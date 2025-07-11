@@ -28,8 +28,3 @@ class ManualAgent:
             # Exibe informações do passo atual
             print(f"[Passo {step}] Ação: {action} | Percepção: {perception} | Status: {status}")
             step += 1  # Incrementa
-
-
-
-
-

@@ -43,11 +43,11 @@ class Visualizer:
                 perception = self.world.perceive()
                 self.world.agent_pos = agent_temp_pos
 
-                if 'BREEZE' in perception:
+                if 'BRISA' in perception:
                     texts.append("💨")
-                if 'STENCH' in perception:
+                if 'FEDOR' in perception:
                     texts.append("💀")
-                if 'GLITTER' in perception:
+                if 'BRILHO' in perception:
                     texts.append("✨")
 
                 label = " ".join(texts)
@@ -76,7 +76,7 @@ class Visualizer:
 
         # 📣 Exibe o grito do Wumpus se ele morreu
         if hasattr(self.world, "last_scream") and self.world.last_scream:
-            scream_label = self.font.render("SCREAM!", True, (255, 0, 0))
+            scream_label = self.font.render("GRITO!", True, (255, 0, 0))
             self.screen.blit(scream_label, (10, 10))
 
         # ☠️ Exibe mensagem de morte do agente
