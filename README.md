@@ -129,6 +129,6 @@ Ao executar com `--vis`, o ambiente é mostrado em uma janela gráfica com:
 
 ## 👩‍💻 Autoria
 
-Este projeto foi desenvolvido por **Ingrid Mendes** e **Alfa Marine**, com foco em pesquisa e ensino de Inteligência Artificial e Jogos Digitais.
+Este projeto foi desenvolvido por **Alfa Marine** e **Ingrid Mendes**, com foco em pesquisa e ensino de Inteligência Artificial e Jogos Digitais.
 
 ---

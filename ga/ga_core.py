@@ -40,7 +40,12 @@ class GeneticAlgorithm:
                 next_gen.extend([c1, c2])
             # Atualiza a população para a próxima geração
             population = next_gen
-        # Retorna o melhor indivíduo da população final
+        # Retorna o melhor indivíduo da população final        
+        # Avalia todos da última geração (caso tenha novos filhos não avaliados)
+        for ind in population:
+            if ind.fitness is None:
+                ind.evaluate(world)
+
         return max(population, key=lambda x: x.fitness)
 
     def select(self, population):
@@ -65,5 +70,6 @@ class GeneticAlgorithm:
     def random_action(self):
         # Gera uma ação aleatória válida para o cromossomo
         # Exemplo: se as ações são inteiros de 0 a 3
-        return random.randint(0, 3)
+        return random.choice(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])
+
 

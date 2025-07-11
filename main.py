@@ -7,6 +7,8 @@ from agents.manual_agent import ManualAgent  # Importa agente manual
 from agents.logic_agent import LogicAgent    # Importa agente lógico
 from agents.genetic_agent import GeneticAgent  # Importa agente genético
 from visual.visualizer import Visualizer  # Importa visualizador gráfico (Pygame)
+from utils.logger import Logger # Importa logger para registro de eventos
+
 
 if __name__ == "__main__":
     # Cria o parser de argumentos para execução via terminal
@@ -38,7 +40,22 @@ if __name__ == "__main__":
         elif args.agente == "genetico":
             agente = GeneticAgent(mundo)
 
+        logger = Logger(args.agente)
+        logger.write(f"Agente: {args.agente.upper()}")
+        logger.write(f"Tamanho do mundo: {args.size} | Seed: {args.seed}\n")
+
+        agente.logger = logger  # Injeta o logger no agente
+
         # Exibe qual agente está sendo executado
         print(f"\nExecutando agente: {args.agente.upper()}")
         # Inicia o ciclo de execução do agente escolhido
         agente.run()
+
+        # 🔍 Verifica e exibe o status final do agente
+        if mundo.won:
+            logger.write("\n🏆 Resultado final: AGENTE VENCEU!")
+        elif not mundo.is_alive:
+            logger.write("\n☠️ Resultado final: AGENTE MORREU!")
+        else:
+            logger.write("\n🤔 Resultado final: AGENTE SOBREVIVEU, mas não venceu.")
+        logger.close()

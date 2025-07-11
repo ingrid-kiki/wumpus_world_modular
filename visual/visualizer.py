@@ -34,10 +34,25 @@ class Visualizer:
         # Preenche o fundo da tela de branco
         self.screen.fill((255, 255, 255))
 
-        # 🧱 Desenha todas as células básicas do grid
+        # 🧱 Desenha todas as células básicas com percepção visual (BREEZE, STENCH, GLITTER)
         for x in range(self.world.size):
             for y in range(self.world.size):
-                self.draw_cell(x, y, (200, 200, 200))
+                texts = []
+                agent_temp_pos = self.world.agent_pos
+                self.world.agent_pos = (x, y)
+                perception = self.world.perceive()
+                self.world.agent_pos = agent_temp_pos
+
+                if 'BREEZE' in perception:
+                    texts.append("💨")
+                if 'STENCH' in perception:
+                    texts.append("💀")
+                if 'GLITTER' in perception:
+                    texts.append("✨")
+
+                label = " ".join(texts)
+                self.draw_cell(x, y, (200, 200, 200), label)
+
 
         # 🟥 Desenha o Wumpus (se estiver vivo)
         if hasattr(self.world, "wumpus_alive") and self.world.wumpus_alive and hasattr(self.world, "wumpus_pos"):

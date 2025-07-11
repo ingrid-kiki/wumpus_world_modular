@@ -11,6 +11,7 @@ class LogicAgent:
         self.knowledge = LogicKnowledgeBase()
         # Histórico das percepções do agente a cada passo
         self.perception_history = []
+        self.logger = None  # Será injetado pelo main
     
 
     def run(self):
@@ -32,13 +33,27 @@ class LogicAgent:
 
             # Exibe percepção atual
             print(f"[Passo {passo}] Percepção: {perception}")
+            
             # Decide próxima ação com base na percepção
             action = self.decide(perception)
+            
             # Exibe ação escolhida
             print(f"[Passo {passo}] Ação decidida: {action}")
+            
             # Executa ação no mundo e recebe novo status
             _, status = self.world.step(action)
-            # Exibe status do agente após a ação
+            
+            # Atualiza a posição atual na base de conhecimento
+            self.knowledge.update_position(action)
+            
+            # Registra tudo no logger, se ele existir
+            if self.logger:
+                self.logger.write(f"[Passo {passo}] Percepção: {perception}")
+                self.logger.write(f"[Passo {passo}] Ação decidida: {action}")
+                self.logger.write(f"[Passo {passo}] Status: {status}\n")
+
+            
+            # Exibe status do agente após a ação no terminal
             print(f"[Passo {passo}] Status do agente: {status}\n")
             passo += 1  # Incrementa o passo
     
