@@ -48,7 +48,7 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 ### Instalação de dependências
 
 ```bash
-pip install pygame
+pip install pygame matplotlib pandas joblib
 ```
 
 ---
@@ -106,6 +106,47 @@ Ao executar com `--vis`, o ambiente é mostrado em uma janela gráfica com:
 - 📣 Grito (se o Wumpus morrer)  
 - ☠️ Morte do agente  
 - 🏆 Vitória (pegou o ouro)
+
+---
+
+## 📊 Benchmarks e Gráficos
+
+Compare o desempenho dos agentes de forma automatizada:
+
+Benchmark Padrão
+Executa 20 rodadas para cada agente:
+```bash
+python benchmark.py
+```
+
+Benchmark Customizado
+Permite definir número de execuções, tamanhos de mundo e agentes:
+```bash
+python benchmark_custom.py --execucoes 30 --sizes 4 6 8 --agentes logico genetico
+```
+
+Benchmark Alternativo
+Executa benchmarks em diferentes tamanhos de mundo (4x4, 6x6, 8x8):
+```bash
+python benchmark_sideB.py 
+```
+Benchmark com Gráficos
+Gera relatórios em CSV e gráficos automáticos (requer pandas, matplotlib e joblib):
+```bash
+python benchmark_graficos.py --execucoes 20 --sizes 4 6 8 --agentes logico genetico
+```
+Os gráficos e resultados serão salvos como arquivos PNG e CSV no diretório do projeto.
+
+---
+
+## 📁 Logs
+Os arquivos de log são salvos automaticamente na pasta /logs/:
+
+```
+/logs/
+├── logico_YYYYMMDD_HHMMSS.log
+├── genetico_YYYYMMDD_HHMMSS.log
+```
 
 ---
 
