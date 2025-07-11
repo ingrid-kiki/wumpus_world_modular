@@ -40,68 +40,82 @@ class World:
 
     def step(self, action):
         """
-        Executa uma ação no ambiente e atualiza o estado do mundo.
-        :param action: Ação a ser executada ('UP', 'DOWN', 'LEFT', 'RIGHT', 'GRAB', 'SHOOT')
-        :return: (percepção, status) onde status pode ser 'OK', 'DEAD' ou 'WIN'
+            Executa uma ação no ambiente: movimento + interação.
+            :param action: Ação a ser executada ('CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO')
+            :return: (percepção, status) onde status pode ser 'OK', 'MORTO' ou 'GANHOU'
         """
-        self.last_scream = False  # Reseta o grito do Wumpus
-        x, y = self.agent_pos
+        self.last_scream = False  # Reset do grito
+        self.move_agent(action)   # Movimento separado
+        status = self.interact(action)  # Interações separadas
+        return self.perceive(), status
 
-        # Movimento do agente
-        if action == 'UP' and x > 0:
+    def move_agent(self, action):
+        """
+        Move o agente no grid se a ação for de movimento.
+        """
+        x, y = self.agent_pos
+        if action == 'CIMA' and x > 0:
             self.agent_pos = (x - 1, y)
-        elif action == 'DOWN' and x < self.size - 1:
+        elif action == 'BAIXO' and x < self.size - 1:
             self.agent_pos = (x + 1, y)
-        elif action == 'LEFT' and y > 0:
+        elif action == 'ESQUERDA' and y > 0:
             self.agent_pos = (x, y - 1)
-        elif action == 'RIGHT' and y < self.size - 1:
+        elif action == 'DIREITA' and y < self.size - 1:
             self.agent_pos = (x, y + 1)
 
-        # Interações com o ambiente
-        if action == 'GRAB' and self.agent_pos == self.gold_pos:
-            self.won = True  # Pegou o ouro
+    def interact(self, action):
+        """
+        Aplica os efeitos da ação (pegar ouro, atirar, morrer etc.).
+        :return: status final da jogada
+        """
+        # Ouro
+        if action == 'AGARRAR' and self.agent_pos == self.gold_pos:
+            self.won = True
+            return 'GANHOU'
 
-        if action == 'SHOOT':
-            # Se o Wumpus está em uma célula adjacente e está vivo, ele morre
+        # Tiro no Wumpus
+        if action == 'TIRO':
             if self.is_adjacent(self.agent_pos, self.wumpus_pos) and self.wumpus_alive:
                 self.wumpus_alive = False
-                self.last_scream = True  # O Wumpus grita
+                self.last_scream = True
 
-        # Verifica se o agente morreu (caiu em poço ou encontrou o Wumpus vivo)
+        # Morte por Wumpus
         if self.agent_pos == self.wumpus_pos and self.wumpus_alive:
             self.is_alive = False
-            return self.perceive(), 'DEAD'
+            return 'MORTO'
+
+        # Morte por poço
         if self.agent_pos in self.pits:
             self.is_alive = False
-            return self.perceive(), 'DEAD'
+            return 'MORTO'
 
-        # Verifica se o agente venceu (pegou o ouro)
+        # Vitória
         if self.won:
-            return self.perceive(), 'WIN'
+            return 'GANHOU'
 
-        # Caso contrário, o jogo continua
-        return self.perceive(), 'OK'
+        return 'OK'
+
 
     def perceive(self):
         """
         Retorna as percepções do agente na posição atual.
-        :return: Lista de percepções ('STENCH', 'BREEZE', 'GLITTER')
+        :return: Lista de percepções ('FEDOR', 'BRISA', 'BRILHO')
         """
         percept = []
         x, y = self.agent_pos
 
-        # Verifica células adjacentes para STENCH (Wumpus) e BREEZE (poço)
+        # Verifica células adjacentes para FEDOR (Wumpus) e BRISA (poço)
         for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
             nx, ny = x + dx, y + dy
             if 0 <= nx < self.size and 0 <= ny < self.size:
                 if (nx, ny) == self.wumpus_pos and self.wumpus_alive:
-                    percept.append('STENCH')
+                    percept.append('FEDOR')
                 if (nx, ny) in self.pits:
-                    percept.append('BREEZE')
+                    percept.append('BRISA')
 
         # Verifica se está sobre o ouro
         if self.agent_pos == self.gold_pos:
-            percept.append('GLITTER')
+            percept.append('BRILHO')
 
         return percept
 

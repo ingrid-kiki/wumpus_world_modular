@@ -39,7 +39,7 @@ class GeneticAgent:
             print(f"[Passo {passo}] Percepção recebida: {perception}")
             print(f"[Passo {passo}] Status do agente: {status}\n")
             # Se o agente morreu ou venceu, encerra a execução
-            if status == 'DEAD' or status == 'WIN':
+            if status == 'MORTO' or status == 'GANHOU':
                 break
             passo += 1
 
