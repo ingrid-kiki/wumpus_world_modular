@@ -1,3 +1,14 @@
+# ==============================
+# benchmark_fast.py (revisado e robusto)
+# ==============================
+'''
+Este benchmark executa múltiplas simulações dos agentes 'lógico' e 'genético'
+no ambiente Wumpus World, para diferentes tamanhos de mundo (4x4, 6x6, 8x8).
+Para cada combinação agente+tamanho, executa várias rodadas em paralelo,
+mede o tempo de execução, salva os resultados e gráficos em pastas organizadas,
+e exibe um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
+'''
+
 import time
 import argparse
 import matplotlib.pyplot as plt
@@ -6,6 +17,9 @@ from joblib import Parallel, delayed
 from world.world import World
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
+import os
+from datetime import datetime
+import seaborn as sns
 
 # Dicionário que associa nomes de agentes às suas classes
 AGENTES_DISPONIVEIS = {
@@ -13,47 +27,73 @@ AGENTES_DISPONIVEIS = {
     'genetico': GeneticAgent
 }
 
+TEMPOS_MEDIOS_ESTIMADOS = {
+    'logico': 0.10,
+    'genetico': 0.30
+}
+
 def simular_execucao(agente_cls, world_size, seed):
-    # Cria uma instância do mundo com a semente fornecida
     mundo = World(size=world_size, seed=seed)
-    # Cria o agente correspondente
     agente = agente_cls(mundo)
-    agente.logger = None  # Desativa logging para não poluir a saída
+    if hasattr(agente, "logger"):
+        agente.logger = None
 
-    # Marca o tempo de início da execução
-    inicio = time.perf_counter()
-    agente.run()  # Executa o agente no mundo
-    fim = time.perf_counter()  # Marca o tempo de fim da execução
-    tempo = fim - inicio  # Calcula o tempo gasto
+    try:
+        inicio = time.perf_counter()
+        resultado = agente.run()
+        fim = time.perf_counter()
+    except Exception as e:
+        print(f"❌ Erro durante execução com semente {seed}: {e}")
+        return None  # falha na execução
 
-    # Determina o status final do agente
+    tempo = fim - inicio
+
     if mundo.won:
         status = "vitória"
     elif not mundo.is_alive:
         status = "morte"
     else:
         status = "sobreviveu"
-    return status, tempo
+
+    # Garante retorno consistente com dados extras
+    dados_extra = resultado.get("fitness", {}) if isinstance(resultado, dict) else {}
+
+    return {
+        "status": status,
+        "tempo": tempo,
+        "dados_extra": dados_extra
+    }
 
 def executar_benchmark(agente_nome, world_size, num_execucoes):
-    # Obtém a classe do agente a partir do nome
     agente_cls = AGENTES_DISPONIVEIS[agente_nome]
 
-    # Executa as simulações em paralelo usando joblib
+    print(f"\n🔁 Iniciando: agente = '{agente_nome}', mundo = {world_size}x{world_size}")
+    estimativa = TEMPOS_MEDIOS_ESTIMADOS.get(agente_nome, 0.2) * num_execucoes
+    print(f"⏳ Estimativa de tempo total: {estimativa:.2f}s")
+
     resultados = Parallel(n_jobs=-1)(
-        delayed(simular_execucao)(agente_cls, world_size, i)
-        for i in range(num_execucoes)
+        delayed(simular_execucao)(agente_cls, world_size, seed)
+        for seed in range(num_execucoes)
     )
 
-    # Conta os resultados de cada tipo
-    vitorias = sum(1 for r, _ in resultados if r == "vitória")
-    mortes = sum(1 for r, _ in resultados if r == "morte")
-    sobrevivencias = sum(1 for r, _ in resultados if r == "sobreviveu")
-    tempos = [t for _, t in resultados]
-    tempo_total = sum(tempos)
-    tempo_medio = tempo_total / num_execucoes
+    # Filtra apenas execuções válidas
+    resultados_validos = [r for r in resultados if r is not None]
 
-    # Retorna um dicionário com os resultados para posterior análise
+    vitorias = sum(1 for r in resultados_validos if r["status"] == "vitória")
+    mortes = sum(1 for r in resultados_validos if r["status"] == "morte")
+    sobrevivencias = sum(1 for r in resultados_validos if r["status"] == "sobreviveu")
+    tempos = [r["tempo"] for r in resultados_validos]
+    tempo_total = sum(tempos)
+    tempo_medio = tempo_total / len(tempos) if tempos else 0.0
+
+    # Dados extras agregados (apenas para genético, se disponíveis)
+    dados_extra = {}
+    if agente_nome == "genetico":
+        for r in resultados_validos:
+            if r["dados_extra"]:
+                for k, v in r["dados_extra"].items():
+                    dados_extra.setdefault(k, []).append(v)
+
     return {
         "agente": agente_nome,
         "tamanho_mundo": world_size,
@@ -61,39 +101,36 @@ def executar_benchmark(agente_nome, world_size, num_execucoes):
         "mortes": mortes,
         "sobreviveu": sobrevivencias,
         "tempo_total": tempo_total,
-        "tempo_médio": tempo_medio
+        "tempo_médio": tempo_medio,
+        "dados_extra": dados_extra
     }
 
-def gerar_graficos(df):
-    # Gera gráficos de barras para vitórias, mortes e sobrevivências
-    for metric in ["vitórias", "mortes", "sobreviveu"]:
-        plt.figure(figsize=(8, 5))
-        for tamanho in sorted(df["tamanho_mundo"].unique()):
-            subset = df[df["tamanho_mundo"] == tamanho]
-            plt.bar([f"{row['agente']}-{tamanho}" for _, row in subset.iterrows()],
-                    subset[metric], label=f"{tamanho}x{tamanho}")
-        plt.title(f"Comparação de {metric.capitalize()} por agente e tamanho do mundo")
-        plt.ylabel("Quantidade")
-        plt.xlabel("Agente-Tamanho")
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.savefig(f"grafico_{metric}.png")
+def gerar_graficos(df_resultados, output_dir):
+    """
+    Gera e salva gráficos simples de barras para vitórias, mortes e tempo médio por agente e tamanho de mundo.
+    """
+    # Gráfico de vitórias por agente e tamanho de mundo
+    plt.figure(figsize=(10, 6))
+    sns.barplot(data=df_resultados, x="tamanho_mundo", y="vitórias", hue="agente")
+    plt.title("Vitórias por agente e tamanho de mundo")
+    plt.savefig(os.path.join(output_dir, "vitorias.png"))
+    plt.close()
 
-    # Gera gráfico de barras para o tempo médio de execução
-    plt.figure(figsize=(8, 5))
-    for tamanho in sorted(df["tamanho_mundo"].unique()):
-        subset = df[df["tamanho_mundo"] == tamanho]
-        plt.bar([f"{row['agente']}-{tamanho}" for _, row in subset.iterrows()],
-                subset["tempo_médio"], label=f"{tamanho}x{tamanho}")
-    plt.title("Tempo médio de execução por agente e tamanho do mundo")
-    plt.ylabel("Tempo médio (s)")
-    plt.xlabel("Agente-Tamanho")
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.savefig("grafico_tempo_medio.png")
+    # Gráfico de mortes por agente e tamanho de mundo
+    plt.figure(figsize=(10, 6))
+    sns.barplot(data=df_resultados, x="tamanho_mundo", y="mortes", hue="agente")
+    plt.title("Mortes por agente e tamanho de mundo")
+    plt.savefig(os.path.join(output_dir, "mortes.png"))
+    plt.close()
+
+    # Gráfico de tempo médio por agente e tamanho de mundo
+    plt.figure(figsize=(10, 6))
+    sns.barplot(data=df_resultados, x="tamanho_mundo", y="tempo_médio", hue="agente")
+    plt.title("Tempo médio por execução")
+    plt.savefig(os.path.join(output_dir, "tempo_medio.png"))
+    plt.close()
 
 if __name__ == "__main__":
-    # Parser de argumentos para personalizar execuções via terminal
     parser = argparse.ArgumentParser()
     parser.add_argument("--execucoes", type=int, default=10)
     parser.add_argument("--sizes", nargs="+", type=int, default=[4, 6, 8])
@@ -101,16 +138,38 @@ if __name__ == "__main__":
                         default=list(AGENTES_DISPONIVEIS.keys()))
     args = parser.parse_args()
 
-    # Executa o benchmark para cada combinação de tamanho de mundo e agente selecionado
+    logs_dir = "logs"
+    os.makedirs(logs_dir, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_dir = os.path.join(logs_dir, f"run_{timestamp}")
+    os.makedirs(output_dir, exist_ok=True)
+
     resultados = []
     for size in args.sizes:
         for nome in args.agentes:
             resultado = executar_benchmark(nome, size, args.execucoes)
             resultados.append(resultado)
 
-    # Salva os resultados em um DataFrame do pandas
     df_resultados = pd.DataFrame(resultados)
-    df_resultados.to_csv("resultados_benchmark.csv", index=False)  # Exporta para CSV
-    gerar_graficos(df_resultados)  # Gera e salva os gráficos
-    print("\n📊 Resultados salvos em 'resultados_benchmark.csv'")
-    print("📈 Gráficos salvos como 'grafico_*.png'")
+    csv_path = os.path.join(output_dir, "resultados_benchmark.csv")
+    df_resultados.to_csv(csv_path, index=False)
+    gerar_graficos(df_resultados, output_dir)
+    print(f"\n📊 Resultados salvos em '{csv_path}'")
+    print(f"📈 Gráficos salvos em '{output_dir}'")
+
+    for _, row in df_resultados.iterrows():
+        agente_nome = row['agente']
+        tamanho = row['tamanho_mundo']
+        vitorias = row['vitórias']
+        mortes = row['mortes']
+        sobrevivencias = row['sobreviveu']
+        tempo_total = row['tempo_total']
+        tempo_medio = row['tempo_médio']
+        num_execucoes = vitorias + mortes + sobrevivencias
+
+        print(f"\n📊 RESULTADOS - Agente: {agente_nome.upper()} | Tamanho: {tamanho}x{tamanho}")
+        print(f"🏆 Vitórias: {vitorias} ({(vitorias/num_execucoes)*100:.1f}%)")
+        print(f"☠️ Mortes: {mortes} ({(mortes/num_execucoes)*100:.1f}%)")
+        print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias/num_execucoes)*100:.1f}%)")
+        print(f"⏱️ Tempo total: {tempo_total:.2f} segundos")
+        print(f"⏱️ Tempo médio por execução: {tempo_medio:.3f} segundos")

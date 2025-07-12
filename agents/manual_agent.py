@@ -1,6 +1,12 @@
 # ==============================
 # agents/manual_agent.py
 # ==============================
+'''
+# Este arquivo implementa o ManualAgent, um agente controlado manualmente pelo usuário
+# via terminal no ambiente Wumpus World. O agente solicita comandos de ação ao usuário
+# a cada passo, permitindo interação direta e didática com o ambiente. Ideal para fins
+# educacionais, testes e comparação com agentes automáticos do projeto.
+'''
 
 class ManualAgent:
     def __init__(self, world):
@@ -27,4 +33,4 @@ class ManualAgent:
             perception, status = self.world.step(action)
             # Exibe informações do passo atual
             print(f"[Passo {step}] Ação: {action} | Percepção: {perception} | Status: {status}")
-            step += 1  # Incrementa
+            step += 1  # Incrementa o contador de passos

@@ -1,13 +1,20 @@
 # ==============================
 # benchmark_sideB.py
 # ==============================
+'''
+Este benchmark executa múltiplas simulações dos agentes 'lógico' e 'genético'
+no ambiente Wumpus World, para diferentes tamanhos de mundo (4x4, 6x6, 8x8).
+Para cada combinação agente+tamanho, executa várias rodadas, mede o tempo de execução,
+e exibe um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
+'''
+
 import time
 from world.world import World
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
 
 # Dicionário que associa nomes de agentes às suas classes
-AGENTES = {
+AGENTES_DISPONIVEIS = {
     'logico': LogicAgent,
     'genetico': GeneticAgent
 }
@@ -35,7 +42,7 @@ def executar_benchmark(agente_nome, world_size):
     for i in range(NUM_EXECUCOES):
         seed = i  # muda a semente em cada rodada para garantir variedade
         mundo = World(size=world_size, seed=seed)  # Cria o mundo com a semente atual
-        agente = AGENTES[agente_nome](mundo)       # Instancia o agente escolhido
+        agente = AGENTES_DISPONIVEIS[agente_nome](mundo)       # Instancia o agente escolhido
         agente.logger = None  # desativa logging para não poluir a saída
 
         # Exibe informações da execução atual
@@ -72,5 +79,5 @@ def executar_benchmark(agente_nome, world_size):
 if __name__ == "__main__":
     # Executa o benchmark para cada combinação de tamanho de mundo e agente selecionado
     for size in WORLD_SIZES:
-        for nome in AGENTES.keys():
+        for nome in AGENTES_DISPONIVEIS.keys():
             executar_benchmark(nome, size)

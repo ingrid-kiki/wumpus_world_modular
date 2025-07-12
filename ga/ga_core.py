@@ -1,6 +1,12 @@
 # ==============================
 # ga/ga_core.py
 # ==============================
+# Este arquivo implementa o núcleo do algoritmo genético utilizado pelo GeneticAgent
+# no projeto Wumpus World. Define a classe GeneticAlgorithm, responsável por criar,
+# evoluir e selecionar populações de indivíduos (soluções), aplicando operadores de
+# seleção, cruzamento e mutação para buscar sequências de ações que maximizem o desempenho
+# do agente no ambiente. Serve como base para experimentos de IA evolutiva no projeto.
+
 import copy
 import random
 
@@ -14,17 +20,31 @@ class GeneticAlgorithm:
         self.gens = gens
         # Tamanho do cromossomo (quantidade de ações em cada indivíduo)
         self.chrom_length = chrom_length
+        # Histórico do fitness médio, máximo e mínimo por geração
+        self.fitness_history = []  # Lista de dicionários: {'min': x, 'mean': y, 'max': z}
+        # Histórico do fitness de toda a população por geração (para gráficos avançados)
+        self.fitness_pop = []
 
-    def run(self, world):
+    def run(self, world, logger=None):
         # Cria a população inicial de indivíduos aleatórios
         population = [Individual(self.chrom_length) for _ in range(self.pop_size)]
-        # Executa o algoritmo genético por um número fixo de gerações
         for g in range(self.gens):
             # Avalia o fitness de cada indivíduo na população
             for ind in population:
                 ind.evaluate(world)
             # Ordena a população do melhor para o pior fitness
             population.sort(key=lambda x: x.fitness, reverse=True)
+            # Coleta estatísticas de fitness para gráficos
+            fitness_vals = [ind.fitness for ind in population]
+            self.fitness_history.append({
+                'min': min(fitness_vals),
+                'mean': sum(fitness_vals) / len(fitness_vals),
+                'max': max(fitness_vals)
+            })
+            self.fitness_pop.append(fitness_vals.copy())
+            # Logging da geração
+            if logger:
+                logger.write(f"[GA] Geração {g+1}: min={min(fitness_vals)}, mean={sum(fitness_vals)/len(fitness_vals):.2f}, max={max(fitness_vals)}")
             # Elitismo: mantém os dois melhores indivíduos da geração atual
             next_gen = population[:2]
             # Preenche o restante da próxima geração com cruzamento e mutação
@@ -39,13 +59,14 @@ class GeneticAlgorithm:
                 # Adiciona os filhos à próxima geração
                 next_gen.extend([c1, c2])
             # Atualiza a população para a próxima geração
-            population = next_gen
-        # Retorna o melhor indivíduo da população final        
+            population = next_gen[:self.pop_size]  # Garante tamanho correto
         # Avalia todos da última geração (caso tenha novos filhos não avaliados)
         for ind in population:
             if ind.fitness is None:
                 ind.evaluate(world)
-
+        # Logging final
+        if logger:
+            logger.write(f"[GA] Fim das gerações. Melhor fitness: {max(population, key=lambda x: x.fitness).fitness}")
         return max(population, key=lambda x: x.fitness)
 
     def select(self, population):
@@ -69,7 +90,6 @@ class GeneticAlgorithm:
         
     def random_action(self):
         # Gera uma ação aleatória válida para o cromossomo
-        # Exemplo: se as ações são inteiros de 0 a 3
         return random.choice(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])
 
 

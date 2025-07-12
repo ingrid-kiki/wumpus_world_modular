@@ -1,3 +1,13 @@
+# ==============================
+# visual/visualizer.py
+# ==============================
+'''
+# Este arquivo implementa a classe Visualizer, responsável pela visualização gráfica
+# do ambiente Wumpus World utilizando Pygame. Permite acompanhar em tempo real o estado
+# do mundo, as percepções, posições do agente, Wumpus, poços e ouro, além de exibir
+# mensagens de vitória, morte e eventos especiais. Ideal para análise didática e demonstrações.
+'''
+
 import pygame
 import sys
 import time

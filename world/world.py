@@ -1,6 +1,14 @@
 # ==============================
 # world/world.py
 # ==============================
+'''
+# Este arquivo implementa a classe World, responsável por representar e gerenciar o ambiente
+# do Wumpus World. O ambiente inclui o agente, o ouro, o Wumpus e os poços, além das regras
+# de movimentação, percepções e interações. Fornece métodos para executar ações, simular
+# percepções, verificar condições de vitória/morte e clonar o estado do mundo para simulações
+# do algoritmo genético e testes dos agentes inteligentes do projeto.
+'''
+
 import random
 import copy
 

@@ -1,6 +1,14 @@
 # ==============================
 # agents/genetic_agent.py
 # ==============================
+'''
+# Este arquivo implementa o GeneticAgent, um agente inteligente para o Wumpus World
+# baseado em algoritmos genéticos. O agente utiliza o núcleo do algoritmo genético
+# para evoluir sequências de ações, buscando maximizar o desempenho no ambiente.
+# Durante a execução, o agente coleta histórico de ações, percepções e status,
+# permitindo análise detalhada do comportamento e integração com benchmarks e gráficos.
+'''
+
 from ga.ga_core import GeneticAlgorithm  # Importa o núcleo do algoritmo genético
 from ga.individual import Individual     # Importa a classe de indivíduo
 
@@ -42,4 +50,10 @@ class GeneticAgent:
             if status == 'MORTO' or status == 'GANHOU':
                 break
             passo += 1
+        # Se quiser retornar dados extras para integração com benchmarks:
+        return {
+            "history": self.history,
+            # Adicione aqui outros dados coletados durante a execução
+            "fitness": self.ga.fitness_history,
+        }
 

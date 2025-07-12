@@ -1,6 +1,13 @@
 # ==============================
 # ga/individual.py
 # ==============================
+'''
+# Este arquivo implementa a classe Individual, que representa um possível agente/solução
+# para o algoritmo genético no Wumpus World. Cada indivíduo possui um cromossomo (sequência
+# de ações) e um valor de fitness, avaliado ao simular sua execução no ambiente. Serve como
+# unidade básica de evolução para o GeneticAlgorithm, permitindo experimentos de IA evolutiva.
+'''
+
 import random
 
 def random_action():
