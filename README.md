@@ -11,6 +11,7 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 - Explorar diferentes estratégias de tomada de decisão em ambientes incertos.
 - Comparar abordagens **manuais**, **baseadas em lógica simbólica** e **algoritmos genéticos**.
 - Visualizar o ambiente e as ações dos agentes em tempo real.
+- Realizar benchmarks automatizados, com coleta de métricas, logs e geração de gráficos avançados.
 
 ---
 
@@ -34,8 +35,20 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 ├── world/                # Ambiente do mundo de Wumpus
 │   └── world.py
 │
-├── main.py               # Script principal para execução
-└── README.md             # Este arquivo
+├── utils/                # Utilitários do projeto
+│   ├── graficos.py       # Geração de gráficos básicos e avançados
+│   └── logger.py         # Logger para logs organizados por execução
+│
+├── logs/                 # Saída dos logs e resultados de benchmarks
+│   └── run_YYYYMMDD_HHMMSS/   # Subpastas por execução, com CSVs, PNGs e logs
+│
+├── benchmark.py               # Benchmark padrão (4x4)
+├── benchmark_custom.py        # Benchmark customizável via argumentos
+├── benchmark_fast.py          # Benchmark paralelo, organizado por pastas
+├── benchmark_graficos.py      # Benchmark com geração automática de gráficos
+├── benchmark_sideB.py         # Benchmark alternativo para comparação
+├── main.py                    # Script principal para execução
+└── README.md                  # Este arquivo
 ```
 
 ---
@@ -44,11 +57,16 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 
 - Python 3.8 ou superior
 - Pygame
+- matplotlib
+- pandas
+- joblib
+- seaborn
+- scikit-learn
 
 ### Instalação de dependências
 
 ```bash
-pip install pygame matplotlib pandas joblib
+pip install pygame matplotlib pandas joblib seaborn scikit-learn
 ```
 
 ---
@@ -111,41 +129,77 @@ Ao executar com `--vis`, o ambiente é mostrado em uma janela gráfica com:
 
 ## 📊 Benchmarks e Gráficos
 
-Compare o desempenho dos agentes de forma automatizada:
+Compare o desempenho dos agentes de forma automatizada, com resultados organizados em subpastas de `/logs` e geração de gráficos básicos e avançados.
 
-Benchmark Padrão
+### Benchmark Padrão
 Executa 20 rodadas para cada agente:
 ```bash
 python benchmark.py
 ```
 
-Benchmark Customizado
+### Benchmark Customizado
 Permite definir número de execuções, tamanhos de mundo e agentes:
 ```bash
 python benchmark_custom.py --execucoes 30 --sizes 4 6 8 --agentes logico genetico
 ```
 
-Benchmark Alternativo
+### Benchmark Alternativo
 Executa benchmarks em diferentes tamanhos de mundo (4x4, 6x6, 8x8):
 ```bash
 python benchmark_sideB.py 
 ```
-Benchmark com Gráficos
-Gera relatórios em CSV e gráficos automáticos (requer pandas, matplotlib e joblib):
+
+### Benchmark com Gráficos
+Gera relatórios em CSV e gráficos automáticos (barras, tempo médio, etc):
 ```bash
 python benchmark_graficos.py --execucoes 20 --sizes 4 6 8 --agentes logico genetico
 ```
-Os gráficos e resultados serão salvos como arquivos PNG e CSV no diretório do projeto.
+
+### Benchmark Paralelo e Avançado
+Executa benchmarks em paralelo, salva resultados e gráficos em subpastas organizadas por execução, e gera gráficos avançados:
+```bash
+python benchmark_fast.py --execucoes 20 --sizes 4 6 8 --agentes logico genetico
+```
+
+Os gráficos e resultados serão salvos como arquivos PNG e CSV em subpastas dentro de `/logs/run_YYYYMMDD_HHMMSS/`.
+
+---
+
+## 📈 Gráficos Avançados
+
+Além dos gráficos básicos, o projeto gera automaticamente (quando os dados são coletados):
+
+- **Memória + CPU + Distribuição dos Recursos**
+- **Evolução do Fitness (convergência)**
+- **Comportamento de Convergência da População (mínimo, médio e máximo)**
+- **Média das Curvas de Convergência com Desvio Padrão**
+- **Plot do Violino**
+- **Função de Distribuição Acumulada (ECDF)**
+- **Mapa de Calor da Diversidade por Variável**
+- **Gráfico de Área Empilhada da Diversidade por Variável**
+- **PCA para Visualizar Agrupamentos Genéticos**
+
+Todos os gráficos são salvos automaticamente na subpasta de cada execução.
 
 ---
 
 ## 📁 Logs
-Os arquivos de log são salvos automaticamente na pasta /logs/:
+
+Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organizados por execução e agente:
 
 ```
 /logs/
-├── logico_YYYYMMDD_HHMMSS.log
-├── genetico_YYYYMMDD_HHMMSS.log
+└── run_YYYYMMDD_HHMMSS/
+    ├── resultados_benchmark.csv
+    ├── grafico_vitorias.png
+    ├── grafico_mortes.png
+    ├── grafico_sobreviveu.png
+    ├── grafico_tempo_medio.png
+    ├── memoria_cpu.png
+    ├── evolucao_fitness.png
+    ├── ... (outros gráficos avançados)
+    ├── logico_YYYYMMDD_HHMMSS.log
+    └── genetico_YYYYMMDD_HHMMSS.log
 ```
 
 ---
@@ -154,9 +208,9 @@ Os arquivos de log são salvos automaticamente na pasta /logs/:
 
 - [ ] Adicionar mapeamento lógico com inferência proposicional.
 - [ ] Expandir o fitness do algoritmo genético.
-- [ ] Implementar logging das execuções.
-- [ ] Adicionar benchmarks entre agentes.
-- [ ] Visualização da árvore de decisão.
+- [x] Implementar logging das execuções.
+- [x] Adicionar benchmarks entre agentes.
+- [x] Visualização de gráficos avançados e análise de desempenho.
 
 ---
 

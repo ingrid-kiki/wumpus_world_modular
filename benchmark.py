@@ -1,70 +1,91 @@
 # ==============================
 # benchmark.py
 # ==============================
+'''
+Este benchmark executa múltiplas simulações dos agentes 'lógico' e 'genético'
+no ambiente Wumpus World, usando um mundo de tamanho 4x4.
+Para cada agente, executa várias rodadas, mede o tempo de execução,
+e retorna um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
+'''
+
 import time
 from world.world import World
-from agents.manual_agent import ManualAgent  # Só para referência, não usado aqui
+from agents.manual_agent import ManualAgent
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
 
 # Dicionário que associa nomes de agentes às suas classes
-AGENTES = {
+AGENTES_DISPONIVEIS = {
+    'manual': ManualAgent,
     'logico': LogicAgent,
     'genetico': GeneticAgent
 }
 
-NUM_EXECUCOES = 20  # Número de execuções para cada agente no benchmark
-WORLD_SIZE = 4      # Tamanho do mundo (4x4)
 TEMPOS_MEDIOS_ESTIMADOS = {
     'logico': 0.10,
     'genetico': 0.30
 }
 
-# Função que executa o benchmark para um agente específico
-def executar_benchmark(agente_nome):
-    # Inicializa contadores de vitórias, mortes e sobrevivências
+def executar_benchmark(agente_nome, world_size=4, num_execucoes=10):
     vitorias, mortes, sobrevivencias = 0, 0, 0
     tempos = []
 
-    tempo_estimado = TEMPOS_MEDIOS_ESTIMADOS.get(agente_nome, 0.2) * NUM_EXECUCOES
-    print(f"⏳ Estimativa de tempo total para '{agente_nome}': {tempo_estimado:.2f} segundos")
+    tempo_estimado = TEMPOS_MEDIOS_ESTIMADOS.get(agente_nome, 0.2) * num_execucoes
+    print(f"\n⏳ Estimativa de tempo total para '{agente_nome}' ({world_size}x{world_size}): {tempo_estimado:.2f}s")
 
-    # Executa o benchmark várias vezes, mudando a semente para cada rodada
-    for i in range(NUM_EXECUCOES):
-        seed = i  # muda a semente em cada rodada para garantir variedade
-        mundo = World(size=WORLD_SIZE, seed=seed)  # Cria o mundo com a semente atual
-        agente = AGENTES[agente_nome](mundo)       # Instancia o agente escolhido
-        agente.logger = None  # desativa logging para não poluir a saída
+    for i in range(num_execucoes):
+        seed = i
+        mundo = World(size=world_size, seed=seed)
+        agente_cls = AGENTES_DISPONIVEIS[agente_nome]
+        agente = agente_cls(mundo)
+        if hasattr(agente, "logger"):
+            agente.logger = None
 
-        print(f"🚀 Execução {i+1}/{NUM_EXECUCOES} [{agente_nome}]")
-        
+        print(f"🚀 Execução {i + 1}/{num_execucoes} [{agente_nome}]")
+
         inicio = time.perf_counter()
-        agente.run()  # Executa o agente no mundo
+        try:
+            resultado = agente.run()
+        except Exception as e:
+            print(f"❌ Erro na execução {i + 1}: {e}")
+            resultado = None
         fim = time.perf_counter()
-        
+
         tempos.append(fim - inicio)
 
-        # Atualiza os contadores de acordo com o resultado da execução
         if mundo.won:
             vitorias += 1
         elif not mundo.is_alive:
             mortes += 1
         else:
             sobrevivencias += 1
-    
-    # Calcula o tempo médio de execução
-    tempo_total = sum(tempos)
-    tempo_medio = tempo_total / NUM_EXECUCOES
 
-    # Exibe o resumo dos resultados do benchmark para o agente
-    print(f"\n📊 RESULTADOS - Agente: {agente_nome.upper()}")
-    print(f"🏆 Vitórias: {vitorias} ({(vitorias/NUM_EXECUCOES)*100:.1f}%)")
-    print(f"☠️ Mortes: {mortes} ({(mortes/NUM_EXECUCOES)*100:.1f}%)")
-    print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias/NUM_EXECUCOES)*100:.1f}%)\n")
-    print(f"⏱️ Tempo total: {tempo_total:.2f} segundos")
-    print(f"⏱️ Tempo médio por execução: {tempo_medio:.3f} segundos\n")
+    tempo_total = sum(tempos)
+    tempo_medio = tempo_total / num_execucoes
+
+    retorno = {
+        "agente": agente_nome,
+        "tamanho_mundo": world_size,
+        "vitórias": vitorias,
+        "mortes": mortes,
+        "sobreviveu": sobrevivencias,
+        "tempo_total": tempo_total,
+        "tempo_médio": tempo_medio,
+        "dados_extra": {}
+    }
+
+    # Se o agente genético devolveu dados durante run(), copia eles
+    if agente_nome == "genetico" and isinstance(resultado, dict):
+        retorno["dados_extra"] = resultado.get("fitness", {})
+
+    return retorno
 
 if __name__ == "__main__":
-    # Executa o benchmark para cada agente definido em AGENTES
-    for nome in AGENTES.keys():
-        executar_benchmark(nome)
+    for nome in AGENTES_DISPONIVEIS.keys():
+        resultado = executar_benchmark(nome, world_size=4, num_execucoes=3)
+        print(f"\nResumo para {nome}:")
+        print(f"Vitórias: {resultado['vitórias']}")
+        print(f"Mortes: {resultado['mortes']}")
+        print(f"Sobreviveu sem vencer: {resultado['sobreviveu']}")
+        print(f"Tempo total: {resultado['tempo_total']:.2f}s")
+        print(f"Tempo médio por execução: {resultado['tempo_médio']:.3f}s")

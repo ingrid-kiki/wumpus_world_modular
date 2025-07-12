@@ -1,6 +1,12 @@
 # ==============================
 # agents/logic_knowledge_base.py
 # ==============================
+'''
+# Este arquivo implementa a classe LogicKnowledgeBase, responsável por manter e atualizar
+# a base de conhecimento lógica do agente simbólico no Wumpus World. Ela armazena percepções,
+# estados conhecidos do ambiente e permite inferir ações seguras a partir das informações coletadas.
+# Serve como núcleo de raciocínio lógico para o LogicAgent, facilitando decisões baseadas em regras.
+'''
 
 class LogicKnowledgeBase:
     def __init__(self):

@@ -16,7 +16,7 @@ Este guia mostra como executar o projeto **Wumpus World**, incluindo o uso dos d
 Abra o terminal no diretório do projeto e execute:
 
 ```bash
-pip install pygame
+pip install pygame matplotlib pandas joblib seaborn scikit-learn
 ```
 
 ---
@@ -77,27 +77,44 @@ python main.py logico --vis
 
 ## ✅ 6. Executar o Benchmark
 
-Benchmark Padrão
+### Benchmark Padrão
 Executa 20 rodadas para cada agente:
 
 ```bash
 python benchmark.py
 ```
 
-Benchmark Customizado
+### Benchmark Customizado
 Permite escolher execuções, tamanhos de mundo e agentes:
 
 ```bash
 python benchmark_custom.py --execucoes 30 --sizes 4 6 8 --agentes logico genetico
 ```
 
-Benchmark Alternativo
+### Benchmark Alternativo
 Executa diferentes tamanhos de mundo (4x4, 6x6, 8x8):
 
 ```bash
 python benchmark_sideB.py
 # executa diferentes tamanhos de mundo (loop sobre 4x4, 6x6, 8x8)
 ```
+
+### Benchmark com Gráficos
+Gera relatórios em CSV e gráficos automáticos (barras, tempo médio, etc):
+
+```bash
+python benchmark_graficos.py --execucoes 20 --sizes 4 6 8 --agentes logico genetico
+```
+
+### Benchmark Paralelo e Avançado
+Executa benchmarks em paralelo, salva resultados e gráficos em subpastas organizadas por execução, e gera gráficos avançados:
+
+```bash
+python benchmark_fast.py --execucoes 20 --sizes 4 6 8 --agentes logico genetico
+```
+
+---
+
 ### Comandos disponíveis:
 
 ```bash
@@ -139,10 +156,12 @@ python benchmark.py --silent
 Exemplo de saída:
 
 ```
-📊 RESULTADOS - Agente: LOGICO
+📊 RESULTADOS - Agente: LOGICO | Tamanho: 4x4
 🏆 Vitórias: 11 (55.0%)
 ☠️ Mortes: 5 (25.0%)
-⏱️ Tempo médio: 0.10 segundos
+🤔 Sobreviveu sem vencer: 4 (20.0%)
+⏱️ Tempo total: 2.00 segundos
+⏱️ Tempo médio por execução: 0.10 segundos
 ```
 
 **Resumo dos arquivos de benchmark:**
@@ -150,17 +169,28 @@ Exemplo de saída:
 - `benchmark.py` — Benchmark padrão, executa 20 rodadas para cada agente.
 - `benchmark_custom.py` — Permite personalizar execuções, tamanhos de mundo e agentes via argumentos.
 - `benchmark_sideB.py` — Benchmark alternativo para cenários e análises diferenciadas.
+- `benchmark_graficos.py` — Benchmark com geração automática de gráficos.
+- `benchmark_fast.py` — Benchmark paralelo, organizado por pastas, com gráficos avançados.
 
 ---
 
-## ✅ 7. Onde ver os logs?
+## ✅ 7. Onde ver os logs e resultados?
 
-Os arquivos de log são salvos automaticamente na pasta:
+Os arquivos de log, CSVs e gráficos são salvos automaticamente em subpastas de `/logs/`, organizados por execução e agente:
 
 ```
 /logs/
-├── logico_YYYYMMDD_HHMMSS.log
-├── genetico_YYYYMMDD_HHMMSS.log
+└── run_YYYYMMDD_HHMMSS/
+    ├── resultados_benchmark.csv
+    ├── grafico_vitorias.png
+    ├── grafico_mortes.png
+    ├── grafico_sobreviveu.png
+    ├── grafico_tempo_medio.png
+    ├── memoria_cpu.png
+    ├── evolucao_fitness.png
+    ├── ... (outros gráficos avançados)
+    ├── logico_YYYYMMDD_HHMMSS.log
+    └── genetico_YYYYMMDD_HHMMSS.log
 ```
 
 ---
@@ -173,14 +203,34 @@ Os arquivos de log são salvos automaticamente na pasta:
 ├── ga/                     # Algoritmo genético
 ├── world/                  # Lógica do mundo do Wumpus
 ├── visual/                 # Visualização com Pygame
-├── utils/                  # Logger
-├── logs/                   # Gerado automaticamente
+├── utils/                  # Logger e gráficos
+├── logs/                   # Gerado automaticamente (organizado por execução)
 ├── main.py                 # Executa o jogo
 ├── benchmark.py            # Executa testes comparativos
 ├── benchmark_custom.py     # Executa testes comparativos customizados
+├── benchmark_graficos.py   # Executa testes com geração automática de gráficos
+├── benchmark_fast.py       # Executa testes paralelos e gráficos avançados
 ├── benchmark_sideB.py      # Executa testes comparativos com tamanhos variados de mundos
 └── README.md
 ```
+
+---
+
+## ✅ 9. Gráficos Avançados
+
+Quando os dados são coletados (especialmente pelo agente genético), o projeto gera automaticamente:
+
+- **Memória + CPU + Distribuição dos Recursos**
+- **Evolução do Fitness (convergência)**
+- **Comportamento de Convergência da População (mínimo, médio e máximo)**
+- **Média das Curvas de Convergência com Desvio Padrão**
+- **Plot do Violino**
+- **Função de Distribuição Acumulada (ECDF)**
+- **Mapa de Calor da Diversidade por Variável**
+- **Gráfico de Área Empilhada da Diversidade por Variável**
+- **PCA para Visualizar Agrupamentos Genéticos**
+
+Todos os gráficos são salvos automaticamente na subpasta de cada execução.
 
 ---
 

@@ -1,6 +1,14 @@
 # ==============================
 # benchmark_custom.py
 # ==============================
+'''
+Este benchmark executa múltiplas simulações dos agentes 'lógico' e 'genético'
+no ambiente Wumpus World, para diferentes tamanhos de mundo (4x4, 6x6, 8x8).
+Para cada combinação agente+tamanho, executa várias rodadas, mede o tempo de execução,
+e exibe um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
+Permite customizar agentes, tamanhos e número de execuções via argumentos de linha de comando.
+'''
+
 import time
 import argparse
 from world.world import World

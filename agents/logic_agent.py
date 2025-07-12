@@ -1,6 +1,14 @@
 # ==============================
 # agents/logic_agent.py
 # ==============================
+'''
+# Este arquivo implementa o LogicAgent, um agente inteligente para o Wumpus World
+# baseado em lógica simbólica. O agente utiliza uma base de conhecimento lógica
+# para inferir ações seguras a partir das percepções do ambiente, atualizando seu
+# conhecimento a cada passo. O histórico de percepções é registrado para análise,
+# e o agente pode integrar-se ao sistema de logs e benchmarks do projeto.
+'''
+
 from agents.logic_knowledge_base import LogicKnowledgeBase
 
 class LogicAgent:

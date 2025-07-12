@@ -1,3 +1,14 @@
+# ==============================
+# benchmark_graficos.py
+# ==============================
+'''
+Este benchmark executa múltiplas simulações dos agentes 'lógico' e 'genético'
+no ambiente Wumpus World, para diferentes tamanhos de mundo (4x4, 6x6, 8x8).
+Para cada combinação agente+tamanho, executa várias rodadas,
+mede o tempo de execução, salva os resultados em CSV e gera gráficos comparativos,
+exibindo um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
+'''
+
 import time
 import argparse
 import matplotlib.pyplot as plt
@@ -105,3 +116,21 @@ if __name__ == "__main__":
     gerar_graficos(df_resultados)  # Gera e salva os gráficos
     print("\n📊 Resultados salvos em 'resultados_benchmark.csv'")
     print("📈 Gráficos salvos como 'grafico_*.png'")
+
+    # Exibe o resumo dos resultados do benchmark para cada agente e tamanho de mundo
+    for _, row in df_resultados.iterrows():
+        agente_nome = row['agente']
+        tamanho = row['tamanho_mundo']
+        vitorias = row['vitórias']
+        mortes = row['mortes']
+        sobrevivencias = row['sobreviveu']
+        tempo_total = row['tempo_total']
+        tempo_medio = row['tempo_médio']
+        num_execucoes = vitorias + mortes + sobrevivencias
+
+        print(f"\n📊 RESULTADOS - Agente: {agente_nome.upper()} | Tamanho: {tamanho}x{tamanho}")
+        print(f"🏆 Vitórias: {vitorias} ({(vitorias/num_execucoes)*100:.1f}%)")
+        print(f"☠️ Mortes: {mortes} ({(mortes/num_execucoes)*100:.1f}%)")
+        print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias/num_execucoes)*100:.1f}%)")
+        print(f"⏱️ Tempo total: {tempo_total:.2f} segundos")
+        print(f"⏱️ Tempo médio por execução: {tempo_medio:.2f} segundos")
