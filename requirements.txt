@@ -1,0 +1,9 @@
+pygame
+matplotlib
+pandas
+joblib
+seaborn
+scikit-learn
+pygad
+numpy
+pandas
