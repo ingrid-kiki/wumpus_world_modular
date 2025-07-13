@@ -19,6 +19,11 @@ Abra o terminal no diretório do projeto e execute:
 pip install pygame matplotlib pandas joblib seaborn scikit-learn
 ```
 
+ou
+
+```bash
+pip install requirements.txt
+```
 ---
 
 ## ✅ 3. Executar o jogo com agentes
