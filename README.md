@@ -69,6 +69,11 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 pip install pygame matplotlib pandas joblib seaborn scikit-learn
 ```
 
+ou
+
+```bash
+pip install requirements.txt
+```
 ---
 
 ## 🚀 Como Executar
