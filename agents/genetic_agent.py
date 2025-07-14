@@ -27,7 +27,7 @@ class GeneticAgent:
         """
         # Executa o algoritmo genético e obtém o melhor indivíduo (sequência de ações)
         ga_results = self.ga.run(self.world)
-        best = ga_results["best_individual"]
+        best = ga_results["best"]
         print("\n🧬 Melhor sequência encontrada pelo algoritmo genético:")
         print(best.chromosome, "\n")
         print("🏆 Pontuação:", best.fitness)

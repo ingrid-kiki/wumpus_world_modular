@@ -82,10 +82,10 @@ class GeneticAlgorithm:
             logger.write(f"[GA] Fim das gerações. Melhor fitness: {best_individual_fitness}")
         
         return {
-            "best_individual": best_individual,
+            "best": best_individual,
             "fitness_history": self.fitness_history,
             "fitness_pop": self.fitness_pop,
-            "final_population": final_population_chromosomes
+            "final_pop": final_population_chromosomes
         }
 
     def select(self, population):
