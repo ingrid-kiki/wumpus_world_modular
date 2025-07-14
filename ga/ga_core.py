@@ -17,13 +17,17 @@ import numpy as np
 from .individual import Individual
 
 class GeneticAlgorithm:
-    def __init__(self, pop_size, gens, chrom_length):
+    def __init__(self, pop_size, gens, chrom_length, mutation_rate=0.02, crossover_rate=0.9):
         # Tamanho da população de indivíduos
         self.pop_size = pop_size
         # Número de gerações (iterações do algoritmo)
         self.gens = gens
         # Tamanho do cromossomo (quantidade de ações em cada indivíduo)
         self.chrom_length = chrom_length
+        # Taxa de mutação padrão
+        self.mutation_rate = mutation_rate
+        # Taxa de cruzamento padrão
+        self.crossover_rate = mutation_rate
         # Histórico do fitness médio, máximo e mínimo por geração
         self.fitness_history = []  # Lista de dicionários: {'min': x, 'mean': y, 'max': z}
         # Histórico do fitness de toda a população por geração (para gráficos avançados)
@@ -38,6 +42,7 @@ class GeneticAlgorithm:
     def run(self, world, logger=None):
         # Registra o uso de memória e CPU antes de iniciar as gerações
         process = psutil.Process(os.getpid())
+        process.cpu_percent()
 
         # Cria a população inicial de indivíduos aleatórios
         population = [Individual(self.chrom_length) for _ in range(self.pop_size)]
@@ -47,6 +52,7 @@ class GeneticAlgorithm:
             self.memory_history.append(memory_mb)
             # Uso de CPU em porcentagem
             self.cpu_history.append(process.cpu_percent())
+            
             # Avalia o fitness de cada indivíduo na população
             for ind in population:
                 ind.evaluate(world)
@@ -82,8 +88,14 @@ class GeneticAlgorithm:
             while len(next_gen) < self.pop_size:
                 # Seleciona dois pais para cruzamento
                 p1, p2 = self.select(population), self.select(population)
-                # Realiza o cruzamento (crossover) para gerar dois filhos
-                c1, c2 = self.crossover(p1, p2)
+                # Verifica se a taxa de cruzamento é atingida
+                if random.random() < self.crossover_rate:
+                    # Realiza o cruzamento (crossover) para gerar dois filhos
+                    c1, c2 = self.crossover(p1, p2)
+                else:
+                    # Se não cruzar, copia os pais diretamente
+                    c1, c2 = copy.deepcopy(p1), copy.deepcopy(p2)
+
                 # Aplica mutação nos filhos
                 self.mutate(c1)
                 self.mutate(c2)
@@ -132,9 +144,10 @@ class GeneticAlgorithm:
         return c1, c2
 
     def mutate(self, individual):
-        # Aplica mutação em um gene aleatório do cromossomo do indivíduo
-        index = random.randint(0, self.chrom_length - 1)
-        individual.chromosome[index] = self.random_action()
+        for i in range(self.chrom_length):
+            # Aplica mutação com base na taxa de mutação
+            if random.random() < self.mutation_rate:
+                individual.chromosome[i] = self.random_action()
         
     def random_action(self):
         # Gera uma ação aleatória válida para o cromossomo
