@@ -32,8 +32,10 @@ class GeneticAlgorithm:
             # Avalia o fitness de cada indivíduo na população
             for ind in population:
                 ind.evaluate(world)
+
             # Ordena a população do melhor para o pior fitness
             population.sort(key=lambda x: x.fitness, reverse=True)
+
             # Coleta estatísticas de fitness para gráficos
             fitness_vals = [ind.fitness for ind in population]
             self.fitness_history.append({
@@ -42,11 +44,14 @@ class GeneticAlgorithm:
                 'max': max(fitness_vals)
             })
             self.fitness_pop.append(fitness_vals.copy())
+
             # Logging da geração
             if logger:
                 logger.write(f"[GA] Geração {g+1}: min={min(fitness_vals)}, mean={sum(fitness_vals)/len(fitness_vals):.2f}, max={max(fitness_vals)}")
+            
             # Elitismo: mantém os dois melhores indivíduos da geração atual
             next_gen = population[:2]
+            
             # Preenche o restante da próxima geração com cruzamento e mutação
             while len(next_gen) < self.pop_size:
                 # Seleciona dois pais para cruzamento
@@ -58,16 +63,30 @@ class GeneticAlgorithm:
                 self.mutate(c2)
                 # Adiciona os filhos à próxima geração
                 next_gen.extend([c1, c2])
+            
             # Atualiza a população para a próxima geração
             population = next_gen[:self.pop_size]  # Garante tamanho correto
+
         # Avalia todos da última geração (caso tenha novos filhos não avaliados)
         for ind in population:
             if ind.fitness is None:
                 ind.evaluate(world)
+
+        # Salva o melhor indivíduo encontrado
+        best_individual = max(population, key=lambda x: x.fitness)
+        best_individual_fitness = best_individual.fitness
+        final_population_chromosomes = [ind.chromosome for ind in population]
+
         # Logging final
         if logger:
-            logger.write(f"[GA] Fim das gerações. Melhor fitness: {max(population, key=lambda x: x.fitness).fitness}")
-        return max(population, key=lambda x: x.fitness)
+            logger.write(f"[GA] Fim das gerações. Melhor fitness: {best_individual_fitness}")
+        
+        return {
+            "best": best_individual,
+            "fitness_history": self.fitness_history,
+            "fitness_pop": self.fitness_pop,
+            "final_pop": final_population_chromosomes
+        }
 
     def select(self, population):
         # Seleciona aleatoriamente um indivíduo entre os 10 melhores (elitismo/seleção por torneio)
@@ -91,5 +110,3 @@ class GeneticAlgorithm:
     def random_action(self):
         # Gera uma ação aleatória válida para o cromossomo
         return random.choice(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])
-
-
