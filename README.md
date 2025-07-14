@@ -63,11 +63,13 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 - joblib
 - seaborn
 - scikit-learn
+- numpy
+- psutil
 
 ### Instalação de dependências
 
 ```bash
-pip install pygame matplotlib pandas joblib seaborn scikit-learn
+pip install pygame matplotlib pandas joblib seaborn scikit-learn numpy psutil
 ```
 
 ou
