@@ -28,8 +28,8 @@ TEMPOS_MEDIOS_ESTIMADOS = {
 
 def executar_benchmark(agente_nome, world_size=4, num_execucoes=10):
     vitorias, mortes, sobrevivencias = 0, 0, 0
+    dados_extra_capturados = {}
     tempos = []
-
     tempo_estimado = TEMPOS_MEDIOS_ESTIMADOS.get(agente_nome, 0.2) * num_execucoes
     print(f"\n⏳ Estimativa de tempo total para '{agente_nome}' ({world_size}x{world_size}): {tempo_estimado:.2f}s")
 
@@ -53,6 +53,9 @@ def executar_benchmark(agente_nome, world_size=4, num_execucoes=10):
 
         tempos.append(fim - inicio)
 
+        if i == 0 and agente_nome == "genetico" and isinstance(resultado, dict):
+            dados_extra_capturados = resultado.get("dados_extra", {})
+        
         if mundo.won:
             vitorias += 1
         elif not mundo.is_alive:
@@ -71,7 +74,7 @@ def executar_benchmark(agente_nome, world_size=4, num_execucoes=10):
         "sobreviveu": sobrevivencias,
         "tempo_total": tempo_total,
         "tempo_médio": tempo_medio,
-        "dados_extra": {}
+        "dados_extra": dados_extra_capturados
     }
 
     # Se o agente genético devolveu dados durante run(), copia eles
