@@ -1,5 +1,5 @@
 # ==============================
-# benchmark_graficos.py
+# benchmark/bm_graficos.py
 # ==============================
 '''
 Este benchmark executa múltiplas simulações dos agentes 'lógico' e 'genético'
@@ -13,6 +13,7 @@ import time
 import argparse
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
 from world.world import World
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
@@ -102,6 +103,11 @@ if __name__ == "__main__":
     parser.add_argument("--agentes", nargs="+", choices=AGENTES_DISPONIVEIS.keys(),
                         default=list(AGENTES_DISPONIVEIS.keys()))
     args = parser.parse_args()
+
+    # Diretório base para salvar logs e resultados
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    output_dir = os.path.join(BASE_DIR, "logs", f"run_{timestamp}")
 
     # Executa o benchmark para cada combinação de tamanho de mundo e agente selecionado
     resultados = []

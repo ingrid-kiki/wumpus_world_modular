@@ -12,6 +12,7 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 - Comparar abordagens **manuais**, **baseadas em lógica simbólica** e **algoritmos genéticos**.
 - Visualizar o ambiente e as ações dos agentes em tempo real.
 - Realizar benchmarks automatizados, com coleta de métricas, logs e geração de gráficos avançados.
+- Garantir a confiabilidade do código com **testes unitários**.
 
 ---
 
@@ -47,6 +48,11 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 ├── benchmark_fast.py          # Benchmark paralelo, organizado por pastas
 ├── benchmark_graficos.py      # Benchmark com geração automática de gráficos
 ├── benchmark_sideB.py         # Benchmark alternativo para comparação
+│
+├── tests/                # Testes unitários automatizados
+│   ├── test_fitness_history.py
+│   └── ... (outros testes)
+│
 ├── main.py                    # Script principal para execução
 └── README.md                  # Este arquivo
 ```
@@ -62,11 +68,13 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 - joblib
 - seaborn
 - scikit-learn
+- psutil
+- pytest (para testes unitários)
 
 ### Instalação de dependências
 
 ```bash
-pip install pygame matplotlib pandas joblib seaborn scikit-learn
+pip install pygame matplotlib pandas joblib seaborn scikit-learn psutil pytest
 ```
 
 ou
@@ -209,6 +217,22 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
 
 ---
 
+## 🧪 Testes Unitários
+
+O projeto inclui testes automatizados para garantir a confiabilidade das principais funcionalidades, como o rastreamento do histórico de fitness dos agentes e a geração de gráficos.
+
+### Como rodar os testes
+
+Execute todos os testes com:
+
+```bash
+pytest
+```
+
+Os testes estão localizados na pasta `/tests` e cobrem agentes, lógica do mundo, benchmarks e geração de gráficos.
+
+---
+
 ## ⚙️ Extensões Sugeridas
 
 - [ ] Adicionar mapeamento lógico com inferência proposicional.
@@ -216,6 +240,7 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
 - [x] Implementar logging das execuções.
 - [x] Adicionar benchmarks entre agentes.
 - [x] Visualização de gráficos avançados e análise de desempenho.
+- [x] Testes unitários automatizados.
 
 ---
 

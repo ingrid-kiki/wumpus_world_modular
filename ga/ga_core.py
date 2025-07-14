@@ -1,14 +1,17 @@
 # ==============================
 # ga/ga_core.py
 # ==============================
+'''
 # Este arquivo implementa o núcleo do algoritmo genético utilizado pelo GeneticAgent
 # no projeto Wumpus World. Define a classe GeneticAlgorithm, responsável por criar,
 # evoluir e selecionar populações de indivíduos (soluções), aplicando operadores de
 # seleção, cruzamento e mutação para buscar sequências de ações que maximizem o desempenho
 # do agente no ambiente. Serve como base para experimentos de IA evolutiva no projeto.
-
+'''
 import copy
 import random
+import numpy as np
+import psutil  # Para monitoramento de recursos
 
 from .individual import Individual  # Importa a classe Individual (representa um possível agente/solução)
 
@@ -20,15 +23,31 @@ class GeneticAlgorithm:
         self.gens = gens
         # Tamanho do cromossomo (quantidade de ações em cada indivíduo)
         self.chrom_length = chrom_length
+
         # Histórico do fitness médio, máximo e mínimo por geração
         self.fitness_history = []  # Lista de dicionários: {'min': x, 'mean': y, 'max': z}
         # Histórico do fitness de toda a população por geração (para gráficos avançados)
         self.fitness_pop = []
+        # Fitness final de todos os indivíduos da última geração
+        self.fitness_final = []
+        # Medidas fictícias ou reais de uso de memória e CPU (simulado aqui)
+        self.memoria_uso = []
+        self.cpu_uso = []
+        # Diversidade genética por variável (variância)
+        self.diversidade_por_var = []
+        # População final (cromossomos) para PCA
+        self.pop_final = []
+
 
     def run(self, world, logger=None):
         # Cria a população inicial de indivíduos aleatórios
         population = [Individual(self.chrom_length) for _ in range(self.pop_size)]
+        
         for g in range(self.gens):
+            # Monitoramento simulado de recursos
+            self.memoria_uso.append(psutil.virtual_memory().percent)
+            self.cpu_uso.append(psutil.cpu_percent(interval=None))
+            
             # Avalia o fitness de cada indivíduo na população
             for ind in population:
                 ind.evaluate(world)
@@ -67,6 +86,24 @@ class GeneticAlgorithm:
         # Logging final
         if logger:
             logger.write(f"[GA] Fim das gerações. Melhor fitness: {max(population, key=lambda x: x.fitness).fitness}")
+            # Fitness final de cada indivíduo
+            self.fitness_final = [ind.fitness for ind in population]
+
+            # Última população para análise por PCA
+            self.pop_final = [ind.chromosome for ind in population]
+
+            # Exemplo de diversidade (variância por gene)
+            import numpy as np
+            pop_matrix = np.array(self.pop_final)
+            if pop_matrix.ndim == 2 and pop_matrix.shape[0] > 1:
+                self.diversidade_por_var = np.var(pop_matrix, axis=0).reshape(1, -1)
+            else:
+                self.diversidade_por_var = np.zeros((1, self.chrom_length))
+
+            # Simulação de monitoramento de recursos (valores fictícios ou reais, se desejar)
+            self.memoria_uso = np.random.uniform(50, 80, size=self.gens).tolist()
+            self.cpu_uso = np.random.uniform(20, 70, size=self.gens).tolist()
+
         return max(population, key=lambda x: x.fitness)
 
     def select(self, population):

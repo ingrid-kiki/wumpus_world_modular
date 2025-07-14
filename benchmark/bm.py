@@ -1,5 +1,5 @@
 # ==============================
-# benchmark.py
+# benchmark/bm.py
 # ==============================
 '''
 Este benchmark executa múltiplas simulações dos agentes 'lógico' e 'genético'
@@ -9,6 +9,7 @@ e retorna um resumo com as taxas de vitória, morte, sobrevivência e tempos mé
 '''
 
 import time
+import os
 from world.world import World
 from agents.manual_agent import ManualAgent
 from agents.logic_agent import LogicAgent
@@ -81,6 +82,10 @@ def executar_benchmark(agente_nome, world_size=4, num_execucoes=10):
     return retorno
 
 if __name__ == "__main__":
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    output_dir = os.path.join(BASE_DIR, "logs", f"run_{timestamp}")
+
     for nome in AGENTES_DISPONIVEIS.keys():
         resultado = executar_benchmark(nome, world_size=4, num_execucoes=3)
         print(f"\nResumo para {nome}:")

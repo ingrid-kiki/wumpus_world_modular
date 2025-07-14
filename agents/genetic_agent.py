@@ -53,7 +53,13 @@ class GeneticAgent:
         # Se quiser retornar dados extras para integração com benchmarks:
         return {
             "history": self.history,
-            # Adicione aqui outros dados coletados durante a execução
             "fitness": self.ga.fitness_history,
-        }
+            "fitness_pop": self.ga.fitness_pop,  # exemplo
+            "fitness_final": self.ga.fitness_final,
+            "memoria": self.ga.memoria_uso,              # se medido
+            "cpu": self.ga.cpu_uso,                      # se medido
+            "diversidade_vars": self.ga.diversidade_por_var,
+            "pop_final": self.ga.pop_final
+}
+
 

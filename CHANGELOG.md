@@ -1,5 +1,40 @@
 # 📦 CHANGELOG - Wumpus World Modular
 
+## [v1.3.0] - 2025-07-14
+
+### Adicionado
+- Integração total dos gráficos avançados (`utils/advance_graphs.py`) ao fluxo dos benchmarks, incluindo debug detalhado e verificação de salvamento dos arquivos.
+- Coleta robusta de dados extras (`dados_extra`) para agentes genéticos, permitindo geração de gráficos como PCA, área empilhada, heatmap, ECDF, violin plot, curva de convergência e uso de recursos.
+- Prints de debug e asserts para garantir que os gráficos são realmente salvos no diretório correto.
+- Função `executar_agente` adicionada ao `main.py` para integração dinâmica com benchmarks modulares.
+- Redirecionamento de toda a saída do terminal para arquivos de log por execução, facilitando auditoria e análise posterior.
+- Blocos `try/except` com traceback detalhado para facilitar a depuração de erros em chamadas de geração de gráficos.
+- Compatibilidade automática para aceitar tanto inteiros quanto listas como argumento de tamanhos de mundo nos benchmarks.
+- Teste de salvamento de gráfico simples ao final de `gerar_graficos_avancados` para depuração.
+
+### Modificado
+- Estrutura dos benchmarks (`bm_fast.py`, `bm_fasting.py`) revisada para garantir integração correta com os gráficos avançados e coleta de dados extras.
+- Ajuste nos caminhos relativos e absolutos para garantir que todos os arquivos (logs, CSVs, gráficos) sejam salvos sempre na pasta correta, independente do diretório de execução.
+- Robustez na coleta de dados extras: tratamento de listas de listas, conversão para `np.array` quando necessário, e checagem de formato antes de plotar.
+- Função de benchmark agora aceita tanto listas quanto inteiros para tamanhos de mundo, evitando erros de iteração.
+- Melhoria na documentação inline e prints de debug para facilitar o entendimento do fluxo de dados e geração de gráficos.
+
+### Corrigido
+- Correção de erro ao tentar iterar sobre inteiro em vez de lista nos tamanhos de mundo.
+- Correção de erro de importação dinâmica e ausência da função `executar_agente` no `main.py`.
+- Ajuste no tratamento de dados extras para evitar listas vazias ou formatos incompatíveis com os gráficos.
+- Correção de possíveis erros silenciosos na geração de gráficos, agora reportados via assert e prints detalhados.
+
+### Performance
+- Pequenas otimizações na coleta e agregação de dados extras para benchmarks genéticos.
+- Melhoria na robustez do paralelismo e na escrita de logs.
+
+### Documentação
+- Atualização do `README.md` e do tutorial para refletir a integração dos gráficos avançados e as novas opções de benchmark.
+- Expansão dos comentários e cabeçalhos explicativos nos arquivos principais, especialmente nos módulos de benchmark e gráficos.
+
+---
+
 ## [v1.2.0] - 2025-07-11
 
 ### Adicionado

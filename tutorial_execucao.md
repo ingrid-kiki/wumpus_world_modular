@@ -1,6 +1,6 @@
 # 📘 Tutorial de Execução - Projeto Wumpus World com Agentes Inteligentes
 
-Este guia mostra como executar o projeto **Wumpus World**, incluindo o uso dos diferentes agentes (manual, lógico, genético), visualização gráfica com Pygame e benchmarks automatizados.
+Este guia mostra como executar o projeto **Wumpus World**, incluindo o uso dos diferentes agentes (manual, lógico, genético), visualização gráfica com Pygame, benchmarks automatizados, gráficos avançados e testes unitários.
 
 ---
 
@@ -16,7 +16,7 @@ Este guia mostra como executar o projeto **Wumpus World**, incluindo o uso dos d
 Abra o terminal no diretório do projeto e execute:
 
 ```bash
-pip install pygame matplotlib pandas joblib seaborn scikit-learn
+pip install pygame matplotlib pandas joblib seaborn scikit-learn psutil pytest
 ```
 
 ou
@@ -210,6 +210,7 @@ Os arquivos de log, CSVs e gráficos são salvos automaticamente em subpastas de
 ├── visual/                 # Visualização com Pygame
 ├── utils/                  # Logger e gráficos
 ├── logs/                   # Gerado automaticamente (organizado por execução)
+├── tests/                  # Testes unitários automatizados
 ├── main.py                 # Executa o jogo
 ├── benchmark.py            # Executa testes comparativos
 ├── benchmark_custom.py     # Executa testes comparativos customizados
@@ -236,6 +237,43 @@ Quando os dados são coletados (especialmente pelo agente genético), o projeto 
 - **PCA para Visualizar Agrupamentos Genéticos**
 
 Todos os gráficos são salvos automaticamente na subpasta de cada execução.
+
+---
+
+## ✅ 10. Testando a Implementação
+
+### Teste mais simples: execução unitária
+
+Execute os testes automatizados para garantir que as principais funções estão corretas:
+
+```bash
+pytest
+```
+
+Os testes estão na pasta `/tests` e cobrem agentes, lógica do mundo, benchmarks e geração de gráficos.
+
+### Teste intermediário: execução de um agente
+
+Execute um agente individualmente para verificar funcionamento básico:
+
+```bash
+python main.py logico --size 4
+```
+
+### Teste avançado: benchmark completo
+
+Execute um benchmark completo, gere gráficos e confira os arquivos de saída:
+
+```bash
+python benchmark_fast.py --execucoes 20 --sizes 4 6 8 --agentes logico genetico
+```
+
+Verifique os arquivos gerados em `/logs/run_YYYYMMDD_HHMMSS/`.
+
+### Teste de integração: logs e gráficos
+
+- Confira se os arquivos de log (`saida_terminal.log`, logs por agente) estão completos.
+- Abra os gráficos PNG gerados e o CSV de resultados para análise visual e estatística.
 
 ---
 

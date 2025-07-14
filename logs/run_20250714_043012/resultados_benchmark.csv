@@ -1,0 +1,4 @@
+agente,tamanho_mundo,vitórias,mortes,sobreviveu,tempo_total,tempo_médio,dados_extra
+genetico,4,25,1,4,38.46050410205498,1.2820168034018329,{}
+genetico,6,22,0,8,40.93833700148389,1.3646112333827962,{}
+genetico,8,15,0,15,42.84352800063789,1.428117600021263,{}

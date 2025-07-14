@@ -9,8 +9,8 @@
 # Todos os gráficos são salvos automaticamente nas pastas de saída organizadas por execução.
 '''
 
-import matplotlib.pyplot as plt
 import os
+import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import seaborn as sns
 import numpy as np
@@ -34,6 +34,7 @@ def gerar_graficos(df, output_dir):
         plt.xticks(rotation=45)
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, f"grafico_{metric}.png"))
+        print(f"Salvando gráfico em: {os.path.join(output_dir, f'grafico_{metric}.png')}")
         plt.close()
 
     # Gráfico de barras para o tempo médio de execução por agente e tamanho
@@ -48,6 +49,7 @@ def gerar_graficos(df, output_dir):
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, "grafico_tempo_medio.png"))
+    print(f"Salvando gráfico em: {os.path.join(output_dir, 'grafico_tempo_medio.png')}")
     plt.close()
 
 def gerar_graficos_avancados(dados_extra, output_dir):
@@ -55,6 +57,18 @@ def gerar_graficos_avancados(dados_extra, output_dir):
     Gera gráficos avançados a partir dos dados extras coletados durante as execuções.
     Cada gráfico é salvo na pasta de saída. Os dados esperados devem estar em arrays/listas.
     """
+
+    # DEBUG: Mostra informações sobre os dados recebidos e o diretório
+    print("=== [DEBUG] gerar_graficos_avancados ===")
+    print(f"output_dir recebido: {output_dir}")
+    print(f"Diretório existe? {os.path.exists(output_dir)}")
+    print(f"Chaves em dados_extra: {list(dados_extra.keys())}")
+    for k, v in dados_extra.items():
+        print(f"  - {k}: tipo={type(v)}, tamanho={len(v)}")
+        if isinstance(v, np.ndarray):
+            print(f"    shape: {v.shape}")
+        elif isinstance(v, list) and v and hasattr(v[0], 'shape'):
+            print(f"    shape do primeiro elemento: {v[0].shape}")
 
     # 1. Memória + CPU + Distribuição dos Recursos ao longo do tempo
     if 'memoria' in dados_extra and 'cpu' in dados_extra:
@@ -67,17 +81,26 @@ def gerar_graficos_avancados(dados_extra, output_dir):
         plt.legend()
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "memoria_cpu.png"))
+        print(f"Salvando gráfico em: {os.path.join(output_dir, 'memoria_cpu.png')}")
         plt.close()
 
     # 2. Evolução do Fitness (convergência) ao longo das gerações
     if 'fitness' in dados_extra:
         plt.figure(figsize=(8,5))
-        plt.plot(dados_extra['fitness'])
+        # Se for lista de listas, transforme em array 2D
+        if isinstance(dados_extra['fitness'][0], list):
+            fitness_array = np.array(dados_extra['fitness'])
+            # Agora você pode plotar cada linha como uma execução
+            for idx, fitness_list in enumerate(fitness_array):
+                plt.plot(fitness_list, label=f"Execução {idx+1}")
+        else:
+            plt.plot(dados_extra['fitness'])
         plt.title('Evolução do Fitness (Convergência)')
         plt.xlabel('Geração')
         plt.ylabel('Fitness')
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "evolucao_fitness.png"))
+        print(f"Salvando gráfico em: {os.path.join(output_dir, 'evolucao_fitness.png')}")
         plt.close()
 
     # 3. Comportamento de Convergência da População (mínimo, médio e máximo de fitness)
@@ -93,6 +116,7 @@ def gerar_graficos_avancados(dados_extra, output_dir):
         plt.legend()
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "convergencia_populacao.png"))
+        print(f"Salvando gráfico em: {os.path.join(output_dir, 'convergencia_populacao.png')}")
         plt.close()
 
     # 4. Média das Curvas de Convergência com Desvio Padrão
@@ -108,6 +132,7 @@ def gerar_graficos_avancados(dados_extra, output_dir):
         plt.legend()
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "curva_convergencia_std.png"))
+        print(f"Salvando gráfico em: {os.path.join(output_dir, 'curva_convergencia_std.png')}")
         plt.close()
 
     # 5. Plot do Violino para distribuição do fitness por geração
@@ -119,6 +144,7 @@ def gerar_graficos_avancados(dados_extra, output_dir):
         plt.ylabel('Fitness')
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "violin_fitness.png"))
+        print(f"Salvando gráfico em: {os.path.join(output_dir, 'violin_fitness.png')}")
         plt.close()
 
     # 6. Função de Distribuição Acumulada (ECDF) do fitness final
@@ -129,6 +155,7 @@ def gerar_graficos_avancados(dados_extra, output_dir):
         plt.xlabel('Fitness')
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "ecdf_fitness_final.png"))
+        print(f"Salvando gráfico em: {os.path.join(output_dir, 'ecdf_fitness_final.png')}")
         plt.close()
 
     # 7. Mapa de Calor da Diversidade por Variável ao longo das gerações
@@ -140,6 +167,7 @@ def gerar_graficos_avancados(dados_extra, output_dir):
         plt.ylabel('Geração')
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "heatmap_diversidade.png"))
+        print(f"Salvando gráfico em: {os.path.join(output_dir, 'heatmap_diversidade.png')}")
         plt.close()
 
     # 8. Gráfico de Área Empilhada da Diversidade por Variável
@@ -153,6 +181,7 @@ def gerar_graficos_avancados(dados_extra, output_dir):
         plt.ylabel('Diversidade')
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "area_empilhada_diversidade.png"))
+        print(f"Salvando gráfico em: {os.path.join(output_dir, 'area_empilhada_diversidade.png')}")
         plt.close()
 
     # 9. PCA para Visualizar Agrupamentos Genéticos da população final
@@ -166,4 +195,46 @@ def gerar_graficos_avancados(dados_extra, output_dir):
         plt.ylabel('PC2')
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "pca_populacao_final.png"))
+        print(f"Salvando gráfico em: {os.path.join(output_dir, 'pca_populacao_final.png')}")
         plt.close()
+
+    # 10. Histórico de Fitness por Execução (avançado)
+    if 'fitness' in dados_extra and len(dados_extra['fitness']) > 0:
+        fitness_data = dados_extra['fitness']
+        if isinstance(fitness_data[0], list):
+            fitness_data = np.array(fitness_data)
+            for idx, f in enumerate(fitness_data):
+                plt.plot(f, label=f"Execução {idx+1}")
+            plt.title("Histórico de Fitness por Execução")
+            plt.xlabel("Geração")
+            plt.ylabel("Fitness")
+            plt.legend()
+            plt.tight_layout()
+            plt.savefig(os.path.join(output_dir, "fitness_avancado.png"))
+            plt.close()
+        else:
+            # Caso seja lista simples
+            plt.plot(fitness_data)
+            plt.title("Histórico de Fitness")
+            plt.xlabel("Geração")
+            plt.ylabel("Fitness")
+            plt.tight_layout()
+            plt.savefig(os.path.join(output_dir, "fitness_avancado.png"))
+            plt.close()
+
+    # Gráfico de teste simples (para verificar salvamento)
+    plt.figure()
+    plt.plot([1,2,3], [4,5,6])
+    plt.title("Teste de Salvamento")
+    plt.savefig(os.path.join(output_dir, "grafico_teste.png"))
+    print(f"Salvando gráfico em: {os.path.join(output_dir, 'grafico_teste.png')}")
+    plt.close()
+
+    # Verifica se os gráficos principais foram salvos (exemplo de asserção)
+    assert os.path.exists(os.path.join(output_dir, "grafico_vitórias.png")), "Gráfico de vitórias não foi salvo!"
+    assert os.path.exists(os.path.join(output_dir, "grafico_mortes.png")), "Gráfico de mortes não foi salvo!"
+    assert os.path.exists(os.path.join(output_dir, "grafico_sobreviveu.png")), "Gráfico de sobrevivências não foi salvo!"
+    assert os.path.exists(os.path.join(output_dir, "grafico_tempo_medio.png")), "Gráfico de tempo médio não foi salvo!"
+
+# Removido o bloco que usa 'output_dir' fora de contexto.
+# Certifique-se de passar 'output_dir' corretamente ao chamar as funções deste módulo.
