@@ -98,15 +98,6 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     resultados = []
-    dados_extra = {
-        "memoria": [],
-        "cpu": [],
-        "fitness": [],
-        "fitness_pop": [],
-        "fitness_final": [],
-        "diversidade_vars": [],
-        "pop_final": []
-    }
 
     # === Execução dos benchmarks ===
     for size in args.sizes:
@@ -120,12 +111,12 @@ def main():
             if resultado is None:
                 print(f"⚠️ Resultado nulo para agente '{nome_agente}' no mundo {size}x{size}")
 
-            # Coleta dados extras (se existirem)
-            if nome_agente == "genetico" and isinstance(resultado, dict) and "dados_extra" in resultado:
-                # Inicializa dados extras se não existir
-                for k in dados_extra:
-                    if k in resultado["dados_extra"] and resultado["dados_extra"][k] is not None:
-                        dados_extra[k].append(resultado["dados_extra"][k])
+            # Salva dados extras e gráficos avançados
+            if nome_agente == "genetico" and isinstance(resultado, dict) and "dados_extra" in resultado and resultado["dados_extra"]:
+                advanced_output_dir = os.path.join(output_dir, f"advanced_charts_{nome_agente}_{size}x{size}")
+                os.makedirs(advanced_output_dir, exist_ok=True)
+                gerar_graficos_avancados(resultado["dados_extra"], advanced_output_dir)
+                print(f"📊 Gráficos avançados para '{nome_agente}' ({size}x{size}) salvos em: {advanced_output_dir}")
 
             logger.write(f"✅ Benchmark finalizado: '{nome_agente}' no mundo {size}x{size}")
             logger.close()
@@ -148,11 +139,6 @@ def main():
         print(f"☠️ Mortes: {row['mortes']} ({(row['mortes']/total)*100:.1f}%)")
         print(f"🤔 Sobreviveu sem vencer: {row['sobreviveu']} ({(row['sobreviveu']/total)*100:.1f}%)")
         print(f"⏱️ Tempo total: {row['tempo_total']:.2f}s | Tempo médio: {row['tempo_médio']:.3f}s")
-
-    # === Geração de gráficos avançados (se aplicável) ===
-    if any(len(v) > 0 for v in dados_extra.values()):
-        gerar_graficos_avancados(dados_extra, output_dir)
-        print(f"📊 Gráficos avançados salvos em: {output_dir}")
 
 if __name__ == "__main__":
     main()
