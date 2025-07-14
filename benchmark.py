@@ -77,10 +77,6 @@ def executar_benchmark(agente_nome, world_size=4, num_execucoes=10):
         "dados_extra": dados_extra_capturados
     }
 
-    # Se o agente genético devolveu dados durante run(), copia eles
-    if agente_nome == "genetico" and isinstance(resultado, dict):
-        retorno["dados_extra"] = resultado.get("fitness", {})
-
     return retorno
 
 if __name__ == "__main__":

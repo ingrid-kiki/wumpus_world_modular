@@ -224,6 +224,6 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
 
 ## 👩‍💻 Autoria
 
-Este projeto foi desenvolvido por **Alfa Marine** e **Ingrid Mendes**, com foco em pesquisa e ensino de Inteligência Artificial e Jogos Digitais.
+Este projeto foi desenvolvido por [**Alfa Marine**](https://github.com/alfa-m) e [**Ingrid Mendes**](https://github.com/ingrid-kiki), com foco em pesquisa e ensino de Inteligência Artificial e Jogos Digitais.
 
 ---

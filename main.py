@@ -82,7 +82,7 @@ def main():
 
     # Só chega aqui se for benchmark (1 ou 5)
     parser = argparse.ArgumentParser(description="Executa benchmarks no Wumpus World")
-    parser.add_argument("--execucoes", type=int, default=10, help="Número de execuções por agente/tamanho")
+    parser.add_argument("--execucoes", type=int, default=32, help="Número de execuções por agente/tamanho")
     parser.add_argument("--sizes", nargs="+", type=int, default=[4, 6, 8], help="Tamanhos do mundo (ex: 4 6 8)")
     parser.add_argument("--agentes", nargs="+", choices=AGENTES_DISPONIVEIS.keys(),
                         default=["logico", "genetico"], help="Agentes a incluir no benchmark")
