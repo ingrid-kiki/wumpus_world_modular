@@ -1,5 +1,5 @@
 # ==============================
-# benchmark_fast.py (revisado e robusto)
+# benchmark/bm_fast.py (revisado e robusto)
 # ==============================
 '''
 Este benchmark executa múltiplas simulações dos agentes 'lógico' e 'genético'
@@ -9,17 +9,19 @@ mede o tempo de execução, salva os resultados e gráficos em pastas organizada
 e exibe um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
 '''
 
+import os
 import time
 import argparse
-import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 from joblib import Parallel, delayed
+from datetime import datetime
 from world.world import World
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
-import os
-from datetime import datetime
-import seaborn as sns
+from utils.advance_graphs import gerar_graficos_avancados
+import traceback
 
 # Dicionário que associa nomes de agentes às suas classes
 AGENTES_DISPONIVEIS = {
@@ -90,7 +92,9 @@ def executar_benchmark(agente_nome, world_size, num_execucoes):
     dados_extra = {}
     if agente_nome == "genetico":
         for r in resultados_validos:
-            if r["dados_extra"]:
+            if r["dados_extra"] and not isinstance(r["dados_extra"], dict):
+                print("Tipo inesperado em dados_extra:", type(r["dados_extra"]), r["dados_extra"])
+            if isinstance(r["dados_extra"], dict) and r["dados_extra"]:
                 for k, v in r["dados_extra"].items():
                     dados_extra.setdefault(k, []).append(v)
 
@@ -114,6 +118,7 @@ def gerar_graficos(df_resultados, output_dir):
     sns.barplot(data=df_resultados, x="tamanho_mundo", y="vitórias", hue="agente")
     plt.title("Vitórias por agente e tamanho de mundo")
     plt.savefig(os.path.join(output_dir, "vitorias.png"))
+    print(f"Salvando gráfico em: {os.path.join(output_dir, 'vitorias.png')}")
     plt.close()
 
     # Gráfico de mortes por agente e tamanho de mundo
@@ -121,6 +126,7 @@ def gerar_graficos(df_resultados, output_dir):
     sns.barplot(data=df_resultados, x="tamanho_mundo", y="mortes", hue="agente")
     plt.title("Mortes por agente e tamanho de mundo")
     plt.savefig(os.path.join(output_dir, "mortes.png"))
+    print(f"Salvando gráfico em: {os.path.join(output_dir, 'mortes.png')}")
     plt.close()
 
     # Gráfico de tempo médio por agente e tamanho de mundo
@@ -128,6 +134,7 @@ def gerar_graficos(df_resultados, output_dir):
     sns.barplot(data=df_resultados, x="tamanho_mundo", y="tempo_médio", hue="agente")
     plt.title("Tempo médio por execução")
     plt.savefig(os.path.join(output_dir, "tempo_medio.png"))
+    print(f"Salvando gráfico em: {os.path.join(output_dir, 'tempo_medio.png')}")
     plt.close()
 
 if __name__ == "__main__":
@@ -138,17 +145,35 @@ if __name__ == "__main__":
                         default=list(AGENTES_DISPONIVEIS.keys()))
     args = parser.parse_args()
 
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     logs_dir = "logs"
     os.makedirs(logs_dir, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = os.path.join(logs_dir, f"run_{timestamp}")
+    output_dir = os.path.join(BASE_DIR, "logs", f"run_{timestamp}")
     os.makedirs(output_dir, exist_ok=True)
 
     resultados = []
+    # Colete dados extras durante o loop de benchmark
+    dados_extra = {
+        "memoria": [],
+        "cpu": [],
+        "fitness": [],
+        "fitness_pop": [],
+        "fitness_final": [],
+        "diversidade_vars": [],
+        "pop_final": []
+    }
     for size in args.sizes:
         for nome in args.agentes:
             resultado = executar_benchmark(nome, size, args.execucoes)
             resultados.append(resultado)
+            # Coleta dados extras se existirem
+            if nome == "genetico" and isinstance(resultado, dict) and "dados_extra" in resultado:
+                for k in dados_extra:
+                    if k in resultado["dados_extra"] and resultado["dados_extra"][k] is not None:
+                        dados_extra[k].append(resultado["dados_extra"][k])
+                        print(f"[DEBUG] Copiando dados_extra[{k}] -> tamanho: {len(resultado['dados_extra'][k])}")
+
 
     df_resultados = pd.DataFrame(resultados)
     csv_path = os.path.join(output_dir, "resultados_benchmark.csv")
@@ -173,3 +198,18 @@ if __name__ == "__main__":
         print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias/num_execucoes)*100:.1f}%)")
         print(f"⏱️ Tempo total: {tempo_total:.2f} segundos")
         print(f"⏱️ Tempo médio por execução: {tempo_medio:.3f} segundos")
+
+    # ==== NOVO: Chama gráficos aprimorados do utils/graficos.py ====
+    try:
+        print("[DEBUG] Chamando gerar_graficos_avancados...")
+        print(f"[DEBUG] output_dir passado: {output_dir}")
+        print(f"[DEBUG] Chaves em dados_extra: {list(dados_extra.keys())}")
+        for k, v in dados_extra.items():
+            print(f"  - {k}: tipo={type(v)}, tamanho={len(v)}")
+            if isinstance(v, list) and v and hasattr(v[0], '__len__'):
+                print(f"    Exemplo de elemento: {v[0]}")
+        gerar_graficos_avancados(dados_extra, output_dir)
+        print("[DEBUG] gerar_graficos_avancados executada com sucesso!")
+    except Exception as e:
+        print(f"[ERRO] Falha ao executar gerar_graficos_avancados: {e}")
+        traceback.print_exc()
