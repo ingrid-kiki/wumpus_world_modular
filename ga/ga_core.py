@@ -27,7 +27,7 @@ class GeneticAlgorithm:
         # Taxa de mutação padrão
         self.mutation_rate = mutation_rate
         # Taxa de cruzamento padrão
-        self.crossover_rate = mutation_rate
+        self.crossover_rate = crossover_rate
         # Histórico do fitness médio, máximo e mínimo por geração
         self.fitness_history = []  # Lista de dicionários: {'min': x, 'mean': y, 'max': z}
         # Histórico do fitness de toda a população por geração (para gráficos avançados)
