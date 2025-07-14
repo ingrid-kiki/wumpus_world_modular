@@ -16,7 +16,7 @@ Este guia mostra como executar o projeto **Wumpus World**, incluindo o uso dos d
 Abra o terminal no diretório do projeto e execute:
 
 ```bash
-pip install pygame matplotlib pandas joblib seaborn scikit-learn
+pip install pygame matplotlib pandas joblib seaborn scikit-learn numpy psutil
 ```
 
 ou

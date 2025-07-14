@@ -6,4 +6,4 @@ seaborn
 scikit-learn
 pygad
 numpy
-pandas
+psutil
