@@ -13,7 +13,7 @@ from ga.ga_core import GeneticAlgorithm  # Importa o núcleo do algoritmo genét
 from ga.individual import Individual     # Importa a classe de indivíduo
 
 class GeneticAgent:
-    def __init__(self, world, population_size=50, gens=100, chrom_length=20):
+    def __init__(self, world, population_size=50, gens=1000, chrom_length=20):
         # Referência ao ambiente (mundo do Wumpus)
         self.world = world
         # Instancia o algoritmo genético com parâmetros de população, gerações e tamanho do cromossomo
@@ -26,7 +26,8 @@ class GeneticAgent:
         Executa o algoritmo genético para encontrar a melhor sequência de ações.
         """
         # Executa o algoritmo genético e obtém o melhor indivíduo (sequência de ações)
-        best = self.ga.run(self.world)
+        ga_results = self.ga.run(self.world)
+        best = ga_results["best_individual"]
         print("\n🧬 Melhor sequência encontrada pelo algoritmo genético:")
         print(best.chromosome, "\n")
         print("🏆 Pontuação:", best.fitness)
@@ -50,10 +51,27 @@ class GeneticAgent:
             if status == 'MORTO' or status == 'GANHOU':
                 break
             passo += 1
-        # Se quiser retornar dados extras para integração com benchmarks:
-        return {
-            "history": self.history,
-            # Adicione aqui outros dados coletados durante a execução
-            "fitness": self.ga.fitness_history,
+        
+        # Salva dados de fitness médio e final
+        mean_fitness_per_gen = [gen_stats['mean'] for gen_stats in ga_results['fitness_history']]
+        final_fitness_dist = ga_results['fitness_pop'][-1] if ga_results['fitness_pop'] else []
+        
+        # Mapeia ações para números para que o PCA possa processar os dados
+        ACTION_MAP = {action: i for i, action in enumerate(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])}
+        final_pop_numeric = [
+            [ACTION_MAP.get(gene, -1) for gene in chromosome] # Usa .get para segurança
+            for chromosome in ga_results["final_pop"]
+        ]
+
+        dados_extra_formatado = {
+            "fitness": mean_fitness_per_gen,
+            "fitness_pop": ga_results["fitness_pop"],
+            "fitness_final": final_fitness_dist,
+            "pop_final": final_pop_numeric
         }
 
+        # Retorna o histórico de ações e os dados extras
+        return {
+            "history": self.history,
+            "dados_extra": dados_extra_formatado,
+        }

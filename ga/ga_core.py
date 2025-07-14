@@ -83,7 +83,6 @@ class GeneticAlgorithm:
         
         return {
             "best_individual": best_individual,
-            "best_fitness": best_individual_fitness,
             "fitness_history": self.fitness_history,
             "fitness_pop": self.fitness_pop,
             "final_population": final_population_chromosomes
