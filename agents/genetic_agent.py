@@ -13,7 +13,7 @@ from ga.ga_core import GeneticAlgorithm  # Importa o núcleo do algoritmo genét
 from ga.individual import Individual     # Importa a classe de indivíduo
 
 class GeneticAgent:
-    def __init__(self, world, population_size=50, gens=1000, chrom_length=20):
+    def __init__(self, world, population_size=100, gens=1000, chrom_length=20):
         # Referência ao ambiente (mundo do Wumpus)
         self.world = world
         # Instancia o algoritmo genético com parâmetros de população, gerações e tamanho do cromossomo
