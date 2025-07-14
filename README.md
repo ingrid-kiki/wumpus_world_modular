@@ -41,6 +41,7 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │
 ├── logs/                 # Saída dos logs e resultados de benchmarks
 │   └── run_YYYYMMDD_HHMMSS/   # Subpastas por execução, com CSVs, PNGs e logs
+│      └── advanced_charts_agent_size/   # Resultados dos gráficos avançados
 │
 ├── benchmark.py               # Benchmark padrão (4x4)
 ├── benchmark_custom.py        # Benchmark customizável via argumentos
@@ -195,11 +196,12 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
     ├── grafico_mortes.png
     ├── grafico_sobreviveu.png
     ├── grafico_tempo_medio.png
-    ├── memoria_cpu.png
-    ├── evolucao_fitness.png
-    ├── ... (outros gráficos avançados)
     ├── logico_YYYYMMDD_HHMMSS.log
-    └── genetico_YYYYMMDD_HHMMSS.log
+    ├── genetico_YYYYMMDD_HHMMSS.log
+    └── advanced_charts_agent_size/   # Resultados dos gráficos avançados
+        ├── convergencia_populacao.png
+        ├── evolucao_fitness.png
+        └── ... (outros gráficos avançados)
 ```
 
 ---
