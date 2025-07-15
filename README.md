@@ -81,7 +81,14 @@ pip install requirements.txt
 
 ## 🚀 Como Executar
 
-Você pode escolher entre 3 agentes: `manual`, `logico`, `genetico`.
+🎮 Menu Interativo (Novo)
+Execute o programa principal para acessar o menu interativo:
+
+1 - Benchmark (vários agentes e tamanhos)
+2 - Agente Manual (interativo)
+3 - Agente Lógico (uma execução)
+4 - Agente Genético (uma execução)
+5 - Customizado via linha de comando (CLI)
 
 ### 🔧 Sintaxe
 
@@ -199,17 +206,53 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
 /logs/
 └── run_YYYYMMDD_HHMMSS/
     ├── resultados_benchmark.csv
+    ├── terminal_output.txt                # ← NOVO: Saída completa do terminal
+    ├── logico_YYYYMMDD_HHMMSS.log        # ← Logs detalhados por agente
+    ├── genetico_YYYYMMDD_HHMMSS.log      # ← Logs detalhados por agente
     ├── grafico_vitorias.png
     ├── grafico_mortes.png
     ├── grafico_sobreviveu.png
     ├── grafico_tempo_medio.png
-    ├── logico_YYYYMMDD_HHMMSS.log
-    ├── genetico_YYYYMMDD_HHMMSS.log
-    └── advanced_charts_agent_size/   # Resultados dos gráficos avançados
+    └── advanced_charts_genetico_4x4/     # ← Gráficos avançados por agente/tamanho
         ├── convergencia_populacao.png
         ├── evolucao_fitness.png
-        └── ... (outros gráficos avançados)
+        └── performance_heatmap.png
 ```
+
+---
+## 💾 Captura de Terminal (Novo)
+
+Toda a saída do terminal é automaticamente capturada e salva em terminal_output.txt, permitindo:
+
+- Análise posterior dos resultados completos
+- Rastreabilidade de todas as execuções
+- Debugging mais eficiente
+- Documentação automática de experimentos
+
+---
+## ⏱️ Formatação Inteligente de Tempo (Novo)
+
+O projeto agora formata automaticamente os tempos de execução:
+
+Segundos para tempos < 60s: "45.23s"
+Minutos para tempos ≥ 60s: "2.34 min"
+Exemplo de saída:
+
+📊 RESULTADOS - GENETICO | Tamanho: 6x6
+🏆 Vitórias: 15 (75.0%)
+☠️ Mortes: 3 (15.0%)
+🤔 Sobreviveu sem vencer: 2 (10.0%)
+⏱️ Tempo total: 2.45 min | Tempo médio: 7.35s
+
+---
+## 🛡️ Tratamento de Erros (Novo)
+
+O sistema agora inclui tratamento robusto de erros:
+
+- Try/catch nas execuções dos agentes
+- Validação de resultados antes de processar
+- Logs de erro detalhados
+- Continuidade da execução mesmo com falhas individuais
 
 ---
 
@@ -220,6 +263,9 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
 - [x] Implementar logging das execuções.
 - [x] Adicionar benchmarks entre agentes.
 - [x] Visualização de gráficos avançados e análise de desempenho.
+- [x] Menu interativo para facilitar o uso.
+- [x] Captura automática da saída do terminal.
+- [x] Formatação inteligente de tempo.
 
 ---
 
