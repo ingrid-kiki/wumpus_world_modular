@@ -14,7 +14,7 @@ from ga.individual import Individual     # Importa a classe de indivíduo
 import numpy as np
 
 class GeneticAgent:
-    def __init__(self, world, population_size=100, gens=500, chrom_length=100, mutation_rate=0.02, crossover_rate=0.9):
+    def __init__(self, world, population_size=100, gens=500, chrom_length=100, mutation_rate=0.02, crossover_rate=0.5):
         # Referência ao ambiente (mundo do Wumpus)
         self.world = world
         # Instancia o algoritmo genético com parâmetros de população, gerações e tamanho do cromossomo
@@ -75,7 +75,7 @@ class GeneticAgent:
             "fitness_pop": np.array(ga_results["fitness_pop"]),
             "fitness_final": final_fitness_dist,
             "pop_final": final_pop_numeric,
-            "memory": ga_results.get("memory", []),
+            "memoria": ga_results.get("memoria", []),
             "cpu": ga_results.get("cpu", []),
             "diversidade_vars": ga_results.get("diversidade_vars")
         }
