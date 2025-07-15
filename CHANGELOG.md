@@ -1,4 +1,36 @@
-# 📦 CHANGELOG - Wumpus World Modular
+## [v1.3.0] - 2025-07-14
+
+### Adicionado
+- **Captura automática da saída do terminal** durante benchmarks, salva em `terminal_output.txt` para cada execução.
+- **Context manager `capturar_saida_terminal()`** para logging simultâneo no terminal e arquivo.
+- **Formatação inteligente de tempo** com a função `formatar_tempo()` (exibe minutos para tempos ≥ 60s).
+- **Menu interativo no `main.py`** para escolha fácil entre modos de execução (benchmark, agentes individuais, CLI customizada).
+- **Tratamento robusto de erros** durante execuções dos agentes, com mensagens claras e logs.
+- **Documentação e comentários didáticos** em todas as funções principais.
+- **Reintegração dos gráficos avançados** para o agente genético, com geração automática em subpastas específicas.
+- **Logs detalhados por agente** e por execução, organizados em subpastas.
+
+### Modificado
+- **Estrutura dos arquivos de saída:** agora inclui `terminal_output.txt` e subpastas para gráficos avançados.
+- **Resumo dos resultados:** tempos exibidos automaticamente em minutos ou segundos conforme apropriado.
+- **Bloco de execução dos benchmarks:** agora dentro do context manager para garantir captura total da saída.
+- **Exibição dos resultados:** mais clara e didática, com percentuais e tempos formatados.
+- **Logger atualizado:** integração total com benchmarks e agentes.
+
+### Corrigido
+- **Erro de argumentos** em `executar_benchmark()` (agora aceita logger opcional).
+- **Restauração de stdout** garantida mesmo em caso de erro no context manager.
+- **Validação de resultados** antes de processar gráficos avançados.
+
+### Performance
+- **Logging otimizado** e organização dos arquivos de saída.
+- **Execução mais robusta** com tratamento de exceções sem interromper o fluxo.
+
+### Documentação
+- **README.md atualizado** com todas as novas funcionalidades, exemplos e estrutura de arquivos.
+- **Comentários e docstrings** detalhados em todo o código principal.
+
+---
 
 ## [v1.2.0] - 2025-07-11
 
@@ -60,6 +92,4 @@
 
 ### Documentation
 - Atualização do `README.md` e `tutorial_execucao.md`
-- Novo arquivo `RELEASE_NOTES.md` para histórico detalhado
-
----
+- Novo arquivo `RELEASE_NOTES.md` para histórico
