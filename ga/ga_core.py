@@ -17,7 +17,7 @@ import numpy as np
 from .individual import Individual
 
 class GeneticAlgorithm:
-    def __init__(self, pop_size, gens, chrom_length, mutation_rate=0.02, crossover_rate=0.5):
+    def __init__(self, pop_size, gens, chrom_length, mutation_rate, crossover_rate):
         # Tamanho da população de indivíduos
         self.pop_size = pop_size
         # Número de gerações (iterações do algoritmo)
