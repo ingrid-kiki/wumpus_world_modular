@@ -125,10 +125,13 @@ def test_tiro_com_fedor_recebe_bonus():
 
 # ---------------------------------------------------------------- Mundo
 
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}22 poços podem ser sorteados na mesma casa")
 def test_pocos_nao_se_sobrepoem():
-    sobrepostos = [s for s in range(300) if len(set(World(size=8, seed=s).pits)) < len(World(size=8, seed=s).pits)]
-    assert sobrepostos == []
+    """#22 (corrigido)."""
+    for tamanho in (4, 6, 8):
+        for semente in range(300):
+            w = World(size=tamanho, seed=semente)
+            assert len(set(w.pits)) == len(w.pits) == tamanho // 2
+            assert not {w.agent_pos, w.gold_pos, w.wumpus_pos} & set(w.pits)
 
 
 def test_world_nao_altera_o_random_global():

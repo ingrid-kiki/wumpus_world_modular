@@ -28,20 +28,24 @@ class World:
         self.agent_pos = (0, 0)  # Posição inicial do agente
         self.gold_pos = self.random_pos(exclude=[self.agent_pos])  # Posição do ouro
         self.wumpus_pos = self.random_pos(exclude=[self.agent_pos, self.gold_pos])  # Posição do Wumpus
-        # Lista de posições dos poços, evitando sobreposição com agente, ouro e Wumpus
-        self.pits = [self.random_pos(exclude=[self.agent_pos, self.gold_pos, self.wumpus_pos]) for _ in range(size // 2)]
+        # Lista de posições dos poços: sem repetir casa e sem cair no agente, no ouro ou no Wumpus (#22)
+        self.pits = []
+        for _ in range(size // 2):
+            ocupadas = [self.agent_pos, self.gold_pos, self.wumpus_pos, *self.pits]
+            self.pits.append(self.random_pos(exclude=ocupadas))
 
         self.is_alive = True         # Estado de vida do agente
         self.wumpus_alive = True     # Estado de vida do Wumpus
         self.last_scream = False     # Indica se o último tiro matou o Wumpus
         self.won = False             # Indica se o agente venceu
 
-    def random_pos(self, exclude=[]):
+    def random_pos(self, exclude=None):
         """
         Gera uma posição aleatória no mundo, excluindo as posições fornecidas.
         :param exclude: Lista de posições a serem evitadas
         :return: Tupla (x, y) com a posição sorteada
         """
+        exclude = exclude or []
         while True:
             pos = (self.rng.randint(0, self.size - 1), self.rng.randint(0, self.size - 1))
             if pos not in exclude:
