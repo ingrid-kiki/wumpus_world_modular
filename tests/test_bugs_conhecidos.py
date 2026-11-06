@@ -84,14 +84,26 @@ def test_logico_sempre_termina(tamanho):
 
 # ---------------------------------------------------------------- Algoritmo genético
 
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}19 indivíduo mutado mantém o fitness do pai")
 def test_mutacao_invalida_o_fitness():
+    """#19 (corrigido)."""
     ga = GeneticAlgorithm(pop_size=4, gens=1, chrom_length=10, mutation_rate=1.0, crossover_rate=0.0)
     ind = Individual(10)
     ind.fitness = 123.0
     ga.mutate(ind)
     assert ind.fitness is None
 
+
+
+@pytest.mark.parametrize("semente", range(5))
+def test_fitness_do_melhor_individuo_corresponde_ao_cromossomo(semente):
+    """#19: reavaliar o melhor indivíduo devolvido pelo AG dá o mesmo fitness (proteção contra regressão)."""
+    w = World(size=4, seed=semente)
+    ga = GeneticAlgorithm(pop_size=20, gens=10, chrom_length=20, mutation_rate=0.1, crossover_rate=0.3, seed=semente)
+    melhor = ga.run(w)["best"]
+    reavaliado = Individual(0)
+    reavaliado.chromosome = list(melhor.chromosome)
+    reavaliado.evaluate(w)
+    assert reavaliado.fitness == melhor.fitness
 
 def test_ouro_pontua_uma_vez_so():
     """#20 (corrigido)."""

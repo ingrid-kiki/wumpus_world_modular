@@ -146,10 +146,15 @@ class GeneticAlgorithm:
         return c1, c2
 
     def mutate(self, individual):
+        mudou = False
         for i in range(self.chrom_length):
             # Aplica mutação com base na taxa de mutação
             if self.rng.random() < self.mutation_rate:
                 individual.chromosome[i] = self.random_action()
+                mudou = True
+        if mudou:
+            # O cromossomo mudou: o fitness herdado do pai não vale mais (#19)
+            individual.fitness = None
         
     def random_action(self):
         # Gera uma ação aleatória válida para o cromossomo
