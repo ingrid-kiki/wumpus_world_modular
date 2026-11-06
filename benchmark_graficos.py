@@ -27,6 +27,7 @@ def executar_benchmark(agente_nome, world_size, num_execucoes):
     # Inicializa contadores de vitórias, mortes e sobrevivências
     vitorias, mortes, sobrevivencias = 0, 0, 0
     tempos = []  # Lista para armazenar o tempo de cada execução
+    dados_extra_capturados = {}  # Dados extras da primeira execução (agente genético)
 
     # Executa o benchmark várias vezes, mudando a semente para cada rodada
     for i in range(num_execucoes):
@@ -37,8 +38,10 @@ def executar_benchmark(agente_nome, world_size, num_execucoes):
 
         # Marca o tempo de início da execução
         inicio = time.perf_counter()
-        agente.run()  # Executa o agente no mundo
+        resultado = agente.run()  # Executa o agente no mundo
         fim = time.perf_counter()  # Marca o tempo de fim da execução
+        if i == 0 and isinstance(resultado, dict):
+            dados_extra_capturados = resultado.get("dados_extra", {})
 
         # Salva o tempo gasto nesta execução
         tempos.append(fim - inicio)
@@ -63,7 +66,8 @@ def executar_benchmark(agente_nome, world_size, num_execucoes):
         "mortes": mortes,
         "sobreviveu": sobrevivencias,
         "tempo_total": tempo_total,
-        "tempo_médio": tempo_medio
+        "tempo_médio": tempo_medio,
+        "dados_extra": dados_extra_capturados
     }
 
 def gerar_graficos(df):

@@ -28,30 +28,33 @@ TEMPOS_MEDIOS_ESTIMADOS = {
     'genetico': 0.30
 }
 
-def executar_benchmark(agente_nome, world_size):
+def executar_benchmark(agente_nome, world_size, num_execucoes=NUM_EXECUCOES):
     # Inicializa contadores de vitórias, mortes e sobrevivências
     vitorias, mortes, sobrevivencias = 0, 0, 0
     tempos = []  # Lista para armazenar o tempo de cada execução
+    dados_extra_capturados = {}  # Dados extras da primeira execução (agente genético)
 
     # Calcula e exibe a estimativa de tempo total para o benchmark
-    tempo_estimado = TEMPOS_MEDIOS_ESTIMADOS.get(agente_nome, 0.2) * NUM_EXECUCOES
+    tempo_estimado = TEMPOS_MEDIOS_ESTIMADOS.get(agente_nome, 0.2) * num_execucoes
     print(f"\n🔁 Iniciando: agente = '{agente_nome}', mundo = {world_size}x{world_size}")
     print(f"⏳ Estimativa de tempo total: {tempo_estimado:.2f} segundos")
 
     # Executa o benchmark várias vezes, mudando a semente para cada rodada
-    for i in range(NUM_EXECUCOES):
+    for i in range(num_execucoes):
         seed = i  # muda a semente em cada rodada para garantir variedade
         mundo = World(size=world_size, seed=seed)  # Cria o mundo com a semente atual
         agente = AGENTES_DISPONIVEIS[agente_nome](mundo)       # Instancia o agente escolhido
         agente.logger = None  # desativa logging para não poluir a saída
 
         # Exibe informações da execução atual
-        print(f"🚀 Execução {i+1}/{NUM_EXECUCOES} [{agente_nome} - {world_size}x{world_size}]")
+        print(f"🚀 Execução {i+1}/{num_execucoes} [{agente_nome} - {world_size}x{world_size}]")
 
         # Marca o tempo de início da execução
         inicio = time.perf_counter()
-        agente.run()  # Executa o agente no mundo
+        resultado = agente.run()  # Executa o agente no mundo
         fim = time.perf_counter()  # Marca o tempo de fim da execução
+        if i == 0 and isinstance(resultado, dict):
+            dados_extra_capturados = resultado.get("dados_extra", {})
 
         # Salva o tempo gasto nesta execução
         tempos.append(fim - inicio)
@@ -66,15 +69,27 @@ def executar_benchmark(agente_nome, world_size):
 
     # Calcula o tempo total e o tempo médio por execução
     tempo_total = sum(tempos)
-    tempo_medio = tempo_total / NUM_EXECUCOES
+    tempo_medio = tempo_total / num_execucoes
 
     # Exibe o resumo dos resultados do benchmark para o agente e tamanho de mundo
     print(f"\n📊 RESULTADOS - Agente: {agente_nome.upper()} | Mundo: {world_size}x{world_size}")
-    print(f"🏆 Vitórias: {vitorias} ({(vitorias/NUM_EXECUCOES)*100:.1f}%)")
-    print(f"☠️ Mortes: {mortes} ({(mortes/NUM_EXECUCOES)*100:.1f}%)")
-    print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias/NUM_EXECUCOES)*100:.1f}%)")
+    print(f"🏆 Vitórias: {vitorias} ({(vitorias/num_execucoes)*100:.1f}%)")
+    print(f"☠️ Mortes: {mortes} ({(mortes/num_execucoes)*100:.1f}%)")
+    print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias/num_execucoes)*100:.1f}%)")
     print(f"⏱️ Tempo total real: {tempo_total:.2f} segundos")
     print(f"⏱️ Tempo médio por execução: {tempo_medio:.3f} segundos\n")
+
+    # Mesmo formato do benchmark.py, para funcionar com main.py --benchmark (#24)
+    return {
+        "agente": agente_nome,
+        "tamanho_mundo": world_size,
+        "vitórias": vitorias,
+        "mortes": mortes,
+        "sobreviveu": sobrevivencias,
+        "tempo_total": tempo_total,
+        "tempo_médio": tempo_medio,
+        "dados_extra": dados_extra_capturados
+    }
 
 if __name__ == "__main__":
     # Executa o benchmark para cada combinação de tamanho de mundo e agente selecionado

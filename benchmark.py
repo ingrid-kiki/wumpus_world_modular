@@ -53,7 +53,7 @@ def executar_benchmark(agente_nome, world_size=4, num_execucoes=10):
 
         tempos.append(fim - inicio)
 
-        if i == 0 and agente_nome == "genetico" and isinstance(resultado, dict):
+        if i == 0 and isinstance(resultado, dict):
             dados_extra_capturados = resultado.get("dados_extra", {})
         
         if mundo.won:

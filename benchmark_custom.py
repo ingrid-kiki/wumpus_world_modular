@@ -31,6 +31,7 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, silent=False):
     # Inicializa contadores de vitórias, mortes e sobrevivências
     vitorias, mortes, sobrevivencias = 0, 0, 0
     tempos = []  # Lista para armazenar o tempo de cada execução
+    dados_extra_capturados = {}  # Dados extras da primeira execução (agente genético)
 
     # Calcula e exibe a estimativa de tempo total para o benchmark
     tempo_estimado = TEMPOS_MEDIOS_ESTIMADOS.get(agente_nome, 0.2) * num_execucoes
@@ -50,8 +51,10 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, silent=False):
 
         # Marca o tempo de início da execução
         inicio = time.perf_counter()
-        agente.run()  # Executa o agente no mundo
+        resultado = agente.run()  # Executa o agente no mundo
         fim = time.perf_counter()  # Marca o tempo de fim da execução
+        if i == 0 and isinstance(resultado, dict):
+            dados_extra_capturados = resultado.get("dados_extra", {})
 
         # Salva o tempo gasto nesta execução
         tempos.append(fim - inicio)
@@ -75,6 +78,18 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, silent=False):
     print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias/num_execucoes)*100:.1f}%)")
     print(f"⏱️ Tempo total real: {tempo_total:.2f} segundos")
     print(f"⏱️ Tempo médio por execução: {tempo_medio:.3f} segundos\n")
+
+    # Mesmo formato do benchmark.py, para funcionar com main.py --benchmark (#24)
+    return {
+        "agente": agente_nome,
+        "tamanho_mundo": world_size,
+        "vitórias": vitorias,
+        "mortes": mortes,
+        "sobreviveu": sobrevivencias,
+        "tempo_total": tempo_total,
+        "tempo_médio": tempo_medio,
+        "dados_extra": dados_extra_capturados
+    }
 
 if __name__ == "__main__":
     # Cria o parser de argumentos para execução via terminal

@@ -56,7 +56,8 @@ def simular_execucao(agente_cls, world_size, seed):
         status = "sobreviveu"
 
     # Garante retorno consistente com dados extras
-    dados_extra = resultado.get("fitness", {}) if isinstance(resultado, dict) else {}
+    # O GeneticAgent devolve os dados extras em "dados_extra" (antes lia "fitness", sempre vazio: #24)
+    dados_extra = resultado.get("dados_extra", {}) if isinstance(resultado, dict) else {}
 
     return {
         "status": status,
@@ -86,13 +87,9 @@ def executar_benchmark(agente_nome, world_size, num_execucoes):
     tempo_total = sum(tempos)
     tempo_medio = tempo_total / len(tempos) if tempos else 0.0
 
-    # Dados extras agregados (apenas para genético, se disponíveis)
-    dados_extra = {}
-    if agente_nome == "genetico":
-        for r in resultados_validos:
-            if r["dados_extra"]:
-                for k, v in r["dados_extra"].items():
-                    dados_extra.setdefault(k, []).append(v)
+    # Dados extras da primeira execução válida, no mesmo formato do benchmark.py
+    # (gerar_graficos_avancados espera os dados de uma execução, não uma lista de execuções)
+    dados_extra = next((r["dados_extra"] for r in resultados_validos if r["dados_extra"]), {})
 
     return {
         "agente": agente_nome,

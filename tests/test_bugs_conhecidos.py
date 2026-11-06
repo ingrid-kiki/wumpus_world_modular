@@ -12,12 +12,15 @@
 
 import random
 
+import numpy as np
 import pytest
 
 import benchmark
 import benchmark_custom
 import benchmark_fast
+import benchmark_graficos
 import benchmark_sideB
+import main
 from agents.logic_agent import LogicAgent
 from agents.logic_knowledge_base import LogicKnowledgeBase
 from ga.ga_core import GeneticAlgorithm
@@ -191,31 +194,46 @@ def test_ag_reprodutivel_com_a_semente_do_mundo():
 
 # ---------------------------------------------------------------- Benchmarks
 
-CHAVES_RESULTADO = {"agente", "tamanho_mundo", "vitórias", "mortes", "sobreviveu", "tempo_total", "tempo_médio"}
+CHAVES_RESULTADO = {"agente", "tamanho_mundo", "vitórias", "mortes", "sobreviveu", "tempo_total", "tempo_médio",
+                    "dados_extra"}
 
 
-def test_benchmark_padrao_retorna_o_contrato_do_main(monkeypatch):
-    # Regressão: é o único benchmark que funciona hoje com o main.py.
-    monkeypatch.setitem(benchmark.AGENTES_DISPONIVEIS, "falso", AgenteFalso)
-    resultado = benchmark.executar_benchmark("falso", 4, 2)
-    assert CHAVES_RESULTADO <= set(resultado)
+def _paralelo_sequencial(n_jobs=None):
+    """Substitui joblib.Parallel nos testes: roda as tarefas em sequência, no mesmo processo."""
+    return lambda tarefas: [funcao(*args, **kwargs) for funcao, args, kwargs in tarefas]
 
 
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}24 benchmark_custom não retorna resultado")
-def test_benchmark_custom_retorna_o_contrato_do_main(monkeypatch):
-    monkeypatch.setitem(benchmark_custom.AGENTES_DISPONIVEIS, "falso", AgenteFalso)
-    resultado = benchmark_custom.executar_benchmark("falso", 4, 2)
+@pytest.mark.parametrize("modulo", [benchmark, benchmark_custom, benchmark_sideB, benchmark_fast, benchmark_graficos],
+                         ids=lambda m: m.__name__)
+def test_benchmarks_cumprem_o_contrato_do_main(modulo, monkeypatch):
+    """#24 (corrigido): os 5 benchmarks aceitam (agente, tamanho, execuções) e devolvem o mesmo dict."""
+    monkeypatch.setitem(modulo.AGENTES_DISPONIVEIS, "falso", AgenteFalso)
+    if hasattr(modulo, "Parallel"):
+        monkeypatch.setattr(modulo, "Parallel", _paralelo_sequencial)
+    resultado = modulo.executar_benchmark("falso", 4, 2)
     assert isinstance(resultado, dict) and CHAVES_RESULTADO <= set(resultado)
+    assert resultado["vitórias"] + resultado["mortes"] + resultado["sobreviveu"] == 2
+    assert resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
 
 
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}24 benchmark_sideB não aceita num_execucoes")
-def test_benchmark_sideB_aceita_a_chamada_do_main(monkeypatch):
-    monkeypatch.setitem(benchmark_sideB.AGENTES_DISPONIVEIS, "falso", AgenteFalso)
-    resultado = benchmark_sideB.executar_benchmark("falso", 4, 2)
-    assert isinstance(resultado, dict) and CHAVES_RESULTADO <= set(resultado)
-
-
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}24 benchmark_fast lê a chave errada e perde os dados extras")
 def test_benchmark_fast_preserva_dados_extra():
+    """#24 (corrigido)."""
     execucao = benchmark_fast.simular_execucao(AgenteFalso, 4, 0)
     assert execucao["dados_extra"].get("fitness") == [1.0, 2.0]
+
+
+def test_csv_do_main_so_tem_colunas_escalares(tmp_path):
+    """#24: dados_extra sai do CSV e vai para um .npz por agente e tamanho."""
+    resultados = [
+        {"agente": "genetico", "tamanho_mundo": 4, "vitórias": 1, "mortes": 0, "sobreviveu": 0,
+         "tempo_total": 1.0, "tempo_médio": 1.0, "dados_extra": {"fitness": [1.0, 2.0], "cpu": [3.0]}},
+        {"agente": "logico", "tamanho_mundo": 4, "vitórias": 0, "mortes": 1, "sobreviveu": 0,
+         "tempo_total": 0.1, "tempo_médio": 0.1, "dados_extra": {}},
+        None,  # benchmark que falhou não derruba a gravação
+    ]
+    df, csv_path = main.salvar_resultados(resultados, str(tmp_path))
+    assert "dados_extra" not in df.columns and len(df) == 2
+    assert "..." not in open(csv_path, encoding="utf-8").read()
+    dados = np.load(tmp_path / "dados_extra_genetico_4x4.npz")
+    assert list(dados["fitness"]) == [1.0, 2.0]
+    assert not (tmp_path / "dados_extra_logico_4x4.npz").exists()
