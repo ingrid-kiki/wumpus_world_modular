@@ -8,11 +8,32 @@
 # Serve como núcleo de raciocínio lógico para o LogicAgent, facilitando decisões baseadas em regras.
 '''
 
+MOVIMENTOS = [(-1, 0, 'CIMA'), (1, 0, 'BAIXO'), (0, -1, 'ESQUERDA'), (0, 1, 'DIREITA')]
+
+
 class LogicKnowledgeBase:
-    def __init__(self):
+    def __init__(self, size=None):
+        # Tamanho do grid: sem ele, a KB "anda" para fora do mapa e entra em loop (#18)
+        self.size = size
         self.perceptions = []
-        self.known = {}  # (x, y) → {'safe': bool, 'visited': bool, 'perceptions': []}
+        self.known = {}  # (x, y) -> {'seguro': bool, 'visitado': bool, 'percepções': [...]}
+        self.visits = {}  # (x, y) -> número de vezes que o agente esteve na célula
         self.current_pos = (0, 0)
+
+    def in_grid(self, pos):
+        """True se a posição está dentro do grid (ou se o tamanho é desconhecido)."""
+        if self.size is None:
+            return True
+        x, y = pos
+        return 0 <= x < self.size and 0 <= y < self.size
+
+    def neighbors(self):
+        """Vizinhas válidas da posição atual, na ordem CIMA, BAIXO, ESQUERDA, DIREITA."""
+        x, y = self.current_pos
+        for dx, dy, action in MOVIMENTOS:
+            pos = (x + dx, y + dy)
+            if self.in_grid(pos):
+                yield pos, action
 
     def update_knowledge(self, perception):
         x, y = self.current_pos
@@ -21,6 +42,7 @@ class LogicKnowledgeBase:
             'visitado': True,
             'percepções': perception
         }
+        self.visits[(x, y)] = self.visits.get((x, y), 0) + 1
         self.perceptions.append((x, y, perception))
 
     def infer_action(self, perception):
@@ -29,30 +51,35 @@ class LogicKnowledgeBase:
         Retorna uma ação baseada na percepção atual.
         """
         self.update_knowledge(perception)
-        # Exemplo básico: se sentir brilho (GLITTER), tenta pegar o ouro
+        # Exemplo básico: se sentir brilho, tenta pegar o ouro
         if 'BRILHO' in perception:
             return 'AGARRAR'
         if 'FEDOR' in perception:
             return 'TIRO'
 
-        # Exploração simples: andar para uma célula vizinha não visitada e provavelmente segura
-        for dx, dy, action in [(-1, 0, 'CIMA'), (1, 0, 'BAIXO'), (0, -1, 'ESQUERDA'), (0, 1, 'DIREITA')]:
-            nx, ny = self.current_pos[0] + dx, self.current_pos[1] + dy
-            if (nx, ny) not in self.known:
-                return action
-            if self.known[(nx, ny)]['seguro'] and not self.known[(nx, ny)]['visitado']:
+        vizinhas = list(self.neighbors())
+        # Exploração simples: andar para uma vizinha ainda não visitada
+        for pos, action in vizinhas:
+            if pos not in self.known:
                 return action
 
-        # Falha segura: não achou caminho bom → tenta sair andando
+        # Todas as vizinhas já foram visitadas: volta pela menos visitada (empate: ordem de MOVIMENTOS).
+        # Antes o fallback era sempre 'DIREITA', que deixava o agente parado na borda direita.
+        if vizinhas:
+            _, action = min(vizinhas, key=lambda item: self.visits.get(item[0], 0))
+            return action
         return 'DIREITA'
 
-    def update_position(self, action):
+    def update_position(self, action, new_pos=None):
+        """
+        Atualiza a posição da KB. Se o mundo informar a posição real (new_pos), ela é usada;
+        assim um movimento bloqueado pela parede não dessincroniza a KB (#18).
+        """
+        if new_pos is not None:
+            self.current_pos = tuple(new_pos)
+            return
         x, y = self.current_pos
-        if action == 'CIMA':
-            self.current_pos = (x - 1, y)
-        elif action == 'BAIXO':
-            self.current_pos = (x + 1, y)
-        elif action == 'ESQUERDA':
-            self.current_pos = (x, y - 1)
-        elif action == 'DIREITA':
-            self.current_pos = (x, y + 1)
+        destinos = {'CIMA': (x - 1, y), 'BAIXO': (x + 1, y), 'ESQUERDA': (x, y - 1), 'DIREITA': (x, y + 1)}
+        destino = destinos.get(action, self.current_pos)
+        if self.in_grid(destino):
+            self.current_pos = destino

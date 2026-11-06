@@ -10,14 +10,16 @@
 
 import random
 
-def random_action():
+def random_action(rng=random):
     # Retorna uma ação aleatória válida para o agente
-    return random.choice(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])
+    return rng.choice(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])
 
 class Individual:
-    def __init__(self, chrom_length):
+    def __init__(self, chrom_length, rng=None):
+        # Gerador aleatório do AG (ou o módulo random, se não for informado)
+        rng = rng if rng is not None else random
         # Inicializa o cromossomo com uma sequência aleatória de ações
-        self.chromosome = [random_action() for _ in range(chrom_length)]
+        self.chromosome = [random_action(rng) for _ in range(chrom_length)]
         # Valor de fitness (avaliação de desempenho do indivíduo)
         self.fitness = None
 
@@ -39,12 +41,17 @@ class Individual:
                 break
             if action == 'AGARRAR' and 'BRILHO' in percept:
                 score += 100  # Bônus se encontrar o ouro
-            if action == 'TIRO' and 'FEDOR' in percept:
-                score += 25   # Atirar com cheiro = tentativa válida
+            if action == 'TIRO' and temp_world.last_scream:
+                # Bônus por matar o Wumpus (o mundo registra o grito). Antes a condição era
+                # 'FEDOR' na percepção pós-tiro, que nunca acontece: o fedor some quando ele morre (#21)
+                score += 25
             if action in ['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA']:
                 score -= 0.5  # Penalidade leve por andar
             else:
                 score -= 1  # Penalidade padrão
+            if status == 'GANHOU':
+                # O jogo acabou: as ações restantes do cromossomo não contam (#20)
+                break
 
         # Pequeno bônus por sobrevivência
         if temp_world.is_alive:

@@ -6,7 +6,7 @@ Este guia mostra como executar o projeto **Wumpus World**, incluindo o uso dos d
 
 ## ✅ 1. Pré-requisitos
 
-- Python 3.8 ou superior
+- Python 3.12 ou superior (exigido pelo numpy 2.5; ver #17)
 - Pip instalado
 
 ---
@@ -16,19 +16,20 @@ Este guia mostra como executar o projeto **Wumpus World**, incluindo o uso dos d
 Abra o terminal no diretório do projeto e execute:
 
 ```bash
-pip install pygame matplotlib pandas joblib seaborn scikit-learn numpy psutil
+pip install -r requirements.txt
 ```
 
-ou
-
-```bash
-pip install requirements.txt
-```
+As versões estão fixadas no `requirements.txt` para que os resultados possam ser reproduzidos.
+Para desenvolver e rodar os testes, use `pip install -r requirements-dev.txt` e depois `python -m pytest`.
 ---
 
 ## ✅ 3. Executar o jogo com agentes
 
 ### 📌 Sintaxe básica
+
+> ⚠️ **Ainda não implementado.** Hoje o `main.py` só abre o menu interativo (`python main.py`) e ignora
+> estes argumentos; o `--vis` também não está ligado ao `Visualizer`. Esta é a sintaxe planejada para a v2.0.0
+> (ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17)).
 
 ```bash
 python main.py [AGENTE] [--size N] [--seed VALOR] [--vis]

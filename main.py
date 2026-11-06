@@ -6,6 +6,7 @@ import argparse
 import os
 import sys
 from datetime import datetime
+import numpy as np
 import pandas as pd
 import shlex
 import importlib.util
@@ -18,7 +19,6 @@ from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
 from utils.logger import Logger
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
-from benchmark import executar_benchmark
 
 # Dicionário de agentes disponíveis
 AGENTES_DISPONIVEIS = {
@@ -69,6 +69,25 @@ def formatar_tempo(segundos):
         return f"{minutos:.2f} min"
     else:
         return f"{segundos:.2f}s"
+
+def salvar_resultados(resultados, output_dir):
+    """
+    Salva o resumo dos benchmarks em resultados_benchmark.csv, só com colunas escalares.
+    Os dados extras (arrays do AG) vão para dados_extra_<agente>_<N>x<N>.npz, um arquivo por
+    agente e tamanho: no CSV eles viravam uma string truncada com "..." (#24).
+    :return: (DataFrame do resumo, caminho do CSV)
+    """
+    validos = [r for r in resultados if isinstance(r, dict)]
+    for r in validos:
+        dados_extra = r.get("dados_extra")
+        if dados_extra:
+            nome = f"dados_extra_{r['agente']}_{r['tamanho_mundo']}x{r['tamanho_mundo']}.npz"
+            np.savez_compressed(os.path.join(output_dir, nome),
+                                **{chave: np.asarray(valor) for chave, valor in dados_extra.items()})
+    df = pd.DataFrame([{k: v for k, v in r.items() if k != "dados_extra"} for r in validos])
+    csv_path = os.path.join(output_dir, "resultados_benchmark.csv")
+    df.to_csv(csv_path, index=False)
+    return df, csv_path
 
 @contextlib.contextmanager
 def capturar_saida_terminal():
@@ -163,9 +182,7 @@ def main():
                 logger.write(f"✅ Benchmark finalizado: '{nome_agente}' no mundo {size}x{size}")
                 logger.close()
 
-        df_resultados = pd.DataFrame(resultados)
-        csv_path = os.path.join(output_dir, "resultados_benchmark.csv")
-        df_resultados.to_csv(csv_path, index=False)
+        df_resultados, csv_path = salvar_resultados(resultados, output_dir)
         gerar_graficos(df_resultados, output_dir)
 
         print(f"\n📊 Resultados salvos em: {csv_path}")

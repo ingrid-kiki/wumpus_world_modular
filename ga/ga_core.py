@@ -17,7 +17,9 @@ import numpy as np
 from .individual import Individual
 
 class GeneticAlgorithm:
-    def __init__(self, pop_size, gens, chrom_length, mutation_rate, crossover_rate):
+    def __init__(self, pop_size, gens, chrom_length, mutation_rate, crossover_rate, seed=None):
+        # Gerador próprio, para o AG ser reprodutível sem depender do random global (#23)
+        self.rng = random.Random(seed)
         # Tamanho da população de indivíduos
         self.pop_size = pop_size
         # Número de gerações (iterações do algoritmo)
@@ -45,7 +47,7 @@ class GeneticAlgorithm:
         process.cpu_percent()
 
         # Cria a população inicial de indivíduos aleatórios
-        population = [Individual(self.chrom_length) for _ in range(self.pop_size)]
+        population = [Individual(self.chrom_length, self.rng) for _ in range(self.pop_size)]
         for g in range(self.gens):
             # Uso de memória em MB
             memory_mb = process.memory_info().rss / (1024 * 1024)
@@ -89,7 +91,7 @@ class GeneticAlgorithm:
                 # Seleciona dois pais para cruzamento
                 p1, p2 = self.select(population), self.select(population)
                 # Verifica se a taxa de cruzamento é atingida
-                if random.random() < self.crossover_rate:
+                if self.rng.random() < self.crossover_rate:
                     # Realiza o cruzamento (crossover) para gerar dois filhos
                     c1, c2 = self.crossover(p1, p2)
                 else:
@@ -131,24 +133,29 @@ class GeneticAlgorithm:
 
     def select(self, population):
         # Seleciona aleatoriamente um indivíduo entre os 10 melhores (elitismo/seleção por torneio)
-        return copy.deepcopy(random.choice(population[:10]))
+        return copy.deepcopy(self.rng.choice(population[:10]))
 
     def crossover(self, p1, p2):
         # Realiza o cruzamento de dois pais para gerar dois filhos
-        point = random.randint(1, self.chrom_length - 1)  # Ponto de corte aleatório
-        c1 = Individual(self.chrom_length)
-        c2 = Individual(self.chrom_length)
+        point = self.rng.randint(1, self.chrom_length - 1)  # Ponto de corte aleatório
+        c1 = Individual(0)
+        c2 = Individual(0)
         # Combina partes dos cromossomos dos pais para formar os filhos
         c1.chromosome = p1.chromosome[:point] + p2.chromosome[point:]
         c2.chromosome = p2.chromosome[:point] + p1.chromosome[point:]
         return c1, c2
 
     def mutate(self, individual):
+        mudou = False
         for i in range(self.chrom_length):
             # Aplica mutação com base na taxa de mutação
-            if random.random() < self.mutation_rate:
+            if self.rng.random() < self.mutation_rate:
                 individual.chromosome[i] = self.random_action()
+                mudou = True
+        if mudou:
+            # O cromossomo mudou: o fitness herdado do pai não vale mais (#19)
+            individual.fitness = None
         
     def random_action(self):
         # Gera uma ação aleatória válida para o cromossomo
-        return random.choice(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])
+        return self.rng.choice(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])

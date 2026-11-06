@@ -12,11 +12,13 @@
 from agents.logic_knowledge_base import LogicKnowledgeBase
 
 class LogicAgent:
-    def __init__(self, world):
+    def __init__(self, world, max_steps=None):
         # Referência ao ambiente (mundo do Wumpus)
         self.world = world
-        # Base de conhecimento lógica para inferências
-        self.knowledge = LogicKnowledgeBase()
+        # Base de conhecimento lógica para inferências; conhece o tamanho do grid (#18)
+        self.knowledge = LogicKnowledgeBase(size=world.size)
+        # Limite de passos: garante que run() sempre termina (#18)
+        self.max_steps = max_steps if max_steps is not None else 4 * world.size * world.size
         # Histórico das percepções do agente a cada passo
         self.perception_history = []
         self.logger = None  # Será injetado pelo main
@@ -28,8 +30,8 @@ class LogicAgent:
         Atualiza a base de conhecimento e decide ações seguras.
         """
         passo = 1  # Contador de passos do agente
-        # Continua enquanto o jogo não termina (vitória ou morte)
-        while not self.world.is_done():
+        # Continua enquanto o jogo não termina (vitória ou morte) e há passos disponíveis
+        while not self.world.is_done() and passo <= self.max_steps:
             # Obtém percepções do ambiente na posição atual
             perception = self.world.perceive()
             
@@ -51,8 +53,8 @@ class LogicAgent:
             # Executa ação no mundo e recebe novo status
             _, status = self.world.step(action)
             
-            # Atualiza a posição atual na base de conhecimento
-            self.knowledge.update_position(action)
+            # Atualiza a posição na base de conhecimento com a posição real do mundo
+            self.knowledge.update_position(action, self.world.agent_pos)
             
             # Registra tudo no logger, se ele existir
             if self.logger:
@@ -69,6 +71,8 @@ class LogicAgent:
         print("📝 Histórico de percepções:")
         for item in self.perception_history:
             print(f"Passo {item['passo']}: {item['perception']}")
+
+        return {"history": self.perception_history, "passos": passo - 1}
 
 
     def decide(self, perception):

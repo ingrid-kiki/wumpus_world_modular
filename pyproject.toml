@@ -1,0 +1,20 @@
+# Configuração das ferramentas de desenvolvimento.
+# O empacotamento do projeto ([project]) entra na Fase 5 (v2.0.0).
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+# Nenhum teste pode travar a suíte (o agente lógico entra em loop infinito, ver #17).
+timeout = 60
+# xfail que passa a passar indica bug corrigido: falha para lembrar de tirar a marcação.
+xfail_strict = true
+addopts = "-ra"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+extend-exclude = ["pygad"]
+
+[tool.ruff.lint]
+# Erros reais (pyflakes) e problemas graves de estilo; ampliar aos poucos.
+select = ["E9", "F"]

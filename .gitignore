@@ -179,3 +179,17 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# ==============================
+# Wumpus World — saídas de execução (não versionar)
+# ==============================
+# Cada execução gera logs/run_YYYYMMDD_HHMMSS/ com CSV, PNG e terminal_output.txt.
+# Resultados de referência ficam nos GitHub Releases, não no git.
+logs/
+results/
+**/run_*/
+*.pkl
+# benchmark_graficos.py e pygad/le_resultados.py gravam na pasta atual
+/grafico_*.png
+/resultados_benchmark.csv
+/resultados.csv
