@@ -1,9 +1,14 @@
-pygame
-matplotlib
-pandas
-joblib
-seaborn
-scikit-learn
-pygad
-numpy
-psutil
+# Dependências do projeto, com versões fixadas para reprodutibilidade dos experimentos.
+# Testado com Python 3.13 (Windows 11). Versão mínima provisória: 3.11 (ver #17).
+# Para atualizar: instale as novas versões, rode `pytest` e atualize os números aqui
+# e no CHANGELOG na mesma PR.
+joblib==1.6.0
+matplotlib==3.11.2
+numpy==2.5.4
+pandas==3.1.1
+psutil==7.2.2
+pygame==2.6.1
+scikit-learn==1.9.1
+seaborn==0.13.2
+# usado somente pelos scripts de pygad/
+pygad==3.9.2
