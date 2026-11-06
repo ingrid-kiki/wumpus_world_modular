@@ -64,8 +64,10 @@ def avisos_de_ambiente(meta):
 
 def comparar(csv_original, csv_novo):
     """Devolve (iguais, tabela) comparando só as colunas determinísticas."""
-    a = pd.read_csv(csv_original)[COLUNAS_COMPARADAS]
-    b = pd.read_csv(csv_novo)[COLUNAS_COMPARADAS]
+    a, b = pd.read_csv(csv_original), pd.read_csv(csv_novo)
+    # "erros" existe a partir da v1.6.0 (#30); só entra na comparação se os dois CSVs tiverem
+    colunas = COLUNAS_COMPARADAS + (["erros"] if "erros" in a.columns and "erros" in b.columns else [])
+    a, b = a[colunas], b[colunas]
     tabela = a.merge(b, on=["agente", "tamanho_mundo"], how="outer", suffixes=("_original", "_reproducao"))
     iguais = len(a) == len(b) and a.sort_values(["agente", "tamanho_mundo"]).reset_index(drop=True).equals(
         b.sort_values(["agente", "tamanho_mundo"]).reset_index(drop=True))

@@ -212,8 +212,10 @@ def test_ag_reprodutivel_com_a_semente_do_mundo():
 
 # ---------------------------------------------------------------- Benchmarks
 
-CHAVES_RESULTADO = {"agente", "tamanho_mundo", "vitórias", "mortes", "sobreviveu", "tempo_total", "tempo_médio",
-                    "dados_extra"}
+CHAVES_RESULTADO = {"agente", "tamanho_mundo", "vitórias", "mortes", "sobreviveu", "erros", "tempo_total",
+                    "tempo_médio", "dados_extra"}
+
+BENCHMARKS = [benchmark, benchmark_custom, benchmark_sideB, benchmark_fast, benchmark_graficos]
 
 
 def _paralelo_sequencial(n_jobs=None):
@@ -221,17 +223,80 @@ def _paralelo_sequencial(n_jobs=None):
     return lambda tarefas: [funcao(*args, **kwargs) for funcao, args, kwargs in tarefas]
 
 
-@pytest.mark.parametrize("modulo", [benchmark, benchmark_custom, benchmark_sideB, benchmark_fast, benchmark_graficos],
-                         ids=lambda m: m.__name__)
-def test_benchmarks_cumprem_o_contrato_do_main(modulo, monkeypatch):
-    """#24 (corrigido): os 5 benchmarks aceitam (agente, tamanho, execuções) e devolvem o mesmo dict."""
-    monkeypatch.setitem(modulo.AGENTES_DISPONIVEIS, "falso", AgenteFalso)
+def _rodar(modulo, monkeypatch, agente_cls, execucoes):
+    monkeypatch.setitem(modulo.AGENTES_DISPONIVEIS, "falso", agente_cls)
     if hasattr(modulo, "Parallel"):
         monkeypatch.setattr(modulo, "Parallel", _paralelo_sequencial)
-    resultado = modulo.executar_benchmark("falso", 4, 2)
+    return modulo.executar_benchmark("falso", 4, execucoes)
+
+
+class AgenteQueFalha(AgenteFalso):
+    """Falha na execução com semente 1; as outras terminam normalmente."""
+
+    def run(self):
+        if self.world.seed == 1:
+            raise RuntimeError("falha de propósito")
+        return super().run()
+
+
+@pytest.mark.parametrize("modulo", BENCHMARKS, ids=lambda m: m.__name__)
+def test_benchmarks_cumprem_o_contrato_do_main(modulo, monkeypatch):
+    """#24 (corrigido): os 5 benchmarks aceitam (agente, tamanho, execuções) e devolvem o mesmo dict."""
+    resultado = _rodar(modulo, monkeypatch, AgenteFalso, 2)
     assert isinstance(resultado, dict) and CHAVES_RESULTADO <= set(resultado)
     assert resultado["vitórias"] + resultado["mortes"] + resultado["sobreviveu"] == 2
+    assert resultado["erros"] == 0
     assert resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
+
+
+@pytest.mark.parametrize("modulo", BENCHMARKS, ids=lambda m: m.__name__)
+def test_erro_nao_vira_resultado_nem_derruba_o_benchmark(modulo, monkeypatch, capsys):
+    """#30: a execução que falha entra em 'erros'; as outras continuam e o traceback vai para o stderr."""
+    resultado = _rodar(modulo, monkeypatch, AgenteQueFalha, 3)
+    assert resultado["erros"] == 1
+    assert resultado["vitórias"] + resultado["mortes"] + resultado["sobreviveu"] == 2
+    assert resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
+    assert "RuntimeError: falha de propósito" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("modulo", BENCHMARKS, ids=lambda m: m.__name__)
+def test_dados_extra_vem_da_primeira_execucao_sem_erro(modulo, monkeypatch):
+    """#30: se a primeira execução falha, os dados extras vêm da seguinte."""
+    class FalhaNaPrimeira(AgenteFalso):
+        def run(self):
+            if self.world.seed == 0:
+                raise RuntimeError("falha de propósito")
+            return super().run()
+
+    resultado = _rodar(modulo, monkeypatch, FalhaNaPrimeira, 2)
+    assert resultado["erros"] == 1 and resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
+
+
+def test_terminal_output_inclui_o_stderr():
+    """#30: tracebacks e avisos (stderr) também vão para o terminal_output.txt."""
+    import sys
+    stdout_antes, stderr_antes = sys.stdout, sys.stderr
+    with main.capturar_saida_terminal() as buffer:
+        print("linha do stdout")
+        print("linha do stderr", file=sys.stderr)
+    texto = buffer.getvalue()
+    assert "linha do stdout" in texto and "linha do stderr" in texto
+    assert sys.stdout is stdout_antes and sys.stderr is stderr_antes  # restaurados ao sair
+
+
+def test_benchmark_py_sozinho_nao_roda_o_agente_manual():
+    """#30: 'python benchmark.py' só testa agentes automáticos; antes o manual falhava 3 vezes sem teclado."""
+    import os
+    import subprocess
+    import sys
+    raiz = os.path.dirname(os.path.abspath(benchmark.__file__))
+    saida = subprocess.run([sys.executable, "benchmark.py"], cwd=raiz, stdin=subprocess.DEVNULL,
+                           capture_output=True, text=True, encoding="utf-8", timeout=180,
+                           env={**os.environ, "PYTHONIOENCODING": "utf-8", "MPLBACKEND": "Agg"})
+    assert saida.returncode == 0, saida.stderr[-2000:]
+    assert "Resumo para manual" not in saida.stdout
+    assert "Resumo para logico" in saida.stdout and "Resumo para genetico" in saida.stdout
+    assert "EOF when reading a line" not in saida.stdout + saida.stderr
 
 
 def test_benchmark_fast_preserva_dados_extra():

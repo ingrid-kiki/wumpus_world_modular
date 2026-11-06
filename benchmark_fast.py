@@ -9,13 +9,13 @@ mede o tempo de execução, salva os resultados e gráficos em pastas organizada
 e exibe um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
 '''
 
-import time
 import argparse
 import matplotlib
 matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender do Tk)
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd
 from joblib import Parallel, delayed
+from utils.execucao import contar, executar_uma
 from world.world import World
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
@@ -40,30 +40,16 @@ def simular_execucao(agente_cls, world_size, seed, parametros=None):
     if hasattr(agente, "logger"):
         agente.logger = None
 
-    try:
-        inicio = time.perf_counter()
-        resultado = agente.run()
-        fim = time.perf_counter()
-    except Exception as e:
-        print(f"❌ Erro durante execução com semente {seed}: {e}")
-        return None  # falha na execução
+    # Um erro vira status "erro" (antes a execução era descartada sem aviso: #30)
+    execucao = executar_uma(agente, mundo, rotulo=f"com semente {seed}")
+    resultado = execucao["resultado"]
 
-    tempo = fim - inicio
-
-    if mundo.won:
-        status = "vitória"
-    elif not mundo.is_alive:
-        status = "morte"
-    else:
-        status = "sobreviveu"
-
-    # Garante retorno consistente com dados extras
     # O GeneticAgent devolve os dados extras em "dados_extra" (antes lia "fitness", sempre vazio: #24)
     dados_extra = resultado.get("dados_extra", {}) if isinstance(resultado, dict) else {}
 
     return {
-        "status": status,
-        "tempo": tempo,
+        "status": execucao["status"],
+        "tempo": execucao["tempo"],
         "dados_extra": dados_extra
     }
 
@@ -79,26 +65,18 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agente
         for seed in range(num_execucoes)
     )
 
-    # Filtra apenas execuções válidas
-    resultados_validos = [r for r in resultados if r is not None]
+    # Toda execução conta: erros ficam na coluna "erros" (#30)
+    tempo_total = sum(r["tempo"] for r in resultados)
+    tempo_medio = tempo_total / num_execucoes if num_execucoes else 0.0
 
-    vitorias = sum(1 for r in resultados_validos if r["status"] == "vitória")
-    mortes = sum(1 for r in resultados_validos if r["status"] == "morte")
-    sobrevivencias = sum(1 for r in resultados_validos if r["status"] == "sobreviveu")
-    tempos = [r["tempo"] for r in resultados_validos]
-    tempo_total = sum(tempos)
-    tempo_medio = tempo_total / len(tempos) if tempos else 0.0
-
-    # Dados extras da primeira execução válida, no mesmo formato do benchmark.py
+    # Dados extras da primeira execução sem erro, no mesmo formato do benchmark.py
     # (gerar_graficos_avancados espera os dados de uma execução, não uma lista de execuções)
-    dados_extra = next((r["dados_extra"] for r in resultados_validos if r["dados_extra"]), {})
+    dados_extra = next((r["dados_extra"] for r in resultados if r["dados_extra"]), {})
 
     return {
         "agente": agente_nome,
         "tamanho_mundo": world_size,
-        "vitórias": vitorias,
-        "mortes": mortes,
-        "sobreviveu": sobrevivencias,
+        **contar([r["status"] for r in resultados]),
         "tempo_total": tempo_total,
         "tempo_médio": tempo_medio,
         "dados_extra": dados_extra
@@ -164,11 +142,14 @@ if __name__ == "__main__":
         sobrevivencias = row['sobreviveu']
         tempo_total = row['tempo_total']
         tempo_medio = row['tempo_médio']
-        num_execucoes = vitorias + mortes + sobrevivencias
+        erros = row['erros']
+        num_execucoes = vitorias + mortes + sobrevivencias + erros
 
         print(f"\n📊 RESULTADOS - Agente: {agente_nome.upper()} | Tamanho: {tamanho}x{tamanho}")
         print(f"🏆 Vitórias: {vitorias} ({(vitorias/num_execucoes)*100:.1f}%)")
         print(f"☠️ Mortes: {mortes} ({(mortes/num_execucoes)*100:.1f}%)")
         print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias/num_execucoes)*100:.1f}%)")
+        if erros:
+            print(f"❌ Erros: {erros}")
         print(f"⏱️ Tempo total: {tempo_total:.2f} segundos")
         print(f"⏱️ Tempo médio por execução: {tempo_medio:.3f} segundos")

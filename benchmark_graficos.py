@@ -9,7 +9,7 @@ mede o tempo de execução, salva os resultados em CSV e gera gráficos comparat
 exibindo um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
 '''
 
-import time
+from utils.execucao import contar, executar_uma
 import argparse
 import matplotlib
 matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender do Tk)
@@ -26,8 +26,8 @@ AGENTES_DISPONIVEIS = {
 }
 
 def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agentes=None):
-    # Inicializa contadores de vitórias, mortes e sobrevivências
-    vitorias, mortes, sobrevivencias = 0, 0, 0
+    # Status de cada execução: "vitória", "morte", "sobreviveu" ou "erro" (#30)
+    status = []
     tempos = []  # Lista para armazenar o tempo de cada execução
     dados_extra_capturados = {}  # Dados extras da primeira execução (agente genético)
 
@@ -38,23 +38,18 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agente
         agente = AGENTES_DISPONIVEIS[agente_nome](mundo, **(parametros_agentes or {}).get(agente_nome, {}))  # Instancia o agente escolhido
         agente.logger = None  # desativa logging
 
-        # Marca o tempo de início da execução
-        inicio = time.perf_counter()
-        resultado = agente.run()  # Executa o agente no mundo
-        fim = time.perf_counter()  # Marca o tempo de fim da execução
-        if i == 0 and isinstance(resultado, dict):
-            dados_extra_capturados = resultado.get("dados_extra", {})
+        # Executa o agente; um erro não derruba o benchmark nem vira resultado (#30)
+        execucao = executar_uma(agente, mundo, rotulo=f"{i+1}/{num_execucoes} [{agente_nome} - {world_size}x{world_size}]")
+        tempos.append(execucao["tempo"])
+        status.append(execucao["status"])
 
-        # Salva o tempo gasto nesta execução
-        tempos.append(fim - inicio)
+        # Dados extras da primeira execução que terminou sem erro
+        if not dados_extra_capturados and isinstance(execucao["resultado"], dict):
+            dados_extra_capturados = execucao["resultado"].get("dados_extra", {})
 
-        # Atualiza os contadores de acordo com o resultado da execução
-        if mundo.won:
-            vitorias += 1
-        elif not mundo.is_alive:
-            mortes += 1
-        else:
-            sobrevivencias += 1
+    # Conta vitórias, mortes, sobrevivências e erros
+    contagem = contar(status)
+    vitorias, mortes, sobrevivencias = contagem["vitórias"], contagem["mortes"], contagem["sobreviveu"]
 
     # Calcula o tempo total e o tempo médio por execução
     tempo_total = sum(tempos)
@@ -67,6 +62,7 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agente
         "vitórias": vitorias,
         "mortes": mortes,
         "sobreviveu": sobrevivencias,
+        "erros": contagem["erros"],
         "tempo_total": tempo_total,
         "tempo_médio": tempo_medio,
         "dados_extra": dados_extra_capturados
@@ -132,11 +128,14 @@ if __name__ == "__main__":
         sobrevivencias = row['sobreviveu']
         tempo_total = row['tempo_total']
         tempo_medio = row['tempo_médio']
-        num_execucoes = vitorias + mortes + sobrevivencias
+        erros = row['erros']
+        num_execucoes = vitorias + mortes + sobrevivencias + erros
 
         print(f"\n📊 RESULTADOS - Agente: {agente_nome.upper()} | Tamanho: {tamanho}x{tamanho}")
         print(f"🏆 Vitórias: {vitorias} ({(vitorias/num_execucoes)*100:.1f}%)")
         print(f"☠️ Mortes: {mortes} ({(mortes/num_execucoes)*100:.1f}%)")
         print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias/num_execucoes)*100:.1f}%)")
+        if erros:
+            print(f"❌ Erros: {erros}")
         print(f"⏱️ Tempo total: {tempo_total:.2f} segundos")
         print(f"⏱️ Tempo médio por execução: {tempo_medio:.2f} segundos")
