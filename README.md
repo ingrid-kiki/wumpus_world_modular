@@ -39,7 +39,13 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │   ├── graficos.py       # Geração de gráficos básicos e avançados
 │   └── logger.py         # Logger para logs organizados por execução
 │
-├── logs/                 # Saída dos logs e resultados de benchmarks
+├── exemplos/             # Resumo dos 34 experimentos do AG + galeria de gráficos
+│   ├── README.md
+│   └── galeria/
+│
+├── pygad/                # Implementação alternativa com PyGAD (requer WumpsimAG, não incluso)
+│
+├── logs/                 # Criada ao rodar; NÃO versionada (ver .gitignore)
 │   └── run_YYYYMMDD_HHMMSS/   # Subpastas por execução, com CSVs, PNGs e logs
 │      └── advanced_charts_agent_size/   # Resultados dos gráficos avançados
 │
@@ -49,6 +55,8 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 ├── benchmark_graficos.py      # Benchmark com geração automática de gráficos
 ├── benchmark_sideB.py         # Benchmark alternativo para comparação
 ├── main.py                    # Script principal para execução
+├── CHANGELOG.md               # Histórico de versões
+├── CONTRIBUTING.md            # Como contribuir (branches, commits, versões)
 └── README.md                  # Este arquivo
 ```
 
@@ -75,7 +83,7 @@ pip install pygame matplotlib pandas joblib seaborn scikit-learn numpy psutil
 ou
 
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 ---
 
@@ -90,7 +98,18 @@ Execute o programa principal para acessar o menu interativo:
 4 - Agente Genético (uma execução)
 5 - Customizado via linha de comando (CLI)
 
+```bash
+python main.py
+```
+
+Na opção 5, digite os argumentos do benchmark, por exemplo:
+`--agentes genetico --sizes 4 6 8 --execucoes 50`.
+
 ### 🔧 Sintaxe
+
+> ⚠️ **Ainda não implementado.** A sintaxe abaixo é a planejada para a v2.0.0
+> (ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17)).
+> Hoje o `main.py` só abre o menu interativo e ignora esses argumentos, e o `--vis` não está ligado ao `Visualizer`.
 
 ```bash
 python main.py [agente] [--size TAMANHO] [--seed SEMENTE] [--vis]
@@ -199,6 +218,11 @@ Todos os gráficos são salvos automaticamente na subpasta de cada execução.
 ---
 
 ## 📁 Logs
+
+A pasta `logs/` **não é versionada**: cada pessoa gera a sua ao rodar. Para compartilhar resultados,
+anexe o zip do run a um GitHub Release (ver [CONTRIBUTING.md](CONTRIBUTING.md)).
+Os experimentos de julho/2025 estão resumidos em [`exemplos/README.md`](exemplos/README.md), e os dados completos
+estão no Release [`v1.3.0-dados`](https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.3.0-dados).
 
 Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organizados por execução e agente:
 
