@@ -18,21 +18,16 @@
 # Esse teste é útil para monitorar a performance dos agentes durante o desenvolvimento.
 '''
 
-import os
-import pytest
 import time
 from agents.genetic_agent import GeneticAgent
 from world.world import World
+from tests.conftest import GA_RAPIDO
 
-# Obtém o diretório base do projeto
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Cria o diretório de saída para os logs, com um timestamp único
-output_dir = os.path.join(BASE_DIR, "logs", f"run_{int(time.time())}")
 
 def test_execution_time():
     # Cria o mundo e o agente genético
     world = World(size=4, seed=42)
-    agent = GeneticAgent(world)
+    agent = GeneticAgent(world, **GA_RAPIDO)
     # Marca o tempo inicial
     start = time.time()
     # Executa o agente

@@ -15,14 +15,9 @@
 # Esse teste assegura que o agente manual está pronto para interagir com o ambiente.
 '''
 
-import os
-import pytest
-import datetime
 from agents.manual_agent import ManualAgent
 from world.world import World
 
-# Obtém o diretório base do projeto
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def test_manual_agent_receives_world():
     # Cria um mundo de tamanho 4x4 com semente fixa
@@ -34,5 +29,3 @@ def test_manual_agent_receives_world():
     # Verifica se o atributo 'world' do agente é o mesmo objeto criado
     assert agent.world == world
 
-timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-output_dir = os.path.join(BASE_DIR, "logs", f"run_{timestamp}")

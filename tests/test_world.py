@@ -13,13 +13,8 @@
 # 
 # Esses testes ajudam a garantir que a classe World está pronta para ser utilizada pelos agentes.
 '''
-import os
-import pytest
 from world.world import World
 
-# Configurações de diretório
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-output_dir = os.path.join(BASE_DIR, "logs", "run")  # Diretório de saída para logs
 
 def test_world_initialization():
     # Cria um mundo de tamanho 4x4 com uma semente fixa para resultados reprodutíveis

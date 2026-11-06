@@ -17,23 +17,15 @@
 # - Garante que pelo menos uma ação foi executada (histórico não vazio).
 '''
 
-import os
-import pytest
-from datetime import datetime
 from agents.genetic_agent import GeneticAgent
 from world.world import World
+from tests.conftest import GA_RAPIDO
 
-# Obtém o diretório base onde o script está localizado
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Cria um timestamp único para os logs
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-# Cria um diretório de saída para os logs, com um timestamp único
-output_dir = os.path.join(BASE_DIR, "logs", f"run_{timestamp}")
 
 def test_action_sequence_length():
     # Cria o mundo e o agente genético
     world = World(size=4, seed=42)
-    agent = GeneticAgent(world)
+    agent = GeneticAgent(world, **GA_RAPIDO)
     # Executa o agente e obtém o resultado
     result = agent.run()
     # Extrai o histórico de ações executadas

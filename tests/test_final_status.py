@@ -6,7 +6,7 @@
 # após a execução de uma simulação no ambiente Wumpus World.
 #
 # O objetivo é garantir que o agente termina a simulação em um dos estados esperados:
-# "MORTO", "GANHOU" ou "VIVO". Isso ajuda a validar que o ciclo de vida do agente está
+# "MORTO", "GANHOU" ou "OK". Isso ajuda a validar que o ciclo de vida do agente está
 # sendo registrado corretamente e que o histórico de execução está consistente.
 #
 # Explicação do teste:
@@ -18,19 +18,15 @@
 # - Garante que o status final está entre os valores esperados.
 '''
 
-import os
-import pytest
 from agents.genetic_agent import GeneticAgent
 from world.world import World
+from tests.conftest import GA_RAPIDO
 
-# Configuração do diretório de saída para logs
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-output_dir = os.path.join(BASE_DIR, "logs")
 
 def test_final_agent_status():
     # Cria o mundo e o agente genético
     world = World(size=4, seed=42)
-    agent = GeneticAgent(world)
+    agent = GeneticAgent(world, **GA_RAPIDO)
     # Executa o agente e obtém o resultado
     result = agent.run()
     # Extrai o status final do histórico de execução
@@ -39,4 +35,4 @@ def test_final_agent_status():
     # Imprime o status final para análise didática
     print(f"🎯 Status final: {last_status}")
     # Garante que o status final é um dos esperados
-    assert last_status in ["MORTO", "GANHOU", "VIVO"]
+    assert last_status in ["MORTO", "GANHOU", "OK"]

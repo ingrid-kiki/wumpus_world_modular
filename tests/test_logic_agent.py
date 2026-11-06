@@ -16,16 +16,9 @@
 # Esses testes asseguram que o agente lógico está pronto para ser utilizado em simulações e benchmarks.
 '''
 
-import os
-import pytest
 from agents.logic_agent import LogicAgent
 from world.world import World
-from datetime import datetime
 
-# Configurações de diretório
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_dir = os.path.join(BASE_DIR, "logs", f"run_{timestamp}")
 
 def test_logic_agent_initialization():
     # Cria um mundo de tamanho 4x4 com semente fixa

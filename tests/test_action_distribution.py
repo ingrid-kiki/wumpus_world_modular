@@ -18,20 +18,16 @@
 # - Garante que pelo menos uma ação foi executada (teste básico de funcionamento).
 '''
 
-import os
-import pytest
 from collections import Counter
 from agents.genetic_agent import GeneticAgent
 from world.world import World
+from tests.conftest import GA_RAPIDO
 
-# Define o diretório base e o diretório de saída para os logs
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-output_dir = os.path.join(BASE_DIR, "logs")
 
 def test_action_distribution():
     # Cria o mundo e o agente genético
     world = World(size=4, seed=42)
-    agent = GeneticAgent(world)
+    agent = GeneticAgent(world, **GA_RAPIDO)
     # Executa o agente e obtém o resultado
     result = agent.run()
     # Extrai as ações do histórico

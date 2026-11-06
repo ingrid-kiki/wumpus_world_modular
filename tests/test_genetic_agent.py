@@ -17,22 +17,16 @@
 # Esses testes asseguram que o agente genético está pronto para ser utilizado em simulações e benchmarks.
 '''
 
-import os
-import pytest
 from agents.genetic_agent import GeneticAgent
-from ga.ga_core import GeneticAlgorithm
 from world.world import World
+from tests.conftest import GA_RAPIDO
 
-# Configuração do diretório de saída para logs
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-timestamp = "20231004_1200"  # Exemplo de timestamp, deve ser gerado dinamicamente em um caso real
-output_dir = os.path.join(BASE_DIR, "logs", f"run_{timestamp}")
 
 def test_genetic_agent_initialization():
     # Cria um mundo de tamanho 4x4 com semente fixa
     world = World(size=4, seed=42)
     # Cria o agente genético com parâmetros customizados
-    agent = GeneticAgent(world, population_size=30, gens=50, chrom_length=10)
+    agent = GeneticAgent(world, **GA_RAPIDO)
 
     # Testa se os atributos principais existem
     assert hasattr(agent, "world")
@@ -40,9 +34,9 @@ def test_genetic_agent_initialization():
     assert hasattr(agent, "history")
 
     # Verifica se a instância de algoritmo genético foi criada corretamente
-    assert agent.ga.pop_size == 30
-    assert agent.ga.gens == 50
-    assert agent.ga.chrom_length == 10
+    assert agent.ga.pop_size == GA_RAPIDO["population_size"]
+    assert agent.ga.gens == GA_RAPIDO["gens"]
+    assert agent.ga.chrom_length == GA_RAPIDO["chrom_length"]
     
     # Verifica se o histórico está vazio inicialmente
     assert agent.history == []
@@ -51,4 +45,5 @@ def test_genetic_agent_initialization():
     result = agent.run()
     assert isinstance(result, dict)
     assert "history" in result
-    assert "fitness" in result
+    assert "dados_extra" in result
+    assert "fitness" in result["dados_extra"]

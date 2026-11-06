@@ -17,14 +17,8 @@
 # Esse teste assegura que o Logger está funcionando corretamente para registrar logs de execução.
 '''
 
-import pytest
 from utils.logger import Logger
-import os
-from datetime import datetime
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_dir = os.path.join(BASE_DIR, "logs", f"run_{timestamp}")
 
 def test_logger_creation(tmp_path):
     # Cria o Logger no diretório temporário com o nome "testagent"
