@@ -36,6 +36,12 @@ Fase 4 de [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17): 
 ### Modificado
 - `main.py`, `pygad/le_resultados.py` e `pygad/wumpus_AG_pygad.py` normalizados para finais de linha LF.
 
+### Corrigido
+- Os gráficos passam a usar sempre o backend `Agg` do matplotlib (`utils/graficos.py`, `benchmark_fast.py`,
+  `benchmark_graficos.py`). Sem isso, o matplotlib tentava o Tk e falhava de forma intermitente em instalações do
+  Python com Tk incompleto (no Windows, 4 de 5 rodadas da suíte de testes falhavam). O projeto só salva gráficos em
+  arquivo, então nada muda nos resultados.
+
 ---
 
 ## [1.4.0] - 2026-11-06

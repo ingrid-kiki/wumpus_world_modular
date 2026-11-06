@@ -9,7 +9,9 @@
 # Todos os gráficos são salvos automaticamente nas pastas de saída organizadas por execução.
 '''
 
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender do Tk)
+import matplotlib.pyplot as plt  # noqa: E402
 import os
 from sklearn.decomposition import PCA
 import seaborn as sns
