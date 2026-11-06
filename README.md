@@ -41,6 +41,8 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │   ├── reprodutibilidade.py  # metadata.json de cada execução
 │   └── versao.py         # Versão do projeto (fonte única)
 │
+├── docs/                 # Análises, plano de ação e relato das decisões (comece por docs/README.md)
+│
 ├── exemplos/             # Resumo dos 34 experimentos do AG + galeria de gráficos
 │   ├── README.md
 │   └── galeria/
@@ -380,6 +382,9 @@ O sistema agora inclui tratamento robusto de erros:
 ## 👩‍💻 Autoria
 
 Este projeto foi desenvolvido por [**Alfa Marine**](https://github.com/alfa-m) e [**Ingrid Mendes**](https://github.com/ingrid-kiki), com foco em pesquisa e ensino de Inteligência Artificial e Jogos Digitais.
+
+O histórico das decisões do projeto está em [`docs/`](docs/README.md), incluindo o relato da
+[reorganização de novembro de 2026](docs/reorganizacao-2026-11.md).
 
 ### 🛠️ Ferramentas utilizadas
 
