@@ -59,4 +59,17 @@ O projeto segue [Versionamento Semântico](https://semver.org/lang/pt-BR/) (`MAJ
 - **PATCH**: correção que não altera resultados.
 
 Toda mudança visível entra na seção `[Não lançado]` do [CHANGELOG.md](CHANGELOG.md) na mesma PR.
-Ao lançar uma versão, essa seção ganha número e data, e o commit recebe uma tag `vX.Y.Z`.
+
+A versão fica num lugar só: `utils/versao.py`. Entre lançamentos ela tem o sufixo `.dev0` (ex.: `1.5.0.dev0`).
+Para lançar:
+
+1. Tire o `.dev0` em `utils/versao.py` e dê número e data à seção `[Não lançado]` do CHANGELOG.
+2. Faça o merge na `main` e crie a tag `vX.Y.Z` no commit de merge, com um GitHub Release.
+3. Volte a versão para a próxima `.dev0` num commit seguinte.
+
+## Experimentos
+
+Todo run grava `metadata.json`. Antes de usar um resultado num texto ou na tese:
+
+- rode a partir de um commit sem alterações pendentes (o `metadata.json` registra se havia);
+- confira com `python reproduzir.py logs/run_...` que ele se repete.

@@ -8,7 +8,27 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## [Não lançado]
 
-Nada ainda. Próximas etapas: reprodutibilidade (Fase 4) e refatoração (Fase 5, v2.0.0), ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
+Fase 4 de [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17): reprodutibilidade. Os resultados
+(vitórias, mortes, sobrevivências) são **idênticos** aos da v1.4.0 para os mesmos parâmetros e sementes.
+
+### Adicionado
+- `metadata.json` em cada run: versão, commit, branch, arquivos alterados não commitados, argumentos, parâmetros
+  efetivos do agente genético, regra das sementes, Python, plataforma e versões das bibliotecas.
+- `reproduzir.py <pasta>`: refaz um run a partir do `metadata.json`, avisa sobre diferenças de código ou ambiente e
+  compara os resultados.
+- Parâmetros do agente genético pela linha de comando: `--populacao`, `--geracoes`, `--cromossomo`, `--mutacao` e
+  `--cruzamento`; e `--saida` para escolher a pasta do run ([#13]).
+- `utils/versao.py` como fonte única da versão.
+- `executar_benchmark(..., parametros_agentes=None)` nos 5 benchmarks; `main.rodar_benchmark(cli_args)`.
+- `tests/test_reprodutibilidade.py` (13 testes).
+
+### Desempenho
+- **Agente genético de 15 a 25 vezes mais rápido** com resultados idênticos (padrão 100 × 500 × 100 em 4x4:
+  17–22 s → cerca de 1 s). `World.clone()` deixou de usar `copy.deepcopy`, que respondia por ~73% do tempo; a seleção
+  usa `Individual.copia()`; e o fitness é guardado em cache por cromossomo.
+
+### Modificado
+- `main.py`, `pygad/le_resultados.py` e `pygad/wumpus_AG_pygad.py` normalizados para finais de linha LF.
 
 ---
 
@@ -183,3 +203,4 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 [#22]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/22
 [#23]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/23
 [#24]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/24
+[#13]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/13
