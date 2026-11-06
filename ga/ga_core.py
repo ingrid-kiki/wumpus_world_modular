@@ -7,7 +7,6 @@
 # seleção, cruzamento e mutação para buscar sequências de ações que maximizem o desempenho
 # do agente no ambiente. Serve como base para experimentos de IA evolutiva no projeto.
 
-import copy
 import random
 import psutil
 import os
@@ -40,8 +39,28 @@ class GeneticAlgorithm:
         self.cpu_history = []
         # Diversidade de genes por posição no cromossomo
         self.diversidade_history = []
+        # Cache de fitness por cromossomo: o mundo não muda durante a evolução, então o mesmo
+        # cromossomo tem sempre a mesma nota. Não altera o resultado, só evita simular de novo.
+        self._cache_fitness = {}
+        self.avaliacoes = 0       # simulações realmente executadas
+        self.acertos_cache = 0    # avaliações respondidas pelo cache
+
+    def avaliar(self, individual, world):
+        """Define individual.fitness, simulando só cromossomos ainda não vistos."""
+        chave = tuple(individual.chromosome)
+        if chave in self._cache_fitness:
+            individual.fitness = self._cache_fitness[chave]
+            self.acertos_cache += 1
+        else:
+            individual.evaluate(world)
+            self._cache_fitness[chave] = individual.fitness
+            self.avaliacoes += 1
 
     def run(self, world, logger=None):
+        # Cada execução começa com o cache vazio (o cache vale para um mundo só)
+        self._cache_fitness = {}
+        self.avaliacoes = 0
+        self.acertos_cache = 0
         # Registra o uso de memória e CPU antes de iniciar as gerações
         process = psutil.Process(os.getpid())
         process.cpu_percent()
@@ -57,7 +76,7 @@ class GeneticAlgorithm:
             
             # Avalia o fitness de cada indivíduo na população
             for ind in population:
-                ind.evaluate(world)
+                self.avaliar(ind, world)
 
             # Ordena a população do melhor para o pior fitness
             population.sort(key=lambda x: x.fitness, reverse=True)
@@ -96,7 +115,7 @@ class GeneticAlgorithm:
                     c1, c2 = self.crossover(p1, p2)
                 else:
                     # Se não cruzar, copia os pais diretamente
-                    c1, c2 = copy.deepcopy(p1), copy.deepcopy(p2)
+                    c1, c2 = p1.copia(), p2.copia()
 
                 # Aplica mutação nos filhos
                 self.mutate(c1)
@@ -110,7 +129,7 @@ class GeneticAlgorithm:
         # Avalia todos da última geração (caso tenha novos filhos não avaliados)
         for ind in population:
             if ind.fitness is None:
-                ind.evaluate(world)
+                self.avaliar(ind, world)
 
         # Salva o melhor indivíduo encontrado
         best_individual = max(population, key=lambda x: x.fitness)
@@ -128,12 +147,14 @@ class GeneticAlgorithm:
             "final_pop": final_population_chromosomes,
             "memoria": self.memory_history,
             "cpu": self.cpu_history,
-            "diversidade_vars": np.array(self.diversidade_history)
+            "diversidade_vars": np.array(self.diversidade_history),
+            "avaliacoes": self.avaliacoes,
+            "acertos_cache": self.acertos_cache
         }
 
     def select(self, population):
-        # Seleciona aleatoriamente um indivíduo entre os 10 melhores (elitismo/seleção por torneio)
-        return copy.deepcopy(self.rng.choice(population[:10]))
+        # Seleciona aleatoriamente um indivíduo entre os 10 melhores (seleção por truncamento)
+        return self.rng.choice(population[:10]).copia()
 
     def crossover(self, p1, p2):
         # Realiza o cruzamento de dois pais para gerar dois filhos
