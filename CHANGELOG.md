@@ -10,6 +10,20 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Próxima etapa: refatoração (Fase 5, v2.0.0), ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
 
+### Corrigido
+- **Erros nos benchmarks** ([#30]): os 5 benchmarks passam a tratar uma execução que falha do mesmo jeito. Ela não
+  conta mais como vitória, morte ou sobrevivência (o `benchmark.py` contava como "sobreviveu" e o `benchmark_fast.py`
+  descartava sem aviso), entra na nova coluna `erros`, e o benchmark continua com as demais execuções (os outros
+  três paravam). Os dados extras vêm da primeira execução sem erro.
+- `python benchmark.py` não testa mais o agente manual, que pedia ações pelo teclado e falhava 3 vezes sem ninguém
+  digitando.
+- `terminal_output.txt` passa a incluir o **stderr**: tracebacks e avisos das execuções ficam salvos na pasta do run.
+
+### Modificado
+- `resultados_benchmark.csv` ganha a coluna `erros`. O resumo impresso mostra os erros quando há, e os percentuais
+  usam o total de execuções. `reproduzir.py` compara a coluna `erros` quando os dois CSVs a têm.
+- `utils/execucao.py`: `executar_uma()` e `contar()`, usadas pelos 5 benchmarks.
+
 ### Documentação
 - Nova pasta `docs/`: relato da reorganização de novembro de 2026 (`reorganizacao-2026-11.md`), plano de ação com o
   status de cada fase (`plano-de-acao.md`) e a análise inicial do código (`analise-inicial-2026-11.md`), com um índice
@@ -224,3 +238,4 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 [#23]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/23
 [#24]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/24
 [#13]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/13
+[#30]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/30

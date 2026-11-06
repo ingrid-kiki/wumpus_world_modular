@@ -96,9 +96,10 @@ def capturar_saida_terminal():
     """
     Context manager para capturar toda a saída do terminal durante a execução.
     Permite salvar a saída do terminal em um arquivo para análise posterior.
+    Captura o stdout e também o stderr, onde ficam os erros e tracebacks das execuções (#30).
     """
     buffer = io.StringIO()
-    stdout_original = sys.stdout
+    stdout_original, stderr_original = sys.stdout, sys.stderr
     try:
         class DualWriter:
             def __init__(self, terminal, buffer):
@@ -111,9 +112,10 @@ def capturar_saida_terminal():
                 self.terminal.flush()
                 self.buffer.flush()
         sys.stdout = DualWriter(stdout_original, buffer)
+        sys.stderr = DualWriter(stderr_original, buffer)
         yield buffer
     finally:
-        sys.stdout = stdout_original
+        sys.stdout, sys.stderr = stdout_original, stderr_original
 
 # Parâmetros do GeneticAgent que podem ser passados pela linha de comando (#13)
 PARAMETROS_AG_CLI = {
@@ -233,11 +235,14 @@ def rodar_benchmark(cli_args):
         for _, row in df_resultados.iterrows():
             agente = row['agente']
             tamanho = row['tamanho_mundo']
-            total = row['vitórias'] + row['mortes'] + row['sobreviveu']
+            erros = row.get('erros', 0)  # benchmarks de terceiros podem não ter a coluna
+            total = row['vitórias'] + row['mortes'] + row['sobreviveu'] + erros
             print(f"\n📊 RESULTADOS - {agente.upper()} | Tamanho: {tamanho}x{tamanho}")
             print(f"🏆 Vitórias: {row['vitórias']} ({(row['vitórias']/total)*100:.1f}%)")
             print(f"☠️ Mortes: {row['mortes']} ({(row['mortes']/total)*100:.1f}%)")
             print(f"🤔 Sobreviveu sem vencer: {row['sobreviveu']} ({(row['sobreviveu']/total)*100:.1f}%)")
+            if erros:
+                print(f"❌ Erros: {erros} ({(erros/total)*100:.1f}%), detalhes em terminal_output.txt")
             print(f"⏱️ Tempo total: {formatar_tempo(row['tempo_total'])} | Tempo médio: {formatar_tempo(row['tempo_médio'])}")
 
     # === Salvando a saída do terminal em arquivo .txt ===
