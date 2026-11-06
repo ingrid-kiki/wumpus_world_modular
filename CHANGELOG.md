@@ -8,8 +8,14 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## [Não lançado]
 
-Trabalho em andamento na branch de integração `reorg/v2`, que será mesclada na `main` como **v2.0.0**.
-Plano e decisões em [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
+Nada ainda. Próximas etapas: reprodutibilidade (Fase 4) e refatoração (Fase 5, v2.0.0), ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
+
+---
+
+## [1.4.0] - 2026-11-06
+
+Reorganização do repositório, testes e CI, e correção dos bugs #18 a #24 (Fases 1 a 3 de [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17)),
+feitas na branch `reorg/v2`. Também foram criadas as tags retroativas `v1.1.0`, `v1.2.0` e `v1.3.0`.
 
 > ⚠️ **As correções abaixo mudam os resultados dos experimentos.** Mundos, evolução do AG e fitness para cada
 > semente não são mais os mesmos da v1.3.0. Os números do Release `v1.3.0-dados` e de `exemplos/` não são
@@ -165,7 +171,8 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 > (os nomes reais são `move_agent()` e `interact()`) e um arquivo `RELEASE_NOTES.md`, que nunca existiu.
 > O `Visualizer` existe, mas não é chamado pelo `main.py`.
 
-[Não lançado]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/main...reorg/v2
+[Não lançado]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.4.0...main
+[1.4.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.3.0
 [1.2.0]: https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.2.0
 [1.1.0]: https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.1.0
