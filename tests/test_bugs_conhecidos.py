@@ -2,12 +2,14 @@
 # tests/test_bugs_conhecidos.py
 # ==============================
 '''
-# Testes de caracterização dos bugs encontrados na análise do projeto (#17).
+# Testes dos bugs encontrados na análise do projeto (#17), issues #18 a #24.
 #
-# Cada teste descreve o comportamento CORRETO e está marcado com xfail estrito,
-# apontando a issue do bug. Enquanto o bug existir, o teste "falha como esperado".
-# Quando o bug for corrigido, o teste passa e o pytest acusa XPASS(strict):
-# é o sinal para remover a marcação xfail na mesma PR da correção.
+# Cada teste descreve o comportamento CORRETO. Eles nasceram marcados com xfail estrito
+# (Fase 2) e a marcação foi removida no commit que corrigiu cada bug (Fase 3).
+# Hoje funcionam como testes de regressão: se algum voltar a falhar, o bug voltou.
+#
+# Para documentar um bug novo antes de corrigi-lo, use:
+#     @pytest.mark.xfail(strict=True, reason=f"{ISSUE}<número> <descrição>")
 '''
 
 import random
@@ -142,8 +144,8 @@ def test_mundo_nao_muda_depois_da_morte():
     _, status = w.step("ESQUERDA")
     assert status == "MORTO" and w.agent_pos == (0, 1) and not w.won
 
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}21 bônus de +25 por tiro nunca é concedido")
-def test_tiro_com_fedor_recebe_bonus():
+def test_matar_o_wumpus_recebe_bonus():
+    """#21 (corrigido): +25 quando o tiro mata o Wumpus."""
     w = World(size=4, seed=0)
     w.wumpus_pos = (0, 1)  # adjacente ao agente em (0,0): há FEDOR
     w.pits = [(3, 3)]
@@ -152,8 +154,24 @@ def test_tiro_com_fedor_recebe_bonus():
     ind = Individual(0)
     ind.chromosome = ["TIRO"]
     ind.evaluate(w)
-    # -1 (ação) + 25 (tiro com fedor) + 10 (sobreviveu)
+    # -1 (ação) + 25 (matou o Wumpus) + 10 (sobreviveu)
     assert ind.fitness == 34
+
+
+def test_tiro_sem_acertar_nao_recebe_bonus():
+    """#21: errar o tiro (ou atirar com o Wumpus já morto) custa só a ação."""
+    w = World(size=4, seed=0)
+    w.wumpus_pos = (3, 3)  # longe do agente
+    w.pits = [(2, 2)]
+    w.gold_pos = (3, 0)
+    ind = Individual(0)
+    ind.chromosome = ["TIRO"]
+    ind.evaluate(w)
+    assert ind.fitness == 9  # -1 + 10
+    w.wumpus_pos = (0, 1)
+    ind.chromosome = ["TIRO", "TIRO"]
+    ind.evaluate(w)
+    assert ind.fitness == 33  # -1 + 25, depois -1, + 10
 
 
 # ---------------------------------------------------------------- Mundo

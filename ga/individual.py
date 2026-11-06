@@ -41,8 +41,10 @@ class Individual:
                 break
             if action == 'AGARRAR' and 'BRILHO' in percept:
                 score += 100  # Bônus se encontrar o ouro
-            if action == 'TIRO' and 'FEDOR' in percept:
-                score += 25   # Atirar com cheiro = tentativa válida
+            if action == 'TIRO' and temp_world.last_scream:
+                # Bônus por matar o Wumpus (o mundo registra o grito). Antes a condição era
+                # 'FEDOR' na percepção pós-tiro, que nunca acontece: o fedor some quando ele morre (#21)
+                score += 25
             if action in ['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA']:
                 score -= 0.5  # Penalidade leve por andar
             else:
