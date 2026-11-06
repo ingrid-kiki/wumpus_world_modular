@@ -23,6 +23,13 @@ class Individual:
         # Valor de fitness (avaliação de desempenho do indivíduo)
         self.fitness = None
 
+    def copia(self):
+        """Cópia independente do cromossomo, mantendo o fitness (mais rápida que copy.deepcopy)."""
+        novo = Individual(0)
+        novo.chromosome = list(self.chromosome)
+        novo.fitness = self.fitness
+        return novo
+
     def evaluate(self, world):
         """
         Executa a sequência de ações no mundo e avalia o desempenho.

@@ -3,6 +3,7 @@
 # ==============================
 
 import argparse
+import functools
 import os
 import sys
 from datetime import datetime
@@ -19,6 +20,7 @@ from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
 from utils.logger import Logger
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
+from utils.reprodutibilidade import coletar_metadados, parametros_efetivos, salvar_metadados
 
 # Dicionário de agentes disponíveis
 AGENTES_DISPONIVEIS = {
@@ -113,6 +115,34 @@ def capturar_saida_terminal():
     finally:
         sys.stdout = stdout_original
 
+# Parâmetros do GeneticAgent que podem ser passados pela linha de comando (#13)
+PARAMETROS_AG_CLI = {
+    "populacao": ("population_size", int, "Tamanho da população do AG"),
+    "geracoes": ("gens", int, "Número de gerações do AG"),
+    "cromossomo": ("chrom_length", int, "Tamanho do cromossomo (ações por indivíduo)"),
+    "mutacao": ("mutation_rate", float, "Taxa de mutação do AG (0 a 1)"),
+    "cruzamento": ("crossover_rate", float, "Taxa de cruzamento do AG (0 a 1)"),
+}
+
+def criar_parser():
+    parser = argparse.ArgumentParser(description="Executa benchmarks no Wumpus World")
+    parser.add_argument("--execucoes", type=int, default=32, help="Número de execuções por agente/tamanho")
+    parser.add_argument("--sizes", nargs="+", type=int, default=[4, 6, 8], help="Tamanhos do mundo (ex: 4 6 8)")
+    parser.add_argument("--agentes", nargs="+", choices=AGENTES_DISPONIVEIS.keys(),
+                        default=["logico", "genetico"], help="Agentes a incluir no benchmark")
+    parser.add_argument("--benchmark", type=str, default="benchmark.py", help="Arquivo de benchmark a ser usado")
+    grupo_ag = parser.add_argument_group("agente genético", "Sem estas opções, valem os padrões do GeneticAgent.")
+    for opcao, (_, tipo, ajuda) in PARAMETROS_AG_CLI.items():
+        grupo_ag.add_argument(f"--{opcao}", type=tipo, default=None, help=ajuda)
+    parser.add_argument("--saida", type=str, default=None,
+                        help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
+    return parser
+
+def parametros_do_ag(args):
+    """Parâmetros do GeneticAgent informados na linha de comando (só os que foram passados)."""
+    return {nome: getattr(args, opcao) for opcao, (nome, _, _) in PARAMETROS_AG_CLI.items()
+            if getattr(args, opcao) is not None}
+
 def main():
     escolha = menu_interativo()
 
@@ -120,7 +150,8 @@ def main():
         # Benchmark padrão: usa sys.argv[1:] (argumentos do terminal)
         cli_args = sys.argv[1:]
     elif escolha == "5":
-        print("\nDigite a linha de comando desejada (exemplo: --agentes logico genetico --sizes 4 6 --execucoes 10 --benchmark outro_benchmark.py):")
+        print("\nDigite a linha de comando desejada (exemplo: --agentes logico genetico --sizes 4 6 --execucoes 10 "
+              "--populacao 50 --geracoes 100 --benchmark outro_benchmark.py):")
         linha = input("main.py ").strip()
         cli_args = shlex.split(linha)
     elif escolha == "2":
@@ -137,21 +168,32 @@ def main():
         return
 
     # Só chega aqui se for benchmark (1 ou 5)
-    parser = argparse.ArgumentParser(description="Executa benchmarks no Wumpus World")
-    parser.add_argument("--execucoes", type=int, default=32, help="Número de execuções por agente/tamanho")
-    parser.add_argument("--sizes", nargs="+", type=int, default=[4, 6, 8], help="Tamanhos do mundo (ex: 4 6 8)")
-    parser.add_argument("--agentes", nargs="+", choices=AGENTES_DISPONIVEIS.keys(),
-                        default=["logico", "genetico"], help="Agentes a incluir no benchmark")
-    parser.add_argument("--benchmark", type=str, default="benchmark.py", help="Arquivo de benchmark a ser usado")
-    args = parser.parse_args(cli_args)
+    rodar_benchmark(cli_args)
 
-    # Carrega o benchmark escolhido pelo usuário
-    executar_benchmark = carregar_benchmark(args.benchmark)
+def rodar_benchmark(cli_args):
+    """
+    Executa os benchmarks descritos por cli_args e grava tudo na pasta do run, incluindo
+    metadata.json (Fase 4 do plano, #17). Usado pelo main() e pelo reproduzir.py.
+    :return: (pasta de saída, DataFrame do resumo)
+    """
+    args = criar_parser().parse_args(cli_args)
+    sobrescritos_ag = parametros_do_ag(args)
+
+    # Carrega o benchmark escolhido pelo usuário; os parâmetros por agente vão junto em toda chamada
+    executar_benchmark = functools.partial(carregar_benchmark(args.benchmark),
+                                           parametros_agentes={"genetico": sobrescritos_ag})
 
     # === Criação do diretório de saída ===
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = os.path.join("logs", f"run_{timestamp}")
+    output_dir = args.saida or os.path.join("logs", f"run_{timestamp}")
     os.makedirs(output_dir, exist_ok=True)
+
+    # === Metadados da execução, gravados antes de rodar (se algo falhar, fica o registro) ===
+    parametros_ag = None
+    if "genetico" in args.agentes:
+        parametros_ag = parametros_efetivos(GeneticAgent, sobrescritos_ag)
+        parametros_ag.pop("seed", None)  # a semente segue a regra descrita em metadados["sementes"]
+    salvar_metadados(output_dir, coletar_metadados(cli_args, vars(args), parametros_ag))
 
     resultados = []
 
@@ -204,6 +246,8 @@ def main():
         f.write(buffer.getvalue())
 
     print(f"\n💾 Saída do terminal salva em: {terminal_output_path}")
+    print(f"🧾 Metadados da execução em: {os.path.join(output_dir, 'metadata.json')}")
+    return output_dir, df_resultados
 
 if __name__ == "__main__":
     main()

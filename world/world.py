@@ -144,10 +144,15 @@ class World:
 
     def clone(self):
         """
-        Retorna uma cópia profunda do mundo (útil para simulações).
+        Retorna uma cópia independente do mundo (útil para simulações).
+        As posições são tuplas (imutáveis), então basta copiar os atributos e a lista de poços.
+        O gerador aleatório é compartilhado: ele só é usado na criação do mundo.
+        Antes era um copy.deepcopy, que respondia por ~70% do tempo do AG.
         :return: Novo objeto World idêntico ao atual
         """
-        return copy.deepcopy(self)
+        novo = copy.copy(self)
+        novo.pits = list(self.pits)
+        return novo
 
     def is_adjacent(self, pos1, pos2):
         """

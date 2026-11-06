@@ -23,7 +23,7 @@ AGENTES_DISPONIVEIS = {
     'genetico': GeneticAgent
 }
 
-def executar_benchmark(agente_nome, world_size, num_execucoes):
+def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agentes=None):
     # Inicializa contadores de vitórias, mortes e sobrevivências
     vitorias, mortes, sobrevivencias = 0, 0, 0
     tempos = []  # Lista para armazenar o tempo de cada execução
@@ -33,7 +33,7 @@ def executar_benchmark(agente_nome, world_size, num_execucoes):
     for i in range(num_execucoes):
         seed = i  # muda a semente em cada rodada para garantir variedade
         mundo = World(size=world_size, seed=seed)  # Cria o mundo com a semente atual
-        agente = AGENTES_DISPONIVEIS[agente_nome](mundo)  # Instancia o agente escolhido
+        agente = AGENTES_DISPONIVEIS[agente_nome](mundo, **(parametros_agentes or {}).get(agente_nome, {}))  # Instancia o agente escolhido
         agente.logger = None  # desativa logging
 
         # Marca o tempo de início da execução
