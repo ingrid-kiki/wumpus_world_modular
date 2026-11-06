@@ -11,7 +11,9 @@ exibindo um resumo com as taxas de vitória, morte, sobrevivência e tempos méd
 
 import time
 import argparse
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender do Tk)
+import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd
 from world.world import World
 from agents.logic_agent import LogicAgent

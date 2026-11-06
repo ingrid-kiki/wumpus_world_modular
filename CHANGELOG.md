@@ -8,6 +8,12 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## [Não lançado]
 
+Nada ainda. Próxima etapa: refatoração (Fase 5, v2.0.0), ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
+
+---
+
+## [1.5.0] - 2026-11-06
+
 Fase 4 de [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17): reprodutibilidade. Os resultados
 (vitórias, mortes, sobrevivências) são **idênticos** aos da v1.4.0 para os mesmos parâmetros e sementes.
 
@@ -29,6 +35,12 @@ Fase 4 de [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17): 
 
 ### Modificado
 - `main.py`, `pygad/le_resultados.py` e `pygad/wumpus_AG_pygad.py` normalizados para finais de linha LF.
+
+### Corrigido
+- Os gráficos passam a usar sempre o backend `Agg` do matplotlib (`utils/graficos.py`, `benchmark_fast.py`,
+  `benchmark_graficos.py`). Sem isso, o matplotlib tentava o Tk e falhava de forma intermitente em instalações do
+  Python com Tk incompleto (no Windows, 4 de 5 rodadas da suíte de testes falhavam). O projeto só salva gráficos em
+  arquivo, então nada muda nos resultados.
 
 ---
 
@@ -191,7 +203,8 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 > (os nomes reais são `move_agent()` e `interact()`) e um arquivo `RELEASE_NOTES.md`, que nunca existiu.
 > O `Visualizer` existe, mas não é chamado pelo `main.py`.
 
-[Não lançado]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.4.0...main
+[Não lançado]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.5.0...main
+[1.5.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.3.0
 [1.2.0]: https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.2.0
