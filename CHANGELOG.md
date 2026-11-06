@@ -11,13 +11,35 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 Trabalho em andamento na branch de integração `reorg/v2`, que será mesclada na `main` como **v2.0.0**.
 Plano e decisões em [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
 
+> ⚠️ **As correções abaixo mudam os resultados dos experimentos.** Mundos, evolução do AG e fitness para cada
+> semente não são mais os mesmos da v1.3.0. Os números do Release `v1.3.0-dados` e de `exemplos/` não são
+> comparáveis com os desta versão.
+
+### Corrigido
+- **Agente lógico entrava em loop infinito** em todo mundo: a base de conhecimento não conhecia o tamanho do grid e
+  "andava" para fora do mapa. Agora respeita o grid, usa a posição real do mundo e tem limite de `4 × N²` passos.
+  É a primeira versão em que o benchmark padrão (`logico` + `genetico`) termina ([#18]).
+- Fitness herdado do pai não é mais mantido depois da mutação ([#19]).
+- O jogo termina na vitória ou na morte: o ouro não é pontuado várias vezes e nada acontece depois do fim ([#20]).
+- O bônus de +25 do fitness passa a premiar matar o Wumpus; antes nunca era concedido ([#21]).
+- Poços não caem mais na mesma casa; todo mundo tem exatamente `N // 2` poços ([#22]).
+- `World` e o AG usam geradores aleatórios próprios; o AG usa a semente do mundo por padrão, então a mesma semente
+  gera sempre o mesmo resultado, sem depender do `random` global ([#23]).
+- Os 5 benchmarks seguem o mesmo contrato do `main.py --benchmark`; o CSV só tem colunas escalares e os dados extras
+  vão para `dados_extra_<agente>_<N>x<N>.npz` ([#24]).
+
 ### Removido
 - `logs/` (214 arquivos) e os 34 runs brutos de `exemplos/` (1.149 arquivos) saem do versionamento.
   Os dados completos foram preservados em `wumpus_dados_v1.3.0.zip`, publicado no Release `v1.3.0-dados`.
 
 ### Adicionado
 - Testes automatizados em `tests/`: os 10 testes da branch `dev-melhorias` (adaptados à `main` e acelerados de 61 s
-  para menos de 1 s) e `test_bugs_conhecidos.py`, com 11 testes `xfail` que documentam os bugs #18 a #24.
+  para menos de 1 s) e `test_bugs_conhecidos.py`, que documentou os bugs #18 a #24 com `xfail` e hoje serve de
+  teste de regressão (37 testes no total).
+- README: seções "Regras deste Wumpus World" (diferenças em relação ao clássico e tabela do fitness) e
+  "Os agentes não jogam nas mesmas condições".
+- `LogicAgent(world, max_steps=None)`, `GeneticAgent(..., seed=None)` e `GeneticAlgorithm(..., seed=None)`.
+- `LogicAgent.run()` devolve `{"history", "passos"}`.
 - `pyproject.toml` com a configuração do pytest (timeout de 60 s, `xfail_strict`) e do ruff.
 - CI no GitHub Actions: ruff e pytest em Ubuntu e Windows, Python 3.12 e 3.13.
 - `requirements-dev.txt` com pytest, pytest-timeout e ruff.
@@ -147,3 +169,10 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 [1.3.0]: https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.3.0
 [1.2.0]: https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.2.0
 [1.1.0]: https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.1.0
+[#18]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/18
+[#19]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/19
+[#20]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/20
+[#21]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/21
+[#22]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/22
+[#23]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/23
+[#24]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/24

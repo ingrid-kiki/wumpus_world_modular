@@ -82,8 +82,8 @@ python -m pytest
 ruff check .
 ```
 
-Os bugs conhecidos estão em [`tests/test_bugs_conhecidos.py`](tests/test_bugs_conhecidos.py), marcados como `xfail`
-e ligados às issues #18 a #24. O CI roda os testes em cada push e PR para `main` e `reorg/v2`.
+Os bugs corrigidos na reorganização (issues #18 a #24) têm testes de regressão em
+[`tests/test_bugs_conhecidos.py`](tests/test_bugs_conhecidos.py). O CI roda os testes em cada push e PR para `main` e `reorg/v2`.
 
 ---
 
@@ -144,6 +144,51 @@ python main.py manual
 | `manual`  | Agente controlado pelo teclado do usuário. |
 | `logico`  | Agente baseado em lógica simbólica simples (regras IF/ELSE). |
 | `genetico`| Agente baseado em algoritmo genético com avaliação de desempenho. |
+
+### ⚖️ Os agentes não jogam nas mesmas condições
+
+- O **agente lógico** só conhece o que percebe: decide passo a passo a partir de `FEDOR`, `BRISA` e `BRILHO`.
+  Ele tem um limite de `4 × N²` passos; se não vencer nem morrer até lá, conta como "sobreviveu".
+- O **agente genético** planeja *antes* de jogar: avalia milhares de sequências de ações simulando cópias do
+  mundo real (`world.clone()`), ou seja, conhece indiretamente onde estão o Wumpus, os poços e o ouro.
+  Depois executa a melhor sequência encontrada.
+
+Por isso, comparar as taxas de vitória dos dois mede "planejar com o mapa" contra "reagir às percepções",
+e não qual algoritmo é melhor em igualdade de informação.
+
+---
+
+## 📜 Regras deste Wumpus World
+
+Este projeto usa uma versão simplificada do ambiente clássico (Russell & Norvig). As diferenças são intencionais
+e afetam os resultados:
+
+| Regra | Neste projeto | Clássico |
+|---|---|---|
+| Mundo | Grid N×N; o agente começa em (0,0) | 4×4 |
+| Poços | Exatamente `N // 2`, em casas diferentes, nunca no início, no ouro ou no Wumpus | 20% de chance por casa |
+| Ações | `CIMA`, `BAIXO`, `ESQUERDA`, `DIREITA`, `AGARRAR`, `TIRO` (sem girar) | Girar, avançar, agarrar, atirar, sair |
+| Percepções | `FEDOR` (Wumpus adjacente e vivo), `BRISA` (poço adjacente), `BRILHO` (ouro na casa) | Também `IMPACTO` e `GRITO` |
+| Parede | O movimento é ignorado, sem percepção de impacto | Percepção `IMPACTO` |
+| Tiro | Flechas ilimitadas; sem direção: mata o Wumpus se ele estiver em qualquer casa adjacente | Uma flecha, em linha reta |
+| Vitória | Agarrar o ouro termina o jogo | Agarrar o ouro e voltar a (0,0) |
+| Fim de jogo | Depois de vencer ou morrer, nenhuma ação tem efeito | — |
+| Aleatoriedade | `World(N, seed)` usa um gerador próprio; a mesma semente gera sempre o mesmo mundo | — |
+
+### Fitness do agente genético
+
+Cada cromossomo é uma sequência de ações executada numa cópia do mundo:
+
+| Evento | Pontos |
+|---|---:|
+| Movimento | −0,5 |
+| `AGARRAR` ou `TIRO` | −1 |
+| Agarrar o ouro (fim de jogo) | +100 |
+| Tiro que mata o Wumpus | +25 |
+| Morrer (fim de jogo) | −100 |
+| Terminar vivo | +10 |
+
+Sem semente explícita, o AG usa a semente do mundo: o mesmo mundo produz sempre a mesma evolução.
 
 ---
 
