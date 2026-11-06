@@ -26,7 +26,7 @@ TEMPOS_MEDIOS_ESTIMADOS = {
     'genetico': 0.30
 }
 
-def executar_benchmark(agente_nome, world_size=4, num_execucoes=10):
+def executar_benchmark(agente_nome, world_size=4, num_execucoes=10, parametros_agentes=None):
     vitorias, mortes, sobrevivencias = 0, 0, 0
     dados_extra_capturados = {}
     tempos = []
@@ -37,7 +37,7 @@ def executar_benchmark(agente_nome, world_size=4, num_execucoes=10):
         seed = i
         mundo = World(size=world_size, seed=seed)
         agente_cls = AGENTES_DISPONIVEIS[agente_nome]
-        agente = agente_cls(mundo)
+        agente = agente_cls(mundo, **(parametros_agentes or {}).get(agente_nome, {}))
         if hasattr(agente, "logger"):
             agente.logger = None
 
