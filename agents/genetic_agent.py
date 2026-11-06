@@ -10,7 +10,6 @@
 '''
 
 from ga.ga_core import GeneticAlgorithm  # Importa o núcleo do algoritmo genético
-from ga.individual import Individual     # Importa a classe de indivíduo
 import numpy as np
 
 class GeneticAgent:

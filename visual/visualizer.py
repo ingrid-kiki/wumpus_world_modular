@@ -10,7 +10,6 @@
 
 import pygame
 import sys
-import time
 
 class Visualizer:
     def __init__(self, world):

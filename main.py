@@ -18,7 +18,6 @@ from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
 from utils.logger import Logger
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
-from benchmark import executar_benchmark
 
 # Dicionário de agentes disponíveis
 AGENTES_DISPONIVEIS = {
