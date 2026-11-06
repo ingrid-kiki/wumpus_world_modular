@@ -16,12 +16,21 @@ Plano e decisões em [#17](https://github.com/ingrid-kiki/wumpus_world_modular/i
   Os dados completos foram preservados em `wumpus_dados_v1.3.0.zip`, publicado no Release `v1.3.0-dados`.
 
 ### Adicionado
+- Testes automatizados em `tests/`: os 10 testes da branch `dev-melhorias` (adaptados à `main` e acelerados de 61 s
+  para menos de 1 s) e `test_bugs_conhecidos.py`, com 11 testes `xfail` que documentam os bugs #18 a #24.
+- `pyproject.toml` com a configuração do pytest (timeout de 60 s, `xfail_strict`) e do ruff.
+- CI no GitHub Actions: ruff e pytest em Ubuntu e Windows, Python 3.11 e 3.13.
+- `requirements-dev.txt` com pytest, pytest-timeout e ruff.
+- `__init__.py` em `agents/`, `ga/`, `utils/`, `world/` e `visual/`.
 - `exemplos/README.md`: tabela com os parâmetros e as vitórias de cada um dos 34 exemplos.
 - `exemplos/galeria/`: amostra de 12 gráficos do exemplo 33, com nomes curtos e sem acento.
 - `CONTRIBUTING.md`: fluxo de branches, Conventional Commits, onde guardar resultados e regras de versão.
 - `.mailmap`: unifica as identidades dos autores no histórico.
 
 ### Modificado
+- `requirements.txt` com versões exatas. **Python mínimo passa a ser 3.11** (antes: "3.8 ou superior", que as
+  versões atuais de numpy e pandas não suportam).
+- Removidos imports sem uso em `main.py`, `agents/genetic_agent.py` e `visual/visualizer.py` (sem mudança de comportamento).
 - `.gitignore` passa a ignorar `logs/`, `results/`, pastas `run_*/`, `*.pkl` e os arquivos que os scripts gravam na raiz.
 - `.gitattributes` marca imagens, zips e pickles como binários.
 - Este CHANGELOG foi reescrito em português no formato Keep a Changelog, e as entradas antigas foram corrigidas (ver notas em cada versão).

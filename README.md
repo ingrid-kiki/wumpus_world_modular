@@ -64,27 +64,27 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 
 ## 🧪 Requisitos
 
-- Python 3.8 ou superior
-- Pygame
-- matplotlib
-- pandas
-- joblib
-- seaborn
-- scikit-learn
-- numpy
-- psutil
+- Python 3.11 ou superior (testado em 3.11 e 3.13; mínimo provisório, ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17))
+- Dependências com versões fixadas em [`requirements.txt`](requirements.txt): pygame, matplotlib, pandas, joblib, seaborn, scikit-learn, numpy, psutil e pygad
 
 ### Instalação de dependências
 
 ```bash
-pip install pygame matplotlib pandas joblib seaborn scikit-learn numpy psutil
-```
-
-ou
-
-```bash
+python -m venv .venv
 pip install -r requirements.txt
 ```
+
+### Testes
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest
+ruff check .
+```
+
+Os bugs conhecidos estão em [`tests/test_bugs_conhecidos.py`](tests/test_bugs_conhecidos.py), marcados como `xfail`
+e ligados às issues #18 a #24. O CI roda os testes em cada push e PR para `main` e `reorg/v2`.
+
 ---
 
 ## 🚀 Como Executar
