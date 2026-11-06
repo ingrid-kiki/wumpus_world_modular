@@ -18,6 +18,7 @@ import benchmark
 import benchmark_custom
 import benchmark_fast
 import benchmark_sideB
+from agents.logic_agent import LogicAgent
 from agents.logic_knowledge_base import LogicKnowledgeBase
 from ga.ga_core import GeneticAlgorithm
 from agents.genetic_agent import GeneticAgent
@@ -50,29 +51,35 @@ class AgenteFalso:
 
 # ---------------------------------------------------------------- Agente lógico
 
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}18 agente lógico sai do grid e entra em loop")
 def test_logico_mantem_posicao_sincronizada_com_o_mundo():
+    """#18 (corrigido)."""
     w = World(size=4, seed=0)
-    kb = LogicKnowledgeBase()
-    for _ in range(5):
+    kb = LogicKnowledgeBase(size=w.size)
+    for _ in range(20):
+        if w.is_done():
+            break
         acao = kb.infer_action(w.perceive())
         w.step(acao)
-        kb.update_position(acao)
+        kb.update_position(acao, w.agent_pos)
         assert kb.current_pos == w.agent_pos
 
 
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}18 agente lógico sai do grid e entra em loop")
-def test_logico_termina_em_ate_200_passos():
-    # Reproduz o laço de LogicAgent.run() com um limite, para não travar a suíte.
-    w = World(size=4, seed=0)
-    kb = LogicKnowledgeBase()
-    passos = 0
-    while not w.is_done() and passos < 200:
-        acao = kb.infer_action(w.perceive())
-        w.step(acao)
-        kb.update_position(acao)
-        passos += 1
-    assert w.is_done()
+def test_kb_nao_sai_do_grid_mesmo_sem_a_posicao_do_mundo():
+    """#18: com o tamanho conhecido, um movimento contra a parede não move a KB."""
+    kb = LogicKnowledgeBase(size=4)
+    kb.update_position("CIMA")
+    kb.update_position("ESQUERDA")
+    assert kb.current_pos == (0, 0)
+
+
+@pytest.mark.parametrize("tamanho", [4, 6, 8])
+def test_logico_sempre_termina(tamanho):
+    """#18: em todo mundo, o agente vence, morre ou esgota o limite de passos."""
+    for semente in range(30):
+        w = World(size=tamanho, seed=semente)
+        agente = LogicAgent(w)
+        resultado = agente.run()
+        assert w.is_done() or resultado["passos"] == agente.max_steps
 
 
 # ---------------------------------------------------------------- Algoritmo genético
