@@ -381,4 +381,19 @@ O sistema agora inclui tratamento robusto de erros:
 
 Este projeto foi desenvolvido por [**Alfa Marine**](https://github.com/alfa-m) e [**Ingrid Mendes**](https://github.com/ingrid-kiki), com foco em pesquisa e ensino de Inteligência Artificial e Jogos Digitais.
 
+### 🛠️ Ferramentas utilizadas
+
+As ferramentas abaixo foram cruciais para elaborar, revisar e evoluir este trabalho. **Elas não são autoras**: não
+são pessoas. As decisões, a revisão e a responsabilidade pelo conteúdo são das autoras.
+
+| Ferramenta | Como foi usada |
+|---|---|
+| [Visual Studio Code](https://code.visualstudio.com/) | Ambiente de desenvolvimento do projeto (configuração em `wumpus_CE_2025.code-workspace`). |
+| [GitHub Copilot](https://github.com/features/copilot) | Assistente de programação no editor durante a escrita do código. |
+| [Claude Code](https://claude.com/claude-code) | Assistente de programação na reorganização de novembro de 2026 (v1.4.0 e v1.5.0): análise do código, testes, correção de bugs, versionamento e documentação, sempre com revisão e aprovação das autoras. |
+
+Por isso, nenhuma delas é registrada como coautora. Os commits de 06/11/2026 que ainda trazem
+`Co-Authored-By: Claude` serão corrigidos na reescrita do histórico prevista em
+[#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
+
 ---

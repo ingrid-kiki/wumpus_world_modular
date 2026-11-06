@@ -8,7 +8,11 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## [Não lançado]
 
-Nada ainda. Próxima etapa: refatoração (Fase 5, v2.0.0), ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
+Próxima etapa: refatoração (Fase 5, v2.0.0), ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
+
+### Documentação
+- README: seção "Ferramentas utilizadas" (Visual Studio Code, GitHub Copilot e Claude Code), deixando claro que
+  são ferramentas e não autoras.
 
 ---
 
