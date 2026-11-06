@@ -6,7 +6,7 @@ Este guia mostra como executar o projeto **Wumpus World**, incluindo o uso dos d
 
 ## ✅ 1. Pré-requisitos
 
-- Python 3.11 ou superior (mínimo provisório, ver #17)
+- Python 3.12 ou superior (exigido pelo numpy 2.5; ver #17)
 - Pip instalado
 
 ---

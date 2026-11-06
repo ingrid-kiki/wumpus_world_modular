@@ -1,5 +1,5 @@
 # Dependências do projeto, com versões fixadas para reprodutibilidade dos experimentos.
-# Testado com Python 3.13 (Windows 11). Versão mínima provisória: 3.11 (ver #17).
+# Testado com Python 3.13 (Windows 11). Versão mínima: 3.12 (exigida pelo numpy 2.5.4; ver #17).
 # Para atualizar: instale as novas versões, rode `pytest` e atualize os números aqui
 # e no CHANGELOG na mesma PR.
 joblib==1.6.0

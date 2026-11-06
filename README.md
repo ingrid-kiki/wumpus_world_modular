@@ -64,7 +64,7 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 
 ## 🧪 Requisitos
 
-- Python 3.11 ou superior (testado em 3.11 e 3.13; mínimo provisório, ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17))
+- Python 3.12 ou superior (testado em 3.12 e 3.13; o numpy 2.5 exige 3.12, ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17))
 - Dependências com versões fixadas em [`requirements.txt`](requirements.txt): pygame, matplotlib, pandas, joblib, seaborn, scikit-learn, numpy, psutil e pygad
 
 ### Instalação de dependências
