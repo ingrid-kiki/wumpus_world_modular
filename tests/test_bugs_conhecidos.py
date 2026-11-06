@@ -86,20 +86,20 @@ def test_mutacao_invalida_o_fitness():
     assert ind.fitness is None
 
 
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}20 ouro pode ser pontuado mais de uma vez")
 def test_ouro_pontua_uma_vez_so():
+    """#20 (corrigido)."""
     w = mundo_controlado()
     uma_vez, tres_vezes = Individual(0), Individual(0)
     uma_vez.chromosome = ["DIREITA", "AGARRAR"]
     tres_vezes.chromosome = ["DIREITA", "AGARRAR", "AGARRAR", "AGARRAR"]
     uma_vez.evaluate(w)
     tres_vezes.evaluate(w)
-    # Agarrar de novo não pode render outro bônus de +100.
-    assert tres_vezes.fitness <= uma_vez.fitness
+    # Agarrar de novo não pode render outro bônus de +100: o jogo termina na vitória.
+    assert tres_vezes.fitness == uma_vez.fitness
 
 
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}20 ações continuam tendo efeito depois da vitória")
 def test_mundo_nao_muda_depois_da_vitoria():
+    """#20 (corrigido)."""
     w = mundo_controlado()
     w.step("DIREITA")
     _, status = w.step("AGARRAR")
@@ -108,6 +108,17 @@ def test_mundo_nao_muda_depois_da_vitoria():
     assert w.won and w.is_alive
     assert status == "GANHOU"
 
+
+
+def test_mundo_nao_muda_depois_da_morte():
+    """#20: morto continua morto e parado."""
+    w = mundo_controlado()
+    w.gold_pos = (3, 0)
+    w.pits = [(0, 1)]
+    _, status = w.step("DIREITA")
+    assert status == "MORTO"
+    _, status = w.step("ESQUERDA")
+    assert status == "MORTO" and w.agent_pos == (0, 1) and not w.won
 
 @pytest.mark.xfail(strict=True, reason=f"{ISSUE}21 bônus de +25 por tiro nunca é concedido")
 def test_tiro_com_fedor_recebe_bonus():

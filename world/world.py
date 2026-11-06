@@ -58,6 +58,9 @@ class World:
             :return: (percepção, status) onde status pode ser 'OK', 'MORTO' ou 'GANHOU'
         """
         self.last_scream = False  # Reset do grito
+        # Depois de vencer ou morrer, nenhuma ação tem efeito (#20)
+        if self.is_done():
+            return self.perceive(), ('GANHOU' if self.won else 'MORTO')
         self.move_agent(action)   # Movimento separado
         status = self.interact(action)  # Interações separadas
         return self.perceive(), status

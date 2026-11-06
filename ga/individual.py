@@ -47,6 +47,9 @@ class Individual:
                 score -= 0.5  # Penalidade leve por andar
             else:
                 score -= 1  # Penalidade padrão
+            if status == 'GANHOU':
+                # O jogo acabou: as ações restantes do cromossomo não contam (#20)
+                break
 
         # Pequeno bônus por sobrevivência
         if temp_world.is_alive:
