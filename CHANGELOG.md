@@ -11,6 +11,9 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 Próxima etapa: refatoração (Fase 5, v2.0.0), ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
 
 ### Documentação
+- Nova pasta `docs/`: relato da reorganização de novembro de 2026 (`reorganizacao-2026-11.md`), plano de ação com o
+  status de cada fase (`plano-de-acao.md`) e a análise inicial do código (`analise-inicial-2026-11.md`), com um índice
+  em `docs/README.md`. Até agora a análise e o plano existiam só fora do repositório.
 - README: seção "Ferramentas utilizadas" (Visual Studio Code, GitHub Copilot e Claude Code), deixando claro que
   são ferramentas e não autoras.
 
