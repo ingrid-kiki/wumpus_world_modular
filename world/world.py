@@ -20,9 +20,10 @@ class World:
         :param seed: Semente para geração aleatória (opcional)
         """
         self.size = size
-        if seed is not None:
-            random.seed(seed)  # Define a semente para resultados reproduzíveis
-        
+        self.seed = seed
+        # Gerador próprio: não altera o random global (#23)
+        self.rng = random.Random(seed)
+
         # Elementos do mundo
         self.agent_pos = (0, 0)  # Posição inicial do agente
         self.gold_pos = self.random_pos(exclude=[self.agent_pos])  # Posição do ouro
@@ -42,7 +43,7 @@ class World:
         :return: Tupla (x, y) com a posição sorteada
         """
         while True:
-            pos = (random.randint(0, self.size - 1), random.randint(0, self.size - 1))
+            pos = (self.rng.randint(0, self.size - 1), self.rng.randint(0, self.size - 1))
             if pos not in exclude:
                 return pos
 

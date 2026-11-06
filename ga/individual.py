@@ -10,14 +10,16 @@
 
 import random
 
-def random_action():
+def random_action(rng=random):
     # Retorna uma ação aleatória válida para o agente
-    return random.choice(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])
+    return rng.choice(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])
 
 class Individual:
-    def __init__(self, chrom_length):
+    def __init__(self, chrom_length, rng=None):
+        # Gerador aleatório do AG (ou o módulo random, se não for informado)
+        rng = rng if rng is not None else random
         # Inicializa o cromossomo com uma sequência aleatória de ações
-        self.chromosome = [random_action() for _ in range(chrom_length)]
+        self.chromosome = [random_action(rng) for _ in range(chrom_length)]
         # Valor de fitness (avaliação de desempenho do indivíduo)
         self.fitness = None
 

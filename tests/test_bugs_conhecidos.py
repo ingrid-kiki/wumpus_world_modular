@@ -20,8 +20,10 @@ import benchmark_fast
 import benchmark_sideB
 from agents.logic_knowledge_base import LogicKnowledgeBase
 from ga.ga_core import GeneticAlgorithm
+from agents.genetic_agent import GeneticAgent
 from ga.individual import Individual
 from world.world import World
+from tests.conftest import GA_RAPIDO
 
 ISSUE = "https://github.com/ingrid-kiki/wumpus_world_modular/issues/"
 
@@ -129,14 +131,30 @@ def test_pocos_nao_se_sobrepoem():
     assert sobrepostos == []
 
 
-@pytest.mark.xfail(strict=True, reason=f"{ISSUE}23 World(seed=...) reinicia o gerador aleatório global")
 def test_world_nao_altera_o_random_global():
+    """#23 (corrigido)."""
     random.seed(123)
     esperado = random.random()
     random.seed(123)
     World(size=4, seed=0)
     assert random.random() == esperado
 
+
+
+def test_mesma_semente_gera_o_mesmo_mundo():
+    a, b = World(size=6, seed=7), World(size=6, seed=7)
+    assert (a.gold_pos, a.wumpus_pos, a.pits) == (b.gold_pos, b.wumpus_pos, b.pits)
+
+
+def test_ag_reprodutivel_com_a_semente_do_mundo():
+    """#23: o AG usa a semente do mundo e não depende do random global."""
+    resultados = []
+    for lixo in (1, 2):
+        random.seed(lixo)  # estado global diferente a cada rodada
+        agente = GeneticAgent(World(size=4, seed=3), **GA_RAPIDO)
+        r = agente.run()
+        resultados.append([passo["ação"] for passo in r["history"]])
+    assert resultados[0] == resultados[1]
 
 # ---------------------------------------------------------------- Benchmarks
 
