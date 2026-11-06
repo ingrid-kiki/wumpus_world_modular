@@ -1,2 +1,9 @@
-# Auto detect text files and perform LF normalization
+# Normaliza finais de linha de arquivos de texto (LF no repositório)
 * text=auto
+
+# Binários: nunca converter nem tentar diff textual
+*.png  binary
+*.jpg  binary
+*.pkl  binary
+*.zip  binary
+*.npz  binary
