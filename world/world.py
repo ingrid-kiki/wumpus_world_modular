@@ -12,6 +12,8 @@
 import random
 import copy
 
+TAMANHO_MINIMO = 2
+
 class World:
     def __init__(self, size, seed=None):
         """
@@ -19,6 +21,9 @@ class World:
         :param size: Tamanho do mundo (quadrado size x size)
         :param seed: Semente para geração aleatória (opcional)
         """
+        # Abaixo disso não cabem agente, ouro, Wumpus e poços, e random_pos() nunca terminaria (#38)
+        if size < TAMANHO_MINIMO:
+            raise ValueError(f"O mundo precisa ter tamanho {TAMANHO_MINIMO} ou maior (recebido: {size}).")
         self.size = size
         self.seed = seed
         # Gerador próprio: não altera o random global (#23)

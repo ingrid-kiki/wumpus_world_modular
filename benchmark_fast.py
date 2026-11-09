@@ -15,7 +15,7 @@ matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender d
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd
 from joblib import Parallel, delayed
-from utils.execucao import contar, executar_uma
+from utils.execucao import contar, executar_uma, relatar_erro
 from world.world import World
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
@@ -36,7 +36,8 @@ def simular_execucao(agente_cls, world_size, seed, parametros=None):
         agente.logger = None
 
     # Um erro vira status "erro" (antes a execução era descartada sem aviso: #30)
-    execucao = executar_uma(agente, mundo, rotulo=f"com semente {seed}")
+    # Este código roda em outro processo: o relato do erro volta no resultado e é escrito no principal (#40)
+    execucao = executar_uma(agente, mundo, rotulo=f"com semente {seed}", relatar=False)
     resultado = execucao["resultado"]
 
     # O GeneticAgent devolve os dados extras em "dados_extra" (antes lia "fitness", sempre vazio: #24)
@@ -45,7 +46,8 @@ def simular_execucao(agente_cls, world_size, seed, parametros=None):
     return {
         "status": execucao["status"],
         "tempo": execucao["tempo"],
-        "dados_extra": dados_extra
+        "dados_extra": dados_extra,
+        "detalhe_erro": execucao["detalhe_erro"]
     }
 
 def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agentes=None):
@@ -57,6 +59,10 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agente
         delayed(simular_execucao)(agente_cls, world_size, seed, (parametros_agentes or {}).get(agente_nome, {}))
         for seed in range(num_execucoes)
     )
+
+    for r in resultados:
+        if r["detalhe_erro"]:
+            relatar_erro(r["detalhe_erro"])
 
     # Toda execução conta: erros ficam na coluna "erros" (#30)
     tempo_total = sum(r["tempo"] for r in resultados)

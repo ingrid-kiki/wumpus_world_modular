@@ -15,7 +15,7 @@ import io
 import contextlib
 import traceback
 
-from world.world import World
+from world.world import TAMANHO_MINIMO, World
 from agents.manual_agent import ManualAgent
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
@@ -41,10 +41,25 @@ def menu_interativo():
     escolha = input("Digite o número da opção desejada: ").strip()
     return escolha
 
+def perguntar_inteiro(pergunta, minimo=None, opcional=False):
+    """Repete a pergunta até receber um inteiro válido; em branco devolve None se for opcional (#38)."""
+    while True:
+        resposta = input(pergunta).strip()
+        if opcional and not resposta:
+            return None
+        try:
+            valor = int(resposta)
+        except ValueError:
+            print(f"❌ '{resposta}' não é um número inteiro. Tente novamente.")
+            continue
+        if minimo is not None and valor < minimo:
+            print(f"❌ O valor precisa ser {minimo} ou maior. Tente novamente.")
+            continue
+        return valor
+
 def execucao_unica(agente_nome):
-    size = int(input("Tamanho do mundo (ex: 4): ").strip())
-    seed = input("Semente aleatória (opcional, pressione Enter para aleatório): ").strip()
-    seed = int(seed) if seed else None
+    size = perguntar_inteiro("Tamanho do mundo (ex: 4): ", minimo=TAMANHO_MINIMO)
+    seed = perguntar_inteiro("Semente aleatória (opcional, pressione Enter para aleatório): ", opcional=True)
 
     mundo = World(size=size, seed=seed)
     agente_cls = AGENTES_DISPONIVEIS[agente_nome]
@@ -139,28 +154,66 @@ def capturar_saida_terminal(caminho=None):
         if arquivo:
             arquivo.close()
 
+def inteiro_minimo(minimo):
+    """Tipo para o argparse: inteiro maior ou igual a `minimo` (#38)."""
+    def converter(texto):
+        try:
+            valor = int(texto)
+        except ValueError:
+            raise argparse.ArgumentTypeError(f"'{texto}' não é um número inteiro") from None
+        if valor < minimo:
+            raise argparse.ArgumentTypeError(f"precisa ser {minimo} ou maior (recebido: {valor})")
+        return valor
+    return converter
+
+def taxa(texto):
+    """Tipo para o argparse: número entre 0 e 1 (#38)."""
+    try:
+        valor = float(texto)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"'{texto}' não é um número") from None
+    if not 0 <= valor <= 1:
+        raise argparse.ArgumentTypeError(f"precisa estar entre 0 e 1 (recebido: {valor})")
+    return valor
+
+def arquivo_existente(caminho):
+    """Tipo para o argparse: caminho de um arquivo que existe (#38)."""
+    if not os.path.isfile(caminho):
+        raise argparse.ArgumentTypeError(f"arquivo não encontrado: {caminho}")
+    return caminho
+
 # Parâmetros do GeneticAgent que podem ser passados pela linha de comando (#13)
 PARAMETROS_AG_CLI = {
-    "populacao": ("population_size", int, "Tamanho da população do AG"),
-    "geracoes": ("gens", int, "Número de gerações do AG"),
-    "cromossomo": ("chrom_length", int, "Tamanho do cromossomo (ações por indivíduo)"),
-    "mutacao": ("mutation_rate", float, "Taxa de mutação do AG (0 a 1)"),
-    "cruzamento": ("crossover_rate", float, "Taxa de cruzamento do AG (0 a 1)"),
+    "populacao": ("population_size", inteiro_minimo(1), "Tamanho da população do AG"),
+    "geracoes": ("gens", inteiro_minimo(0), "Número de gerações do AG"),
+    "cromossomo": ("chrom_length", inteiro_minimo(1), "Tamanho do cromossomo (ações por indivíduo)"),
+    "mutacao": ("mutation_rate", taxa, "Taxa de mutação do AG (0 a 1)"),
+    "cruzamento": ("crossover_rate", taxa, "Taxa de cruzamento do AG (0 a 1)"),
 }
 
 def criar_parser():
     parser = argparse.ArgumentParser(description="Executa benchmarks no Wumpus World")
-    parser.add_argument("--execucoes", type=int, default=32, help="Número de execuções por agente/tamanho")
-    parser.add_argument("--sizes", nargs="+", type=int, default=[4, 6, 8], help="Tamanhos do mundo (ex: 4 6 8)")
-    parser.add_argument("--agentes", nargs="+", choices=AGENTES_DISPONIVEIS.keys(),
+    parser.add_argument("--execucoes", type=inteiro_minimo(1), default=32, help="Número de execuções por agente/tamanho")
+    parser.add_argument("--sizes", nargs="+", type=inteiro_minimo(TAMANHO_MINIMO), default=[4, 6, 8],
+                        help="Tamanhos do mundo (ex: 4 6 8)")
+    # O agente manual pede ações pelo teclado: não faz sentido num benchmark (#38)
+    parser.add_argument("--agentes", nargs="+", choices=[nome for nome in AGENTES_DISPONIVEIS if nome != "manual"],
                         default=["logico", "genetico"], help="Agentes a incluir no benchmark")
-    parser.add_argument("--benchmark", type=str, default="benchmark.py", help="Arquivo de benchmark a ser usado")
+    parser.add_argument("--benchmark", type=arquivo_existente, default="benchmark.py",
+                        help="Arquivo de benchmark a ser usado")
     grupo_ag = parser.add_argument_group("agente genético", "Sem estas opções, valem os padrões do GeneticAgent.")
     for opcao, (_, tipo, ajuda) in PARAMETROS_AG_CLI.items():
         grupo_ag.add_argument(f"--{opcao}", type=tipo, default=None, help=ajuda)
     parser.add_argument("--saida", type=str, default=None,
                         help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
     return parser
+
+def separar_argumentos(linha, windows=os.name == "nt"):
+    """
+    Separa a linha digitada na opção 5 em argumentos, respeitando aspas.
+    No Windows, a barra invertida é separador de caminho: sem isso o shlex a apagaria (#39).
+    """
+    return shlex.split(linha.replace("\\", "\\\\") if windows else linha)
 
 def parametros_do_ag(args):
     """Parâmetros do GeneticAgent informados na linha de comando (só os que foram passados)."""
@@ -177,7 +230,7 @@ def main():
         print("\nDigite a linha de comando desejada (exemplo: --agentes logico genetico --sizes 4 6 --execucoes 10 "
               "--populacao 50 --geracoes 100 --benchmark outro_benchmark.py):")
         linha = input("main.py ").strip()
-        cli_args = shlex.split(linha)
+        cli_args = separar_argumentos(linha)
     elif escolha == "2":
         execucao_unica("manual")
         return

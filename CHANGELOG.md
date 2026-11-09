@@ -21,6 +21,11 @@ aleatória); depois a refatoração (Fase 5, v2.0.0).
   erro que interrompeu o programa, inclusive Ctrl+C. Uma queda perde no máximo a etapa em andamento.
 - Os gráficos avançados passam a ser gerados para qualquer agente que devolva dados extras, e não só para `genetico`.
   A mensagem no terminal informa quantos gráficos foram realmente gerados e quais falharam.
+- **Entradas inválidas** ([#38]): o mundo de tamanho 1 travava o programa; agora o tamanho mínimo é 2. As opções do
+  benchmark são validadas, com mensagem clara, e o menu repete a pergunta quando o tamanho ou a semente são inválidos.
+  O agente `manual` não é mais aceito em `--agentes`. O cruzamento não falha mais com cromossomo de um gene.
+- Caminhos do Windows com barra invertida funcionam na opção 5 do menu ([#39]); antes, as barras eram apagadas.
+- O traceback dos erros do `benchmark_fast.py` agora chega ao `terminal_output.txt` ([#40]).
 
 ### Modificado
 - O comentário "NÃO ALTERAR" do `main.py` foi substituído por testes (`tests/test_main_etapas.py`) que garantem as
@@ -271,3 +276,6 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 [#13]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/13
 [#30]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/30
 [#37]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/37
+[#38]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/38
+[#39]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/39
+[#40]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/40

@@ -320,3 +320,28 @@ def test_csv_do_main_so_tem_colunas_escalares(tmp_path):
     dados = np.load(tmp_path / "dados_extra_genetico_4x4.npz")
     assert list(dados["fitness"]) == [1.0, 2.0]
     assert not (tmp_path / "dados_extra_logico_4x4.npz").exists()
+
+
+def test_traceback_do_benchmark_fast_chega_ao_terminal_output(tmp_path, monkeypatch):
+    """#40: com processos paralelos de verdade, o erro aparece uma vez no terminal_output.txt."""
+    monkeypatch.setitem(benchmark_fast.AGENTES_DISPONIVEIS, "falso", AgenteQueFalha)
+    caminho = tmp_path / "terminal_output.txt"
+    with main.capturar_saida_terminal(str(caminho)):
+        resultado = benchmark_fast.executar_benchmark("falso", 4, 3)
+    assert resultado["erros"] == 1
+    log = caminho.read_text(encoding="utf-8")
+    assert log.count("RuntimeError: falha de propósito") == 2  # a linha do resumo e a do traceback
+    assert "Traceback (most recent call last)" in log
+
+
+@pytest.mark.parametrize("linha, windows, esperado", [
+    (r"--saida logs\teste --sizes 4", True, ["--saida", r"logs\teste", "--sizes", "4"]),
+    (r"--saida C:\Users\ana\run", True, ["--saida", r"C:\Users\ana\run"]),
+    (r'--saida "C:\Minha Pasta\run"', True, ["--saida", r"C:\Minha Pasta\run"]),
+    ("--saida logs/teste", True, ["--saida", "logs/teste"]),
+    ('--saida "minha pasta/run"', False, ["--saida", "minha pasta/run"]),
+    ("--agentes logico genetico --sizes 4 6", False, ["--agentes", "logico", "genetico", "--sizes", "4", "6"]),
+], ids=["relativo", "absoluto", "com_espaco_e_aspas", "barra_normal", "linux_aspas", "sem_caminho"])
+def test_opcao_5_preserva_caminhos(linha, windows, esperado):
+    """#39: o shlex apagava as barras invertidas de caminhos do Windows."""
+    assert main.separar_argumentos(linha, windows=windows) == esperado
