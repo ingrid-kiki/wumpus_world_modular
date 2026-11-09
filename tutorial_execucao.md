@@ -6,7 +6,8 @@ versão 1.6.0. O que ainda não funciona está na [seção 9](#9-o-que-ainda-nã
 Sumário: [instalação](#1-instalação) · [menu](#2-o-menu-do-programa) · [jogar](#3-jogar-com-o-agente-manual) ·
 [agentes automáticos](#4-rodar-um-agente-automático-uma-vez) · [benchmark](#5-comparar-agentes-com-o-benchmark) ·
 [resultados](#6-onde-ficam-os-resultados) · [reproduzir](#7-reproduzir-uma-execução) ·
-[benchmarks avulsos](#8-benchmarks-avulsos) · [limitações](#9-o-que-ainda-não-funciona) · [testes](#10-conferir-a-instalação-com-os-testes)
+[benchmarks avulsos](#8-benchmarks-avulsos) · [limitações](#9-o-que-ainda-não-funciona) · [testes](#10-conferir-a-instalação-com-os-testes) ·
+[problemas no Windows](#11-problemas-comuns-no-windows)
 
 ---
 
@@ -307,6 +308,80 @@ python -m pytest
 ```
 
 Todos os testes devem passar.
+
+---
+
+## 11. Problemas comuns no Windows
+
+Situações que já aconteceram ao trabalhar neste projeto no Windows, e como resolver.
+
+### O clone falha ou vem incompleto
+
+O histórico antigo do repositório tem caminhos que passam do limite do Windows. Clone com:
+
+```bash
+git -c core.longpaths=true clone https://github.com/ingrid-kiki/wumpus_world_modular
+```
+
+Para valer em todos os repositórios da máquina:
+
+```bash
+git config --global core.longpaths true
+```
+
+### Erro do Tk (`Can't find a usable tk.tcl`) em scripts próprios
+
+Acontece quando a instalação do Python está sem o Tcl/Tk completo, e às vezes de forma intermitente. O projeto já evita o
+problema. Em scripts seus que usem matplotlib, defina o modo sem janela antes de importar o `pyplot`:
+
+```python
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+```
+
+Para resolver de vez, reinstale o Python marcando a opção "tcl/tk and IDLE".
+
+### Acentos e emojis trocados no terminal
+
+Defina a codificação antes de rodar. No PowerShell:
+
+```bash
+$env:PYTHONIOENCODING = "utf-8"
+```
+
+No Git Bash:
+
+```bash
+export PYTHONIOENCODING=utf-8
+```
+
+### Barra invertida no Git Bash
+
+No Git Bash, `\t` dentro de `printf` ou de um heredoc vira uma tabulação, o que pode quebrar caminhos do Windows. Prefira
+`/` nos caminhos: `--saida logs/teste`. Na opção 5 do menu, tanto `/` quanto `\` funcionam.
+
+### Os logs do GitHub Actions não aparecem no `gh api`
+
+O comando recusa a saída por causa de caracteres especiais. Acrescente `--allow-escape-sequences`:
+
+```bash
+gh api repos/ingrid-kiki/wumpus_world_modular/actions/jobs/ID/logs --allow-escape-sequences
+```
+
+### O tempo de execução varia muito
+
+Na mesma máquina, o mesmo trabalho já levou de 3 a 4 vezes mais em dias diferentes, conforme o que mais estava rodando.
+Considere faixas de tempo ao planejar um experimento longo.
+
+### Um experimento parece parado
+
+O `experimentos/comparar_metodos.py` só mostra resultados ao final. Para ver se ele continua trabalhando, confira se o
+tempo de CPU está subindo:
+
+```bash
+Get-Process python | Measure-Object CPU -Sum
+```
 
 ---
 

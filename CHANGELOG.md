@@ -18,6 +18,7 @@ aleatória); depois a refatoração (Fase 5, v2.0.0).
   resultados não mudam. Foi a única mudança que superou a busca aleatória com significância ([#31]).
 - `experimentos/comparar_metodos.py` e `docs/investigacao-31-ag-vs-busca-aleatoria.md`: comparação pareada de métodos,
   com teste estatístico.
+- Tutorial: seção "Problemas comuns no Windows".
 
 ### Corrigido
 - **Um gráfico não interrompe mais o benchmark** ([#37]). Antes, uma falha nos gráficos avançados parava o `main.py`
