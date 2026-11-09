@@ -46,10 +46,12 @@ O trabalho seguiu o [plano de ação](plano-de-acao.md). As Fases 1 a 3 foram fe
 | 3. Bugs | #18 a #24 corrigidas, um commit por bug. O benchmark padrão (`logico` + `genetico`) passou a terminar | v1.4.0 |
 | 4. Reprodutibilidade | `metadata.json` em cada execução; `reproduzir.py`; parâmetros do AG pela linha de comando (#13); AG de 15 a 25 vezes mais rápido com resultados idênticos | v1.5.0 |
 
-Merges: PR #25 (v1.4.0), PRs #26 e #27 (v1.5.0), PR #32 (ferramentas no README).
+Merges: PR #25 (v1.4.0), PRs #26 e #27 (v1.5.0); PRs #28, #32, #33, #34 e o lançamento seguinte (v1.6.0: correção da
+#30, pasta `docs/`, ferramentas no README, tutorial reescrito).
 Releases publicados: [`v1.3.0-dados`](https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.3.0-dados),
-[`v1.4.0`](https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.4.0) e
-[`v1.5.0`](https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.5.0).
+[`v1.4.0`](https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.4.0),
+[`v1.5.0`](https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.5.0) e
+[`v1.6.0`](https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.6.0).
 
 > ⚠️ **Os resultados mudaram na v1.4.0.** Mundos, evolução do AG e fitness por semente não são os mesmos da v1.3.0.
 > Os números do Release `v1.3.0-dados` e de `exemplos/` não são comparáveis com os atuais. Da v1.4.0 para a v1.5.0
@@ -70,7 +72,7 @@ Releases publicados: [`v1.3.0-dados`](https://github.com/ingrid-kiki/wumpus_worl
 | Ferramentas de IA **não** entram como coautoras; as usadas ficam registradas no README | Ingrid | PR #32 |
 | A Fase 6 também retira o `Co-Authored-By: Claude` de 30 commits de 06/11/2026 | Ingrid | #17 |
 | Arquivar a `dev-melhorias` (tag `archive/dev-melhorias`) e fechar a PR #8 | Ingrid | PR #8 |
-| Manter por enquanto as branches já mescladas e a PR #28 aberta | Ingrid | — |
+| Manter por enquanto as branches já mescladas | Ingrid | — |
 
 ---
 
@@ -83,7 +85,7 @@ Releases publicados: [`v1.3.0-dados`](https://github.com/ingrid-kiki/wumpus_worl
 | #15 PyGAD e DEAP | **Aberta, com plano.** `pygad/` não roda: depende do módulo `WumpsimAG`, ausente do repositório e de qualquer fonte pública, e usa outro mundo (7 ações). Plano: agente PyGAD sobre o nosso `World`, depois DEAP |
 | #16 Outras metaheurísticas | **Aberta, com plano.** Não havia código. Protótipo comparou busca aleatória, subida de encosta, recozimento e o AG |
 | #29 (nova) | Gráficos avançados usam só a primeira execução; a ideia de juntar todas veio da `dev-melhorias` |
-| #30 (nova) | Benchmarks tratam erros de formas diferentes (`benchmark.py` conta falha como "sobreviveu"); gravar o stderr no log |
+| #30 (nova) | Benchmarks tratavam erros de formas diferentes (`benchmark.py` contava falha como "sobreviveu"). **Corrigida na v1.6.0** (PR #34), incluindo gravar o stderr no log |
 | #31 (nova) | **A busca aleatória vence igual ou mais que o AG** com o mesmo número de avaliações, em todos os cenários testados |
 
 O achado da #31 é o mais importante para a tese: sem uma referência, a taxa de vitória do AG não demonstra que ele é
@@ -109,17 +111,15 @@ Registrados para não se repetirem:
 
 ---
 
-## 6. Pendências
+## 6. Pendências (atualizado em 09/11/2026, v1.6.0)
 
 | Item | Onde |
 |---|---|
 | Investigar por que o AG não supera a busca aleatória | #31 |
 | Gráficos com os dados de todas as execuções | #29 |
-| Padronizar o tratamento de erros nos benchmarks e gravar o stderr | #30 |
 | Agente PyGAD sobre o nosso `World`, depois DEAP; resposta da Alfa sobre o `WumpsimAG` | #15 |
 | Busca aleatória como referência e outras metaheurísticas | #16 |
 | Fase 5: refatoração (pacote, classe base de agente, runner único, linha de comando nova) | v2.0.0 |
 | Fase 6: reescrever o histórico (dados antigos e `Co-Authored-By`) | #17 |
 | Proteger a `main` | #17 |
 | Rodar de novo os experimentos da tese com o código atual | Fase 4.6 |
-| PR #28 (versão `1.6.0.dev0`) | aberta |
