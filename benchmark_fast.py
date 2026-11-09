@@ -120,7 +120,8 @@ if __name__ == "__main__":
             resultado = executar_benchmark(nome, size, args.execucoes)
             resultados.append(resultado)
 
-    df_resultados = pd.DataFrame(resultados)
+    # CSV só com colunas escalares: dados_extra são arrays do AG
+    df_resultados = pd.DataFrame([{k: v for k, v in r.items() if k != "dados_extra"} for r in resultados])
     csv_path = os.path.join(output_dir, "resultados_benchmark.csv")
     df_resultados.to_csv(csv_path, index=False)
     gerar_graficos(df_resultados, output_dir)
