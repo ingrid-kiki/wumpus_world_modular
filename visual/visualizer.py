@@ -1,15 +1,16 @@
 # ==============================
 # visual/visualizer.py
 # ==============================
-'''
+"""
 # Este arquivo implementa a classe Visualizer, responsável pela visualização gráfica
 # do ambiente Wumpus World utilizando Pygame. Permite acompanhar em tempo real o estado
 # do mundo, as percepções, posições do agente, Wumpus, poços e ouro, além de exibir
 # mensagens de vitória, morte e eventos especiais. Ideal para análise didática e demonstrações.
-'''
+"""
 
 import pygame
 import sys
+
 
 class Visualizer:
     def __init__(self, world):
@@ -52,16 +53,15 @@ class Visualizer:
                 perception = self.world.perceive()
                 self.world.agent_pos = agent_temp_pos
 
-                if 'BRISA' in perception:
+                if "BRISA" in perception:
                     texts.append("💨")
-                if 'FEDOR' in perception:
+                if "FEDOR" in perception:
                     texts.append("💀")
-                if 'BRILHO' in perception:
+                if "BRILHO" in perception:
                     texts.append("✨")
 
                 label = " ".join(texts)
                 self.draw_cell(x, y, (200, 200, 200), label)
-
 
         # 🟥 Desenha o Wumpus (se estiver vivo)
         if hasattr(self.world, "wumpus_alive") and self.world.wumpus_alive and hasattr(self.world, "wumpus_pos"):

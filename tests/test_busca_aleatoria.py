@@ -1,9 +1,9 @@
 # ==============================
 # tests/test_busca_aleatoria.py
 # ==============================
-'''
+"""
 # Testes do agente de busca aleatória, referência para o agente genético (#31).
-'''
+"""
 
 import json
 import random
@@ -59,9 +59,25 @@ def test_orcamento_zero_ainda_avalia_uma_sequencia():
 
 def test_benchmark_usa_o_mesmo_orcamento_do_ag(tmp_path):
     pasta = tmp_path / "run"
-    _, df = main.rodar_benchmark(["--agentes", "aleatorio", "genetico", "--sizes", "4", "--execucoes", "2",
-                                  "--populacao", "10", "--geracoes", "5", "--cromossomo", "15",
-                                  "--saida", str(pasta)])
+    _, df = main.rodar_benchmark(
+        [
+            "--agentes",
+            "aleatorio",
+            "genetico",
+            "--sizes",
+            "4",
+            "--execucoes",
+            "2",
+            "--populacao",
+            "10",
+            "--geracoes",
+            "5",
+            "--cromossomo",
+            "15",
+            "--saida",
+            str(pasta),
+        ]
+    )
     assert list(df["agente"]) == ["aleatorio", "genetico"]
     assert df["erros"].sum() == 0
     meta = json.loads((pasta / "metadata.json").read_text(encoding="utf-8"))
@@ -72,7 +88,21 @@ def test_benchmark_usa_o_mesmo_orcamento_do_ag(tmp_path):
 
 def test_orcamento_explicito_tem_prioridade(tmp_path):
     pasta = tmp_path / "run"
-    main.rodar_benchmark(["--agentes", "aleatorio", "--sizes", "4", "--execucoes", "1", "--avaliacoes", "7",
-                          "--cromossomo", "5", "--saida", str(pasta)])
+    main.rodar_benchmark(
+        [
+            "--agentes",
+            "aleatorio",
+            "--sizes",
+            "4",
+            "--execucoes",
+            "1",
+            "--avaliacoes",
+            "7",
+            "--cromossomo",
+            "5",
+            "--saida",
+            str(pasta),
+        ]
+    )
     meta = json.loads((pasta / "metadata.json").read_text(encoding="utf-8"))
     assert meta["parametros_busca_aleatoria"] == {"chrom_length": 5, "avaliacoes": 7}

@@ -1,7 +1,7 @@
 # ==============================
 # experimentos/comparar_metodos.py
 # ==============================
-'''
+"""
 # Investigação da issue #31: o agente genético supera a busca aleatória?
 #
 # Compara métodos de busca nos mesmos mundos e com o mesmo orçamento de avaliações de fitness.
@@ -16,7 +16,7 @@
 #
 # Saída em logs/exp31_<fase>_AAAAMMDD_HHMMSS/: tentativas.csv (uma linha por método e mundo),
 # resumo.csv, comparacoes.csv e metadata.json.
-'''
+"""
 
 import argparse
 import itertools
@@ -37,7 +37,7 @@ from utils.reprodutibilidade import estado_do_git, versoes_das_bibliotecas
 from utils.versao import __version__
 from world.world import World
 
-ACOES = ['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO']
+ACOES = ["CIMA", "BAIXO", "ESQUERDA", "DIREITA", "AGARRAR", "TIRO"]
 REFERENCIA = "busca_aleatoria"
 
 
@@ -153,10 +153,18 @@ def tentar(nome, mundo_n, genes, orcamento, semente):
     funcao, parametros = METODOS[nome]
     inicio = time.perf_counter()
     cromossomo, extra = funcao(mundo, orcamento, genes, semente, **parametros)
-    return {"metodo": nome, "mundo": mundo_n, "genes": genes, "orcamento": orcamento, "semente": semente,
-            "resolvivel": resolvivel(mundo), "vitoria": venceu(mundo, cromossomo),
-            "fitness": fitness_real(mundo, cromossomo), "segundos": time.perf_counter() - inicio,
-            "repetidas": extra.get("repetidas")}
+    return {
+        "metodo": nome,
+        "mundo": mundo_n,
+        "genes": genes,
+        "orcamento": orcamento,
+        "semente": semente,
+        "resolvivel": resolvivel(mundo),
+        "vitoria": venceu(mundo, cromossomo),
+        "fitness": fitness_real(mundo, cromossomo),
+        "segundos": time.perf_counter() - inicio,
+        "repetidas": extra.get("repetidas"),
+    }
 
 
 def holm(pvalores):
@@ -180,9 +188,18 @@ def comparar(tentativas):
             so_base = int((pivo[base] & ~pivo[metodo]).sum())
             discordantes = so_metodo + so_base
             p = binomtest(so_metodo, discordantes, 0.5).pvalue if discordantes else 1.0
-            linhas.append({**dict(zip(chaves, cenario)), "metodo": metodo,
-                           "vitorias_metodo": int(pivo[metodo].sum()), "vitorias_aleatoria": int(pivo[base].sum()),
-                           "mundos": len(pivo), "so_metodo_venceu": so_metodo, "so_aleatoria_venceu": so_base, "p": p})
+            linhas.append(
+                {
+                    **dict(zip(chaves, cenario)),
+                    "metodo": metodo,
+                    "vitorias_metodo": int(pivo[metodo].sum()),
+                    "vitorias_aleatoria": int(pivo[base].sum()),
+                    "mundos": len(pivo),
+                    "so_metodo_venceu": so_metodo,
+                    "so_aleatoria_venceu": so_base,
+                    "p": p,
+                }
+            )
     df = pd.DataFrame(linhas)
     df["p_holm"] = holm(df["p"].tolist())
     return df
@@ -199,9 +216,20 @@ def main():
     saida = args.saida or os.path.join("logs", f"exp31_{args.fase}_{datetime.now():%Y%m%d_%H%M%S}")
     os.makedirs(saida, exist_ok=True)
     with open(os.path.join(saida, "metadata.json"), "w", encoding="utf-8") as f:
-        json.dump({"versao": __version__, "git": estado_do_git(), "fase": args.fase, "mundos": args.mundos,
-                   "metodos": fase["metodos"], "cenarios": fase["cenarios"], "bibliotecas": versoes_das_bibliotecas()},
-                  f, ensure_ascii=False, indent=2)
+        json.dump(
+            {
+                "versao": __version__,
+                "git": estado_do_git(),
+                "fase": args.fase,
+                "mundos": args.mundos,
+                "metodos": fase["metodos"],
+                "cenarios": fase["cenarios"],
+                "bibliotecas": versoes_das_bibliotecas(),
+            },
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
 
     tarefas = [(m, n, g, b, s) for n, g, b in fase["cenarios"] for m in fase["metodos"] for s in range(args.mundos)]
     print(f"{len(tarefas)} tentativas em {saida}")
@@ -211,10 +239,17 @@ def main():
 
     tentativas = pd.DataFrame(resultados)
     tentativas.to_csv(os.path.join(saida, "tentativas.csv"), index=False)
-    resumo = (tentativas.groupby(["mundo", "genes", "orcamento", "metodo"])
-              .agg(vitorias=("vitoria", "sum"), mundos=("vitoria", "size"), resolviveis=("resolvivel", "sum"),
-                   fitness_medio=("fitness", "mean"), repetidas_media=("repetidas", "mean"))
-              .reset_index())
+    resumo = (
+        tentativas.groupby(["mundo", "genes", "orcamento", "metodo"])
+        .agg(
+            vitorias=("vitoria", "sum"),
+            mundos=("vitoria", "size"),
+            resolviveis=("resolvivel", "sum"),
+            fitness_medio=("fitness", "mean"),
+            repetidas_media=("repetidas", "mean"),
+        )
+        .reset_index()
+    )
     resumo.to_csv(os.path.join(saida, "resumo.csv"), index=False)
     comparacoes = comparar(tentativas)
     comparacoes.to_csv(os.path.join(saida, "comparacoes.csv"), index=False)

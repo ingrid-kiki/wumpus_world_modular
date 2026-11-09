@@ -1,7 +1,7 @@
 # ==============================
 # tests/referencia.py
 # ==============================
-'''
+"""
 # Cenário de referência do projeto: um conjunto fixo de mundos e agentes cujos resultados não
 # podem mudar sem uma decisão explícita. É o que protege as etapas de limpeza e refatoração.
 #
@@ -12,7 +12,7 @@
 # regenere o arquivo e explique o motivo no commit e no CHANGELOG:
 #
 #     python -m tests.referencia
-'''
+"""
 
 import contextlib
 import hashlib
@@ -85,6 +85,7 @@ def _casos_de_fitness():
 
 def _casos_do_agente_logico():
     """Decisões raras em jogo real: com as vizinhas já visitadas, volta pela menos visitada."""
+
     def decidir(posicao, visitas):
         base = LogicKnowledgeBase(size=3)
         base.current_pos = posicao
@@ -106,22 +107,39 @@ def calcular():
     for tamanho in TAMANHOS:
         for semente in SEMENTES:
             m = World(size=tamanho, seed=semente)
-            mundos.append({"tamanho": tamanho, "semente": semente, "ouro": list(m.gold_pos),
-                           "wumpus": list(m.wumpus_pos), "pocos": [list(p) for p in m.pits]})
+            mundos.append(
+                {
+                    "tamanho": tamanho,
+                    "semente": semente,
+                    "ouro": list(m.gold_pos),
+                    "wumpus": list(m.wumpus_pos),
+                    "pocos": [list(p) for p in m.pits],
+                }
+            )
         for nome, (classe, parametros) in AGENTES.items():
             # O agente lógico é instantâneo: mais mundos para alcançar todos os caminhos da decisão
-            for semente in (SEMENTES_LOGICO if nome == "logico" else SEMENTES):
+            for semente in SEMENTES_LOGICO if nome == "logico" else SEMENTES:
                 mundo = World(size=tamanho, seed=semente)
                 with contextlib.redirect_stdout(io.StringIO()):
                     resultado = classe(mundo, **parametros).run()
                 historico = resultado["history"]
-                execucoes.append({"agente": nome, "tamanho": tamanho, "semente": semente,
-                                  "status": classificar(mundo), "passos": len(historico),
-                                  "fitness": _fitness_das_acoes(historico, tamanho, semente,
-                                                                parametros.get("proximidade", 0.0)),
-                                  "historico": _resumo_do_historico(historico)})
-    return {"mundos": mundos, "execucoes": execucoes, "casos_de_fitness": _casos_de_fitness(),
-            "casos_do_agente_logico": _casos_do_agente_logico()}
+                execucoes.append(
+                    {
+                        "agente": nome,
+                        "tamanho": tamanho,
+                        "semente": semente,
+                        "status": classificar(mundo),
+                        "passos": len(historico),
+                        "fitness": _fitness_das_acoes(historico, tamanho, semente, parametros.get("proximidade", 0.0)),
+                        "historico": _resumo_do_historico(historico),
+                    }
+                )
+    return {
+        "mundos": mundos,
+        "execucoes": execucoes,
+        "casos_de_fitness": _casos_de_fitness(),
+        "casos_do_agente_logico": _casos_do_agente_logico(),
+    }
 
 
 if __name__ == "__main__":

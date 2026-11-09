@@ -1,7 +1,7 @@
 # ==============================
 # reproduzir.py
 # ==============================
-'''
+"""
 # Refaz uma execução de benchmark a partir do metadata.json gravado na pasta do run
 # e compara os resultados com os originais.
 #
@@ -12,7 +12,7 @@
 # Vitórias, mortes e sobrevivências devem ser idênticas (as sementes são fixas).
 # Tempos, memória e CPU variam de máquina para máquina e não são comparados.
 # Código de saída: 0 se os resultados batem, 1 se diferem, 2 se não foi possível comparar.
-'''
+"""
 
 import argparse
 import os
@@ -49,8 +49,10 @@ def avisos_de_ambiente(meta):
     if git_original.get("commit") and git_atual["commit"] != git_original["commit"]:
         avisos.append(f"commit diferente: original {git_original['commit'][:7]}, atual {str(git_atual['commit'])[:7]}")
     if git_original.get("alteracoes_nao_commitadas"):
-        avisos.append("a execução original tinha alterações não commitadas: "
-                      + ", ".join(git_original.get("arquivos_alterados", [])))
+        avisos.append(
+            "a execução original tinha alterações não commitadas: "
+            + ", ".join(git_original.get("arquivos_alterados", []))
+        )
     if git_atual.get("alteracoes_nao_commitadas"):
         avisos.append("há alterações não commitadas agora: " + ", ".join(git_atual["arquivos_alterados"]))
     if meta.get("versao") != __version__:
@@ -70,7 +72,8 @@ def comparar(csv_original, csv_novo):
     a, b = a[colunas], b[colunas]
     tabela = a.merge(b, on=["agente", "tamanho_mundo"], how="outer", suffixes=("_original", "_reproducao"))
     iguais = len(a) == len(b) and a.sort_values(["agente", "tamanho_mundo"]).reset_index(drop=True).equals(
-        b.sort_values(["agente", "tamanho_mundo"]).reset_index(drop=True))
+        b.sort_values(["agente", "tamanho_mundo"]).reset_index(drop=True)
+    )
     return iguais, tabela
 
 
@@ -99,6 +102,7 @@ def main(argv=None):
     print(f"🔁 Reproduzindo: main.py {' '.join(argumentos)}\n")
 
     import main as programa  # importado aqui para os avisos aparecerem antes das mensagens do benchmark
+
     programa.rodar_benchmark(argumentos)
 
     iguais, tabela = comparar(csv_original, os.path.join(saida, "resultados_benchmark.csv"))

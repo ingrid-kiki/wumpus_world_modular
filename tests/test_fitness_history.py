@@ -1,7 +1,7 @@
 # ==============================
 # tests/test_fitness_history.py
 # ==============================
-'''
+"""
 # Este arquivo contém um teste unitário para verificar o rastreamento do histórico de fitness
 # do agente genético (GeneticAgent) durante a execução do algoritmo genético no ambiente Wumpus World.
 #
@@ -14,11 +14,12 @@
 # - Executa o agente e obtém o resultado da simulação, incluindo o histórico de fitness.
 # - Salva o histórico de fitness em um arquivo CSV temporário para facilitar a geração de gráficos.
 # - Garante que o histórico de fitness não está vazio (ou seja, o rastreamento foi realizado).
-'''
+"""
 
 from agents.genetic_agent import GeneticAgent
 from world.world import World
 from tests.conftest import GA_RAPIDO
+
 
 def test_fitness_history_tracking(tmp_path):
     # Cria o mundo e o agente genético com parâmetros customizados
@@ -27,7 +28,7 @@ def test_fitness_history_tracking(tmp_path):
     # Executa o agente e obtém o resultado
     result = agent.run()
     fitness = result["dados_extra"]["fitness"]
-    
+
     # Salva o histórico de fitness em um arquivo CSV temporário
     output_file = tmp_path / "fitness_history.csv"
     with open(output_file, "w") as f:

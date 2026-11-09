@@ -1,16 +1,17 @@
 # ==============================
 # benchmark_fast.py (revisado e robusto)
 # ==============================
-'''
+"""
 Este benchmark executa múltiplas simulações dos agentes 'lógico' e 'genético'
 no ambiente Wumpus World, para diferentes tamanhos de mundo (4x4, 6x6, 8x8).
 Para cada combinação agente+tamanho, executa várias rodadas em paralelo,
 mede o tempo de execução, salva os resultados e gráficos em pastas organizadas,
 e exibe um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
-'''
+"""
 
 import argparse
 import matplotlib
+
 matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender do Tk)
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd
@@ -25,11 +26,8 @@ from datetime import datetime
 import seaborn as sns
 
 # Dicionário que associa nomes de agentes às suas classes
-AGENTES_DISPONIVEIS = {
-    'logico': LogicAgent,
-    'genetico': GeneticAgent,
-    'aleatorio': RandomSearchAgent
-}
+AGENTES_DISPONIVEIS = {"logico": LogicAgent, "genetico": GeneticAgent, "aleatorio": RandomSearchAgent}
+
 
 def simular_execucao(agente_cls, world_size, seed, parametros=None):
     mundo = World(size=world_size, seed=seed)
@@ -49,8 +47,9 @@ def simular_execucao(agente_cls, world_size, seed, parametros=None):
         "status": execucao["status"],
         "tempo": execucao["tempo"],
         "dados_extra": dados_extra,
-        "detalhe_erro": execucao["detalhe_erro"]
+        "detalhe_erro": execucao["detalhe_erro"],
     }
+
 
 def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agentes=None):
     agente_cls = AGENTES_DISPONIVEIS[agente_nome]
@@ -80,8 +79,9 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agente
         **contar([r["status"] for r in resultados]),
         "tempo_total": tempo_total,
         "tempo_médio": tempo_medio,
-        "dados_extra": dados_extra
+        "dados_extra": dados_extra,
     }
+
 
 def gerar_graficos(df_resultados, output_dir):
     """
@@ -108,12 +108,14 @@ def gerar_graficos(df_resultados, output_dir):
     plt.savefig(os.path.join(output_dir, "tempo_medio.png"))
     plt.close()
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--execucoes", type=int, default=10)
     parser.add_argument("--sizes", nargs="+", type=int, default=[4, 6, 8])
-    parser.add_argument("--agentes", nargs="+", choices=AGENTES_DISPONIVEIS.keys(),
-                        default=list(AGENTES_DISPONIVEIS.keys()))
+    parser.add_argument(
+        "--agentes", nargs="+", choices=AGENTES_DISPONIVEIS.keys(), default=list(AGENTES_DISPONIVEIS.keys())
+    )
     args = parser.parse_args()
 
     logs_dir = "logs"
@@ -137,20 +139,20 @@ if __name__ == "__main__":
     print(f"📈 Gráficos salvos em '{output_dir}'")
 
     for _, row in df_resultados.iterrows():
-        agente_nome = row['agente']
-        tamanho = row['tamanho_mundo']
-        vitorias = row['vitórias']
-        mortes = row['mortes']
-        sobrevivencias = row['sobreviveu']
-        tempo_total = row['tempo_total']
-        tempo_medio = row['tempo_médio']
-        erros = row['erros']
+        agente_nome = row["agente"]
+        tamanho = row["tamanho_mundo"]
+        vitorias = row["vitórias"]
+        mortes = row["mortes"]
+        sobrevivencias = row["sobreviveu"]
+        tempo_total = row["tempo_total"]
+        tempo_medio = row["tempo_médio"]
+        erros = row["erros"]
         num_execucoes = vitorias + mortes + sobrevivencias + erros
 
         print(f"\n📊 RESULTADOS - Agente: {agente_nome.upper()} | Tamanho: {tamanho}x{tamanho}")
-        print(f"🏆 Vitórias: {vitorias} ({(vitorias/num_execucoes)*100:.1f}%)")
-        print(f"☠️ Mortes: {mortes} ({(mortes/num_execucoes)*100:.1f}%)")
-        print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias/num_execucoes)*100:.1f}%)")
+        print(f"🏆 Vitórias: {vitorias} ({(vitorias / num_execucoes) * 100:.1f}%)")
+        print(f"☠️ Mortes: {mortes} ({(mortes / num_execucoes) * 100:.1f}%)")
+        print(f"🤔 Sobreviveu sem vencer: {sobrevivencias} ({(sobrevivencias / num_execucoes) * 100:.1f}%)")
         if erros:
             print(f"❌ Erros: {erros}")
         print(f"⏱️ Tempo total: {tempo_total:.2f} segundos")

@@ -1,7 +1,7 @@
 # ==============================
 # tests/test_manual_agent.py
 # ==============================
-'''
+"""
 # Este arquivo contém testes unitários para o agente ManualAgent do projeto Wumpus World.
 # O objetivo é garantir que o agente manual recebe corretamente uma instância do mundo
 # e armazena essa referência em seu atributo 'world'.
@@ -13,7 +13,7 @@
 # - Verifica se o atributo 'world' do agente é exatamente o objeto mundo criado.
 #
 # Esse teste assegura que o agente manual está pronto para interagir com o ambiente.
-'''
+"""
 
 from agents.manual_agent import ManualAgent
 from world.world import World
@@ -28,4 +28,3 @@ def test_manual_agent_receives_world():
     assert hasattr(agent, "world")
     # Verifica se o atributo 'world' do agente é o mesmo objeto criado
     assert agent.world == world
-

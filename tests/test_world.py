@@ -1,18 +1,19 @@
 # ==============================
 # tests/test_world.py
 # ==============================
-'''
+"""
 # Este arquivo contém testes unitários para a classe World do projeto Wumpus World.
 # O objetivo é garantir que o mundo seja inicializado corretamente e que seus principais
 # atributos estejam presentes e com os tipos esperados.
-# 
+#
 # Explicação dos testes:
 # - Verifica se o tamanho do mundo está correto.
 # - Verifica se os atributos essenciais (posição do agente, ouro, wumpus e poços) existem.
 # - Verifica se os tipos desses atributos são os esperados (tupla para posições, lista para poços).
-# 
+#
 # Esses testes ajudam a garantir que a classe World está pronta para ser utilizada pelos agentes.
-'''
+"""
+
 from world.world import World
 
 

@@ -225,6 +225,7 @@ Para abrir os arrays em Python:
 
 ```python
 import numpy as np
+
 dados = np.load("logs/run_AAAAMMDD_HHMMSS/dados_extra_genetico_4x4.npz")
 print(dados.files)
 print(dados["fitness"])
@@ -340,6 +341,7 @@ problema. Em scripts seus que usem matplotlib, defina o modo sem janela antes de
 
 ```python
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 ```

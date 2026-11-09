@@ -1,7 +1,7 @@
 # ==============================
 # utils/execucao.py
 # ==============================
-'''
+"""
 # Executa um agente uma vez e classifica o resultado. Usado pelos 5 benchmarks, para que
 # todos tratem erros do mesmo jeito (#30):
 #
@@ -9,7 +9,7 @@
 # - "erro" se agente.run() lançar uma exceção. Uma execução com erro NÃO conta como vitória,
 #   morte ou sobrevivência: ela entra na coluna "erros" do resultado, e o traceback vai para
 #   o stderr (que o main.py grava no terminal_output.txt).
-'''
+"""
 
 import sys
 import time

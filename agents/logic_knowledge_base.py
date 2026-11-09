@@ -1,14 +1,14 @@
 # ==============================
 # agents/logic_knowledge_base.py
 # ==============================
-'''
+"""
 # Este arquivo implementa a classe LogicKnowledgeBase, responsável por manter e atualizar
 # a base de conhecimento lógica do agente simbólico no Wumpus World. Ela armazena percepções,
 # estados conhecidos do ambiente e permite inferir ações seguras a partir das informações coletadas.
 # Serve como núcleo de raciocínio lógico para o LogicAgent, facilitando decisões baseadas em regras.
-'''
+"""
 
-MOVIMENTOS = [(-1, 0, 'CIMA'), (1, 0, 'BAIXO'), (0, -1, 'ESQUERDA'), (0, 1, 'DIREITA')]
+MOVIMENTOS = [(-1, 0, "CIMA"), (1, 0, "BAIXO"), (0, -1, "ESQUERDA"), (0, 1, "DIREITA")]
 
 
 class LogicKnowledgeBase:
@@ -38,9 +38,9 @@ class LogicKnowledgeBase:
     def update_knowledge(self, perception):
         x, y = self.current_pos
         self.known[(x, y)] = {
-            'seguro': 'BRISA' not in perception and 'FEDOR' not in perception,
-            'visitado': True,
-            'percepções': perception
+            "seguro": "BRISA" not in perception and "FEDOR" not in perception,
+            "visitado": True,
+            "percepções": perception,
         }
         self.visits[(x, y)] = self.visits.get((x, y), 0) + 1
         self.perceptions.append((x, y, perception))
@@ -52,10 +52,10 @@ class LogicKnowledgeBase:
         """
         self.update_knowledge(perception)
         # Exemplo básico: se sentir brilho, tenta pegar o ouro
-        if 'BRILHO' in perception:
-            return 'AGARRAR'
-        if 'FEDOR' in perception:
-            return 'TIRO'
+        if "BRILHO" in perception:
+            return "AGARRAR"
+        if "FEDOR" in perception:
+            return "TIRO"
 
         vizinhas = list(self.neighbors())
         # Exploração simples: andar para uma vizinha ainda não visitada
@@ -68,7 +68,7 @@ class LogicKnowledgeBase:
         if vizinhas:
             _, action = min(vizinhas, key=lambda item: self.visits.get(item[0], 0))
             return action
-        return 'DIREITA'
+        return "DIREITA"
 
     def update_position(self, action, new_pos=None):
         """
@@ -79,7 +79,7 @@ class LogicKnowledgeBase:
             self.current_pos = tuple(new_pos)
             return
         x, y = self.current_pos
-        destinos = {'CIMA': (x - 1, y), 'BAIXO': (x + 1, y), 'ESQUERDA': (x, y - 1), 'DIREITA': (x, y + 1)}
+        destinos = {"CIMA": (x - 1, y), "BAIXO": (x + 1, y), "ESQUERDA": (x, y - 1), "DIREITA": (x, y + 1)}
         destino = destinos.get(action, self.current_pos)
         if self.in_grid(destino):
             self.current_pos = destino

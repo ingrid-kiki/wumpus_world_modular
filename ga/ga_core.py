@@ -15,6 +15,7 @@ import numpy as np
 # Importa a classe Individual (representa um possível agente/solução)
 from .individual import Individual
 
+
 class GeneticAlgorithm:
     def __init__(self, pop_size, gens, chrom_length, mutation_rate, crossover_rate, seed=None, proximidade=0.0):
         # Gerador próprio, para o AG ser reprodutível sem depender do random global (#23)
@@ -44,8 +45,8 @@ class GeneticAlgorithm:
         # Cache de fitness por cromossomo: o mundo não muda durante a evolução, então o mesmo
         # cromossomo tem sempre a mesma nota. Não altera o resultado, só evita simular de novo.
         self._cache_fitness = {}
-        self.avaliacoes = 0       # simulações realmente executadas
-        self.acertos_cache = 0    # avaliações respondidas pelo cache
+        self.avaliacoes = 0  # simulações realmente executadas
+        self.acertos_cache = 0  # avaliações respondidas pelo cache
 
     def avaliar(self, individual, world):
         """Define individual.fitness, simulando só cromossomos ainda não vistos."""
@@ -75,7 +76,7 @@ class GeneticAlgorithm:
             self.memory_history.append(memory_mb)
             # Uso de CPU em porcentagem
             self.cpu_history.append(process.cpu_percent())
-            
+
             # Avalia o fitness de cada indivíduo na população
             for ind in population:
                 self.avaliar(ind, world)
@@ -93,20 +94,20 @@ class GeneticAlgorithm:
 
             # Coleta estatísticas de fitness para gráficos
             fitness_vals = [ind.fitness for ind in population]
-            self.fitness_history.append({
-                'min': min(fitness_vals),
-                'mean': sum(fitness_vals) / len(fitness_vals),
-                'max': max(fitness_vals)
-            })
+            self.fitness_history.append(
+                {"min": min(fitness_vals), "mean": sum(fitness_vals) / len(fitness_vals), "max": max(fitness_vals)}
+            )
             self.fitness_pop.append(fitness_vals.copy())
 
             # Logging da geração
             if logger:
-                logger.write(f"[GA] Geração {g+1}: min={min(fitness_vals)}, mean={sum(fitness_vals)/len(fitness_vals):.2f}, max={max(fitness_vals)}")
-            
+                logger.write(
+                    f"[GA] Geração {g + 1}: min={min(fitness_vals)}, mean={sum(fitness_vals) / len(fitness_vals):.2f}, max={max(fitness_vals)}"
+                )
+
             # Elitismo: mantém os dois melhores indivíduos da geração atual
             next_gen = population[:2]
-            
+
             # Preenche o restante da próxima geração com cruzamento e mutação
             while len(next_gen) < self.pop_size:
                 # Seleciona dois pais para cruzamento
@@ -124,9 +125,9 @@ class GeneticAlgorithm:
                 self.mutate(c2)
                 # Adiciona os filhos à próxima geração
                 next_gen.extend([c1, c2])
-            
+
             # Atualiza a população para a próxima geração
-            population = next_gen[:self.pop_size]  # Garante tamanho correto
+            population = next_gen[: self.pop_size]  # Garante tamanho correto
 
         # Avalia todos da última geração (caso tenha novos filhos não avaliados)
         for ind in population:
@@ -141,7 +142,7 @@ class GeneticAlgorithm:
         # Logging final
         if logger:
             logger.write(f"[GA] Fim das gerações. Melhor fitness: {best_individual_fitness}")
-        
+
         return {
             "best": best_individual,
             "fitness_history": self.fitness_history,
@@ -151,7 +152,7 @@ class GeneticAlgorithm:
             "cpu": self.cpu_history,
             "diversidade_vars": np.array(self.diversidade_history),
             "avaliacoes": self.avaliacoes,
-            "acertos_cache": self.acertos_cache
+            "acertos_cache": self.acertos_cache,
         }
 
     def select(self, population):
@@ -180,7 +181,7 @@ class GeneticAlgorithm:
         if mudou:
             # O cromossomo mudou: o fitness herdado do pai não vale mais (#19)
             individual.fitness = None
-        
+
     def random_action(self):
         # Gera uma ação aleatória válida para o cromossomo
-        return self.rng.choice(['CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO'])
+        return self.rng.choice(["CIMA", "BAIXO", "ESQUERDA", "DIREITA", "AGARRAR", "TIRO"])

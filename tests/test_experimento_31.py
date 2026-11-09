@@ -1,9 +1,9 @@
 # ==============================
 # tests/test_experimento_31.py
 # ==============================
-'''
+"""
 # Testes do script de comparação da issue #31 (experimentos/comparar_metodos.py).
-'''
+"""
 
 import pandas as pd
 import pytest
@@ -37,9 +37,11 @@ def test_holm_ajusta_na_ordem_original():
 
 
 def test_comparar_conta_mundos_discordantes():
-    linhas = [{"metodo": m, "mundo": 4, "genes": 10, "orcamento": 50, "semente": s, "vitoria": v}
-              for s, (a, b) in enumerate([(True, True), (True, False), (True, False), (False, False)])
-              for m, v in (("busca_aleatoria", a), ("ag_projeto", b))]
+    linhas = [
+        {"metodo": m, "mundo": 4, "genes": 10, "orcamento": 50, "semente": s, "vitoria": v}
+        for s, (a, b) in enumerate([(True, True), (True, False), (True, False), (False, False)])
+        for m, v in (("busca_aleatoria", a), ("ag_projeto", b))
+    ]
     r = exp.comparar(pd.DataFrame(linhas)).iloc[0]
     assert (r.vitorias_aleatoria, r.vitorias_metodo, r.so_aleatoria_venceu, r.so_metodo_venceu) == (3, 1, 2, 0)
     assert r.p == pytest.approx(0.5)

@@ -1,7 +1,7 @@
 # ==============================
 # tests/test_logic_agent.py
 # ==============================
-'''
+"""
 # Este arquivo contém testes unitários para o agente LogicAgent do projeto Wumpus World.
 # O objetivo é garantir que o agente lógico é inicializado corretamente e possui os principais
 # atributos e métodos necessários para operar no ambiente.
@@ -14,7 +14,7 @@
 # - Verifica se o agente possui o método 'decide' (responsável por decidir a próxima ação).
 #
 # Esses testes asseguram que o agente lógico está pronto para ser utilizado em simulações e benchmarks.
-'''
+"""
 
 from agents.logic_agent import LogicAgent
 from world.world import World

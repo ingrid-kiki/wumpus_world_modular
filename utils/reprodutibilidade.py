@@ -1,14 +1,14 @@
 # ==============================
 # utils/reprodutibilidade.py
 # ==============================
-'''
+"""
 # Registra, junto com cada execução de benchmark, tudo o que é preciso para refazê-la:
 # versão e commit do código, argumentos usados, parâmetros efetivos do agente genético,
 # regra das sementes e versões do Python e das bibliotecas.
 #
 # O arquivo metadata.json fica na pasta do run (logs/run_AAAAMMDD_HHMMSS/) e é lido
 # por reproduzir.py.
-'''
+"""
 
 import inspect
 import json
@@ -72,10 +72,7 @@ def versoes_das_bibliotecas(nomes=BIBLIOTECAS):
 def parametros_efetivos(classe, sobrescritos=None):
     """Valores padrão do __init__ da classe, com os sobrescritos aplicados por cima."""
     assinatura = inspect.signature(classe.__init__)
-    padroes = {
-        nome: p.default for nome, p in assinatura.parameters.items()
-        if p.default is not inspect.Parameter.empty
-    }
+    padroes = {nome: p.default for nome, p in assinatura.parameters.items() if p.default is not inspect.Parameter.empty}
     padroes.update(sobrescritos or {})
     return padroes
 
