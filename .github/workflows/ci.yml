@@ -45,4 +45,10 @@ jobs:
         run: ruff check .
 
       - name: Testes (pytest)
+        if: ${{ !(matrix.os == 'ubuntu-latest' && matrix.python == '3.13') }}
         run: python -m pytest
+
+      # A medição de cobertura deixa os testes bem mais lentos, então roda em um ambiente só
+      - name: Testes com cobertura (pytest-cov)
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.python == '3.13' }}
+        run: python -m pytest --cov --cov-report=term

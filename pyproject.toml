@@ -18,3 +18,13 @@ extend-exclude = ["pygad"]
 [tool.ruff.lint]
 # Erros reais (pyflakes) e problemas graves de estilo; ampliar aos poucos.
 select = ["E9", "F"]
+
+[tool.coverage.run]
+# sysmon (Python 3.12+) mede bem mais rápido que o modo padrão
+core = "sysmon"
+source = ["."]
+omit = ["tests/*", "pygad/*", ".venv/*", "logs/*"]
+
+[tool.coverage.report]
+# Mínimo igual ao medido na Etapa 1 (79%), com 1 ponto de folga para diferenças entre Windows e Linux
+fail_under = 78

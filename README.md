@@ -87,6 +87,10 @@ python -m pytest
 ruff check .
 ```
 
+Para ver a cobertura de testes (fica bem mais lento): `python -m pytest --cov --cov-report=term`.
+
+O [teste de referência](tests/referencia.py) garante que os resultados não mudam sem uma decisão explícita.
+
 Os bugs corrigidos na reorganização (issues #18 a #24) têm testes de regressão em
 [`tests/test_bugs_conhecidos.py`](tests/test_bugs_conhecidos.py). O CI roda os testes em cada push e PR para a `main`.
 

@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 09/11/2026:** Etapa 0 concluída com a v1.7.0; próximas, Etapas 1 e 2.
+**Status em 09/11/2026:** Etapa 0 concluída com a v1.7.0; Etapa 1 em andamento (PR A: teste de referência e cobertura).
 
 ## Objetivo
 
@@ -45,6 +45,24 @@ A base que protege todo o resto.
 - **Guia de estilo no CONTRIBUTING:** nomes, tamanho de função, docstrings e comentários.
 
 **Meta:** CI com cobertura e lint ampliado, tudo verde.
+
+**Divisão em tarefas (a PR A vem primeiro, porque protege as demais):**
+
+| PR | Tarefa | Tempo |
+|---|---|---|
+| A | 1.1 Definir o cenário de referência (agentes, tamanhos, sementes e parâmetros) | 10 min |
+| A | 1.2 Gerar e guardar os valores esperados (vitórias, mortes, sobrevivências e erros; só números, porque os PNGs mudam entre Windows e Linux) | 15 min |
+| A | 1.3 Criar o teste que compara com esses valores e explicar como atualizar numa mudança intencional | 20 min |
+| A | 1.4 Medir a cobertura atual com `pytest-cov` | 10 min |
+| A | 1.5 Colocar a cobertura no CI, com o valor atual como mínimo | 15 min |
+| B | 1.6 Aplicar `ruff format` num commit só de formatação | 15 min |
+| B | 1.7 Aplicar as correções automáticas (imports, espaços, sintaxe antiga) | 15 min |
+| C | 1.8 Corrigir à mão os avisos de possíveis erros e simplificações | 30 min |
+| C | 1.9 Ativar a regra de complexidade, com as 2 funções acima do limite como exceções até a refatoração | 15 min |
+| D | 1.10 Configurar o `pre-commit` e explicar como instalar | 30 min |
+| D | 1.11 Escrever o guia de estilo no CONTRIBUTING | 30 min |
+
+Os 33 números soltos no código ficam para a refatoração, depois da tese.
 
 ### Etapa 2. Documentação de arquitetura e diagramas (4 a 6 h)
 Em `docs/arquitetura/`, com **Mermaid**, que o GitHub desenha direto e o git versiona como texto.
