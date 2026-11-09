@@ -9,4 +9,4 @@
 # remova o sufixo, feche a seção do CHANGELOG e crie a tag vX.Y.Z no commit de merge.
 '''
 
-__version__ = "1.6.0"
+__version__ = "1.7.0.dev0"
