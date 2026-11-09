@@ -4,7 +4,7 @@ Base: [analise-inicial-2026-11.md](analise-inicial-2026-11.md) (os números entr
 seções 3 e 4 de lá). Decisões de equipe: [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
 O relato do que foi feito está em [reorganizacao-2026-11.md](reorganizacao-2026-11.md).
 
-## Status (atualizado em 09/11/2026, v1.6.0)
+## Status (atualizado em 09/11/2026, v1.6.0 lançada e `1.7.0.dev0` em andamento)
 
 | Fase | Status | Onde |
 |---|---|---|
@@ -24,6 +24,8 @@ O relato do que foi feito está em [reorganizacao-2026-11.md](reorganizacao-2026
   v1.4.0 ou foi registrado na #29.
 - Pendências que surgiram das análises: #29 e #31 (ver o relato). A #30 foi corrigida na **v1.6.0**, uma versão de
   manutenção fora do plano original (correção de erros nos benchmarks, pasta `docs/`, tutorial reescrito).
+- Depois da v1.6.0, entraram na `main` as correções #37 a #40 e o salvamento a cada etapa. A investigação da #31
+  (busca aleatória contra o AG) e a opção `--proximidade` estão nas PRs #46 e #47. A próxima versão é a **v1.7.0**.
 
 ---
 

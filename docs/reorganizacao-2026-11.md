@@ -111,15 +111,43 @@ Registrados para não se repetirem:
 
 ---
 
-## 6. Pendências (atualizado em 09/11/2026, v1.6.0)
+## 6. Continuação (09/11/2026)
+
+Depois da v1.6.0, uma varredura do projeto abriu as issues #37 a #42. Na `main`, ainda sem versão lançada (`1.7.0.dev0`):
+
+| Item | Resultado | PR |
+|---|---|---|
+| #37 | Uma falha nos gráficos não interrompe mais o benchmark nem perde os resultados | #43 |
+| Seção "NÃO ALTERAR" do `main.py` | Resultados e log gravados a cada etapa; gráficos para qualquer agente com dados extras; o comentário virou testes | #44 |
+| #38, #39 e #40 | Entradas validadas (o mundo de tamanho 1 travava), caminhos do Windows na opção 5 e traceback do `benchmark_fast` no log | #45 |
+
+Em PRs abertas, aguardando merge, nesta ordem:
+
+| PR | Conteúdo |
+|---|---|
+| #46 | Agente `aleatorio` (busca aleatória), `experimentos/comparar_metodos.py` e o relato da investigação |
+| #47 | Opção `--proximidade P` no agente genético, desligada por padrão |
+
+A investigação da #31 está em [investigacao-31-ag-vs-busca-aleatoria.md](investigacao-31-ag-vs-busca-aleatoria.md).
+**Principal conclusão:** com o mesmo número de avaliações, a busca aleatória venceu mais que o AG do projeto nos 30 cenários
+testados, inclusive no padrão de 50.000 avaliações em mundos grandes. O bônus de proximidade ao ouro, adotado como opção,
+foi a única mudança que superou a busca aleatória com significância.
+
+---
+
+## 7. Pendências (atualizado em 09/11/2026)
 
 | Item | Onde |
 |---|---|
-| Investigar por que o AG não supera a busca aleatória | #31 |
+| Mesclar as PRs #46 e #47, nessa ordem | #31 |
+| Lançar a v1.7.0 (a seção `[Não lançado]` do CHANGELOG já está pronta) | — |
+| Comparação final para a tese: busca aleatória, AG original e AG com proximidade, em orçamentos menores | #31 |
+| Testar proximidade com mutação 0,1 e medir a variação do próprio AG (várias execuções por mundo) | #31 |
+| Rodar de novo os experimentos da tese com o código atual (depois da comparação acima) | Fase 4.6 |
 | Gráficos com os dados de todas as execuções | #29 |
 | Agente PyGAD sobre o nosso `World`, depois DEAP; resposta da Alfa sobre o `WumpsimAG` | #15 |
-| Busca aleatória como referência e outras metaheurísticas | #16 |
-| Fase 5: refatoração (pacote, classe base de agente, runner único, linha de comando nova) | v2.0.0 |
-| Fase 6: reescrever o histórico (dados antigos e `Co-Authored-By`) | #17 |
+| Outras metaheurísticas (recozimento, busca tabu, colônia de formigas) | #16 |
+| Inconsistências no README, no CONTRIBUTING e na LICENSE | #41 |
+| Reorganizar o repositório e a estrutura do código; Fase 5 (v2.0.0) | #42 |
+| Fase 6: reescrever o histórico (dados antigos, `Co-Authored-By` e e-mail pessoal) | #17, #42 |
 | Proteger a `main` | #17 |
-| Rodar de novo os experimentos da tese com o código atual | Fase 4.6 |

@@ -288,9 +288,9 @@ Os cinco dão os mesmos números para os mesmos parâmetros.
 | Pasta `pygad/` | Não roda: depende do módulo `WumpsimAG`, que não está no projeto ([#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15)) |
 | Gráficos com todas as execuções | Hoje usam só a primeira ([#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29)) |
 
-⚠️ **Sobre interpretar os resultados:** num protótipo, a busca aleatória venceu igual ou mais que o agente genético
-com o mesmo número de avaliações. Isso ainda está em investigação
-([#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31)).
+⚠️ **Sobre interpretar os resultados:** em experimentos com o mesmo número de avaliações, a busca aleatória (`aleatorio`)
+venceu igual ou mais que o agente genético original. Veja a
+[investigação da #31](docs/investigacao-31-ag-vs-busca-aleatoria.md) antes de tirar conclusões sobre o genético.
 
 ---
 
