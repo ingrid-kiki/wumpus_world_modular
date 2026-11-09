@@ -30,17 +30,24 @@ class Individual:
         novo.fitness = self.fitness
         return novo
 
-    def evaluate(self, world):
+    def evaluate(self, world, proximidade=0.0):
         """
         Executa a sequência de ações no mundo e avalia o desempenho.
         :param world: Instância do mundo do Wumpus para simulação
+        :param proximidade: Peso do bônus por chegar perto do ouro. Com 0 (padrão), o fitness é o
+                            original; com peso positivo, soma de 0 a `proximidade` conforme a menor
+                            distância até o ouro alcançada na sequência (#31)
         :return: Nenhum retorno, mas atualiza o atributo fitness do indivíduo
         """
         temp_world = world.clone()  # Cria uma cópia do mundo para simulação
         score = 0  # Inicializa a pontuação
-        for i, action in enumerate(self.chromosome):
+        ouro_x, ouro_y = world.gold_pos
+        menor_distancia = abs(temp_world.agent_pos[0] - ouro_x) + abs(temp_world.agent_pos[1] - ouro_y)
+        for action in self.chromosome:
             # Executa cada ação do cromossomo no mundo simulado
             percept, status = temp_world.step(action)
+            menor_distancia = min(menor_distancia,
+                                  abs(temp_world.agent_pos[0] - ouro_x) + abs(temp_world.agent_pos[1] - ouro_y))
 
             if status == 'MORTO':
                 # Penalidade alta se o agente morrer
@@ -63,6 +70,9 @@ class Individual:
         # Pequeno bônus por sobrevivência
         if temp_world.is_alive:
             score += 10
+        # Sinal de progresso até o ouro: sem ele, a pontuação é quase plana até pegar o ouro (#31)
+        if proximidade:
+            score += proximidade * (1 - menor_distancia / (2 * (world.size - 1)))
         # Salva o fitness final do indivíduo
         self.fitness = score
 

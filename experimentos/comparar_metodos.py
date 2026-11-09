@@ -76,33 +76,15 @@ def fitness_real(mundo, cromossomo):
 class AGVariante(GeneticAlgorithm):
     """O GeneticAlgorithm do projeto, com seleção e fitness trocáveis para testar as hipóteses."""
 
-    def __init__(self, *args, selecao="truncamento", torneio_k=3, proximidade=0.0, **kwargs):
+    def __init__(self, *args, selecao="truncamento", torneio_k=3, **kwargs):
         super().__init__(*args, **kwargs)
-        self.selecao, self.torneio_k, self.proximidade = selecao, torneio_k, proximidade
+        self.selecao, self.torneio_k = selecao, torneio_k
 
     def select(self, population):
         if self.selecao == "truncamento":
             return super().select(population)
         competidores = self.rng.sample(population, min(self.torneio_k, len(population)))
         return max(competidores, key=lambda ind: ind.fitness).copia()
-
-    def avaliar(self, individual, world):
-        super().avaliar(individual, world)
-        if self.proximidade:
-            individual.fitness += self.proximidade * self._aproximacao(individual, world)
-
-    @staticmethod
-    def _aproximacao(individual, world):
-        """Entre 0 e 1: quanto o agente chegou perto do ouro (não entra no critério de vitória)."""
-        copia, gx, gy = world.clone(), *world.gold_pos
-        maior_distancia = 2 * (world.size - 1)
-        menor = abs(copia.agent_pos[0] - gx) + abs(copia.agent_pos[1] - gy)
-        for acao in individual.chromosome:
-            _, status = copia.step(acao)
-            menor = min(menor, abs(copia.agent_pos[0] - gx) + abs(copia.agent_pos[1] - gy))
-            if status in ("GANHOU", "MORTO"):
-                break
-        return 1 - menor / maior_distancia
 
 
 def busca_aleatoria(mundo, orcamento, genes, semente, **_):

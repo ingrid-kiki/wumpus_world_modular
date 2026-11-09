@@ -14,7 +14,7 @@ import numpy as np
 
 class GeneticAgent:
     def __init__(self, world, population_size=100, gens=500, chrom_length=100, mutation_rate=0.02, crossover_rate=0.8,
-                 seed=None):
+                 seed=None, proximidade=0.0):
         # Referência ao ambiente (mundo do Wumpus)
         self.world = world
         # Sem semente explícita, usa a do mundo: mesma semente -> mesmo resultado (#23)
@@ -27,7 +27,8 @@ class GeneticAgent:
             chrom_length=chrom_length,
             mutation_rate=mutation_rate,
             crossover_rate=crossover_rate,
-            seed=seed
+            seed=seed,
+            proximidade=proximidade
             )
         # Histórico das ações e percepções do agente
         self.history = []

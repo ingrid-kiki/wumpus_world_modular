@@ -121,6 +121,8 @@ Na opção 5, digite os argumentos do benchmark, por exemplo:
 | `--benchmark` | benchmark.py | Arquivo de benchmark (os 5 do projeto são compatíveis) |
 | `--populacao`, `--geracoes`, `--cromossomo` | 100, 500, 100 | Parâmetros do agente genético |
 | `--mutacao`, `--cruzamento` | 0,02, 0,8 | Taxas do agente genético |
+| `--proximidade` | 0 | Peso do bônus de proximidade ao ouro no fitness (0 = fitness original) |
+| `--avaliacoes` | população × gerações | Orçamento da busca aleatória (agente `aleatorio`) |
 | `--saida` | `logs/run_AAAAMMDD_HHMMSS` | Pasta de saída |
 
 Antes, os parâmetros do genético só podiam ser mudados editando `agents/genetic_agent.py`.
@@ -221,6 +223,7 @@ Cada cromossomo é uma sequência de ações executada numa cópia do mundo:
 | Tiro que mata o Wumpus | +25 |
 | Morrer (fim de jogo) | −100 |
 | Terminar vivo | +10 |
+| Proximidade ao ouro (só com `--proximidade P`) | de 0 a +P, pela menor distância alcançada |
 
 Sem semente explícita, o AG usa a semente do mundo: o mesmo mundo produz sempre a mesma evolução.
 

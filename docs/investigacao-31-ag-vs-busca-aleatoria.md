@@ -91,6 +91,12 @@ Comando: `python -m experimentos.comparar_metodos --fase padrao`. Vitórias em 1
 - O bônus de proximidade usa a posição do ouro. O AG já simula o mundo real, mas isso amplia o que ele sabe, o que precisa constar na tese.
 - Em cenários com busca aleatória perto de 100%, o problema é fácil demais para distinguir métodos.
 
+## Decisão
+
+O bônus de proximidade foi adotado como **opção** (`--proximidade P`), desligada por padrão: o AG original continua
+disponível e os resultados dele não mudam. A comparação indicada para a tese é entre busca aleatória, AG original e AG
+com proximidade, em cenários com orçamento menor. A combinação de proximidade com mutação 0,1 não foi testada.
+
 ## O que muda na interpretação
 
 O AG do projeto, como está, **não demonstra ganho sobre uma busca sem inteligência** nos cenários testados, inclusive no padrão de 50.000 avaliações. Os resultados de `exemplos/` e os gráficos não permitem concluir o contrário.

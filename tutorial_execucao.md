@@ -150,7 +150,7 @@ python main.py --agentes logico --sizes 4 --execucoes 3
 |---|---|---|
 | `--execucoes N` | 32 | Execuções por agente e tamanho |
 | `--sizes A B ...` | 4 6 8 | Tamanhos do mundo (mínimo 2) |
-| `--agentes A B ...` | logico genetico | `logico`, `genetico` |
+| `--agentes A B ...` | logico genetico | `logico`, `genetico`, `aleatorio` (busca aleatória, a referência do genético) |
 | `--benchmark ARQUIVO` | benchmark.py | Qual dos 5 arquivos de benchmark usar; `benchmark_fast.py` roda em paralelo |
 | `--saida PASTA` | `logs/run_AAAAMMDD_HHMMSS` | Pasta dos resultados |
 | `--populacao N` | 100 | Tamanho da população do genético |
@@ -158,6 +158,8 @@ python main.py --agentes logico --sizes 4 --execucoes 3
 | `--cromossomo N` | 100 | Quantas ações cada indivíduo tem |
 | `--mutacao X` | 0.02 | Taxa de mutação (0 a 1) |
 | `--cruzamento X` | 0.8 | Taxa de cruzamento (0 a 1) |
+| `--proximidade P` | 0 | Bônus no fitness por chegar perto do ouro. Com 0, é o fitness original; nos experimentos da #31, usamos 20 |
+| `--avaliacoes N` | população × gerações | Orçamento da busca aleatória |
 
 Exemplo completo, com os parâmetros do genético:
 
@@ -286,9 +288,9 @@ Os cinco dão os mesmos números para os mesmos parâmetros.
 | Pasta `pygad/` | Não roda: depende do módulo `WumpsimAG`, que não está no projeto ([#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15)) |
 | Gráficos com todas as execuções | Hoje usam só a primeira ([#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29)) |
 
-⚠️ **Sobre interpretar os resultados:** num protótipo, a busca aleatória venceu igual ou mais que o agente genético
-com o mesmo número de avaliações. Isso ainda está em investigação
-([#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31)).
+⚠️ **Sobre interpretar os resultados:** em experimentos com o mesmo número de avaliações, a busca aleatória (`aleatorio`)
+venceu igual ou mais que o agente genético original. Veja a
+[investigação da #31](docs/investigacao-31-ag-vs-busca-aleatoria.md) antes de tirar conclusões sobre o genético.
 
 ---
 

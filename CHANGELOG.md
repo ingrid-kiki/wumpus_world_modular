@@ -11,6 +11,14 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 Próxima etapa: [#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31) (agente genético contra busca
 aleatória); depois a refatoração (Fase 5, v2.0.0).
 
+### Adicionado
+- Agente `aleatorio` (busca aleatória), referência para o agente genético, com o mesmo cromossomo e o mesmo orçamento
+  de avaliações ([#31]).
+- `--proximidade P`: bônus opcional no fitness do AG por chegar perto do ouro. Com o padrão 0, o fitness e os
+  resultados não mudam. Foi a única mudança que superou a busca aleatória com significância ([#31]).
+- `experimentos/comparar_metodos.py` e `docs/investigacao-31-ag-vs-busca-aleatoria.md`: comparação pareada de métodos,
+  com teste estatístico.
+
 ### Corrigido
 - **Um gráfico não interrompe mais o benchmark** ([#37]). Antes, uma falha nos gráficos avançados parava o `main.py`
   sem gravar o CSV, e as execuções já feitas se perdiam (por exemplo, com `--populacao 1`, `--geracoes 0` ou
@@ -279,3 +287,4 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 [#38]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/38
 [#39]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/39
 [#40]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/40
+[#31]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/31
