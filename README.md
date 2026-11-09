@@ -94,6 +94,9 @@ Os bugs corrigidos na reorganização (issues #18 a #24) têm testes de regress�
 
 ## 🚀 Como Executar
 
+> 📘 **O [tutorial de uso](tutorial_execucao.md) cobre, passo a passo, tudo o que funciona hoje**, com exemplos reais,
+> onde ficam os resultados, quanto tempo leva e o que ainda não funciona.
+
 🎮 Menu Interativo (Novo)
 Execute o programa principal para acessar o menu interativo:
 
@@ -225,7 +228,10 @@ Sem semente explícita, o AG usa a semente do mundo: o mesmo mundo produz sempre
 
 ## 🖼️ Interface Visual
 
-Ao executar com `--vis`, o ambiente é mostrado em uma janela gráfica com:
+> ⚠️ **Ainda não disponível.** O código está em `visual/visualizer.py`, mas não está ligado ao programa; a opção
+> `--vis` está prevista para a v2.0.0.
+
+A janela gráfica mostra:
 
 - 🟥 Wumpus  
 - 🕳️ Poços  
@@ -242,7 +248,7 @@ Ao executar com `--vis`, o ambiente é mostrado em uma janela gráfica com:
 Compare o desempenho dos agentes de forma automatizada, com resultados organizados em subpastas de `/logs` e geração de gráficos básicos e avançados.
 
 ### Benchmark Padrão
-Executa 20 rodadas para cada agente:
+Executa 3 rodadas em 4x4 para os agentes lógico e genético:
 ```bash
 python benchmark.py
 ```
@@ -311,14 +317,14 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
     ├── terminal_output.txt                # Saída completa do terminal
     ├── logico_YYYYMMDD_HHMMSS.log        # ← Logs detalhados por agente
     ├── genetico_YYYYMMDD_HHMMSS.log      # ← Logs detalhados por agente
-    ├── grafico_vitorias.png
+    ├── grafico_vitórias.png
     ├── grafico_mortes.png
     ├── grafico_sobreviveu.png
     ├── grafico_tempo_medio.png
     └── advanced_charts_genetico_4x4/     # ← Gráficos avançados por agente/tamanho
         ├── convergencia_populacao.png
         ├── evolucao_fitness.png
-        └── performance_heatmap.png
+        └── heatmap_diversidade.png
 ```
 
 ---

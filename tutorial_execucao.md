@@ -1,255 +1,307 @@
-# 📘 Tutorial de Execução - Projeto Wumpus World com Agentes Inteligentes
+# 📘 Tutorial de uso do Wumpus World
 
-Este guia mostra como executar o projeto **Wumpus World**, incluindo o uso dos diferentes agentes (manual, lógico, genético), visualização gráfica com Pygame e benchmarks automatizados.
+Este guia mostra **o que o projeto faz hoje e como usar**. Todos os comandos abaixo foram executados e conferidos na
+versão 1.6.0. O que ainda não funciona está na [seção 9](#9-o-que-ainda-não-funciona).
+
+Sumário: [instalação](#1-instalação) · [menu](#2-o-menu-do-programa) · [jogar](#3-jogar-com-o-agente-manual) ·
+[agentes automáticos](#4-rodar-um-agente-automático-uma-vez) · [benchmark](#5-comparar-agentes-com-o-benchmark) ·
+[resultados](#6-onde-ficam-os-resultados) · [reproduzir](#7-reproduzir-uma-execução) ·
+[benchmarks avulsos](#8-benchmarks-avulsos) · [limitações](#9-o-que-ainda-não-funciona) · [testes](#10-conferir-a-instalação-com-os-testes)
 
 ---
 
-## ✅ 1. Pré-requisitos
+## 1. Instalação
 
-- Python 3.12 ou superior (exigido pelo numpy 2.5; ver #17)
-- Pip instalado
+É preciso ter **Python 3.12 ou superior**. No terminal, dentro da pasta do projeto:
 
----
+```bash
+python -m venv .venv
+```
 
-## ✅ 2. Instalar dependências
+Ative o ambiente. No Windows (PowerShell):
 
-Abra o terminal no diretório do projeto e execute:
+```bash
+.venv\Scripts\Activate.ps1
+```
+
+No Linux ou macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+Instale as dependências, que têm versões fixadas para os resultados poderem ser reproduzidos:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-As versões estão fixadas no `requirements.txt` para que os resultados possam ser reproduzidos.
-Para desenvolver e rodar os testes, use `pip install -r requirements-dev.txt` e depois `python -m pytest`.
 ---
 
-## ✅ 3. Executar o jogo com agentes
+## 2. O menu do programa
 
-### 📌 Sintaxe básica
-
-> ⚠️ **Ainda não implementado.** Hoje o `main.py` só abre o menu interativo (`python main.py`) e ignora
-> estes argumentos; o `--vis` também não está ligado ao `Visualizer`. Esta é a sintaxe planejada para a v2.0.0
-> (ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17)).
+Tudo começa em:
 
 ```bash
-python main.py [AGENTE] [--size N] [--seed VALOR] [--vis]
+python main.py
 ```
-
-### 🧠 Agentes disponíveis
-
-| Nome       | Descrição                                      |
-|------------|-----------------------------------------------|
-| `manual`   | Controlado pelo usuário via terminal           |
-| `logico`   | Regras simples com mapa interno                |
-| `genetico` | IA baseada em algoritmo genético               |
-
----
-
-### 🎮 Exemplos
-
-```bash
-python main.py manual
-```
-
-```bash
-python main.py logico --size 4 --vis
-```
-
-```bash
-python main.py genetico --size 6 --seed 42
-```
-
----
-
-## ✅ 4. Como controlar o agente manual
-
-Digite as ações no terminal:
 
 ```text
-Ação (CIMA, BAIXO, ESQUERDA, DIREITA, AGARRAR, TIRO): up
+=== Wumpus World ===
+Escolha o modo de execução:
+1 - Benchmark (vários agentes e tamanhos)
+2 - Agente Manual (interativo)
+3 - Agente Lógico (uma execução)
+4 - Agente Genético (uma execução)
+5 - Customizado via linha de comando (CLI)
 ```
+
+| Opção | Para que serve | Gera arquivos? |
+|---|---|---|
+| 1 ou 5 | Comparar agentes em muitos mundos | Sim, em `logs/` |
+| 2 | Você joga, digitando as ações | Não |
+| 3 ou 4 | Ver um agente jogar uma partida | Não |
+
+As opções 2, 3 e 4 perguntam o tamanho do mundo e a semente. **A mesma semente gera sempre o mesmo mundo**; deixando
+a semente em branco (Enter), o mundo é sorteado.
+
+### As regras em resumo
+
+O mundo é um grid N×N, e o agente começa em (0,0), o canto superior esquerdo. As posições são (linha, coluna).
+
+| Ação | Efeito |
+|---|---|
+| `CIMA`, `BAIXO`, `ESQUERDA`, `DIREITA` | Anda uma casa. Contra a parede, não acontece nada |
+| `AGARRAR` | Pega o ouro, se estiver na casa dele. **Isso vence o jogo** |
+| `TIRO` | Mata o Wumpus, se ele estiver em uma casa vizinha. Flechas são ilimitadas e o tiro não tem direção |
+
+| Percepção | Significa |
+|---|---|
+| `FEDOR` | O Wumpus está em uma casa vizinha (e vivo) |
+| `BRISA` | Há um poço em uma casa vizinha |
+| `BRILHO` | O ouro está nesta casa |
+
+Entrar na casa de um poço ou do Wumpus vivo mata o agente. As diferenças em relação ao jogo clássico estão na seção
+"Regras deste Wumpus World" do [README](README.md).
 
 ---
 
-## ✅ 5. Visualização com Pygame
+## 3. Jogar com o agente manual
 
-Use `--vis` para ativar a interface gráfica:
+Escolha a opção **2**. Exemplo real, num mundo 4x4 com semente 7 (ouro em (2,1), poços em (1,0) e (2,0)):
 
-```bash
-python main.py logico --vis
+```text
+Digite o número da opção desejada: 2
+Tamanho do mundo (ex: 4): 4
+Semente aleatória (opcional, pressione Enter para aleatório): 7
+
+Ação (CIMA, BAIXO, ESQUERDA, DIREITA, AGARRAR, TIRO): pular
+❌ Ação inválida: 'PULAR'. Tente novamente.
+Ação (...): direita
+[Passo 1] Ação: DIREITA | Percepção: [] | Status: OK
+Ação (...): baixo
+[Passo 2] Ação: BAIXO | Percepção: ['BRISA'] | Status: OK
+Ação (...): baixo
+[Passo 3] Ação: BAIXO | Percepção: ['BRISA', 'BRILHO'] | Status: OK
+Ação (...): agarrar
+[Passo 4] Ação: AGARRAR | Percepção: ['BRISA', 'BRILHO'] | Status: GANHOU
 ```
+
+Maiúsculas e minúsculas tanto faz. O jogo termina quando você vence (`GANHOU`) ou morre (`MORTO`). O mapa não é
+mostrado: você decide só pelas percepções.
 
 ---
 
-## ✅ 6. Executar o Benchmark
+## 4. Rodar um agente automático uma vez
 
-### Benchmark Padrão
-Executa 20 rodadas para cada agente:
+- **Opção 3, agente lógico:** decide passo a passo pelas percepções. Mostra cada percepção e ação, e o histórico no
+  final. Ele tem limite de `4 × N²` passos e **morre com frequência**, porque entra em casas desconhecidas mesmo
+  sentindo brisa.
+- **Opção 4, agente genético:** evolui uma sequência de ações simulando o mundo e depois a executa. Mostra a melhor
+  sequência, a pontuação e cada passo. Exemplo real, mundo 6x6 com semente 42: pontuação 106,5, venceu no passo 6.
 
-```bash
-python benchmark.py
-```
-
-### Benchmark Customizado
-Permite escolher execuções, tamanhos de mundo e agentes:
-
-```bash
-python benchmark_custom.py --execucoes 30 --sizes 4 6 8 --agentes logico genetico
-```
-
-### Benchmark Alternativo
-Executa diferentes tamanhos de mundo (4x4, 6x6, 8x8):
-
-```bash
-python benchmark_sideB.py
-# executa diferentes tamanhos de mundo (loop sobre 4x4, 6x6, 8x8)
-```
-
-### Benchmark com Gráficos
-Gera relatórios em CSV e gráficos automáticos (barras, tempo médio, etc):
-
-```bash
-python benchmark_graficos.py --execucoes 20 --sizes 4 6 8 --agentes logico genetico
-```
-
-### Benchmark Paralelo e Avançado
-Executa benchmarks em paralelo, salva resultados e gráficos em subpastas organizadas por execução, e gera gráficos avançados:
-
-```bash
-python benchmark_fast.py --execucoes 20 --sizes 4 6 8 --agentes logico genetico
-```
+> O genético e o lógico não jogam nas mesmas condições: o genético planeja simulando o mundo real, e o lógico só usa
+> percepções. Veja "Os agentes não jogam nas mesmas condições" no [README](README.md).
 
 ---
 
-### Comandos disponíveis:
+## 5. Comparar agentes com o benchmark
+
+O benchmark roda os agentes em vários mundos (a execução *i* usa a semente *i*) e grava resultados, gráficos e
+metadados. Há duas formas de passar as opções:
+
+**Opção 5 do menu:** o programa pede a linha de opções.
+
+```text
+Digite o número da opção desejada: 5
+main.py --agentes logico genetico --sizes 4 6 --execucoes 10
+```
+
+**Opção 1 do menu:** as opções vão na própria chamada do programa, e depois você digita `1` no menu.
 
 ```bash
-python benchmark.py [--execucoes N] [--sizes N1 N2 ...] [--agentes A1 A2 ...] [--silent]
+python main.py --agentes logico --sizes 4 --execucoes 3
 ```
 
-### Parâmetros customizáveis:
+### Opções
 
-| Parâmetro     | Descrição                                 | Exemplo                 |
-|---------------|---------------------------------------------|--------------------------|
-| `--execucoes` | Quantidade de execuções por teste           | `--execucoes 20`         |
-| `--sizes`     | Tamanhos do mundo (pode passar vários)      | `--sizes 4 6 8`          |
-| `--agentes`   | Lista de agentes a testar                   | `--agentes logico genetico` |
-| `--silent`    | Ativa modo silencioso (menos prints)        | `--silent`               |
+| Opção | Padrão | O que faz |
+|---|---|---|
+| `--execucoes N` | 32 | Execuções por agente e tamanho |
+| `--sizes A B ...` | 4 6 8 | Tamanhos do mundo |
+| `--agentes A B ...` | logico genetico | `logico`, `genetico` (o `manual` pede teclado; não use em benchmark) |
+| `--benchmark ARQUIVO` | benchmark.py | Qual dos 5 arquivos de benchmark usar; `benchmark_fast.py` roda em paralelo |
+| `--saida PASTA` | `logs/run_AAAAMMDD_HHMMSS` | Pasta dos resultados |
+| `--populacao N` | 100 | Tamanho da população do genético |
+| `--geracoes N` | 500 | Número de gerações |
+| `--cromossomo N` | 100 | Quantas ações cada indivíduo tem |
+| `--mutacao X` | 0.02 | Taxa de mutação (0 a 1) |
+| `--cruzamento X` | 0.8 | Taxa de cruzamento (0 a 1) |
+
+Exemplo completo, com os parâmetros do genético:
+
+```text
+main.py --agentes logico genetico --sizes 4 --execucoes 5 --populacao 50 --geracoes 100 --cromossomo 50 --mutacao 0.05 --cruzamento 0.7 --saida logs/teste
+```
+
+No final, o programa mostra o resumo de cada agente e tamanho:
+
+```text
+📊 RESULTADOS - GENETICO | Tamanho: 4x4
+🏆 Vitórias: 4 (80.0%)
+☠️ Mortes: 0 (0.0%)
+🤔 Sobreviveu sem vencer: 1 (20.0%)
+⏱️ Tempo total: 1.69s | Tempo médio: 0.34s
+```
+
+Se alguma execução falhar, ela aparece em uma linha `❌ Erros`, e o benchmark continua com as demais. O detalhe do erro
+fica em `terminal_output.txt`.
+
+### Quanto tempo leva
+
+O tempo varia bastante com a máquina e com o que mais estiver rodando. Valores medidos:
+
+| O que | Tempo |
+|---|---|
+| Agente lógico | Menos de 1 ms por execução |
+| Genético com parâmetros padrão (100 × 500 × 100) | De 1 a 6 s por execução |
+| Benchmark padrão completo (32 execuções, 3 tamanhos, 2 agentes) | De 4 a 12 min |
+| Gráficos avançados | Até 40 s por tamanho de mundo, a maior parte no gráfico de violino |
+
+Para um teste rápido, reduza `--execucoes`, `--geracoes` ou `--populacao`.
 
 ---
-### Exemplos de execução do benchmark
 
-Executar 10 execuções para todos os agentes nos mundos 4x4, 6x6 e 8x8:
+## 6. Onde ficam os resultados
+
+Cada benchmark cria uma pasta própria:
+
+```text
+logs/run_AAAAMMDD_HHMMSS/
+├── metadata.json                 versão, commit, opções, parâmetros do genético, bibliotecas
+├── resultados_benchmark.csv      uma linha por agente e tamanho
+├── terminal_output.txt           tudo o que apareceu no terminal, inclusive erros
+├── logico_*.log, genetico_*.log  início e fim de cada benchmark
+├── grafico_vitórias.png          comparações entre agentes e tamanhos
+├── grafico_mortes.png
+├── grafico_sobreviveu.png
+├── grafico_tempo_medio.png
+├── dados_extra_genetico_4x4.npz  arrays do genético (fitness, diversidade, memória, CPU)
+└── advanced_charts_genetico_4x4/ gráficos do genético, um conjunto por tamanho
+```
+
+**`resultados_benchmark.csv`** tem as colunas `agente`, `tamanho_mundo`, `vitórias`, `mortes`, `sobreviveu`, `erros`,
+`tempo_total` e `tempo_médio`.
+
+**Gráficos avançados** (só para o genético, feitos com os dados da **primeira** execução de cada tamanho):
+`evolucao_fitness`, `convergencia_populacao`, `curva_convergencia_std`, `violin_fitness`, `ecdf_fitness_final`,
+`heatmap_diversidade`, `area_empilhada_diversidade`, `pca_populacao_final` e `memoria_cpu`.
+
+Para abrir os arrays em Python:
+
+```python
+import numpy as np
+dados = np.load("logs/run_AAAAMMDD_HHMMSS/dados_extra_genetico_4x4.npz")
+print(dados.files)
+print(dados["fitness"])
+```
+
+A pasta `logs/` não vai para o git. Para compartilhar resultados, veja o [CONTRIBUTING](CONTRIBUTING.md).
+
+---
+
+## 7. Reproduzir uma execução
+
+Todo benchmark grava o `metadata.json`, e isso permite refazê-lo e conferir se os números se repetem:
 
 ```bash
-python benchmark.py
+python reproduzir.py logs/run_AAAAMMDD_HHMMSS
 ```
 
-Executar só o agente lógico 30 vezes no mundo 6x6:
+O script roda de novo, grava em `<pasta>_reproducao` (ou em `--saida PASTA`), avisa se o commit, a versão ou as
+bibliotecas forem diferentes e compara vitórias, mortes, sobrevivências e erros:
+
+```text
+✅ Resultados idênticos aos originais.
+```
+
+| Código de saída | Significado |
+|---|---|
+| 0 | Resultados iguais |
+| 1 | Resultados diferentes |
+| 2 | Não dá para comparar (pasta sem `metadata.json` ou sem CSV) |
+
+Tempos, memória e CPU variam a cada rodada e não são comparados. Execuções anteriores à v1.5.0 não têm `metadata.json`.
+
+---
+
+## 8. Benchmarks avulsos
+
+Os arquivos de benchmark também rodam sozinhos, **mas o `main.py` é o caminho recomendado**: só ele grava o
+`metadata.json` e aceita os parâmetros do genético. Rodados sozinhos, eles usam os padrões do genético.
+
+| Comando | Opções | O que gera |
+|---|---|---|
+| `python benchmark.py` | Nenhuma (argumentos são ignorados): 3 execuções em 4x4, lógico e genético | Só resumo na tela |
+| `python benchmark_custom.py` | `--execucoes`, `--sizes`, `--agentes`, `--silent` | Só resumo na tela |
+| `python benchmark_sideB.py` | Nenhuma: 10 execuções em 4x4, 6x6 e 8x8 | Só resumo na tela |
+| `python benchmark_graficos.py` | `--execucoes`, `--sizes`, `--agentes`, `--saida` | CSV e gráficos em `logs/run_.../` |
+| `python benchmark_fast.py` | `--execucoes`, `--sizes`, `--agentes` | Roda em paralelo; CSV e gráficos em `logs/run_.../` |
+
+Os cinco dão os mesmos números para os mesmos parâmetros.
+
+---
+
+## 9. O que ainda não funciona
+
+| Item | Situação |
+|---|---|
+| `python main.py logico --size 4 --vis` | Essa sintaxe não existe ainda: o `main.py` sempre abre o menu. Prevista para a v2.0.0 |
+| Janela gráfica (`visual/visualizer.py`) | O código existe, mas não está ligado ao programa |
+| Pasta `pygad/` | Não roda: depende do módulo `WumpsimAG`, que não está no projeto ([#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15)) |
+| Gráficos com todas as execuções | Hoje usam só a primeira ([#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29)) |
+
+⚠️ **Sobre interpretar os resultados:** num protótipo, a busca aleatória venceu igual ou mais que o agente genético
+com o mesmo número de avaliações. Isso ainda está em investigação
+([#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31)).
+
+---
+
+## 10. Conferir a instalação com os testes
+
+Para confirmar que está tudo funcionando:
 
 ```bash
-python benchmark.py --execucoes 30 --sizes 6 --agentes logico
+pip install -r requirements-dev.txt
 ```
-
-Executar em modo silencioso:
 
 ```bash
-python benchmark.py --silent
+python -m pytest
 ```
+
+Todos os testes devem passar.
 
 ---
 
-Exemplo de saída:
-
-```
-📊 RESULTADOS - Agente: LOGICO | Tamanho: 4x4
-🏆 Vitórias: 11 (55.0%)
-☠️ Mortes: 5 (25.0%)
-🤔 Sobreviveu sem vencer: 4 (20.0%)
-⏱️ Tempo total: 2.00 segundos
-⏱️ Tempo médio por execução: 0.10 segundos
-```
-
-**Resumo dos arquivos de benchmark:**
-
-- `benchmark.py` — Benchmark padrão, executa 20 rodadas para cada agente.
-- `benchmark_custom.py` — Permite personalizar execuções, tamanhos de mundo e agentes via argumentos.
-- `benchmark_sideB.py` — Benchmark alternativo para cenários e análises diferenciadas.
-- `benchmark_graficos.py` — Benchmark com geração automática de gráficos.
-- `benchmark_fast.py` — Benchmark paralelo, organizado por pastas, com gráficos avançados.
-
----
-
-## ✅ 7. Onde ver os logs e resultados?
-
-Os arquivos de log, CSVs e gráficos são salvos automaticamente em subpastas de `/logs/`, organizados por execução e agente:
-
-```
-/logs/
-└── run_YYYYMMDD_HHMMSS/
-    ├── resultados_benchmark.csv
-    ├── grafico_vitorias.png
-    ├── grafico_mortes.png
-    ├── grafico_sobreviveu.png
-    ├── grafico_tempo_medio.png
-    ├── memoria_cpu.png
-    ├── evolucao_fitness.png
-    ├── ... (outros gráficos avançados)
-    ├── logico_YYYYMMDD_HHMMSS.log
-    └── genetico_YYYYMMDD_HHMMSS.log
-```
-
----
-
-## ✅ 8. Estrutura do Projeto
-
-```
-.
-├── agents/                 # Agentes manuais, lógicos e genéticos
-├── ga/                     # Algoritmo genético
-├── world/                  # Lógica do mundo do Wumpus
-├── visual/                 # Visualização com Pygame
-├── utils/                  # Logger e gráficos
-├── logs/                   # Gerado automaticamente (organizado por execução)
-├── main.py                 # Executa o jogo
-├── benchmark.py            # Executa testes comparativos
-├── benchmark_custom.py     # Executa testes comparativos customizados
-├── benchmark_graficos.py   # Executa testes com geração automática de gráficos
-├── benchmark_fast.py       # Executa testes paralelos e gráficos avançados
-├── benchmark_sideB.py      # Executa testes comparativos com tamanhos variados de mundos
-└── README.md
-```
-
----
-
-## ✅ 9. Gráficos Avançados
-
-Quando os dados são coletados (especialmente pelo agente genético), o projeto gera automaticamente:
-
-- **Memória + CPU + Distribuição dos Recursos**
-- **Evolução do Fitness (convergência)**
-- **Comportamento de Convergência da População (mínimo, médio e máximo)**
-- **Média das Curvas de Convergência com Desvio Padrão**
-- **Plot do Violino**
-- **Função de Distribuição Acumulada (ECDF)**
-- **Mapa de Calor da Diversidade por Variável**
-- **Gráfico de Área Empilhada da Diversidade por Variável**
-- **PCA para Visualizar Agrupamentos Genéticos**
-
-Todos os gráficos são salvos automaticamente na subpasta de cada execução.
-
----
-
-## 💡 Dica extra
-
-Quer repetir o mesmo cenário para testes? Use:
-
-```bash
-python main.py logico --seed 123
-```
-
----
-
-## 👩‍💻 Autoria
-
-Este projeto é mantido por **Alfa Marine** e **Ingrid Mendes**, com foco em IA, jogos e ensino computacional.
+Para saber o que mudou em cada versão, veja o [CHANGELOG](CHANGELOG.md). O histórico das decisões está em
+[`docs/`](docs/README.md).
