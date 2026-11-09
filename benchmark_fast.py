@@ -29,11 +29,6 @@ AGENTES_DISPONIVEIS = {
     'genetico': GeneticAgent
 }
 
-TEMPOS_MEDIOS_ESTIMADOS = {
-    'logico': 0.10,
-    'genetico': 0.30
-}
-
 def simular_execucao(agente_cls, world_size, seed, parametros=None):
     mundo = World(size=world_size, seed=seed)
     agente = agente_cls(mundo, **(parametros or {}))
@@ -57,8 +52,6 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agente
     agente_cls = AGENTES_DISPONIVEIS[agente_nome]
 
     print(f"\n🔁 Iniciando: agente = '{agente_nome}', mundo = {world_size}x{world_size}")
-    estimativa = TEMPOS_MEDIOS_ESTIMADOS.get(agente_nome, 0.2) * num_execucoes
-    print(f"⏳ Estimativa de tempo total: {estimativa:.2f}s")
 
     resultados = Parallel(n_jobs=-1)(
         delayed(simular_execucao)(agente_cls, world_size, seed, (parametros_agentes or {}).get(agente_nome, {}))

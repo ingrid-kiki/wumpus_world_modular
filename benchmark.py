@@ -21,17 +21,10 @@ AGENTES_DISPONIVEIS = {
     'genetico': GeneticAgent
 }
 
-TEMPOS_MEDIOS_ESTIMADOS = {
-    'logico': 0.10,
-    'genetico': 0.30
-}
-
 def executar_benchmark(agente_nome, world_size=4, num_execucoes=10, parametros_agentes=None):
     status = []  # "vitória", "morte", "sobreviveu" ou "erro", uma por execução (#30)
     dados_extra_capturados = {}
     tempos = []
-    tempo_estimado = TEMPOS_MEDIOS_ESTIMADOS.get(agente_nome, 0.2) * num_execucoes
-    print(f"\n⏳ Estimativa de tempo total para '{agente_nome}' ({world_size}x{world_size}): {tempo_estimado:.2f}s")
 
     for i in range(num_execucoes):
         seed = i
