@@ -13,6 +13,7 @@ import shlex
 import importlib.util
 import io
 import contextlib
+import traceback
 
 from world.world import World
 from agents.manual_agent import ManualAgent
@@ -84,21 +85,33 @@ def salvar_resultados(resultados, output_dir):
         dados_extra = r.get("dados_extra")
         if dados_extra:
             nome = f"dados_extra_{r['agente']}_{r['tamanho_mundo']}x{r['tamanho_mundo']}.npz"
-            np.savez_compressed(os.path.join(output_dir, nome),
-                                **{chave: np.asarray(valor) for chave, valor in dados_extra.items()})
+            with _gravacao_atomica(os.path.join(output_dir, nome), "wb") as f:
+                np.savez_compressed(f, **{chave: np.asarray(valor) for chave, valor in dados_extra.items()})
     df = pd.DataFrame([{k: v for k, v in r.items() if k != "dados_extra"} for r in validos])
     csv_path = os.path.join(output_dir, "resultados_benchmark.csv")
-    df.to_csv(csv_path, index=False)
+    with _gravacao_atomica(csv_path, "w", encoding="utf-8", newline="") as f:
+        df.to_csv(f, index=False)
     return df, csv_path
 
 @contextlib.contextmanager
-def capturar_saida_terminal():
+def _gravacao_atomica(caminho, modo, **kwargs):
+    """Grava num arquivo temporário e só então substitui o definitivo: uma queda no meio não corrompe o anterior."""
+    temporario = f"{caminho}.tmp"
+    with open(temporario, modo, **kwargs) as arquivo:
+        yield arquivo
+    os.replace(temporario, caminho)
+
+@contextlib.contextmanager
+def capturar_saida_terminal(caminho=None):
     """
     Context manager para capturar toda a saída do terminal durante a execução.
     Permite salvar a saída do terminal em um arquivo para análise posterior.
     Captura o stdout e também o stderr, onde ficam os erros e tracebacks das execuções (#30).
+    Com `caminho`, grava no arquivo à medida que a execução avança, e um erro que interrompa o
+    programa também fica registrado nele: o log sobrevive justamente quando mais é necessário.
     """
     buffer = io.StringIO()
+    arquivo = open(caminho, "w", encoding="utf-8") if caminho else None  # noqa: SIM115 (fechado no finally)
     stdout_original, stderr_original = sys.stdout, sys.stderr
     try:
         class DualWriter:
@@ -108,14 +121,23 @@ def capturar_saida_terminal():
             def write(self, text):
                 self.terminal.write(text)
                 self.buffer.write(text)
+                if arquivo:
+                    arquivo.write(text)
+                    arquivo.flush()
             def flush(self):
                 self.terminal.flush()
                 self.buffer.flush()
         sys.stdout = DualWriter(stdout_original, buffer)
         sys.stderr = DualWriter(stderr_original, buffer)
         yield buffer
+    except BaseException:  # inclui Ctrl+C; o erro continua subindo normalmente depois de registrado
+        if arquivo:
+            arquivo.write("\n" + traceback.format_exc())
+        raise
     finally:
         sys.stdout, sys.stderr = stdout_original, stderr_original
+        if arquivo:
+            arquivo.close()
 
 # Parâmetros do GeneticAgent que podem ser passados pela linha de comando (#13)
 PARAMETROS_AG_CLI = {
@@ -200,31 +222,38 @@ def rodar_benchmark(cli_args):
     resultados = []
 
     # === Execução dos benchmarks ===
-    with capturar_saida_terminal() as buffer:
+    terminal_output_path = os.path.join(output_dir, "terminal_output.txt")
+    with capturar_saida_terminal(terminal_output_path):
         print(f"🚀 Iniciando benchmark em: {output_dir}")
         print(f"📊 Configuração: {args.execucoes} execuções, tamanhos {args.sizes}, agentes {args.agentes}\n")
 
         for size in args.sizes:
             for nome_agente in args.agentes:
                 logger = Logger(nome_agente, output_dir)
-                logger.write(f"\n🚀 Iniciando benchmark: Agente = '{nome_agente}' | Mundo = {size}x{size}")
+                try:
+                    logger.write(f"\n🚀 Iniciando benchmark: Agente = '{nome_agente}' | Mundo = {size}x{size}")
 
-                # ATENÇÃO: NÃO ALTERAR A SEÇÃO DE DADOS EXTRAS E GRÁFICOS AVANÇADOS
-                resultado = executar_benchmark(nome_agente, size, args.execucoes)
-                resultados.append(resultado)
+                    # Pastas, arquivos e gravação parcial desta etapa são garantidos por
+                    # tests/test_main_etapas.py. Ao mudar este trecho, mantenha aqueles testes passando.
+                    resultado = executar_benchmark(nome_agente, size, args.execucoes)
+                    resultados.append(resultado)
+                    # Grava a cada etapa: uma queda perde no máximo a etapa em andamento
+                    salvar_resultados(resultados, output_dir)
 
-                if resultado is None:
-                    print(f"⚠️ Resultado nulo para agente '{nome_agente}' no mundo {size}x{size}")
+                    if not isinstance(resultado, dict):  # benchmark externo (--benchmark) sem o contrato
+                        print(f"⚠️ Resultado nulo para agente '{nome_agente}' no mundo {size}x{size}")
+                    elif resultado.get("dados_extra"):  # vale para qualquer agente que devolva dados extras
+                        advanced_output_dir = os.path.join(output_dir, f"advanced_charts_{nome_agente}_{size}x{size}")
+                        os.makedirs(advanced_output_dir, exist_ok=True)
+                        relatorio = gerar_graficos_avancados(resultado["dados_extra"], advanced_output_dir)
+                        print(f"📊 Gráficos avançados para '{nome_agente}' ({size}x{size}): "
+                              f"{len(relatorio['gerados'])} salvos em {advanced_output_dir}")
+                        if relatorio["falhas"]:
+                            print(f"⚠️ Gráficos que falharam: {', '.join(relatorio['falhas'])}")
 
-                # Salva dados extras e gráficos avançados
-                if nome_agente == "genetico" and isinstance(resultado, dict) and "dados_extra" in resultado and resultado["dados_extra"]:
-                    advanced_output_dir = os.path.join(output_dir, f"advanced_charts_{nome_agente}_{size}x{size}")
-                    os.makedirs(advanced_output_dir, exist_ok=True)
-                    gerar_graficos_avancados(resultado["dados_extra"], advanced_output_dir)
-                    print(f"📊 Gráficos avançados para '{nome_agente}' ({size}x{size}) salvos em: {advanced_output_dir}")
-
-                logger.write(f"✅ Benchmark finalizado: '{nome_agente}' no mundo {size}x{size}")
-                logger.close()
+                    logger.write(f"✅ Benchmark finalizado: '{nome_agente}' no mundo {size}x{size}")
+                finally:
+                    logger.close()
 
         df_resultados, csv_path = salvar_resultados(resultados, output_dir)
         gerar_graficos(df_resultados, output_dir)
@@ -244,11 +273,6 @@ def rodar_benchmark(cli_args):
             if erros:
                 print(f"❌ Erros: {erros} ({(erros/total)*100:.1f}%), detalhes em terminal_output.txt")
             print(f"⏱️ Tempo total: {formatar_tempo(row['tempo_total'])} | Tempo médio: {formatar_tempo(row['tempo_médio'])}")
-
-    # === Salvando a saída do terminal em arquivo .txt ===
-    terminal_output_path = os.path.join(output_dir, "terminal_output.txt")
-    with open(terminal_output_path, "w", encoding="utf-8") as f:
-        f.write(buffer.getvalue())
 
     print(f"\n💾 Saída do terminal salva em: {terminal_output_path}")
     print(f"🧾 Metadados da execução em: {os.path.join(output_dir, 'metadata.json')}")

@@ -226,6 +226,10 @@ print(dados.files)
 print(dados["fitness"])
 ```
 
+**Se a execução for interrompida** (Ctrl+C, queda de energia, erro inesperado), o CSV e os `.npz` ficam com tudo o que
+já terminou, e o `terminal_output.txt` guarda o que aconteceu até ali: perde-se no máximo o agente e tamanho em
+andamento. Os 4 gráficos de comparação só são gerados no final.
+
 A pasta `logs/` não vai para o git. Para compartilhar resultados, veja o [CONTRIBUTING](CONTRIBUTING.md).
 
 ---

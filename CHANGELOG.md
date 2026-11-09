@@ -16,6 +16,15 @@ aleatória); depois a refatoração (Fase 5, v2.0.0).
   sem gravar o CSV, e as execuções já feitas se perdiam (por exemplo, com `--populacao 1`, `--geracoes 0` ou
   `--cromossomo 1 --cruzamento 0`). Agora um gráfico sem dados suficientes é pulado, com aviso, e uma falha vai para o
   stderr sem impedir os demais. Os gráficos gerados não mudam.
+- **Uma interrupção não perde mais o que já foi feito.** `resultados_benchmark.csv` e os `.npz` são gravados ao fim de
+  cada agente e tamanho, por substituição atômica, e `terminal_output.txt` é gravado durante a execução e registra o
+  erro que interrompeu o programa, inclusive Ctrl+C. Uma queda perde no máximo a etapa em andamento.
+- Os gráficos avançados passam a ser gerados para qualquer agente que devolva dados extras, e não só para `genetico`.
+  A mensagem no terminal informa quantos gráficos foram realmente gerados e quais falharam.
+
+### Modificado
+- O comentário "NÃO ALTERAR" do `main.py` foi substituído por testes (`tests/test_main_etapas.py`) que garantem as
+  pastas, os arquivos e a gravação parcial de cada etapa.
 
 ---
 
