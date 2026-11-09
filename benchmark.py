@@ -13,12 +13,14 @@ from world.world import World
 from agents.manual_agent import ManualAgent
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
+from agents.random_search_agent import RandomSearchAgent
 
 # Dicionário que associa nomes de agentes às suas classes
 AGENTES_DISPONIVEIS = {
     'manual': ManualAgent,
     'logico': LogicAgent,
-    'genetico': GeneticAgent
+    'genetico': GeneticAgent,
+    'aleatorio': RandomSearchAgent
 }
 
 def executar_benchmark(agente_nome, world_size=4, num_execucoes=10, parametros_agentes=None):

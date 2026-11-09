@@ -12,11 +12,13 @@ from utils.execucao import contar, executar_uma
 from world.world import World
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
+from agents.random_search_agent import RandomSearchAgent
 
 # Dicionário que associa nomes de agentes às suas classes
 AGENTES_DISPONIVEIS = {
     'logico': LogicAgent,
-    'genetico': GeneticAgent
+    'genetico': GeneticAgent,
+    'aleatorio': RandomSearchAgent
 }
 
 NUM_EXECUCOES = 10  # Número de execuções para cada combinação agente + tamanho
