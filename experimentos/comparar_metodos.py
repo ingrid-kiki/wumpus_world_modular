@@ -11,6 +11,7 @@
 # Uso (a partir da raiz do projeto):
 #     python -m experimentos.comparar_metodos --fase confirmacao
 #     python -m experimentos.comparar_metodos --fase hipoteses
+#     python -m experimentos.comparar_metodos --fase padrao     (100 x 500 x 100, 50.000 avaliações)
 #     python -m experimentos.comparar_metodos --fase confirmacao --mundos 20    (teste rápido)
 #
 # Saída em logs/exp31_<fase>_AAAAMMDD_HHMMSS/: tentativas.csv (uma linha por método e mundo),
@@ -141,6 +142,10 @@ METODOS = {
     # H4, parâmetros: população
     "ag_pop_20": _ag(populacao=20),
     "ag_pop_100": _ag(populacao=100),
+    # Padrão do GeneticAgent (100 x 500 x 100), para a fase "padrao"
+    "ag_padrao": _ag(populacao=100),
+    "ag_padrao_mut_0.1": _ag(populacao=100, mutacao=0.1),
+    "ag_padrao_proximidade": _ag(populacao=100, proximidade=20.0),
 }
 
 FASES = {
@@ -150,8 +155,13 @@ FASES = {
         "cenarios": [(n, g, b) for n in (4, 6, 8, 10, 14) for g in (40, 100) for b in (500, 2000, 10000)],
     },
     "hipoteses": {
-        "metodos": list(METODOS),
+        "metodos": [m for m in METODOS if not m.startswith("ag_padrao")],
         "cenarios": [(n, g, b) for n in (6, 10, 14) for g in (40, 100) for b in (2000,)],
+    },
+    # Configuração padrão do projeto: 100 indivíduos, 100 genes, 50.000 avaliações
+    "padrao": {
+        "metodos": ["busca_aleatoria", "ag_padrao", "ag_padrao_mut_0.1", "ag_padrao_proximidade"],
+        "cenarios": [(n, 100, 50000) for n in (4, 6, 8, 10, 14)],
     },
 }
 
