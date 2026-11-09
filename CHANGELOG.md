@@ -8,8 +8,14 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## [Não lançado]
 
-Próxima etapa: [#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31) (agente genético contra busca
-aleatória); depois a refatoração (Fase 5, v2.0.0).
+Nada ainda. Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md).
+
+---
+
+## [1.7.0] - 2026-11-09
+
+Os resultados (vitórias, mortes, sobrevivências) são **idênticos** aos da v1.6.0 para os mesmos parâmetros e sementes,
+sem usar as opções novas.
 
 ### Adicionado
 - Agente `aleatorio` (busca aleatória), referência para o agente genético, com o mesmo cromossomo e o mesmo orçamento
@@ -19,6 +25,7 @@ aleatória); depois a refatoração (Fase 5, v2.0.0).
 - `experimentos/comparar_metodos.py` e `docs/investigacao-31-ag-vs-busca-aleatoria.md`: comparação pareada de métodos,
   com teste estatístico.
 - Tutorial: seção "Problemas comuns no Windows".
+- `docs/resumo-2026-11.md` e `docs/plano-boas-praticas.md`: resumo do trabalho de novembro de 2026 e plano de boas práticas.
 
 ### Corrigido
 - **Um gráfico não interrompe mais o benchmark** ([#37]). Antes, uma falha nos gráficos avançados parava o `main.py`
@@ -268,7 +275,8 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 > (os nomes reais são `move_agent()` e `interact()`) e um arquivo `RELEASE_NOTES.md`, que nunca existiu.
 > O `Visualizer` existe, mas não é chamado pelo `main.py`.
 
-[Não lançado]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.6.0...main
+[Não lançado]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.7.0...main
+[1.7.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.3.0...v1.4.0
