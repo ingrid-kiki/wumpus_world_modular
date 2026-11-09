@@ -3,7 +3,7 @@
 ## Branches
 
 - A `main` só recebe mudanças por **Pull Request**, com pelo menos uma revisão.
-- Crie uma branch curta por tarefa, a partir da `main` (ou da branch de integração em uso, como `reorg/v2`):
+- Crie uma branch curta por tarefa, a partir da `main`:
 
   | Prefixo | Uso | Exemplo |
   |---|---|---|

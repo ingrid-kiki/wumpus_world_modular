@@ -22,22 +22,13 @@ AGENTES_DISPONIVEIS = {
 NUM_EXECUCOES = 10  # Número de execuções para cada combinação agente + tamanho
 WORLD_SIZES = [4, 6, 8]  # Tamanhos de mundo a serem testados
 
-# Tempos médios estimados para cada agente (usado apenas para exibir estimativa)
-TEMPOS_MEDIOS_ESTIMADOS = {
-    'logico': 0.10,
-    'genetico': 0.30
-}
-
 def executar_benchmark(agente_nome, world_size, num_execucoes=NUM_EXECUCOES, parametros_agentes=None):
     # Status de cada execução: "vitória", "morte", "sobreviveu" ou "erro" (#30)
     status = []
     tempos = []  # Lista para armazenar o tempo de cada execução
     dados_extra_capturados = {}  # Dados extras da primeira execução (agente genético)
 
-    # Calcula e exibe a estimativa de tempo total para o benchmark
-    tempo_estimado = TEMPOS_MEDIOS_ESTIMADOS.get(agente_nome, 0.2) * num_execucoes
     print(f"\n🔁 Iniciando: agente = '{agente_nome}', mundo = {world_size}x{world_size}")
-    print(f"⏳ Estimativa de tempo total: {tempo_estimado:.2f} segundos")
 
     # Executa o benchmark várias vezes, mudando a semente para cada rodada
     for i in range(num_execucoes):

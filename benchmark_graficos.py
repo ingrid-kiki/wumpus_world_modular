@@ -11,6 +11,8 @@ exibindo um resumo com as taxas de vitória, morte, sobrevivência e tempos méd
 
 from utils.execucao import contar, executar_uma
 import argparse
+import os
+from datetime import datetime
 import matplotlib
 matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender do Tk)
 import matplotlib.pyplot as plt  # noqa: E402
@@ -68,7 +70,7 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agente
         "dados_extra": dados_extra_capturados
     }
 
-def gerar_graficos(df):
+def gerar_graficos(df, output_dir="."):
     # Gera gráficos de barras para vitórias, mortes e sobrevivências
     for metric in ["vitórias", "mortes", "sobreviveu"]:
         plt.figure(figsize=(8, 5))
@@ -81,7 +83,8 @@ def gerar_graficos(df):
         plt.xlabel("Agente-Tamanho")
         plt.xticks(rotation=45)
         plt.tight_layout()
-        plt.savefig(f"grafico_{metric}.png")
+        plt.savefig(os.path.join(output_dir, f"grafico_{metric}.png"))
+        plt.close()
 
     # Gera gráfico de barras para o tempo médio de execução
     plt.figure(figsize=(8, 5))
@@ -94,7 +97,8 @@ def gerar_graficos(df):
     plt.xlabel("Agente-Tamanho")
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.savefig("grafico_tempo_medio.png")
+    plt.savefig(os.path.join(output_dir, "grafico_tempo_medio.png"))
+    plt.close()
 
 if __name__ == "__main__":
     # Parser de argumentos para personalizar execuções via terminal
@@ -103,7 +107,13 @@ if __name__ == "__main__":
     parser.add_argument("--sizes", nargs="+", type=int, default=[4, 6, 8])
     parser.add_argument("--agentes", nargs="+", choices=AGENTES_DISPONIVEIS.keys(),
                         default=list(AGENTES_DISPONIVEIS.keys()))
+    parser.add_argument("--saida", type=str, default=None,
+                        help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
     args = parser.parse_args()
+
+    # Grava na pasta do run, como os outros benchmarks (antes gravava na pasta atual)
+    output_dir = args.saida or os.path.join("logs", datetime.now().strftime("run_%Y%m%d_%H%M%S"))
+    os.makedirs(output_dir, exist_ok=True)
 
     # Executa o benchmark para cada combinação de tamanho de mundo e agente selecionado
     resultados = []
@@ -113,11 +123,12 @@ if __name__ == "__main__":
             resultados.append(resultado)
 
     # Salva os resultados em um DataFrame do pandas
-    df_resultados = pd.DataFrame(resultados)
-    df_resultados.to_csv("resultados_benchmark.csv", index=False)  # Exporta para CSV
-    gerar_graficos(df_resultados)  # Gera e salva os gráficos
-    print("\n📊 Resultados salvos em 'resultados_benchmark.csv'")
-    print("📈 Gráficos salvos como 'grafico_*.png'")
+    df_resultados = pd.DataFrame([{k: v for k, v in r.items() if k != "dados_extra"} for r in resultados])
+    csv_path = os.path.join(output_dir, "resultados_benchmark.csv")
+    df_resultados.to_csv(csv_path, index=False)  # Exporta para CSV, só com colunas escalares
+    gerar_graficos(df_resultados, output_dir)  # Gera e salva os gráficos
+    print(f"\n📊 Resultados salvos em '{csv_path}'")
+    print(f"📈 Gráficos salvos em '{output_dir}'")
 
     # Exibe o resumo dos resultados do benchmark para cada agente e tamanho de mundo
     for _, row in df_resultados.iterrows():

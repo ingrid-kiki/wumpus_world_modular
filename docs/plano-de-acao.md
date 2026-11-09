@@ -4,7 +4,7 @@ Base: [analise-inicial-2026-11.md](analise-inicial-2026-11.md) (os números entr
 seções 3 e 4 de lá). Decisões de equipe: [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
 O relato do que foi feito está em [reorganizacao-2026-11.md](reorganizacao-2026-11.md).
 
-## Status (atualizado em 06/11/2026)
+## Status (atualizado em 09/11/2026, v1.6.0)
 
 | Fase | Status | Onde |
 |---|---|---|
@@ -22,7 +22,8 @@ O relato do que foi feito está em [reorganizacao-2026-11.md](reorganizacao-2026
 - O Python mínimo virou **3.12**, e não 3.11: o numpy 2.5.4 exige 3.12.
 - A branch `dev-melhorias` foi arquivada na tag `archive/dev-melhorias` (PR #8 fechada); o que valia dela entrou na
   v1.4.0 ou foi registrado na #29.
-- Novas pendências que surgiram das análises: #29, #30 e #31 (ver o relato).
+- Pendências que surgiram das análises: #29 e #31 (ver o relato). A #30 foi corrigida na **v1.6.0**, uma versão de
+  manutenção fora do plano original (correção de erros nos benchmarks, pasta `docs/`, tutorial reescrito).
 
 ---
 
