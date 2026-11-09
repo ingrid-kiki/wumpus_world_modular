@@ -158,6 +158,8 @@ class GeneticAlgorithm:
 
     def crossover(self, p1, p2):
         # Realiza o cruzamento de dois pais para gerar dois filhos
+        if self.chrom_length < 2:  # com um gene só não há ponto de corte possível (#38)
+            return p1.copia(), p2.copia()
         point = self.rng.randint(1, self.chrom_length - 1)  # Ponto de corte aleatório
         c1 = Individual(0)
         c2 = Individual(0)
