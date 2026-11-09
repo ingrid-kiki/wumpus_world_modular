@@ -8,7 +8,15 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## [Não lançado]
 
-Próxima etapa: refatoração (Fase 5, v2.0.0), ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
+Nada ainda. Próxima etapa: [#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31) (agente genético
+contra busca aleatória); depois a refatoração (Fase 5, v2.0.0).
+
+---
+
+## [1.6.0] - 2026-11-09
+
+Versão de manutenção. Os resultados (vitórias, mortes, sobrevivências) são **idênticos** aos da v1.5.0 para os mesmos
+parâmetros e sementes; o CSV ganha a coluna `erros`.
 
 ### Corrigido
 - **Erros nos benchmarks** ([#30]): os 5 benchmarks passam a tratar uma execução que falha do mesmo jeito. Ela não
@@ -18,13 +26,20 @@ Próxima etapa: refatoração (Fase 5, v2.0.0), ver [#17](https://github.com/ing
 - `python benchmark.py` não testa mais o agente manual, que pedia ações pelo teclado e falhava 3 vezes sem ninguém
   digitando.
 - `terminal_output.txt` passa a incluir o **stderr**: tracebacks e avisos das execuções ficam salvos na pasta do run.
+- `benchmark_graficos.py` rodado sozinho grava em `logs/run_.../` (ou em `--saida`), e não mais na pasta atual.
+- `benchmark_fast.py` e `benchmark_graficos.py` rodados sozinhos gravam só colunas escalares no CSV.
+- Os benchmarks não anunciam mais uma estimativa de tempo fixa no código, que nunca foi medida.
 
 ### Modificado
+- CI roda só em push e PR para a `main` (a branch `reorg/v2` já foi mesclada).
 - `resultados_benchmark.csv` ganha a coluna `erros`. O resumo impresso mostra os erros quando há, e os percentuais
   usam o total de execuções. `reproduzir.py` compara a coluna `erros` quando os dois CSVs a têm.
 - `utils/execucao.py`: `executar_uma()` e `contar()`, usadas pelos 5 benchmarks.
 
 ### Documentação
+- **`tutorial_execucao.md` reescrito** com o que funciona hoje, com todos os comandos conferidos: menu, agente manual,
+  opções do benchmark, resultados, `reproduzir.py`, benchmarks avulsos, tempos medidos e o que ainda não funciona.
+  Saíram comandos que nunca existiram (`main.py logico --vis`, `benchmark.py --execucoes`).
 - Nova pasta `docs/`: relato da reorganização de novembro de 2026 (`reorganizacao-2026-11.md`), plano de ação com o
   status de cada fase (`plano-de-acao.md`) e a análise inicial do código (`analise-inicial-2026-11.md`), com um índice
   em `docs/README.md`. Até agora a análise e o plano existiam só fora do repositório.
@@ -224,7 +239,8 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 > (os nomes reais são `move_agent()` e `interact()`) e um arquivo `RELEASE_NOTES.md`, que nunca existiu.
 > O `Visualizer` existe, mas não é chamado pelo `main.py`.
 
-[Não lançado]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.5.0...main
+[Não lançado]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.6.0...main
+[1.6.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/ingrid-kiki/wumpus_world_modular/releases/tag/v1.3.0
