@@ -67,6 +67,17 @@ Para lançar:
 2. Faça o merge na `main` e crie a tag `vX.Y.Z` no commit de merge, com um GitHub Release.
 3. Volte a versão para a próxima `.dev0` num commit seguinte.
 
+## Resultados de referência
+
+`tests/test_referencia.py` compara os resultados atuais com `tests/referencia.json`: mundos gerados, sequências de
+ações e regras do fitness. Se ele falhar sem que você quisesse mudar resultados, há uma regressão.
+
+Se a mudança for intencional, regenere o arquivo e explique o motivo no commit e no CHANGELOG:
+
+```bash
+python -m tests.referencia
+```
+
 ## Experimentos
 
 Todo run grava `metadata.json`. Antes de usar um resultado num texto ou na tese:

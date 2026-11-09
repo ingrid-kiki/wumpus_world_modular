@@ -1,0 +1,1905 @@
+{
+ "mundos": [
+  {
+   "tamanho": 4,
+   "semente": 0,
+   "ouro": [
+    3,
+    3
+   ],
+   "wumpus": [
+    0,
+    2
+   ],
+   "pocos": [
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     1
+    ]
+   ]
+  },
+  {
+   "tamanho": 4,
+   "semente": 1,
+   "ouro": [
+    1,
+    0
+   ],
+   "wumpus": [
+    2,
+    0
+   ],
+   "pocos": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     0
+    ]
+   ]
+  },
+  {
+   "tamanho": 4,
+   "semente": 2,
+   "ouro": [
+    0,
+    2
+   ],
+   "wumpus": [
+    1,
+    2
+   ],
+   "pocos": [
+    [
+     2,
+     1
+    ],
+    [
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "tamanho": 4,
+   "semente": 3,
+   "ouro": [
+    1,
+    1
+   ],
+   "wumpus": [
+    2,
+    3
+   ],
+   "pocos": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ]
+   ]
+  },
+  {
+   "tamanho": 4,
+   "semente": 4,
+   "ouro": [
+    1,
+    2
+   ],
+   "wumpus": [
+    0,
+    3
+   ],
+   "pocos": [
+    [
+     3,
+     1
+    ],
+    [
+     2,
+     0
+    ]
+   ]
+  },
+  {
+   "tamanho": 6,
+   "semente": 0,
+   "ouro": [
+    3,
+    3
+   ],
+   "wumpus": [
+    0,
+    2
+   ],
+   "pocos": [
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     4,
+     1
+    ]
+   ]
+  },
+  {
+   "tamanho": 6,
+   "semente": 1,
+   "ouro": [
+    1,
+    4
+   ],
+   "wumpus": [
+    0,
+    2
+   ],
+   "pocos": [
+    [
+     0,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     5,
+     3
+    ]
+   ]
+  },
+  {
+   "tamanho": 6,
+   "semente": 2,
+   "ouro": [
+    0,
+    2
+   ],
+   "wumpus": [
+    1,
+    5
+   ],
+   "pocos": [
+    [
+     5,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     1,
+     4
+    ]
+   ]
+  },
+  {
+   "tamanho": 6,
+   "semente": 3,
+   "ouro": [
+    1,
+    4
+   ],
+   "wumpus": [
+    4,
+    1
+   ],
+   "pocos": [
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     0
+    ]
+   ]
+  },
+  {
+   "tamanho": 6,
+   "semente": 4,
+   "ouro": [
+    1,
+    2
+   ],
+   "wumpus": [
+    0,
+    5
+   ],
+   "pocos": [
+    [
+     3,
+     3
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ]
+  },
+  {
+   "tamanho": 8,
+   "semente": 0,
+   "ouro": [
+    6,
+    6
+   ],
+   "wumpus": [
+    0,
+    4
+   ],
+   "pocos": [
+    [
+     7,
+     6
+    ],
+    [
+     4,
+     7
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     2,
+     4
+    ]
+   ]
+  },
+  {
+   "tamanho": 8,
+   "semente": 1,
+   "ouro": [
+    2,
+    1
+   ],
+   "wumpus": [
+    4,
+    1
+   ],
+   "pocos": [
+    [
+     7,
+     7
+    ],
+    [
+     7,
+     6
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     7,
+     0
+    ]
+   ]
+  },
+  {
+   "tamanho": 8,
+   "semente": 2,
+   "ouro": [
+    0,
+    1
+   ],
+   "wumpus": [
+    1,
+    5
+   ],
+   "pocos": [
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     6,
+     6
+    ]
+   ]
+  },
+  {
+   "tamanho": 8,
+   "semente": 3,
+   "ouro": [
+    3,
+    2
+   ],
+   "wumpus": [
+    5,
+    7
+   ],
+   "pocos": [
+    [
+     1,
+     0
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     7,
+     7
+    ]
+   ]
+  },
+  {
+   "tamanho": 8,
+   "semente": 4,
+   "ouro": [
+    3,
+    4
+   ],
+   "wumpus": [
+    1,
+    6
+   ],
+   "pocos": [
+    [
+     7,
+     2
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     4,
+     0
+    ]
+   ]
+  }
+ ],
+ "execucoes": [
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 0,
+   "status": "morte",
+   "passos": 5,
+   "fitness": null,
+   "historico": "f202fd2e9c85a1a7"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 1,
+   "status": "vitória",
+   "passos": 2,
+   "fitness": null,
+   "historico": "670ebf808fdb38a8"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 2,
+   "status": "morte",
+   "passos": 5,
+   "fitness": null,
+   "historico": "390f339d4f3e49f3"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 3,
+   "status": "vitória",
+   "passos": 7,
+   "fitness": null,
+   "historico": "e3d9d7ae20fcb6aa"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 4,
+   "status": "morte",
+   "passos": 2,
+   "fitness": null,
+   "historico": "d11f991cf50a9253"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 5,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 6,
+   "status": "morte",
+   "passos": 8,
+   "fitness": null,
+   "historico": "1a6afbe9dbe6156b"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 7,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 8,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "109f9a4505a536d1"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 9,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 10,
+   "status": "morte",
+   "passos": 12,
+   "fitness": null,
+   "historico": "f96d714cd8a1e788"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 11,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 12,
+   "status": "morte",
+   "passos": 4,
+   "fitness": null,
+   "historico": "815bb6530b76c9a3"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 13,
+   "status": "morte",
+   "passos": 3,
+   "fitness": null,
+   "historico": "9c17a54251433976"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 14,
+   "status": "morte",
+   "passos": 2,
+   "fitness": null,
+   "historico": "d11f991cf50a9253"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 15,
+   "status": "vitória",
+   "passos": 3,
+   "fitness": null,
+   "historico": "c0cfd7eb90a737ee"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 16,
+   "status": "morte",
+   "passos": 3,
+   "fitness": null,
+   "historico": "630ee098465d6ceb"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 17,
+   "status": "morte",
+   "passos": 10,
+   "fitness": null,
+   "historico": "5a675f12d51ea178"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 18,
+   "status": "vitória",
+   "passos": 2,
+   "fitness": null,
+   "historico": "a014acf693e5fcf2"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 19,
+   "status": "morte",
+   "passos": 9,
+   "fitness": null,
+   "historico": "e22081df10faee9e"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 20,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 21,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 22,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 23,
+   "status": "vitória",
+   "passos": 3,
+   "fitness": null,
+   "historico": "6afb87831abdcfb2"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 24,
+   "status": "morte",
+   "passos": 3,
+   "fitness": null,
+   "historico": "9c17a54251433976"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 25,
+   "status": "morte",
+   "passos": 2,
+   "fitness": null,
+   "historico": "d11f991cf50a9253"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 26,
+   "status": "vitória",
+   "passos": 8,
+   "fitness": null,
+   "historico": "038eb21758cc833e"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 27,
+   "status": "morte",
+   "passos": 5,
+   "fitness": null,
+   "historico": "19aac6a508eff629"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 28,
+   "status": "morte",
+   "passos": 5,
+   "fitness": null,
+   "historico": "b65e04b8d09e309a"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 29,
+   "status": "morte",
+   "passos": 4,
+   "fitness": null,
+   "historico": "117fc2cdd22eda9c"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 30,
+   "status": "vitória",
+   "passos": 3,
+   "fitness": null,
+   "historico": "ca9c6be3c5a6b2fb"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 31,
+   "status": "morte",
+   "passos": 7,
+   "fitness": null,
+   "historico": "ab4ccef1c2a38ea7"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 32,
+   "status": "vitória",
+   "passos": 9,
+   "fitness": null,
+   "historico": "089698f52004c606"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 33,
+   "status": "vitória",
+   "passos": 7,
+   "fitness": null,
+   "historico": "130a18b7b13fd40b"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 34,
+   "status": "vitória",
+   "passos": 4,
+   "fitness": null,
+   "historico": "b94df357b74ead53"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 35,
+   "status": "morte",
+   "passos": 2,
+   "fitness": null,
+   "historico": "d11f991cf50a9253"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 36,
+   "status": "vitória",
+   "passos": 3,
+   "fitness": null,
+   "historico": "ae5eb9c1cc201197"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 37,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 38,
+   "status": "morte",
+   "passos": 2,
+   "fitness": null,
+   "historico": "d11f991cf50a9253"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 4,
+   "semente": 39,
+   "status": "morte",
+   "passos": 7,
+   "fitness": null,
+   "historico": "3a22f6cb5b2f9f12"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 4,
+   "semente": 0,
+   "status": "vitória",
+   "passos": 10,
+   "fitness": 129.0,
+   "historico": "b8432577dbd5e05d"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 4,
+   "semente": 1,
+   "status": "vitória",
+   "passos": 13,
+   "fitness": 127.5,
+   "historico": "5a8aab899b087cfe"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 4,
+   "semente": 2,
+   "status": "vitória",
+   "passos": 13,
+   "fitness": 125.5,
+   "historico": "fa12c9930ee8304a"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 4,
+   "semente": 3,
+   "status": "vitória",
+   "passos": 19,
+   "fitness": 123.0,
+   "historico": "c97abcedf7329a00"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 4,
+   "semente": 4,
+   "status": "vitória",
+   "passos": 10,
+   "fitness": 104.0,
+   "historico": "a7a173c874535c69"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 4,
+   "semente": 0,
+   "status": "vitória",
+   "passos": 10,
+   "fitness": 148.5,
+   "historico": "4b789632ba496b2f"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 4,
+   "semente": 1,
+   "status": "vitória",
+   "passos": 13,
+   "fitness": 147.5,
+   "historico": "5a8aab899b087cfe"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 4,
+   "semente": 2,
+   "status": "vitória",
+   "passos": 13,
+   "fitness": 145.5,
+   "historico": "fa12c9930ee8304a"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 4,
+   "semente": 3,
+   "status": "vitória",
+   "passos": 19,
+   "fitness": 143.0,
+   "historico": "c97abcedf7329a00"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 4,
+   "semente": 4,
+   "status": "vitória",
+   "passos": 7,
+   "fitness": 126.0,
+   "historico": "718302f128649fca"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 4,
+   "semente": 0,
+   "status": "vitória",
+   "passos": 19,
+   "fitness": 98.5,
+   "historico": "93a3348480f543be"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 4,
+   "semente": 1,
+   "status": "vitória",
+   "passos": 4,
+   "fitness": 132.0,
+   "historico": "5a84af972c648b38"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 4,
+   "semente": 2,
+   "status": "sobreviveu",
+   "passos": 20,
+   "fitness": 20.5,
+   "historico": "3c5aec7f0ad88241"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 4,
+   "semente": 3,
+   "status": "vitória",
+   "passos": 3,
+   "fitness": 108.0,
+   "historico": "4f6449c2938b0334"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 4,
+   "semente": 4,
+   "status": "vitória",
+   "passos": 11,
+   "fitness": 127.5,
+   "historico": "76845d0c84f354f0"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 0,
+   "status": "morte",
+   "passos": 7,
+   "fitness": null,
+   "historico": "e881e7b6b0ca424a"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 1,
+   "status": "morte",
+   "passos": 19,
+   "fitness": null,
+   "historico": "b0299ce325e85c04"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 2,
+   "status": "vitória",
+   "passos": 13,
+   "fitness": null,
+   "historico": "68b22c15eb09909e"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 3,
+   "status": "morte",
+   "passos": 4,
+   "fitness": null,
+   "historico": "aadae1cf582e8ec5"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 4,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 5,
+   "status": "vitória",
+   "passos": 18,
+   "fitness": null,
+   "historico": "034e201aa6b217b8"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 6,
+   "status": "vitória",
+   "passos": 5,
+   "fitness": null,
+   "historico": "e378b18ece57c367"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 7,
+   "status": "morte",
+   "passos": 4,
+   "fitness": null,
+   "historico": "aadae1cf582e8ec5"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 8,
+   "status": "morte",
+   "passos": 8,
+   "fitness": null,
+   "historico": "9adf31f4b52cf49f"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 9,
+   "status": "morte",
+   "passos": 5,
+   "fitness": null,
+   "historico": "ad29219279425313"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 10,
+   "status": "vitória",
+   "passos": 5,
+   "fitness": null,
+   "historico": "e378b18ece57c367"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 11,
+   "status": "morte",
+   "passos": 10,
+   "fitness": null,
+   "historico": "623a47665f375aa1"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 12,
+   "status": "morte",
+   "passos": 12,
+   "fitness": null,
+   "historico": "6eb2ae08713780d9"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 13,
+   "status": "morte",
+   "passos": 10,
+   "fitness": null,
+   "historico": "623a47665f375aa1"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 14,
+   "status": "morte",
+   "passos": 7,
+   "fitness": null,
+   "historico": "e881e7b6b0ca424a"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 15,
+   "status": "vitória",
+   "passos": 2,
+   "fitness": null,
+   "historico": "ebfb9198ce41bc94"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 16,
+   "status": "morte",
+   "passos": 3,
+   "fitness": null,
+   "historico": "630ee098465d6ceb"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 17,
+   "status": "morte",
+   "passos": 9,
+   "fitness": null,
+   "historico": "f8918cdc22dc6b83"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 18,
+   "status": "vitória",
+   "passos": 2,
+   "fitness": null,
+   "historico": "b06a9a3bf772983f"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 19,
+   "status": "vitória",
+   "passos": 7,
+   "fitness": null,
+   "historico": "be65140eb8316e68"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 20,
+   "status": "morte",
+   "passos": 7,
+   "fitness": null,
+   "historico": "e881e7b6b0ca424a"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 21,
+   "status": "morte",
+   "passos": 8,
+   "fitness": null,
+   "historico": "516656a0e24ff54f"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 22,
+   "status": "morte",
+   "passos": 5,
+   "fitness": null,
+   "historico": "1ee9c82c324309c9"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 23,
+   "status": "vitória",
+   "passos": 3,
+   "fitness": null,
+   "historico": "6afb87831abdcfb2"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 24,
+   "status": "morte",
+   "passos": 11,
+   "fitness": null,
+   "historico": "9312d0a7d33a6fb7"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 25,
+   "status": "vitória",
+   "passos": 4,
+   "fitness": null,
+   "historico": "42309feb75e07b5b"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 26,
+   "status": "morte",
+   "passos": 4,
+   "fitness": null,
+   "historico": "aadae1cf582e8ec5"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 27,
+   "status": "morte",
+   "passos": 10,
+   "fitness": null,
+   "historico": "354c68fc7965d1da"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 28,
+   "status": "morte",
+   "passos": 10,
+   "fitness": null,
+   "historico": "623a47665f375aa1"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 29,
+   "status": "vitória",
+   "passos": 5,
+   "fitness": null,
+   "historico": "e378b18ece57c367"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 30,
+   "status": "morte",
+   "passos": 14,
+   "fitness": null,
+   "historico": "ba54e0cda7d64ed1"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 31,
+   "status": "morte",
+   "passos": 10,
+   "fitness": null,
+   "historico": "3cd3339fd6484f79"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 32,
+   "status": "morte",
+   "passos": 3,
+   "fitness": null,
+   "historico": "630ee098465d6ceb"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 33,
+   "status": "vitória",
+   "passos": 9,
+   "fitness": null,
+   "historico": "53183cae385f105c"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 34,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 35,
+   "status": "morte",
+   "passos": 9,
+   "fitness": null,
+   "historico": "f8918cdc22dc6b83"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 36,
+   "status": "vitória",
+   "passos": 3,
+   "fitness": null,
+   "historico": "ae5eb9c1cc201197"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 37,
+   "status": "morte",
+   "passos": 21,
+   "fitness": null,
+   "historico": "a5470295ef19d8ec"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 38,
+   "status": "morte",
+   "passos": 15,
+   "fitness": null,
+   "historico": "54a587af7c32a919"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 6,
+   "semente": 39,
+   "status": "morte",
+   "passos": 5,
+   "fitness": null,
+   "historico": "736901b03b3c06fd"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 6,
+   "semente": 0,
+   "status": "sobreviveu",
+   "passos": 20,
+   "fitness": 24.5,
+   "historico": "8ed7289630ee050c"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 6,
+   "semente": 1,
+   "status": "sobreviveu",
+   "passos": 20,
+   "fitness": 23.5,
+   "historico": "3d075efe596bb72b"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 6,
+   "semente": 2,
+   "status": "vitória",
+   "passos": 14,
+   "fitness": 102.5,
+   "historico": "522c9478f9c2204f"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 6,
+   "semente": 3,
+   "status": "vitória",
+   "passos": 20,
+   "fitness": 98.5,
+   "historico": "c8fdeecf4c15216d"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 6,
+   "semente": 4,
+   "status": "vitória",
+   "passos": 5,
+   "fitness": 106.5,
+   "historico": "be9e7b802cf0ebfe"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 6,
+   "semente": 0,
+   "status": "sobreviveu",
+   "passos": 20,
+   "fitness": 41.0,
+   "historico": "551c14e5061f1554"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 6,
+   "semente": 1,
+   "status": "vitória",
+   "passos": 19,
+   "fitness": 142.0,
+   "historico": "3c7318200674f662"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 6,
+   "semente": 2,
+   "status": "vitória",
+   "passos": 14,
+   "fitness": 122.5,
+   "historico": "201f20e78404ddb1"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 6,
+   "semente": 3,
+   "status": "vitória",
+   "passos": 20,
+   "fitness": 118.0,
+   "historico": "706292a0f06a410d"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 6,
+   "semente": 4,
+   "status": "vitória",
+   "passos": 5,
+   "fitness": 126.5,
+   "historico": "be9e7b802cf0ebfe"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 6,
+   "semente": 0,
+   "status": "sobreviveu",
+   "passos": 20,
+   "fitness": 24.0,
+   "historico": "b6b64351489973c0"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 6,
+   "semente": 1,
+   "status": "vitória",
+   "passos": 14,
+   "fitness": 124.5,
+   "historico": "be4f47172ed3ec58"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 6,
+   "semente": 2,
+   "status": "vitória",
+   "passos": 3,
+   "fitness": 108.0,
+   "historico": "04a9303b3c1d1f8e"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 6,
+   "semente": 3,
+   "status": "vitória",
+   "passos": 20,
+   "fitness": 98.0,
+   "historico": "706292a0f06a410d"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 6,
+   "semente": 4,
+   "status": "vitória",
+   "passos": 7,
+   "fitness": 105.5,
+   "historico": "4db1c0e0ad338313"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 0,
+   "status": "morte",
+   "passos": 26,
+   "fitness": null,
+   "historico": "b984a1375e2c3957"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 1,
+   "status": "morte",
+   "passos": 8,
+   "fitness": null,
+   "historico": "70a353e8285afeb2"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 2,
+   "status": "vitória",
+   "passos": 16,
+   "fitness": null,
+   "historico": "d5dadca6dab29a86"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 3,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 4,
+   "status": "morte",
+   "passos": 4,
+   "fitness": null,
+   "historico": "47d22d8f4ee71c41"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 5,
+   "status": "morte",
+   "passos": 3,
+   "fitness": null,
+   "historico": "fd3221cf3ae9415a"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 6,
+   "status": "morte",
+   "passos": 6,
+   "fitness": null,
+   "historico": "a801d390302287cd"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 7,
+   "status": "morte",
+   "passos": 3,
+   "fitness": null,
+   "historico": "5a1c91cf08e9ca4d"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 8,
+   "status": "morte",
+   "passos": 3,
+   "fitness": null,
+   "historico": "630ee098465d6ceb"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 9,
+   "status": "morte",
+   "passos": 2,
+   "fitness": null,
+   "historico": "d11f991cf50a9253"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 10,
+   "status": "morte",
+   "passos": 2,
+   "fitness": null,
+   "historico": "d11f991cf50a9253"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 11,
+   "status": "morte",
+   "passos": 13,
+   "fitness": null,
+   "historico": "7cf979aae98ff986"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 12,
+   "status": "morte",
+   "passos": 3,
+   "fitness": null,
+   "historico": "630ee098465d6ceb"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 13,
+   "status": "morte",
+   "passos": 4,
+   "fitness": null,
+   "historico": "aadae1cf582e8ec5"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 14,
+   "status": "morte",
+   "passos": 9,
+   "fitness": null,
+   "historico": "5a595f336b7ac36a"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 15,
+   "status": "vitória",
+   "passos": 4,
+   "fitness": null,
+   "historico": "42309feb75e07b5b"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 16,
+   "status": "morte",
+   "passos": 7,
+   "fitness": null,
+   "historico": "51c6ce1c97b01e52"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 17,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 18,
+   "status": "vitória",
+   "passos": 14,
+   "fitness": null,
+   "historico": "3a827584474b8918"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 19,
+   "status": "vitória",
+   "passos": 16,
+   "fitness": null,
+   "historico": "19f99f6f908b0d05"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 20,
+   "status": "morte",
+   "passos": 2,
+   "fitness": null,
+   "historico": "6580c444886d6636"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 21,
+   "status": "morte",
+   "passos": 3,
+   "fitness": null,
+   "historico": "630ee098465d6ceb"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 22,
+   "status": "morte",
+   "passos": 10,
+   "fitness": null,
+   "historico": "14e133f13bf90d36"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 23,
+   "status": "morte",
+   "passos": 7,
+   "fitness": null,
+   "historico": "51c6ce1c97b01e52"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 24,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 25,
+   "status": "morte",
+   "passos": 4,
+   "fitness": null,
+   "historico": "47d22d8f4ee71c41"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 26,
+   "status": "morte",
+   "passos": 17,
+   "fitness": null,
+   "historico": "a8562e008590d459"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 27,
+   "status": "morte",
+   "passos": 14,
+   "fitness": null,
+   "historico": "baddc7d0daf47753"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 28,
+   "status": "vitória",
+   "passos": 18,
+   "fitness": null,
+   "historico": "46dd88ca4958e86d"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 29,
+   "status": "morte",
+   "passos": 7,
+   "fitness": null,
+   "historico": "2377243ae4de952d"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 30,
+   "status": "vitória",
+   "passos": 5,
+   "fitness": null,
+   "historico": "e378b18ece57c367"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 31,
+   "status": "morte",
+   "passos": 2,
+   "fitness": null,
+   "historico": "d11f991cf50a9253"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 32,
+   "status": "morte",
+   "passos": 5,
+   "fitness": null,
+   "historico": "bbcdf9ea79449d86"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 33,
+   "status": "morte",
+   "passos": 11,
+   "fitness": null,
+   "historico": "b17b7ac289958cfc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 34,
+   "status": "vitória",
+   "passos": 7,
+   "fitness": null,
+   "historico": "7fdf09ff9856c23d"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 35,
+   "status": "morte",
+   "passos": 4,
+   "fitness": null,
+   "historico": "aadae1cf582e8ec5"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 36,
+   "status": "morte",
+   "passos": 1,
+   "fitness": null,
+   "historico": "c23f5478ddfd61cc"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 37,
+   "status": "vitória",
+   "passos": 2,
+   "fitness": null,
+   "historico": "a014acf693e5fcf2"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 38,
+   "status": "morte",
+   "passos": 6,
+   "fitness": null,
+   "historico": "c98fea09d19589c8"
+  },
+  {
+   "agente": "logico",
+   "tamanho": 8,
+   "semente": 39,
+   "status": "morte",
+   "passos": 2,
+   "fitness": null,
+   "historico": "d11f991cf50a9253"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 8,
+   "semente": 0,
+   "status": "sobreviveu",
+   "passos": 20,
+   "fitness": 23.5,
+   "historico": "1f2aa4707c7e1d9c"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 8,
+   "semente": 1,
+   "status": "vitória",
+   "passos": 12,
+   "fitness": 102.0,
+   "historico": "2fb973503dc3666c"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 8,
+   "semente": 2,
+   "status": "vitória",
+   "passos": 2,
+   "fitness": 108.5,
+   "historico": "b9fb3dc058abad9f"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 8,
+   "semente": 3,
+   "status": "vitória",
+   "passos": 9,
+   "fitness": 104.0,
+   "historico": "088ad78ecc581fee"
+  },
+  {
+   "agente": "genetico",
+   "tamanho": 8,
+   "semente": 4,
+   "status": "sobreviveu",
+   "passos": 20,
+   "fitness": -1.0,
+   "historico": "e03a1488933b29e0"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 8,
+   "semente": 0,
+   "status": "sobreviveu",
+   "passos": 20,
+   "fitness": 39.142857142857146,
+   "historico": "b1e8844364c27d92"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 8,
+   "semente": 1,
+   "status": "vitória",
+   "passos": 14,
+   "fitness": 122.0,
+   "historico": "9b795030feec50ed"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 8,
+   "semente": 2,
+   "status": "vitória",
+   "passos": 2,
+   "fitness": 128.5,
+   "historico": "b9fb3dc058abad9f"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 8,
+   "semente": 3,
+   "status": "vitória",
+   "passos": 9,
+   "fitness": 124.0,
+   "historico": "088ad78ecc581fee"
+  },
+  {
+   "agente": "genetico_proximidade",
+   "tamanho": 8,
+   "semente": 4,
+   "status": "sobreviveu",
+   "passos": 20,
+   "fitness": 19.0,
+   "historico": "f4c1bad133b81ab2"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 8,
+   "semente": 0,
+   "status": "sobreviveu",
+   "passos": 20,
+   "fitness": 23.0,
+   "historico": "4663a887fff9a0ff"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 8,
+   "semente": 1,
+   "status": "vitória",
+   "passos": 5,
+   "fitness": 107.0,
+   "historico": "23717fafd1c39b4c"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 8,
+   "semente": 2,
+   "status": "vitória",
+   "passos": 2,
+   "fitness": 108.5,
+   "historico": "b9fb3dc058abad9f"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 8,
+   "semente": 3,
+   "status": "vitória",
+   "passos": 8,
+   "fitness": 104.5,
+   "historico": "44fb95b0b1da1c13"
+  },
+  {
+   "agente": "aleatorio",
+   "tamanho": 8,
+   "semente": 4,
+   "status": "vitória",
+   "passos": 15,
+   "fitness": 98.5,
+   "historico": "8df21206160c0f2e"
+  }
+ ],
+ "casos_de_fitness": {
+  "andar|proximidade=0": 9.5,
+  "andar|proximidade=20": 27.0,
+  "contra_a_parede|proximidade=0": 9.0,
+  "contra_a_parede|proximidade=20": 24.0,
+  "agarrar_sem_ouro|proximidade=0": 9,
+  "agarrar_sem_ouro|proximidade=20": 24.0,
+  "tiro_errado|proximidade=0": 9,
+  "tiro_errado|proximidade=20": 24.0,
+  "matar_wumpus|proximidade=0": 33.5,
+  "matar_wumpus|proximidade=20": 51.0,
+  "pegar_o_ouro|proximidade=0": 108.0,
+  "pegar_o_ouro|proximidade=20": 128.0,
+  "cair_no_poco|proximidade=0": -100.5,
+  "cair_no_poco|proximidade=20": -85.5,
+  "morrer_para_o_wumpus|proximidade=0": -100.5,
+  "morrer_para_o_wumpus|proximidade=20": -83.0
+ },
+ "casos_do_agente_logico": {
+  "desempate_pela_ordem_dos_movimentos": "CIMA",
+  "volta_pela_menos_visitada_baixo": "BAIXO",
+  "volta_pela_menos_visitada_esquerda": "ESQUERDA",
+  "canto_inferior_direito": "ESQUERDA"
+ }
+}

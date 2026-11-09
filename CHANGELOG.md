@@ -8,7 +8,12 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## [Não lançado]
 
-Nada ainda. Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md).
+Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md).
+
+### Adicionado
+- Teste de referência (`tests/test_referencia.py`): mundos, sequências de ações e regras do fitness não podem mudar
+  sem decisão explícita.
+- Cobertura de testes no CI com `pytest-cov`: 79% hoje, mínimo de 78%.
 
 ---
 
