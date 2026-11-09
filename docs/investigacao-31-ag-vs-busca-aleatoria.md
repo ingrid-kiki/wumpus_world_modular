@@ -1,6 +1,6 @@
 # Investigação: o agente genético supera a busca aleatória? (#31)
 
-Experimentos de 09/11/2026 sobre o código da versão `1.7.0.dev0`. Para refazer:
+Experimentos de 09/11/2026 sobre o código da versão `1.7.0.dev0`. Para refazer (o de 50.000 avaliações levou cerca de 40 min):
 
 ```bash
 python -m experimentos.comparar_metodos --fase confirmacao
@@ -68,13 +68,31 @@ Vitórias em 100 mundos, com 2.000 avaliações:
 
 **Interpretação:** sem um sinal de progresso, a pontuação é quase plana até o agente pegar o ouro, e o que diferencia as sequências é sobreviver. O AG concentra a busca em poucas sequências seguras; a busca aleatória continua amostrando o espaço inteiro e, com poucas ações necessárias, acaba encontrando o ouro.
 
+## Resultado 3: com o padrão do projeto (100 × 500 × 100, 50.000 avaliações)
+
+Comando: `python -m experimentos.comparar_metodos --fase padrao`. Vitórias em 100 mundos, 100 genes:
+
+| Método | 4x4 | 6x6 | 8x8 | 10x10 | 14x14 |
+|---|---|---|---|---|---|
+| **Busca aleatória** | **99** | **100** | **100** | **100** | **99** |
+| AG padrão | 99 | 100 | 92 | 87 | 72 |
+| AG padrão com mutação 0,1 | 99 | 100 | 96 | 97 | 90 |
+| AG padrão com proximidade ao ouro | 99 | 100 | 100 | 100 | 100 |
+
+- O **AG padrão** perde com diferença significativa em 10x10 (p ajustado = 0,003) e 14x14 (p < 0,001). Em 8x8 a diferença não é significativa (p = 0,09).
+- Com **mutação 0,1**, nenhuma diferença é significativa depois da correção (14x14: p = 0,051).
+- Com **proximidade**, o AG empata com a busca aleatória em todos os tamanhos e fica à frente em um mundo 14x14.
+- Com 50.000 avaliações, a busca aleatória já está no teto (99 a 100%), então este orçamento **não consegue mostrar que um método é melhor que ela**: só que um método é pior.
+
 ## Limites destes resultados
 
-- Foi testada **uma configuração-base** do AG. O padrão do projeto (100 × 500 × 100, 50.000 avaliações) não foi avaliado, e os orçamentos foram até 10.000.
+- As variantes testadas são poucas: seleção, mutação, população e proximidade, sem combinações além das da tabela. Mutação 0,1 com proximidade não foi testada no padrão.
 - O AG roda uma vez por mundo, com a semente do mundo: a variação do próprio AG não foi medida separadamente.
 - O bônus de proximidade usa a posição do ouro. O AG já simula o mundo real, mas isso amplia o que ele sabe, o que precisa constar na tese.
 - Em cenários com busca aleatória perto de 100%, o problema é fácil demais para distinguir métodos.
 
 ## O que muda na interpretação
 
-O AG do projeto, como está, **não demonstra ganho sobre uma busca sem inteligência** nos cenários testados. Os resultados de `exemplos/` e os gráficos não permitem concluir o contrário.
+O AG do projeto, como está, **não demonstra ganho sobre uma busca sem inteligência** nos cenários testados, inclusive no padrão de 50.000 avaliações. Os resultados de `exemplos/` e os gráficos não permitem concluir o contrário.
+
+Para mostrar que um método é **melhor** que a busca aleatória, os cenários precisam deixar espaço abaixo do teto: orçamentos menores ou mundos maiores, como os da tabela do Resultado 2.
