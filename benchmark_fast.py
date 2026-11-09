@@ -19,6 +19,7 @@ from utils.execucao import contar, executar_uma, relatar_erro
 from world.world import World
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
+from agents.random_search_agent import RandomSearchAgent
 import os
 from datetime import datetime
 import seaborn as sns
@@ -26,7 +27,8 @@ import seaborn as sns
 # Dicionário que associa nomes de agentes às suas classes
 AGENTES_DISPONIVEIS = {
     'logico': LogicAgent,
-    'genetico': GeneticAgent
+    'genetico': GeneticAgent,
+    'aleatorio': RandomSearchAgent
 }
 
 def simular_execucao(agente_cls, world_size, seed, parametros=None):

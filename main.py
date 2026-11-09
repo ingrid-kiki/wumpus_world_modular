@@ -19,6 +19,7 @@ from world.world import TAMANHO_MINIMO, World
 from agents.manual_agent import ManualAgent
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
+from agents.random_search_agent import RandomSearchAgent
 from utils.logger import Logger
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
 from utils.reprodutibilidade import coletar_metadados, parametros_efetivos, salvar_metadados
@@ -27,7 +28,8 @@ from utils.reprodutibilidade import coletar_metadados, parametros_efetivos, salv
 AGENTES_DISPONIVEIS = {
     "manual": ManualAgent,
     "logico": LogicAgent,
-    "genetico": GeneticAgent
+    "genetico": GeneticAgent,
+    "aleatorio": RandomSearchAgent
 }
 
 def menu_interativo():
@@ -204,6 +206,8 @@ def criar_parser():
     grupo_ag = parser.add_argument_group("agente genético", "Sem estas opções, valem os padrões do GeneticAgent.")
     for opcao, (_, tipo, ajuda) in PARAMETROS_AG_CLI.items():
         grupo_ag.add_argument(f"--{opcao}", type=tipo, default=None, help=ajuda)
+    parser.add_argument("--avaliacoes", type=inteiro_minimo(1), default=None,
+                        help="Orçamento da busca aleatória (padrão: população x gerações do AG)")
     parser.add_argument("--saida", type=str, default=None,
                         help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
     return parser
@@ -255,10 +259,15 @@ def rodar_benchmark(cli_args):
     """
     args = criar_parser().parse_args(cli_args)
     sobrescritos_ag = parametros_do_ag(args)
+    # A busca aleatória usa o mesmo cromossomo e o mesmo orçamento do AG, para a comparação ser justa (#31)
+    efetivos_ag = parametros_efetivos(GeneticAgent, sobrescritos_ag)
+    parametros_busca = {"chrom_length": efetivos_ag["chrom_length"],
+                        "avaliacoes": args.avaliacoes or efetivos_ag["population_size"] * efetivos_ag["gens"]}
 
     # Carrega o benchmark escolhido pelo usuário; os parâmetros por agente vão junto em toda chamada
     executar_benchmark = functools.partial(carregar_benchmark(args.benchmark),
-                                           parametros_agentes={"genetico": sobrescritos_ag})
+                                           parametros_agentes={"genetico": sobrescritos_ag,
+                                                               "aleatorio": parametros_busca})
 
     # === Criação do diretório de saída ===
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -270,7 +279,10 @@ def rodar_benchmark(cli_args):
     if "genetico" in args.agentes:
         parametros_ag = parametros_efetivos(GeneticAgent, sobrescritos_ag)
         parametros_ag.pop("seed", None)  # a semente segue a regra descrita em metadados["sementes"]
-    salvar_metadados(output_dir, coletar_metadados(cli_args, vars(args), parametros_ag))
+    metadados = coletar_metadados(cli_args, vars(args), parametros_ag)
+    if "aleatorio" in args.agentes:
+        metadados["parametros_busca_aleatoria"] = parametros_busca
+    salvar_metadados(output_dir, metadados)
 
     resultados = []
 

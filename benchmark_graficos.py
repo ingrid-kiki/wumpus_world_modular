@@ -20,11 +20,13 @@ import pandas as pd
 from world.world import World
 from agents.logic_agent import LogicAgent
 from agents.genetic_agent import GeneticAgent
+from agents.random_search_agent import RandomSearchAgent
 
 # Dicionário que associa nomes de agentes às suas classes
 AGENTES_DISPONIVEIS = {
     'logico': LogicAgent,
-    'genetico': GeneticAgent
+    'genetico': GeneticAgent,
+    'aleatorio': RandomSearchAgent
 }
 
 def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agentes=None):
