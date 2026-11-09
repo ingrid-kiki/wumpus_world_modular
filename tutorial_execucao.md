@@ -307,7 +307,7 @@ pip install -r requirements-dev.txt
 python -m pytest
 ```
 
-Todos os testes devem passar. Para ver também a cobertura, que deixa os testes bem mais lentos:
+Todos os testes devem passar. Para ver também a cobertura:
 
 ```bash
 python -m pytest --cov --cov-report=term

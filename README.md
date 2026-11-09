@@ -87,7 +87,7 @@ python -m pytest
 ruff check .
 ```
 
-Para ver a cobertura de testes (fica bem mais lento): `python -m pytest --cov --cov-report=term`.
+Para ver a cobertura de testes: `python -m pytest --cov --cov-report=term`.
 
 O [teste de referência](tests/referencia.py) garante que os resultados não mudam sem uma decisão explícita.
 

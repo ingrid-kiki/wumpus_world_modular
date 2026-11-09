@@ -20,7 +20,7 @@ extend-exclude = ["pygad"]
 select = ["E9", "F"]
 
 [tool.coverage.run]
-# sysmon (Python 3.12+) mede bem mais rápido que o modo padrão
+# sysmon usa o mecanismo de monitoramento do Python 3.12+
 core = "sysmon"
 source = ["."]
 omit = ["tests/*", "pygad/*", ".venv/*", "logs/*"]
