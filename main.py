@@ -208,6 +208,13 @@ def criar_parser():
                         help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
     return parser
 
+def separar_argumentos(linha, windows=os.name == "nt"):
+    """
+    Separa a linha digitada na opção 5 em argumentos, respeitando aspas.
+    No Windows, a barra invertida é separador de caminho: sem isso o shlex a apagaria (#39).
+    """
+    return shlex.split(linha.replace("\\", "\\\\") if windows else linha)
+
 def parametros_do_ag(args):
     """Parâmetros do GeneticAgent informados na linha de comando (só os que foram passados)."""
     return {nome: getattr(args, opcao) for opcao, (nome, _, _) in PARAMETROS_AG_CLI.items()
@@ -223,7 +230,7 @@ def main():
         print("\nDigite a linha de comando desejada (exemplo: --agentes logico genetico --sizes 4 6 --execucoes 10 "
               "--populacao 50 --geracoes 100 --benchmark outro_benchmark.py):")
         linha = input("main.py ").strip()
-        cli_args = shlex.split(linha)
+        cli_args = separar_argumentos(linha)
     elif escolha == "2":
         execucao_unica("manual")
         return

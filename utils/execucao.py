@@ -27,26 +27,36 @@ def classificar(mundo):
     return "sobreviveu"
 
 
-def executar_uma(agente, mundo, rotulo=""):
+def relatar_erro(detalhe):
+    """Escreve o relato de um erro no stderr, que o main.py grava no terminal_output.txt."""
+    print(detalhe, file=sys.stderr)
+
+
+def executar_uma(agente, mundo, rotulo="", relatar=True):
     """
     Roda agente.run() uma vez, sem deixar uma exceção derrubar o benchmark.
-    :return: dict com status, tempo (s), resultado devolvido por run() e mensagem de erro (ou None)
+    :param relatar: False quando a execução roda em outro processo: o stderr de lá não chega ao
+                    terminal_output.txt, então quem chamou deve usar relatar_erro(execucao["detalhe_erro"]) (#40)
+    :return: dict com status, tempo (s), resultado devolvido por run(), mensagem de erro e relato completo (ou None)
     """
     inicio = time.perf_counter()
+    detalhe = None
     try:
         resultado = agente.run()
         erro = None
     except Exception as e:  # o benchmark continua; o erro fica registrado
         resultado = None
         erro = f"{type(e).__name__}: {e}"
-        print(f"❌ Erro na execução {rotulo}: {erro}", file=sys.stderr)
-        traceback.print_exc(file=sys.stderr)
+        detalhe = f"❌ Erro na execução {rotulo}: {erro}\n{traceback.format_exc()}"
+        if relatar:
+            relatar_erro(detalhe)
     tempo = time.perf_counter() - inicio
     return {
         "status": "erro" if erro else classificar(mundo),
         "tempo": tempo,
         "resultado": resultado,
         "erro": erro,
+        "detalhe_erro": detalhe,
     }
 
 
