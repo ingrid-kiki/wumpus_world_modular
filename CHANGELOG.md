@@ -8,8 +8,14 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## [Não lançado]
 
-Nada ainda. Próxima etapa: [#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31) (agente genético
-contra busca aleatória); depois a refatoração (Fase 5, v2.0.0).
+Próxima etapa: [#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31) (agente genético contra busca
+aleatória); depois a refatoração (Fase 5, v2.0.0).
+
+### Corrigido
+- **Um gráfico não interrompe mais o benchmark** ([#37]). Antes, uma falha nos gráficos avançados parava o `main.py`
+  sem gravar o CSV, e as execuções já feitas se perdiam (por exemplo, com `--populacao 1`, `--geracoes 0` ou
+  `--cromossomo 1 --cruzamento 0`). Agora um gráfico sem dados suficientes é pulado, com aviso, e uma falha vai para o
+  stderr sem impedir os demais. Os gráficos gerados não mudam.
 
 ---
 
@@ -255,3 +261,4 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 [#24]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/24
 [#13]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/13
 [#30]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/30
+[#37]: https://github.com/ingrid-kiki/wumpus_world_modular/issues/37
