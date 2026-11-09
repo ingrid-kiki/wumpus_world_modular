@@ -178,6 +178,16 @@ def taxa(texto):
         raise argparse.ArgumentTypeError(f"precisa estar entre 0 e 1 (recebido: {valor})")
     return valor
 
+def peso(texto):
+    """Tipo para o argparse: número maior ou igual a zero."""
+    try:
+        valor = float(texto)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"'{texto}' não é um número") from None
+    if valor < 0:
+        raise argparse.ArgumentTypeError(f"precisa ser 0 ou maior (recebido: {valor})")
+    return valor
+
 def arquivo_existente(caminho):
     """Tipo para o argparse: caminho de um arquivo que existe (#38)."""
     if not os.path.isfile(caminho):
@@ -191,6 +201,7 @@ PARAMETROS_AG_CLI = {
     "cromossomo": ("chrom_length", inteiro_minimo(1), "Tamanho do cromossomo (ações por indivíduo)"),
     "mutacao": ("mutation_rate", taxa, "Taxa de mutação do AG (0 a 1)"),
     "cruzamento": ("crossover_rate", taxa, "Taxa de cruzamento do AG (0 a 1)"),
+    "proximidade": ("proximidade", peso, "Peso do bônus de proximidade ao ouro no fitness (padrão: 0, fitness original; nos experimentos da #31, 20)"),
 }
 
 def criar_parser():

@@ -16,9 +16,11 @@ import numpy as np
 from .individual import Individual
 
 class GeneticAlgorithm:
-    def __init__(self, pop_size, gens, chrom_length, mutation_rate, crossover_rate, seed=None):
+    def __init__(self, pop_size, gens, chrom_length, mutation_rate, crossover_rate, seed=None, proximidade=0.0):
         # Gerador próprio, para o AG ser reprodutível sem depender do random global (#23)
         self.rng = random.Random(seed)
+        # Peso do bônus de proximidade ao ouro no fitness; 0 mantém o fitness original (#31)
+        self.proximidade = proximidade
         # Tamanho da população de indivíduos
         self.pop_size = pop_size
         # Número de gerações (iterações do algoritmo)
@@ -52,7 +54,7 @@ class GeneticAlgorithm:
             individual.fitness = self._cache_fitness[chave]
             self.acertos_cache += 1
         else:
-            individual.evaluate(world)
+            individual.evaluate(world, self.proximidade)
             self._cache_fitness[chave] = individual.fitness
             self.avaliacoes += 1
 
