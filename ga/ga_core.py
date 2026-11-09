@@ -7,10 +7,11 @@
 # seleção, cruzamento e mutação para buscar sequências de ações que maximizem o desempenho
 # do agente no ambiente. Serve como base para experimentos de IA evolutiva no projeto.
 
-import random
-import psutil
 import os
+import random
+
 import numpy as np
+import psutil
 
 # Importa a classe Individual (representa um possível agente/solução)
 from .individual import Individual

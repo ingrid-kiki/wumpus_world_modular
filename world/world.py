@@ -9,8 +9,8 @@
 # do algoritmo genético e testes dos agentes inteligentes do projeto.
 """
 
-import random
 import copy
+import random
 
 TAMANHO_MINIMO = 2
 

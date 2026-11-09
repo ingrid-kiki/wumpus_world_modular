@@ -18,8 +18,8 @@
 """
 
 from agents.genetic_agent import GeneticAgent
-from world.world import World
 from tests.conftest import GA_RAPIDO
+from world.world import World
 
 
 def test_action_sequence_length():

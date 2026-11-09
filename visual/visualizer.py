@@ -8,8 +8,9 @@
 # mensagens de vitória, morte e eventos especiais. Ideal para análise didática e demonstrações.
 """
 
-import pygame
 import sys
+
+import pygame
 
 
 class Visualizer:

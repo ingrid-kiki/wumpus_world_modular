@@ -15,13 +15,14 @@
 import matplotlib
 
 matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender do Tk)
-import matplotlib.pyplot as plt  # noqa: E402
 import os
 import sys
 import traceback
-from sklearn.decomposition import PCA
-import seaborn as sns
+
+import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np
+import seaborn as sns
+from sklearn.decomposition import PCA
 
 
 def _desenhar(nome, funcao, relatorio):

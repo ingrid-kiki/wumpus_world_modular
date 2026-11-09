@@ -3,26 +3,27 @@
 # ==============================
 
 import argparse
+import contextlib
 import functools
-import os
-import sys
-from datetime import datetime
-import numpy as np
-import pandas as pd
-import shlex
 import importlib.util
 import io
-import contextlib
+import os
+import shlex
+import sys
 import traceback
+from datetime import datetime
 
-from world.world import TAMANHO_MINIMO, World
-from agents.manual_agent import ManualAgent
-from agents.logic_agent import LogicAgent
+import numpy as np
+import pandas as pd
+
 from agents.genetic_agent import GeneticAgent
+from agents.logic_agent import LogicAgent
+from agents.manual_agent import ManualAgent
 from agents.random_search_agent import RandomSearchAgent
-from utils.logger import Logger
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
+from utils.logger import Logger
 from utils.reprodutibilidade import coletar_metadados, parametros_efetivos, salvar_metadados
+from world.world import TAMANHO_MINIMO, World
 
 # Dicionário de agentes disponíveis
 AGENTES_DISPONIVEIS = {

@@ -9,8 +9,9 @@
 # permitindo análise detalhada do comportamento e integração com benchmarks e gráficos.
 """
 
-from ga.ga_core import GeneticAlgorithm  # Importa o núcleo do algoritmo genético
 import numpy as np
+
+from ga.ga_core import GeneticAlgorithm  # Importa o núcleo do algoritmo genético
 
 
 class GeneticAgent:

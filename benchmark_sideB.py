@@ -8,11 +8,11 @@ Para cada combinação agente+tamanho, executa várias rodadas, mede o tempo de 
 e exibe um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
 """
 
+from agents.genetic_agent import GeneticAgent
+from agents.logic_agent import LogicAgent
+from agents.random_search_agent import RandomSearchAgent
 from utils.execucao import contar, executar_uma
 from world.world import World
-from agents.logic_agent import LogicAgent
-from agents.genetic_agent import GeneticAgent
-from agents.random_search_agent import RandomSearchAgent
 
 # Dicionário que associa nomes de agentes às suas classes
 AGENTES_DISPONIVEIS = {"logico": LogicAgent, "genetico": GeneticAgent, "aleatorio": RandomSearchAgent}

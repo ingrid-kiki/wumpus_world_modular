@@ -9,19 +9,22 @@ mede o tempo de execução, salva os resultados em CSV e gera gráficos comparat
 exibindo um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
 """
 
-from utils.execucao import contar, executar_uma
 import argparse
 import os
 from datetime import datetime
+
 import matplotlib
+
+from utils.execucao import contar, executar_uma
 
 matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender do Tk)
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd
-from world.world import World
-from agents.logic_agent import LogicAgent
+
 from agents.genetic_agent import GeneticAgent
+from agents.logic_agent import LogicAgent
 from agents.random_search_agent import RandomSearchAgent
+from world.world import World
 
 # Dicionário que associa nomes de agentes às suas classes
 AGENTES_DISPONIVEIS = {"logico": LogicAgent, "genetico": GeneticAgent, "aleatorio": RandomSearchAgent}

@@ -23,13 +23,13 @@ import benchmark_fast
 import benchmark_graficos
 import benchmark_sideB
 import main
+from agents.genetic_agent import GeneticAgent
 from agents.logic_agent import LogicAgent
 from agents.logic_knowledge_base import LogicKnowledgeBase
 from ga.ga_core import GeneticAlgorithm
-from agents.genetic_agent import GeneticAgent
 from ga.individual import Individual
-from world.world import World
 from tests.conftest import GA_RAPIDO
+from world.world import World
 
 ISSUE = "https://github.com/ingrid-kiki/wumpus_world_modular/issues/"
 
