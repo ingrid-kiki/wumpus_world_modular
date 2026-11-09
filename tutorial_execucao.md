@@ -67,7 +67,8 @@ a semente em branco (Enter), o mundo é sorteado.
 
 ### As regras em resumo
 
-O mundo é um grid N×N, e o agente começa em (0,0), o canto superior esquerdo. As posições são (linha, coluna).
+O mundo é um grid N×N (N a partir de 2), e o agente começa em (0,0), o canto superior esquerdo. As posições são
+(linha, coluna).
 
 | Ação | Efeito |
 |---|---|
@@ -148,8 +149,8 @@ python main.py --agentes logico --sizes 4 --execucoes 3
 | Opção | Padrão | O que faz |
 |---|---|---|
 | `--execucoes N` | 32 | Execuções por agente e tamanho |
-| `--sizes A B ...` | 4 6 8 | Tamanhos do mundo |
-| `--agentes A B ...` | logico genetico | `logico`, `genetico` (o `manual` pede teclado; não use em benchmark) |
+| `--sizes A B ...` | 4 6 8 | Tamanhos do mundo (mínimo 2) |
+| `--agentes A B ...` | logico genetico | `logico`, `genetico` |
 | `--benchmark ARQUIVO` | benchmark.py | Qual dos 5 arquivos de benchmark usar; `benchmark_fast.py` roda em paralelo |
 | `--saida PASTA` | `logs/run_AAAAMMDD_HHMMSS` | Pasta dos resultados |
 | `--populacao N` | 100 | Tamanho da população do genético |
