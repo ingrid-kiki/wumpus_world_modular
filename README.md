@@ -90,6 +90,9 @@ ruff format .
 
 Para ver a cobertura de testes: `python -m pytest --cov --cov-report=term`.
 
+Para quem vai contribuir: o gancho do `pre-commit` não vem ativado ao clonar. Rode `pre-commit install` uma vez em cada
+clone, como explicado em [CONTRIBUTING.md](CONTRIBUTING.md#checagem-automática-antes-do-commit).
+
 O [teste de referência](tests/referencia.py) garante que os resultados não mudam sem uma decisão explícita.
 
 Os bugs corrigidos na reorganização (issues #18 a #24) têm testes de regressão em
