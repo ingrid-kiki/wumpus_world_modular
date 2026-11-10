@@ -49,6 +49,8 @@ flowchart TD
 - `metadata.json` é gravado antes das execuções. Se algo falhar, o registro do que foi pedido continua lá.
 - A gravação parcial acontece depois de cada combinação de tamanho e agente, então uma queda perde no máximo a combinação
   em andamento.
+- Se `agente.run()` lançar um erro durante o benchmark, `executar_uma` o registra na coluna `erros` e o benchmark continua
+  na execução seguinte.
 - `carregar_benchmark` usa `benchmark.py` por padrão. A opção `--benchmark` escolhe outro arquivo, como
   `benchmark_fast.py`, `benchmark_custom.py`, `benchmark_graficos.py` ou `benchmark_sideB.py`.
 - `reproduzir.py` chama o mesmo `rodar_benchmark` com os argumentos guardados no `metadata.json`, e depois compara os

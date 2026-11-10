@@ -40,7 +40,7 @@ o caso de origem é uma variação opcional do caso de destino.
 | Jogar manualmente | `python main.py`, opção 2 | `execucao_unica`, `ManualAgent` |
 | Ver um agente resolver um mundo | `python main.py`, opção 3 (lógico) ou 4 (genético) | `execucao_unica`, `LogicAgent`, `GeneticAgent` |
 | Comparar agentes em benchmark | `python main.py`, opção 1 | `rodar_benchmark` |
-| Configurar o benchmark pela linha de comando | Opção 5 do menu, ou argumentos antes da opção 1 | `criar_parser`, `separar_argumentos` |
+| Configurar o benchmark pela linha de comando | Opção 5 do menu, ou `python main.py <argumentos>` seguido da opção 1 | `criar_parser`, `separar_argumentos` |
 | Gravar resultados, gráficos e metadados | Automático em todo benchmark | `salvar_resultados`, `gerar_graficos`, `salvar_metadados` |
 | Reproduzir um run | `python reproduzir.py logs/run_AAAAMMDD_HHMMSS` | `reproduzir.main`, `rodar_benchmark` |
 | Comparar métodos de busca em experimentos | `python -m experimentos.comparar_metodos --fase <fase>` | `experimentos/comparar_metodos.py` |
