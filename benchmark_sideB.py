@@ -87,5 +87,5 @@ def executar_benchmark(agente_nome, world_size, num_execucoes=NUM_EXECUCOES, par
 if __name__ == "__main__":
     # Executa o benchmark para cada combinação de tamanho de mundo e agente selecionado
     for size in WORLD_SIZES:
-        for nome in AGENTES_DISPONIVEIS.keys():
+        for nome in AGENTES_DISPONIVEIS:
             executar_benchmark(nome, size)

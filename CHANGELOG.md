@@ -16,6 +16,8 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
 - Cobertura de testes no CI com `pytest-cov`: 79% hoje, mínimo de 78%.
 - Padronização com `ruff format`, verificada no CI, e regras de lint para imports, espaços e sintaxe antiga. Os commits só de
   formatação ficam em `.git-blame-ignore-revs`.
+- Regras de lint para possíveis erros (`B`) e simplificações (`SIM`), e limite de complexidade 10 por função.
+  `gerar_graficos_avancados` e `draw_world` ficam como exceções até a refatoração.
 
 ---
 

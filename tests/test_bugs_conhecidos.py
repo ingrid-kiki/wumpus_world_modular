@@ -255,7 +255,7 @@ class AgenteQueFalha(AgenteFalso):
 def test_benchmarks_cumprem_o_contrato_do_main(modulo, monkeypatch):
     """#24 (corrigido): os 5 benchmarks aceitam (agente, tamanho, execuções) e devolvem o mesmo dict."""
     resultado = _rodar(modulo, monkeypatch, AgenteFalso, 2)
-    assert isinstance(resultado, dict) and CHAVES_RESULTADO <= set(resultado)
+    assert isinstance(resultado, dict) and set(resultado) >= CHAVES_RESULTADO
     assert resultado["vitórias"] + resultado["mortes"] + resultado["sobreviveu"] == 2
     assert resultado["erros"] == 0
     assert resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
@@ -354,7 +354,8 @@ def test_csv_do_main_so_tem_colunas_escalares(tmp_path):
     ]
     df, csv_path = main.salvar_resultados(resultados, str(tmp_path))
     assert "dados_extra" not in df.columns and len(df) == 2
-    assert "..." not in open(csv_path, encoding="utf-8").read()
+    with open(csv_path, encoding="utf-8") as csv:
+        assert "..." not in csv.read()
     dados = np.load(tmp_path / "dados_extra_genetico_4x4.npz")
     assert list(dados["fitness"]) == [1.0, 2.0]
     assert not (tmp_path / "dados_extra_logico_4x4.npz").exists()

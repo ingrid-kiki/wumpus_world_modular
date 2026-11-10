@@ -41,7 +41,7 @@ class Visualizer:
             label = self.font.render(text, True, (0, 0, 0))
             self.screen.blit(label, (rect.x + 10, rect.y + 10))
 
-    def draw_world(self):
+    def draw_world(self):  # noqa: C901 (refatorar na Etapa 3)
         # Preenche o fundo da tela de branco
         self.screen.fill((255, 255, 255))
 

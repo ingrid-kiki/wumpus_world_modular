@@ -107,7 +107,7 @@ def _serie(dados_extra, chave):
     return valor if valor is not None and len(valor) > 0 else None
 
 
-def gerar_graficos_avancados(dados_extra, output_dir):
+def gerar_graficos_avancados(dados_extra, output_dir):  # noqa: C901 (refatorar na Etapa 3)
     """
     Gera gráficos avançados a partir dos dados extras coletados durante as execuções.
     Cada gráfico é salvo na pasta de saída. Os dados esperados devem estar em arrays/listas.

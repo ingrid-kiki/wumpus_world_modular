@@ -96,10 +96,9 @@ class World:
             return "GANHOU"
 
         # Tiro no Wumpus
-        if action == "TIRO":
-            if self.is_adjacent(self.agent_pos, self.wumpus_pos) and self.wumpus_alive:
-                self.wumpus_alive = False
-                self.last_scream = True
+        if action == "TIRO" and self.is_adjacent(self.agent_pos, self.wumpus_pos) and self.wumpus_alive:
+            self.wumpus_alive = False
+            self.last_scream = True
 
         # Morte por Wumpus
         if self.agent_pos == self.wumpus_pos and self.wumpus_alive:

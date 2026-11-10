@@ -16,8 +16,12 @@ line-length = 120
 extend-exclude = ["pygad"]
 
 [tool.ruff.lint]
-# Erros reais (F, E9), imports (I), espaços (W) e sintaxe antiga (UP); ampliar aos poucos.
-select = ["E9", "F", "I", "W", "UP"]
+# Erros reais (F, E9), imports (I), espaços (W), sintaxe antiga (UP), armadilhas (B), simplificações (SIM) e complexidade (C90).
+select = ["E9", "F", "I", "W", "UP", "B", "SIM", "C90"]
+
+[tool.ruff.lint.mccabe]
+# Funções acima do limite só com "# noqa: C901" e justificativa, até a refatoração da Etapa 3.
+max-complexity = 10
 
 [tool.coverage.run]
 # sysmon usa o mecanismo de monitoramento do Python 3.12+

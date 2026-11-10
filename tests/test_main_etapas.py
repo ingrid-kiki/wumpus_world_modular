@@ -54,7 +54,7 @@ def test_layout_completo_de_um_run(tmp_path):
     )
     assert {p.stem for p in (pasta / "advanced_charts_genetico_4x4").glob("*.png")} == GRAFICOS_AVANCADOS
     assert not (pasta / "advanced_charts_logico_4x4").exists()  # o agente lógico não tem dados extras
-    assert GRAFICOS_BASICOS <= {p.stem for p in pasta.glob("*.png")}
+    assert {p.stem for p in pasta.glob("*.png")} >= GRAFICOS_BASICOS
     for arquivo in ("resultados_benchmark.csv", "terminal_output.txt", "metadata.json", "dados_extra_genetico_4x4.npz"):
         assert (pasta / arquivo).exists(), arquivo
     assert len(list(pasta.glob("logico_*.log"))) == 1 and len(list(pasta.glob("genetico_*.log"))) == 1

@@ -21,7 +21,7 @@ class Logger:
         os.makedirs(log_dir, exist_ok=True)
         # Define o caminho completo do arquivo de log
         self.filepath = os.path.join(log_dir, f"{agente_nome}_{timestamp}.log")
-        self.file = open(self.filepath, "w", encoding="utf-8")
+        self.file = open(self.filepath, "w", encoding="utf-8")  # noqa: SIM115 (fica aberto até close())
 
     def write(self, msg):
         print(msg)
