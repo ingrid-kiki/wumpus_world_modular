@@ -8,13 +8,13 @@ O relato do que foi feito está em [reorganizacao-2026-11.md](reorganizacao-2026
 
 | Fase | Status | Onde |
 |---|---|---|
-| 0. Preparação | ✅ Concluída, exceto proteger a `main` (aguarda decisão na #17) | #17 |
+| 0. Preparação | ✅ Concluída; `main` protegida em 09/11/2026 | #17 |
 | 1. Repositório limpo | ✅ Concluída | v1.4.0 (PR #25), Release `v1.3.0-dados`, tags `v1.1.0` a `v1.3.0` |
 | 2. Testes e CI | ✅ Concluída | v1.4.0 (PR #25) |
 | 3. Bugs críticos | ✅ Concluída: #18 a #24 | v1.4.0 (PR #25) |
 | 4. Reprodutibilidade | ✅ Concluída, exceto rodar de novo os experimentos da tese (4.6) | v1.5.0 (PRs #26 e #27), #13 |
 | 5. Refatoração | ⏳ Não iniciada | v2.0.0 |
-| 6. Reescrever o histórico | ⏳ Aguarda acordo de todas; inclui retirar `Co-Authored-By` de 30 commits | #17 |
+| 6. Reescrever o histórico | ⏳ Aguarda acordo de todas; inclui retirar `Co-Authored-By` de 30 commits e exige suspender a proteção da `main` durante a operação | #17 |
 
 **O que mudou em relação ao plano original:**
 - As Fases 1 a 3 foram feitas numa branch de integração (`reorg/v2`) e entraram na `main` juntas como **v1.4.0**,
@@ -57,7 +57,7 @@ preparo   repo      testes    bugs      reprodu-  refatoração
 | 0.2 | Ativar `git config --global core.longpaths true` (e, se possível, *long paths* no Windows) | Evita o checkout quebrado visto na análise |
 | 0.3 | Criar `.venv` e instalar o `requirements.txt`; anotar as versões instaladas (`pip freeze`) | Essas versões viram o primeiro *pin* na Fase 2 |
 | 0.4 | Combinar com a equipe (Ingrid e Alfa): fluxo de PR, quem revisa, o que fazer com `dev-melhorias` e se o histórico poderá ser reescrito na Fase 6 | Decisões de equipe, não técnicas |
-| 0.5 | Proteger a `main` no GitHub (merge só via PR) | |
+| 0.5 | Proteger a `main` no GitHub (merge só via PR) | Feito em 09/11/2026: exige PR e o CI aprovado, e bloqueia force-push e exclusão |
 
 **Pronto quando:** clone íntegro (`git fsck` sem erro), ambiente rodando `python main.py`, decisões de 0.4 registradas numa issue.
 

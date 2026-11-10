@@ -152,4 +152,4 @@ As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos ex
 ## Decisões necessárias
 
 1. Identificadores em português ou inglês? Hoje estão misturados. Minha sugestão é português, como o resto do projeto. Só afeta a Etapa 3.
-2. Bloquear merge com CI falho? Depende de proteger a `main` (#17).
+2. Bloquear merge com CI falho? **Decidido:** sim, com a `main` protegida desde 09/11/2026.

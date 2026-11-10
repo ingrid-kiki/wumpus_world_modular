@@ -34,7 +34,8 @@ python -m experimentos.comparar_metodos --fase confirmacao
 - Cada merge, Release, comentário em issue ou outra ação pública precisa de aprovação naquele caso; aprovação anterior não vale para a próxima.
 - Conferir o CI no commit mais recente da PR antes de mesclar.
 - Antes de arquivar ou descartar código ou branch, analisar o que vale aproveitar e informar primeiro.
-- Reescrita de histórico e `push --force` na `main` dependem de acordo com a equipe (#17).
+- A `main` é protegida no GitHub: exige PR e os 4 ambientes do CI aprovados, e bloqueia force-push.
+- Reescrita de histórico e `push --force` na `main` dependem de acordo com a equipe (#17) e exigem suspender a proteção.
 
 **Qualidade**
 - Só fazer commit se `python -m pytest` passar, checando o código de saída; não encadear com `| tail`, que esconde a falha.
