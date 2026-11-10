@@ -45,7 +45,11 @@ Regras:
 
 ### Checagem automática antes do commit
 
-O `pre-commit` roda as checagens do `ruff` em cada commit. Basta instalar uma vez em cada clone:
+O `pre-commit` roda as checagens do `ruff` em cada commit.
+
+> **Atenção:** o gancho não vem ativado ao clonar ou atualizar o repositório. Cada pessoa precisa instalá-lo uma vez em
+> cada clone, com o ambiente `.venv` ativado. Enquanto não instalar, os commits não são checados na sua máquina, e os
+> problemas só aparecem no CI.
 
 ```bash
 pip install -r requirements-dev.txt
