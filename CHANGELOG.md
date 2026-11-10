@@ -10,6 +10,10 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md).
 
+### Alterado
+- A `main` agora é protegida no GitHub: exige PR e o CI aprovado nos quatro ambientes, e bloqueia force-push e exclusão.
+  A revisão de outra pessoa é recomendada, mas não obrigatória.
+
 ### Adicionado
 - Teste de referência (`tests/test_referencia.py`): mundos, sequências de ações e regras do fitness não podem mudar
   sem decisão explícita.

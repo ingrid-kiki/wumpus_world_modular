@@ -2,7 +2,9 @@
 
 ## Branches
 
-- A `main` só recebe mudanças por **Pull Request**, com pelo menos uma revisão.
+- A `main` só recebe mudanças por **Pull Request**, com os quatro ambientes do CI aprovados. O GitHub aplica essa regra a
+  todas as pessoas, inclusive administradoras, e bloqueia force-push e exclusão da `main`.
+- A revisão de outra pessoa é recomendada, mas não obrigatória, porque o GitHub não permite aprovar a própria PR.
 - Crie uma branch curta por tarefa, a partir da `main`:
 
   | Prefixo | Uso | Exemplo |
