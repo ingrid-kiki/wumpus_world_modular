@@ -1,7 +1,7 @@
 # ==============================
 # tests/test_execution_time.py
 # ==============================
-'''
+"""
 # Este arquivo contém um teste unitário para medir o tempo de execução do agente genético (GeneticAgent)
 # no ambiente Wumpus World. O objetivo é garantir que o agente executa dentro de um tempo razoável,
 # ajudando a identificar possíveis problemas de desempenho ou loops infinitos.
@@ -16,12 +16,13 @@
 #   Esse limite pode ser ajustado conforme a complexidade do agente e do ambiente.
 #
 # Esse teste é útil para monitorar a performance dos agentes durante o desenvolvimento.
-'''
+"""
 
 import time
+
 from agents.genetic_agent import GeneticAgent
-from world.world import World
 from tests.conftest import GA_RAPIDO
+from world.world import World
 
 
 def test_execution_time():

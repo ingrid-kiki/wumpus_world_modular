@@ -1,7 +1,7 @@
 # ==============================
 # tests/test_logger.py
 # ==============================
-'''
+"""
 # Este arquivo contém testes unitários para a classe Logger do projeto Wumpus World.
 # O objetivo é garantir que o Logger cria corretamente arquivos de log e registra mensagens.
 #
@@ -15,7 +15,7 @@
 # - Abre o arquivo de log e verifica se a mensagem escrita está presente no conteúdo.
 #
 # Esse teste assegura que o Logger está funcionando corretamente para registrar logs de execução.
-'''
+"""
 
 from utils.logger import Logger
 
@@ -32,7 +32,7 @@ def test_logger_creation(tmp_path):
     # Verifica se algum arquivo de log foi criado
     assert files, "Arquivo de log não foi criado"
     # Abre o arquivo de log e lê o conteúdo
-    with open(files[0], "r") as f:
+    with open(files[0]) as f:
         content = f.read()
     # Verifica se a mensagem escrita está presente no conteúdo do log
     assert "Test log entry" in content

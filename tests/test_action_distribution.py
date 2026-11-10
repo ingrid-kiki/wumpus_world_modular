@@ -1,7 +1,7 @@
 # ==============================
 # tests/test_action_distribution.py
 # ==============================
-'''
+"""
 # Este arquivo contém um teste unitário para analisar a distribuição das ações
 # executadas pelo agente genético (GeneticAgent) durante uma simulação no mundo Wumpus.
 #
@@ -16,12 +16,13 @@
 # - Conta a frequência de cada ação usando Counter.
 # - Imprime a distribuição das ações para análise didática.
 # - Garante que pelo menos uma ação foi executada (teste básico de funcionamento).
-'''
+"""
 
 from collections import Counter
+
 from agents.genetic_agent import GeneticAgent
-from world.world import World
 from tests.conftest import GA_RAPIDO
+from world.world import World
 
 
 def test_action_distribution():

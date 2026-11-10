@@ -1,7 +1,7 @@
 # ==============================
 # tests/test_final_status.py
 # ==============================
-'''
+"""
 # Este arquivo contém um teste unitário para verificar o status final do agente genético (GeneticAgent)
 # após a execução de uma simulação no ambiente Wumpus World.
 #
@@ -16,11 +16,11 @@
 # - Extrai o status final do agente a partir do último elemento do histórico.
 # - Imprime o status final para análise didática.
 # - Garante que o status final está entre os valores esperados.
-'''
+"""
 
 from agents.genetic_agent import GeneticAgent
-from world.world import World
 from tests.conftest import GA_RAPIDO
+from world.world import World
 
 
 def test_final_agent_status():

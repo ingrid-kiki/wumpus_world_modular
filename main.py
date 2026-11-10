@@ -3,34 +3,36 @@
 # ==============================
 
 import argparse
+import contextlib
 import functools
-import os
-import sys
-from datetime import datetime
-import numpy as np
-import pandas as pd
-import shlex
 import importlib.util
 import io
-import contextlib
+import os
+import shlex
+import sys
 import traceback
+from datetime import datetime
 
-from world.world import TAMANHO_MINIMO, World
-from agents.manual_agent import ManualAgent
-from agents.logic_agent import LogicAgent
+import numpy as np
+import pandas as pd
+
 from agents.genetic_agent import GeneticAgent
+from agents.logic_agent import LogicAgent
+from agents.manual_agent import ManualAgent
 from agents.random_search_agent import RandomSearchAgent
-from utils.logger import Logger
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
+from utils.logger import Logger
 from utils.reprodutibilidade import coletar_metadados, parametros_efetivos, salvar_metadados
+from world.world import TAMANHO_MINIMO, World
 
 # Dicionário de agentes disponíveis
 AGENTES_DISPONIVEIS = {
     "manual": ManualAgent,
     "logico": LogicAgent,
     "genetico": GeneticAgent,
-    "aleatorio": RandomSearchAgent
+    "aleatorio": RandomSearchAgent,
 }
+
 
 def menu_interativo():
     print("=== Wumpus World ===")
@@ -42,6 +44,7 @@ def menu_interativo():
     print("5 - Customizado via linha de comando (CLI)")
     escolha = input("Digite o número da opção desejada: ").strip()
     return escolha
+
 
 def perguntar_inteiro(pergunta, minimo=None, opcional=False):
     """Repete a pergunta até receber um inteiro válido; em branco devolve None se for opcional (#38)."""
@@ -59,6 +62,7 @@ def perguntar_inteiro(pergunta, minimo=None, opcional=False):
             continue
         return valor
 
+
 def execucao_unica(agente_nome):
     size = perguntar_inteiro("Tamanho do mundo (ex: 4): ", minimo=TAMANHO_MINIMO)
     seed = perguntar_inteiro("Semente aleatória (opcional, pressione Enter para aleatório): ", opcional=True)
@@ -72,12 +76,14 @@ def execucao_unica(agente_nome):
     print(f"\nExecutando agente '{agente_nome}' no mundo {size}x{size}...\n")
     agente.run()
 
+
 def carregar_benchmark(path):
     """Importa dinamicamente um módulo de benchmark pelo caminho."""
     spec = importlib.util.spec_from_file_location("benchmark_mod", path)
     benchmark_mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(benchmark_mod)
     return benchmark_mod.executar_benchmark
+
 
 def formatar_tempo(segundos):
     """
@@ -89,6 +95,7 @@ def formatar_tempo(segundos):
         return f"{minutos:.2f} min"
     else:
         return f"{segundos:.2f}s"
+
 
 def salvar_resultados(resultados, output_dir):
     """
@@ -110,6 +117,7 @@ def salvar_resultados(resultados, output_dir):
         df.to_csv(f, index=False)
     return df, csv_path
 
+
 @contextlib.contextmanager
 def _gravacao_atomica(caminho, modo, **kwargs):
     """Grava num arquivo temporário e só então substitui o definitivo: uma queda no meio não corrompe o anterior."""
@@ -117,6 +125,7 @@ def _gravacao_atomica(caminho, modo, **kwargs):
     with open(temporario, modo, **kwargs) as arquivo:
         yield arquivo
     os.replace(temporario, caminho)
+
 
 @contextlib.contextmanager
 def capturar_saida_terminal(caminho=None):
@@ -131,19 +140,23 @@ def capturar_saida_terminal(caminho=None):
     arquivo = open(caminho, "w", encoding="utf-8") if caminho else None  # noqa: SIM115 (fechado no finally)
     stdout_original, stderr_original = sys.stdout, sys.stderr
     try:
+
         class DualWriter:
             def __init__(self, terminal, buffer):
                 self.terminal = terminal
                 self.buffer = buffer
+
             def write(self, text):
                 self.terminal.write(text)
                 self.buffer.write(text)
                 if arquivo:
                     arquivo.write(text)
                     arquivo.flush()
+
             def flush(self):
                 self.terminal.flush()
                 self.buffer.flush()
+
         sys.stdout = DualWriter(stdout_original, buffer)
         sys.stderr = DualWriter(stderr_original, buffer)
         yield buffer
@@ -156,8 +169,10 @@ def capturar_saida_terminal(caminho=None):
         if arquivo:
             arquivo.close()
 
+
 def inteiro_minimo(minimo):
     """Tipo para o argparse: inteiro maior ou igual a `minimo` (#38)."""
+
     def converter(texto):
         try:
             valor = int(texto)
@@ -166,7 +181,9 @@ def inteiro_minimo(minimo):
         if valor < minimo:
             raise argparse.ArgumentTypeError(f"precisa ser {minimo} ou maior (recebido: {valor})")
         return valor
+
     return converter
+
 
 def taxa(texto):
     """Tipo para o argparse: número entre 0 e 1 (#38)."""
@@ -178,6 +195,7 @@ def taxa(texto):
         raise argparse.ArgumentTypeError(f"precisa estar entre 0 e 1 (recebido: {valor})")
     return valor
 
+
 def peso(texto):
     """Tipo para o argparse: número maior ou igual a zero."""
     try:
@@ -188,11 +206,13 @@ def peso(texto):
         raise argparse.ArgumentTypeError(f"precisa ser 0 ou maior (recebido: {valor})")
     return valor
 
+
 def arquivo_existente(caminho):
     """Tipo para o argparse: caminho de um arquivo que existe (#38)."""
     if not os.path.isfile(caminho):
         raise argparse.ArgumentTypeError(f"arquivo não encontrado: {caminho}")
     return caminho
+
 
 # Parâmetros do GeneticAgent que podem ser passados pela linha de comando (#13)
 PARAMETROS_AG_CLI = {
@@ -201,27 +221,49 @@ PARAMETROS_AG_CLI = {
     "cromossomo": ("chrom_length", inteiro_minimo(1), "Tamanho do cromossomo (ações por indivíduo)"),
     "mutacao": ("mutation_rate", taxa, "Taxa de mutação do AG (0 a 1)"),
     "cruzamento": ("crossover_rate", taxa, "Taxa de cruzamento do AG (0 a 1)"),
-    "proximidade": ("proximidade", peso, "Peso do bônus de proximidade ao ouro no fitness (padrão: 0, fitness original; nos experimentos da #31, 20)"),
+    "proximidade": (
+        "proximidade",
+        peso,
+        "Peso do bônus de proximidade ao ouro no fitness (padrão: 0, fitness original; nos experimentos da #31, 20)",
+    ),
 }
+
 
 def criar_parser():
     parser = argparse.ArgumentParser(description="Executa benchmarks no Wumpus World")
-    parser.add_argument("--execucoes", type=inteiro_minimo(1), default=32, help="Número de execuções por agente/tamanho")
-    parser.add_argument("--sizes", nargs="+", type=inteiro_minimo(TAMANHO_MINIMO), default=[4, 6, 8],
-                        help="Tamanhos do mundo (ex: 4 6 8)")
+    parser.add_argument(
+        "--execucoes", type=inteiro_minimo(1), default=32, help="Número de execuções por agente/tamanho"
+    )
+    parser.add_argument(
+        "--sizes",
+        nargs="+",
+        type=inteiro_minimo(TAMANHO_MINIMO),
+        default=[4, 6, 8],
+        help="Tamanhos do mundo (ex: 4 6 8)",
+    )
     # O agente manual pede ações pelo teclado: não faz sentido num benchmark (#38)
-    parser.add_argument("--agentes", nargs="+", choices=[nome for nome in AGENTES_DISPONIVEIS if nome != "manual"],
-                        default=["logico", "genetico"], help="Agentes a incluir no benchmark")
-    parser.add_argument("--benchmark", type=arquivo_existente, default="benchmark.py",
-                        help="Arquivo de benchmark a ser usado")
+    parser.add_argument(
+        "--agentes",
+        nargs="+",
+        choices=[nome for nome in AGENTES_DISPONIVEIS if nome != "manual"],
+        default=["logico", "genetico"],
+        help="Agentes a incluir no benchmark",
+    )
+    parser.add_argument(
+        "--benchmark", type=arquivo_existente, default="benchmark.py", help="Arquivo de benchmark a ser usado"
+    )
     grupo_ag = parser.add_argument_group("agente genético", "Sem estas opções, valem os padrões do GeneticAgent.")
     for opcao, (_, tipo, ajuda) in PARAMETROS_AG_CLI.items():
         grupo_ag.add_argument(f"--{opcao}", type=tipo, default=None, help=ajuda)
-    parser.add_argument("--avaliacoes", type=inteiro_minimo(1), default=None,
-                        help="Orçamento da busca aleatória (padrão: população x gerações do AG)")
-    parser.add_argument("--saida", type=str, default=None,
-                        help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
+    parser.add_argument(
+        "--avaliacoes",
+        type=inteiro_minimo(1),
+        default=None,
+        help="Orçamento da busca aleatória (padrão: população x gerações do AG)",
+    )
+    parser.add_argument("--saida", type=str, default=None, help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
     return parser
+
 
 def separar_argumentos(linha, windows=os.name == "nt"):
     """
@@ -230,10 +272,15 @@ def separar_argumentos(linha, windows=os.name == "nt"):
     """
     return shlex.split(linha.replace("\\", "\\\\") if windows else linha)
 
+
 def parametros_do_ag(args):
     """Parâmetros do GeneticAgent informados na linha de comando (só os que foram passados)."""
-    return {nome: getattr(args, opcao) for opcao, (nome, _, _) in PARAMETROS_AG_CLI.items()
-            if getattr(args, opcao) is not None}
+    return {
+        nome: getattr(args, opcao)
+        for opcao, (nome, _, _) in PARAMETROS_AG_CLI.items()
+        if getattr(args, opcao) is not None
+    }
+
 
 def main():
     escolha = menu_interativo()
@@ -242,8 +289,10 @@ def main():
         # Benchmark padrão: usa sys.argv[1:] (argumentos do terminal)
         cli_args = sys.argv[1:]
     elif escolha == "5":
-        print("\nDigite a linha de comando desejada (exemplo: --agentes logico genetico --sizes 4 6 --execucoes 10 "
-              "--populacao 50 --geracoes 100 --benchmark outro_benchmark.py):")
+        print(
+            "\nDigite a linha de comando desejada (exemplo: --agentes logico genetico --sizes 4 6 --execucoes 10 "
+            "--populacao 50 --geracoes 100 --benchmark outro_benchmark.py):"
+        )
         linha = input("main.py ").strip()
         cli_args = separar_argumentos(linha)
     elif escolha == "2":
@@ -262,6 +311,7 @@ def main():
     # Só chega aqui se for benchmark (1 ou 5)
     rodar_benchmark(cli_args)
 
+
 def rodar_benchmark(cli_args):
     """
     Executa os benchmarks descritos por cli_args e grava tudo na pasta do run, incluindo
@@ -272,13 +322,16 @@ def rodar_benchmark(cli_args):
     sobrescritos_ag = parametros_do_ag(args)
     # A busca aleatória usa o mesmo cromossomo e o mesmo orçamento do AG, para a comparação ser justa (#31)
     efetivos_ag = parametros_efetivos(GeneticAgent, sobrescritos_ag)
-    parametros_busca = {"chrom_length": efetivos_ag["chrom_length"],
-                        "avaliacoes": args.avaliacoes or efetivos_ag["population_size"] * efetivos_ag["gens"]}
+    parametros_busca = {
+        "chrom_length": efetivos_ag["chrom_length"],
+        "avaliacoes": args.avaliacoes or efetivos_ag["population_size"] * efetivos_ag["gens"],
+    }
 
     # Carrega o benchmark escolhido pelo usuário; os parâmetros por agente vão junto em toda chamada
-    executar_benchmark = functools.partial(carregar_benchmark(args.benchmark),
-                                           parametros_agentes={"genetico": sobrescritos_ag,
-                                                               "aleatorio": parametros_busca})
+    executar_benchmark = functools.partial(
+        carregar_benchmark(args.benchmark),
+        parametros_agentes={"genetico": sobrescritos_ag, "aleatorio": parametros_busca},
+    )
 
     # === Criação do diretório de saída ===
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -322,8 +375,10 @@ def rodar_benchmark(cli_args):
                         advanced_output_dir = os.path.join(output_dir, f"advanced_charts_{nome_agente}_{size}x{size}")
                         os.makedirs(advanced_output_dir, exist_ok=True)
                         relatorio = gerar_graficos_avancados(resultado["dados_extra"], advanced_output_dir)
-                        print(f"📊 Gráficos avançados para '{nome_agente}' ({size}x{size}): "
-                              f"{len(relatorio['gerados'])} salvos em {advanced_output_dir}")
+                        print(
+                            f"📊 Gráficos avançados para '{nome_agente}' ({size}x{size}): "
+                            f"{len(relatorio['gerados'])} salvos em {advanced_output_dir}"
+                        )
                         if relatorio["falhas"]:
                             print(f"⚠️ Gráficos que falharam: {', '.join(relatorio['falhas'])}")
 
@@ -338,21 +393,24 @@ def rodar_benchmark(cli_args):
         print(f"📈 Gráficos básicos salvos em: {output_dir}")
 
         for _, row in df_resultados.iterrows():
-            agente = row['agente']
-            tamanho = row['tamanho_mundo']
-            erros = row.get('erros', 0)  # benchmarks de terceiros podem não ter a coluna
-            total = row['vitórias'] + row['mortes'] + row['sobreviveu'] + erros
+            agente = row["agente"]
+            tamanho = row["tamanho_mundo"]
+            erros = row.get("erros", 0)  # benchmarks de terceiros podem não ter a coluna
+            total = row["vitórias"] + row["mortes"] + row["sobreviveu"] + erros
             print(f"\n📊 RESULTADOS - {agente.upper()} | Tamanho: {tamanho}x{tamanho}")
-            print(f"🏆 Vitórias: {row['vitórias']} ({(row['vitórias']/total)*100:.1f}%)")
-            print(f"☠️ Mortes: {row['mortes']} ({(row['mortes']/total)*100:.1f}%)")
-            print(f"🤔 Sobreviveu sem vencer: {row['sobreviveu']} ({(row['sobreviveu']/total)*100:.1f}%)")
+            print(f"🏆 Vitórias: {row['vitórias']} ({(row['vitórias'] / total) * 100:.1f}%)")
+            print(f"☠️ Mortes: {row['mortes']} ({(row['mortes'] / total) * 100:.1f}%)")
+            print(f"🤔 Sobreviveu sem vencer: {row['sobreviveu']} ({(row['sobreviveu'] / total) * 100:.1f}%)")
             if erros:
-                print(f"❌ Erros: {erros} ({(erros/total)*100:.1f}%), detalhes em terminal_output.txt")
-            print(f"⏱️ Tempo total: {formatar_tempo(row['tempo_total'])} | Tempo médio: {formatar_tempo(row['tempo_médio'])}")
+                print(f"❌ Erros: {erros} ({(erros / total) * 100:.1f}%), detalhes em terminal_output.txt")
+            print(
+                f"⏱️ Tempo total: {formatar_tempo(row['tempo_total'])} | Tempo médio: {formatar_tempo(row['tempo_médio'])}"
+            )
 
     print(f"\n💾 Saída do terminal salva em: {terminal_output_path}")
     print(f"🧾 Metadados da execução em: {os.path.join(output_dir, 'metadata.json')}")
     return output_dir, df_resultados
+
 
 if __name__ == "__main__":
     main()

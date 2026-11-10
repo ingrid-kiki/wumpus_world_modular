@@ -16,8 +16,8 @@ line-length = 120
 extend-exclude = ["pygad"]
 
 [tool.ruff.lint]
-# Erros reais (pyflakes) e problemas graves de estilo; ampliar aos poucos.
-select = ["E9", "F"]
+# Erros reais (F, E9), imports (I), espaços (W) e sintaxe antiga (UP); ampliar aos poucos.
+select = ["E9", "F", "I", "W", "UP"]
 
 [tool.coverage.run]
 # sysmon usa o mecanismo de monitoramento do Python 3.12+

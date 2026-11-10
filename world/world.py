@@ -1,18 +1,19 @@
 # ==============================
 # world/world.py
 # ==============================
-'''
+"""
 # Este arquivo implementa a classe World, responsável por representar e gerenciar o ambiente
 # do Wumpus World. O ambiente inclui o agente, o ouro, o Wumpus e os poços, além das regras
 # de movimentação, percepções e interações. Fornece métodos para executar ações, simular
 # percepções, verificar condições de vitória/morte e clonar o estado do mundo para simulações
 # do algoritmo genético e testes dos agentes inteligentes do projeto.
-'''
+"""
 
-import random
 import copy
+import random
 
 TAMANHO_MINIMO = 2
+
 
 class World:
     def __init__(self, size, seed=None):
@@ -39,10 +40,10 @@ class World:
             ocupadas = [self.agent_pos, self.gold_pos, self.wumpus_pos, *self.pits]
             self.pits.append(self.random_pos(exclude=ocupadas))
 
-        self.is_alive = True         # Estado de vida do agente
-        self.wumpus_alive = True     # Estado de vida do Wumpus
-        self.last_scream = False     # Indica se o último tiro matou o Wumpus
-        self.won = False             # Indica se o agente venceu
+        self.is_alive = True  # Estado de vida do agente
+        self.wumpus_alive = True  # Estado de vida do Wumpus
+        self.last_scream = False  # Indica se o último tiro matou o Wumpus
+        self.won = False  # Indica se o agente venceu
 
     def random_pos(self, exclude=None):
         """
@@ -58,15 +59,15 @@ class World:
 
     def step(self, action):
         """
-            Executa uma ação no ambiente: movimento + interação.
-            :param action: Ação a ser executada ('CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO')
-            :return: (percepção, status) onde status pode ser 'OK', 'MORTO' ou 'GANHOU'
+        Executa uma ação no ambiente: movimento + interação.
+        :param action: Ação a ser executada ('CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO')
+        :return: (percepção, status) onde status pode ser 'OK', 'MORTO' ou 'GANHOU'
         """
         self.last_scream = False  # Reset do grito
         # Depois de vencer ou morrer, nenhuma ação tem efeito (#20)
         if self.is_done():
-            return self.perceive(), ('GANHOU' if self.won else 'MORTO')
-        self.move_agent(action)   # Movimento separado
+            return self.perceive(), ("GANHOU" if self.won else "MORTO")
+        self.move_agent(action)  # Movimento separado
         status = self.interact(action)  # Interações separadas
         return self.perceive(), status
 
@@ -75,13 +76,13 @@ class World:
         Move o agente no grid se a ação for de movimento.
         """
         x, y = self.agent_pos
-        if action == 'CIMA' and x > 0:
+        if action == "CIMA" and x > 0:
             self.agent_pos = (x - 1, y)
-        elif action == 'BAIXO' and x < self.size - 1:
+        elif action == "BAIXO" and x < self.size - 1:
             self.agent_pos = (x + 1, y)
-        elif action == 'ESQUERDA' and y > 0:
+        elif action == "ESQUERDA" and y > 0:
             self.agent_pos = (x, y - 1)
-        elif action == 'DIREITA' and y < self.size - 1:
+        elif action == "DIREITA" and y < self.size - 1:
             self.agent_pos = (x, y + 1)
 
     def interact(self, action):
@@ -90,12 +91,12 @@ class World:
         :return: status final da jogada
         """
         # Ouro
-        if action == 'AGARRAR' and self.agent_pos == self.gold_pos:
+        if action == "AGARRAR" and self.agent_pos == self.gold_pos:
             self.won = True
-            return 'GANHOU'
+            return "GANHOU"
 
         # Tiro no Wumpus
-        if action == 'TIRO':
+        if action == "TIRO":
             if self.is_adjacent(self.agent_pos, self.wumpus_pos) and self.wumpus_alive:
                 self.wumpus_alive = False
                 self.last_scream = True
@@ -103,19 +104,18 @@ class World:
         # Morte por Wumpus
         if self.agent_pos == self.wumpus_pos and self.wumpus_alive:
             self.is_alive = False
-            return 'MORTO'
+            return "MORTO"
 
         # Morte por poço
         if self.agent_pos in self.pits:
             self.is_alive = False
-            return 'MORTO'
+            return "MORTO"
 
         # Vitória
         if self.won:
-            return 'GANHOU'
+            return "GANHOU"
 
-        return 'OK'
-
+        return "OK"
 
     def perceive(self):
         """
@@ -126,17 +126,17 @@ class World:
         x, y = self.agent_pos
 
         # Verifica células adjacentes para FEDOR (Wumpus) e BRISA (poço)
-        for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
             nx, ny = x + dx, y + dy
             if 0 <= nx < self.size and 0 <= ny < self.size:
                 if (nx, ny) == self.wumpus_pos and self.wumpus_alive:
-                    percept.append('FEDOR')
+                    percept.append("FEDOR")
                 if (nx, ny) in self.pits:
-                    percept.append('BRISA')
+                    percept.append("BRISA")
 
         # Verifica se está sobre o ouro
         if self.agent_pos == self.gold_pos:
-            percept.append('BRILHO')
+            percept.append("BRILHO")
 
         return percept
 

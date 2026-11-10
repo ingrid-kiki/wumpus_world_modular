@@ -1,27 +1,28 @@
 # ==============================
 # benchmark.py
 # ==============================
-'''
+"""
 Este benchmark executa múltiplas simulações dos agentes 'lógico' e 'genético'
 no ambiente Wumpus World, usando um mundo de tamanho 4x4.
 Para cada agente, executa várias rodadas, mede o tempo de execução,
 e retorna um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
-'''
+"""
 
+from agents.genetic_agent import GeneticAgent
+from agents.logic_agent import LogicAgent
+from agents.manual_agent import ManualAgent
+from agents.random_search_agent import RandomSearchAgent
 from utils.execucao import contar, executar_uma
 from world.world import World
-from agents.manual_agent import ManualAgent
-from agents.logic_agent import LogicAgent
-from agents.genetic_agent import GeneticAgent
-from agents.random_search_agent import RandomSearchAgent
 
 # Dicionário que associa nomes de agentes às suas classes
 AGENTES_DISPONIVEIS = {
-    'manual': ManualAgent,
-    'logico': LogicAgent,
-    'genetico': GeneticAgent,
-    'aleatorio': RandomSearchAgent
+    "manual": ManualAgent,
+    "logico": LogicAgent,
+    "genetico": GeneticAgent,
+    "aleatorio": RandomSearchAgent,
 }
+
 
 def executar_benchmark(agente_nome, world_size=4, num_execucoes=10, parametros_agentes=None):
     status = []  # "vitória", "morte", "sobreviveu" ou "erro", uma por execução (#30)
@@ -55,10 +56,11 @@ def executar_benchmark(agente_nome, world_size=4, num_execucoes=10, parametros_a
         **contar(status),
         "tempo_total": tempo_total,
         "tempo_médio": tempo_medio,
-        "dados_extra": dados_extra_capturados
+        "dados_extra": dados_extra_capturados,
     }
 
     return retorno
+
 
 if __name__ == "__main__":
     # Só agentes automáticos: o manual pede ações pelo teclado e não faz sentido num benchmark (#30)

@@ -1,13 +1,13 @@
 # ==============================
 # agents/random_search_agent.py
 # ==============================
-'''
+"""
 # Agente de referência para o agente genético (#31, #16): sorteia sequências de ações, avalia cada
 # uma com a mesma função de fitness do AG, simulando cópias do mundo, e executa a melhor.
 #
 # Serve de patamar mínimo: um método de busca só mostra valor se superar este agente usando o mesmo
 # número de avaliações. Por isso o tamanho do cromossomo e o orçamento vêm das mesmas opções do AG.
-'''
+"""
 
 import random
 

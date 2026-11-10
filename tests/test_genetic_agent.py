@@ -1,7 +1,7 @@
 # ==============================
 # tests/test_genetic_agent.py
 # ==============================
-'''
+"""
 # Este arquivo contém testes unitários para o agente GeneticAgent do projeto Wumpus World.
 # O objetivo é garantir que o agente genético é inicializado corretamente, possui os principais
 # atributos e integra corretamente o núcleo do algoritmo genético (GeneticAlgorithm).
@@ -15,11 +15,11 @@
 # - Executa o método 'run' do agente e verifica se o retorno é um dicionário com as chaves esperadas.
 #
 # Esses testes asseguram que o agente genético está pronto para ser utilizado em simulações e benchmarks.
-'''
+"""
 
 from agents.genetic_agent import GeneticAgent
-from world.world import World
 from tests.conftest import GA_RAPIDO
+from world.world import World
 
 
 def test_genetic_agent_initialization():
@@ -37,7 +37,7 @@ def test_genetic_agent_initialization():
     assert agent.ga.pop_size == GA_RAPIDO["population_size"]
     assert agent.ga.gens == GA_RAPIDO["gens"]
     assert agent.ga.chrom_length == GA_RAPIDO["chrom_length"]
-    
+
     # Verifica se o histórico está vazio inicialmente
     assert agent.history == []
 

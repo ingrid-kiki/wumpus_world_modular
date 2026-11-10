@@ -1,10 +1,10 @@
 # ==============================
 # tests/test_reprodutibilidade.py
 # ==============================
-'''
+"""
 # Testes da Fase 4 (#17): metadados por execução, parâmetros do AG pela linha de comando (#13),
 # reprodução de um run e as otimizações do AG, que não podem mudar resultados.
-'''
+"""
 
 import json
 
@@ -20,8 +20,23 @@ from utils.versao import __version__
 from world.world import World
 
 # Benchmark pequeno e completo (os dois agentes), usado por vários testes
-ARGS_PEQUENOS = ["--agentes", "logico", "genetico", "--sizes", "4", "--execucoes", "3",
-                 "--populacao", "20", "--geracoes", "15", "--cromossomo", "20", "--mutacao", "0.1"]
+ARGS_PEQUENOS = [
+    "--agentes",
+    "logico",
+    "genetico",
+    "--sizes",
+    "4",
+    "--execucoes",
+    "3",
+    "--populacao",
+    "20",
+    "--geracoes",
+    "15",
+    "--cromossomo",
+    "20",
+    "--mutacao",
+    "0.1",
+]
 
 
 @pytest.fixture(scope="module")
@@ -32,6 +47,7 @@ def run_pequeno(tmp_path_factory):
 
 
 # ---------------------------------------------------------------- Linha de comando
+
 
 def test_parametros_do_ag_vem_da_linha_de_comando():
     args = main.criar_parser().parse_args(["--populacao", "30", "--cruzamento", "0.5"])
@@ -61,11 +77,12 @@ def test_benchmark_repassa_os_parametros_so_para_o_agente_certo(monkeypatch):
 
 # ---------------------------------------------------------------- metadata.json
 
+
 def test_run_grava_metadata_completo(run_pequeno):
     meta = json.loads((run_pequeno / "metadata.json").read_text(encoding="utf-8"))
     assert meta["versao"] == __version__
     assert set(meta["git"]) == {"commit", "branch", "alteracoes_nao_commitadas", "arquivos_alterados"}
-    assert meta["argumentos_cli"][:len(ARGS_PEQUENOS)] == ARGS_PEQUENOS
+    assert meta["argumentos_cli"][: len(ARGS_PEQUENOS)] == ARGS_PEQUENOS
     assert meta["parametros_ag"]["population_size"] == 20
     assert meta["parametros_ag"]["gens"] == 15
     assert meta["parametros_ag"]["mutation_rate"] == 0.1
@@ -81,6 +98,7 @@ def test_sem_agente_genetico_nao_ha_parametros_do_ag(tmp_path):
 
 
 # ---------------------------------------------------------------- reproduzir.py
+
 
 def test_reproduzir_da_o_mesmo_resultado(run_pequeno, tmp_path):
     assert reproduzir.main([str(run_pequeno), "--saida", str(tmp_path / "copia")]) == 0
@@ -107,6 +125,7 @@ def test_sem_opcao_remove_opcao_e_valor():
 
 
 # ---------------------------------------------------------------- Otimizações do AG
+
 
 def test_clone_do_mundo_e_independente():
     w = World(size=4, seed=1)

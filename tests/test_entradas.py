@@ -1,9 +1,9 @@
 # ==============================
 # tests/test_entradas.py
 # ==============================
-'''
+"""
 # Testes de #38: entradas inválidas têm mensagem clara e nunca travam o programa.
-'''
+"""
 
 import builtins
 
@@ -25,21 +25,24 @@ def test_menor_mundo_valido_funciona():
     assert {w.agent_pos, w.gold_pos, w.wumpus_pos, *w.pits} == {(0, 0), (0, 1), (1, 0), (1, 1)}
 
 
-@pytest.mark.parametrize("args, trecho", [
-    (["--execucoes", "0"], "precisa ser 1 ou maior"),
-    (["--execucoes", "-1"], "precisa ser 1 ou maior"),
-    (["--execucoes", "abc"], "não é um número inteiro"),
-    (["--sizes", "1"], "precisa ser 2 ou maior"),
-    (["--sizes", "0"], "precisa ser 2 ou maior"),
-    (["--populacao", "0"], "precisa ser 1 ou maior"),
-    (["--geracoes", "-1"], "precisa ser 0 ou maior"),
-    (["--cromossomo", "0"], "precisa ser 1 ou maior"),
-    (["--mutacao", "5"], "entre 0 e 1"),
-    (["--cruzamento", "-0.1"], "entre 0 e 1"),
-    (["--mutacao", "x"], "não é um número"),
-    (["--agentes", "manual"], "manual"),
-    (["--benchmark", "nao_existe.py"], "arquivo não encontrado"),
-])
+@pytest.mark.parametrize(
+    "args, trecho",
+    [
+        (["--execucoes", "0"], "precisa ser 1 ou maior"),
+        (["--execucoes", "-1"], "precisa ser 1 ou maior"),
+        (["--execucoes", "abc"], "não é um número inteiro"),
+        (["--sizes", "1"], "precisa ser 2 ou maior"),
+        (["--sizes", "0"], "precisa ser 2 ou maior"),
+        (["--populacao", "0"], "precisa ser 1 ou maior"),
+        (["--geracoes", "-1"], "precisa ser 0 ou maior"),
+        (["--cromossomo", "0"], "precisa ser 1 ou maior"),
+        (["--mutacao", "5"], "entre 0 e 1"),
+        (["--cruzamento", "-0.1"], "entre 0 e 1"),
+        (["--mutacao", "x"], "não é um número"),
+        (["--agentes", "manual"], "manual"),
+        (["--benchmark", "nao_existe.py"], "arquivo não encontrado"),
+    ],
+)
 def test_opcao_invalida_tem_mensagem_clara(args, trecho, capsys):
     with pytest.raises(SystemExit) as saida:
         main.criar_parser().parse_args(args)
@@ -49,11 +52,32 @@ def test_opcao_invalida_tem_mensagem_clara(args, trecho, capsys):
 
 
 def test_opcoes_validas_nos_limites():
-    args = main.criar_parser().parse_args(["--execucoes", "1", "--sizes", "2", "--populacao", "1", "--geracoes", "0",
-                                           "--cromossomo", "1", "--mutacao", "0", "--cruzamento", "1"])
+    args = main.criar_parser().parse_args(
+        [
+            "--execucoes",
+            "1",
+            "--sizes",
+            "2",
+            "--populacao",
+            "1",
+            "--geracoes",
+            "0",
+            "--cromossomo",
+            "1",
+            "--mutacao",
+            "0",
+            "--cruzamento",
+            "1",
+        ]
+    )
     assert args.execucoes == 1 and args.sizes == [2]
-    assert main.parametros_do_ag(args) == {"population_size": 1, "gens": 0, "chrom_length": 1,
-                                           "mutation_rate": 0.0, "crossover_rate": 1.0}
+    assert main.parametros_do_ag(args) == {
+        "population_size": 1,
+        "gens": 0,
+        "chrom_length": 1,
+        "mutation_rate": 0.0,
+        "crossover_rate": 1.0,
+    }
 
 
 def test_opcoes_padrao_continuam_validas():
@@ -94,6 +118,24 @@ def test_execucao_unica_termina_com_entradas_corrigidas(monkeypatch, capsys):
 def test_cromossomo_de_um_gene_nao_gera_erro(tmp_path):
     """Com um gene só, o cruzamento falhava e toda execução virava erro."""
     pasta = tmp_path / "run"
-    _, df = main.rodar_benchmark(["--agentes", "genetico", "--sizes", "4", "--execucoes", "2", "--populacao", "10",
-                                  "--geracoes", "3", "--cromossomo", "1", "--cruzamento", "1", "--saida", str(pasta)])
+    _, df = main.rodar_benchmark(
+        [
+            "--agentes",
+            "genetico",
+            "--sizes",
+            "4",
+            "--execucoes",
+            "2",
+            "--populacao",
+            "10",
+            "--geracoes",
+            "3",
+            "--cromossomo",
+            "1",
+            "--cruzamento",
+            "1",
+            "--saida",
+            str(pasta),
+        ]
+    )
     assert df.iloc[0]["erros"] == 0

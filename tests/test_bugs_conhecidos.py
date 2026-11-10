@@ -1,7 +1,7 @@
 # ==============================
 # tests/test_bugs_conhecidos.py
 # ==============================
-'''
+"""
 # Testes dos bugs encontrados na análise do projeto (#17), issues #18 a #24.
 #
 # Cada teste descreve o comportamento CORRETO. Eles nasceram marcados com xfail estrito
@@ -10,7 +10,7 @@
 #
 # Para documentar um bug novo antes de corrigi-lo, use:
 #     @pytest.mark.xfail(strict=True, reason=f"{ISSUE}<número> <descrição>")
-'''
+"""
 
 import random
 
@@ -23,13 +23,13 @@ import benchmark_fast
 import benchmark_graficos
 import benchmark_sideB
 import main
+from agents.genetic_agent import GeneticAgent
 from agents.logic_agent import LogicAgent
 from agents.logic_knowledge_base import LogicKnowledgeBase
 from ga.ga_core import GeneticAlgorithm
-from agents.genetic_agent import GeneticAgent
 from ga.individual import Individual
-from world.world import World
 from tests.conftest import GA_RAPIDO
+from world.world import World
 
 ISSUE = "https://github.com/ingrid-kiki/wumpus_world_modular/issues/"
 
@@ -55,6 +55,7 @@ class AgenteFalso:
 
 
 # ---------------------------------------------------------------- Agente lógico
+
 
 def test_logico_mantem_posicao_sincronizada_com_o_mundo():
     """#18 (corrigido)."""
@@ -89,6 +90,7 @@ def test_logico_sempre_termina(tamanho):
 
 # ---------------------------------------------------------------- Algoritmo genético
 
+
 def test_mutacao_invalida_o_fitness():
     """#19 (corrigido)."""
     ga = GeneticAlgorithm(pop_size=4, gens=1, chrom_length=10, mutation_rate=1.0, crossover_rate=0.0)
@@ -96,7 +98,6 @@ def test_mutacao_invalida_o_fitness():
     ind.fitness = 123.0
     ga.mutate(ind)
     assert ind.fitness is None
-
 
 
 @pytest.mark.parametrize("semente", range(5))
@@ -109,6 +110,7 @@ def test_fitness_do_melhor_individuo_corresponde_ao_cromossomo(semente):
     reavaliado.chromosome = list(melhor.chromosome)
     reavaliado.evaluate(w)
     assert reavaliado.fitness == melhor.fitness
+
 
 def test_ouro_pontua_uma_vez_so():
     """#20 (corrigido)."""
@@ -133,7 +135,6 @@ def test_mundo_nao_muda_depois_da_vitoria():
     assert status == "GANHOU"
 
 
-
 def test_mundo_nao_muda_depois_da_morte():
     """#20: morto continua morto e parado."""
     w = mundo_controlado()
@@ -143,6 +144,7 @@ def test_mundo_nao_muda_depois_da_morte():
     assert status == "MORTO"
     _, status = w.step("ESQUERDA")
     assert status == "MORTO" and w.agent_pos == (0, 1) and not w.won
+
 
 def test_matar_o_wumpus_recebe_bonus():
     """#21 (corrigido): +25 quando o tiro mata o Wumpus."""
@@ -176,6 +178,7 @@ def test_tiro_sem_acertar_nao_recebe_bonus():
 
 # ---------------------------------------------------------------- Mundo
 
+
 def test_pocos_nao_se_sobrepoem():
     """#22 (corrigido)."""
     for tamanho in (4, 6, 8):
@@ -194,7 +197,6 @@ def test_world_nao_altera_o_random_global():
     assert random.random() == esperado
 
 
-
 def test_mesma_semente_gera_o_mesmo_mundo():
     a, b = World(size=6, seed=7), World(size=6, seed=7)
     assert (a.gold_pos, a.wumpus_pos, a.pits) == (b.gold_pos, b.wumpus_pos, b.pits)
@@ -210,10 +212,20 @@ def test_ag_reprodutivel_com_a_semente_do_mundo():
         resultados.append([passo["ação"] for passo in r["history"]])
     assert resultados[0] == resultados[1]
 
+
 # ---------------------------------------------------------------- Benchmarks
 
-CHAVES_RESULTADO = {"agente", "tamanho_mundo", "vitórias", "mortes", "sobreviveu", "erros", "tempo_total",
-                    "tempo_médio", "dados_extra"}
+CHAVES_RESULTADO = {
+    "agente",
+    "tamanho_mundo",
+    "vitórias",
+    "mortes",
+    "sobreviveu",
+    "erros",
+    "tempo_total",
+    "tempo_médio",
+    "dados_extra",
+}
 
 BENCHMARKS = [benchmark, benchmark_custom, benchmark_sideB, benchmark_fast, benchmark_graficos]
 
@@ -262,6 +274,7 @@ def test_erro_nao_vira_resultado_nem_derruba_o_benchmark(modulo, monkeypatch, ca
 @pytest.mark.parametrize("modulo", BENCHMARKS, ids=lambda m: m.__name__)
 def test_dados_extra_vem_da_primeira_execucao_sem_erro(modulo, monkeypatch):
     """#30: se a primeira execução falha, os dados extras vêm da seguinte."""
+
     class FalhaNaPrimeira(AgenteFalso):
         def run(self):
             if self.world.seed == 0:
@@ -275,6 +288,7 @@ def test_dados_extra_vem_da_primeira_execucao_sem_erro(modulo, monkeypatch):
 def test_terminal_output_inclui_o_stderr():
     """#30: tracebacks e avisos (stderr) também vão para o terminal_output.txt."""
     import sys
+
     stdout_antes, stderr_antes = sys.stdout, sys.stderr
     with main.capturar_saida_terminal() as buffer:
         print("linha do stdout")
@@ -289,10 +303,18 @@ def test_benchmark_py_sozinho_nao_roda_o_agente_manual():
     import os
     import subprocess
     import sys
+
     raiz = os.path.dirname(os.path.abspath(benchmark.__file__))
-    saida = subprocess.run([sys.executable, "benchmark.py"], cwd=raiz, stdin=subprocess.DEVNULL,
-                           capture_output=True, text=True, encoding="utf-8", timeout=180,
-                           env={**os.environ, "PYTHONIOENCODING": "utf-8", "MPLBACKEND": "Agg"})
+    saida = subprocess.run(
+        [sys.executable, "benchmark.py"],
+        cwd=raiz,
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        timeout=180,
+        env={**os.environ, "PYTHONIOENCODING": "utf-8", "MPLBACKEND": "Agg"},
+    )
     assert saida.returncode == 0, saida.stderr[-2000:]
     assert "Resumo para manual" not in saida.stdout
     assert "Resumo para logico" in saida.stdout and "Resumo para genetico" in saida.stdout
@@ -308,10 +330,26 @@ def test_benchmark_fast_preserva_dados_extra():
 def test_csv_do_main_so_tem_colunas_escalares(tmp_path):
     """#24: dados_extra sai do CSV e vai para um .npz por agente e tamanho."""
     resultados = [
-        {"agente": "genetico", "tamanho_mundo": 4, "vitórias": 1, "mortes": 0, "sobreviveu": 0,
-         "tempo_total": 1.0, "tempo_médio": 1.0, "dados_extra": {"fitness": [1.0, 2.0], "cpu": [3.0]}},
-        {"agente": "logico", "tamanho_mundo": 4, "vitórias": 0, "mortes": 1, "sobreviveu": 0,
-         "tempo_total": 0.1, "tempo_médio": 0.1, "dados_extra": {}},
+        {
+            "agente": "genetico",
+            "tamanho_mundo": 4,
+            "vitórias": 1,
+            "mortes": 0,
+            "sobreviveu": 0,
+            "tempo_total": 1.0,
+            "tempo_médio": 1.0,
+            "dados_extra": {"fitness": [1.0, 2.0], "cpu": [3.0]},
+        },
+        {
+            "agente": "logico",
+            "tamanho_mundo": 4,
+            "vitórias": 0,
+            "mortes": 1,
+            "sobreviveu": 0,
+            "tempo_total": 0.1,
+            "tempo_médio": 0.1,
+            "dados_extra": {},
+        },
         None,  # benchmark que falhou não derruba a gravação
     ]
     df, csv_path = main.salvar_resultados(resultados, str(tmp_path))
@@ -334,14 +372,18 @@ def test_traceback_do_benchmark_fast_chega_ao_terminal_output(tmp_path, monkeypa
     assert "Traceback (most recent call last)" in log
 
 
-@pytest.mark.parametrize("linha, windows, esperado", [
-    (r"--saida logs\teste --sizes 4", True, ["--saida", r"logs\teste", "--sizes", "4"]),
-    (r"--saida C:\Users\ana\run", True, ["--saida", r"C:\Users\ana\run"]),
-    (r'--saida "C:\Minha Pasta\run"', True, ["--saida", r"C:\Minha Pasta\run"]),
-    ("--saida logs/teste", True, ["--saida", "logs/teste"]),
-    ('--saida "minha pasta/run"', False, ["--saida", "minha pasta/run"]),
-    ("--agentes logico genetico --sizes 4 6", False, ["--agentes", "logico", "genetico", "--sizes", "4", "6"]),
-], ids=["relativo", "absoluto", "com_espaco_e_aspas", "barra_normal", "linux_aspas", "sem_caminho"])
+@pytest.mark.parametrize(
+    "linha, windows, esperado",
+    [
+        (r"--saida logs\teste --sizes 4", True, ["--saida", r"logs\teste", "--sizes", "4"]),
+        (r"--saida C:\Users\ana\run", True, ["--saida", r"C:\Users\ana\run"]),
+        (r'--saida "C:\Minha Pasta\run"', True, ["--saida", r"C:\Minha Pasta\run"]),
+        ("--saida logs/teste", True, ["--saida", "logs/teste"]),
+        ('--saida "minha pasta/run"', False, ["--saida", "minha pasta/run"]),
+        ("--agentes logico genetico --sizes 4 6", False, ["--agentes", "logico", "genetico", "--sizes", "4", "6"]),
+    ],
+    ids=["relativo", "absoluto", "com_espaco_e_aspas", "barra_normal", "linux_aspas", "sem_caminho"],
+)
 def test_opcao_5_preserva_caminhos(linha, windows, esperado):
     """#39: o shlex apagava as barras invertidas de caminhos do Windows."""
     assert main.separar_argumentos(linha, windows=windows) == esperado

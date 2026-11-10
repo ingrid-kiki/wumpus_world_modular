@@ -1,10 +1,10 @@
 # ==============================
 # tests/test_referencia.py
 # ==============================
-'''
+"""
 # Garante que os resultados do projeto não mudam sem uma decisão explícita.
 # O cenário e como atualizá-lo em uma mudança intencional estão em tests/referencia.py.
-'''
+"""
 
 import json
 from collections import Counter
@@ -13,8 +13,10 @@ import pytest
 
 from tests import referencia
 
-AVISO = ("Os resultados de referência mudaram. Se NÃO era a intenção, há uma regressão. "
-         "Se era, rode 'python -m tests.referencia' e explique o motivo no commit e no CHANGELOG.")
+AVISO = (
+    "Os resultados de referência mudaram. Se NÃO era a intenção, há uma regressão. "
+    "Se era, rode 'python -m tests.referencia' e explique o motivo no commit e no CHANGELOG."
+)
 
 
 @pytest.fixture(scope="module")

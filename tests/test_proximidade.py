@@ -1,9 +1,9 @@
 # ==============================
 # tests/test_proximidade.py
 # ==============================
-'''
+"""
 # Testes do bônus de proximidade ao ouro no fitness do AG (#31).
-'''
+"""
 
 import json
 
@@ -39,7 +39,7 @@ def test_peso_zero_mantem_o_fitness_original():
 
 
 def test_bonus_cresce_com_a_proximidade():
-    longe = nota(["CIMA"], 20.0) - nota(["CIMA"])                 # distância 8: bônus 0
+    longe = nota(["CIMA"], 20.0) - nota(["CIMA"])  # distância 8: bônus 0
     perto = nota(["DIREITA", "DIREITA"], 20.0) - nota(["DIREITA", "DIREITA"])  # distância 6
     assert longe == pytest.approx(0.0)
     assert perto == pytest.approx(20 * (1 - 6 / 8))
@@ -65,23 +65,64 @@ def test_ag_sem_proximidade_nao_muda():
 
 
 def test_agente_com_proximidade_e_reprodutivel():
-    execucoes = [[p["ação"] for p in GeneticAgent(World(size=6, seed=4), population_size=20, gens=10, chrom_length=30,
-                                                  proximidade=20.0).run()["history"]] for _ in range(2)]
+    execucoes = [
+        [
+            p["ação"]
+            for p in GeneticAgent(
+                World(size=6, seed=4), population_size=20, gens=10, chrom_length=30, proximidade=20.0
+            ).run()["history"]
+        ]
+        for _ in range(2)
+    ]
     assert execucoes[0] == execucoes[1]
 
 
 def test_opcao_chega_ao_agente_e_ao_metadata(tmp_path):
     pasta = tmp_path / "run"
-    main.rodar_benchmark(["--agentes", "genetico", "--sizes", "4", "--execucoes", "1", "--populacao", "10",
-                          "--geracoes", "3", "--cromossomo", "10", "--proximidade", "20", "--saida", str(pasta)])
+    main.rodar_benchmark(
+        [
+            "--agentes",
+            "genetico",
+            "--sizes",
+            "4",
+            "--execucoes",
+            "1",
+            "--populacao",
+            "10",
+            "--geracoes",
+            "3",
+            "--cromossomo",
+            "10",
+            "--proximidade",
+            "20",
+            "--saida",
+            str(pasta),
+        ]
+    )
     meta = json.loads((pasta / "metadata.json").read_text(encoding="utf-8"))
     assert meta["parametros_ag"]["proximidade"] == 20.0
 
 
 def test_sem_a_opcao_o_padrao_e_o_fitness_original(tmp_path):
     pasta = tmp_path / "run"
-    main.rodar_benchmark(["--agentes", "genetico", "--sizes", "4", "--execucoes", "1", "--populacao", "10",
-                          "--geracoes", "3", "--cromossomo", "10", "--saida", str(pasta)])
+    main.rodar_benchmark(
+        [
+            "--agentes",
+            "genetico",
+            "--sizes",
+            "4",
+            "--execucoes",
+            "1",
+            "--populacao",
+            "10",
+            "--geracoes",
+            "3",
+            "--cromossomo",
+            "10",
+            "--saida",
+            str(pasta),
+        ]
+    )
     meta = json.loads((pasta / "metadata.json").read_text(encoding="utf-8"))
     assert meta["parametros_ag"]["proximidade"] == 0.0
 

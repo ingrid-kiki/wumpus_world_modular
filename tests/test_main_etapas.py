@@ -1,11 +1,11 @@
 # ==============================
 # tests/test_main_etapas.py
 # ==============================
-'''
+"""
 # Garante o que cada etapa do laço de main.rodar_benchmark() precisa entregar: pastas e arquivos
 # por agente e tamanho, gráficos avançados de quem tem dados extras e resultados que sobrevivem
 # a uma interrupção. Estes testes substituem o antigo comentário "NÃO ALTERAR" daquele trecho.
-'''
+"""
 
 import pandas as pd
 import pytest
@@ -15,15 +15,32 @@ from agents.genetic_agent import GeneticAgent
 from world.world import World
 
 ARGS_AG = ["--populacao", "10", "--geracoes", "3", "--cromossomo", "10"]
-GRAFICOS_AVANCADOS = {"memoria_cpu", "evolucao_fitness", "convergencia_populacao", "curva_convergencia_std",
-                      "violin_fitness", "ecdf_fitness_final", "heatmap_diversidade",
-                      "area_empilhada_diversidade", "pca_populacao_final"}
+GRAFICOS_AVANCADOS = {
+    "memoria_cpu",
+    "evolucao_fitness",
+    "convergencia_populacao",
+    "curva_convergencia_std",
+    "violin_fitness",
+    "ecdf_fitness_final",
+    "heatmap_diversidade",
+    "area_empilhada_diversidade",
+    "pca_populacao_final",
+}
 GRAFICOS_BASICOS = {"grafico_vitórias", "grafico_mortes", "grafico_sobreviveu", "grafico_tempo_medio"}
 
 
 def resultado_falso(agente, tamanho, dados_extra=None):
-    return {"agente": agente, "tamanho_mundo": tamanho, "vitórias": 1, "mortes": 0, "sobreviveu": 0, "erros": 0,
-            "tempo_total": 0.1, "tempo_médio": 0.1, "dados_extra": dados_extra or {}}
+    return {
+        "agente": agente,
+        "tamanho_mundo": tamanho,
+        "vitórias": 1,
+        "mortes": 0,
+        "sobreviveu": 0,
+        "erros": 0,
+        "tempo_total": 0.1,
+        "tempo_médio": 0.1,
+        "dados_extra": dados_extra or {},
+    }
 
 
 def benchmark_falso(monkeypatch, funcao):
@@ -32,13 +49,13 @@ def benchmark_falso(monkeypatch, funcao):
 
 def test_layout_completo_de_um_run(tmp_path):
     pasta = tmp_path / "run"
-    main.rodar_benchmark(["--agentes", "logico", "genetico", "--sizes", "4", "--execucoes", "2", *ARGS_AG,
-                          "--saida", str(pasta)])
+    main.rodar_benchmark(
+        ["--agentes", "logico", "genetico", "--sizes", "4", "--execucoes", "2", *ARGS_AG, "--saida", str(pasta)]
+    )
     assert {p.stem for p in (pasta / "advanced_charts_genetico_4x4").glob("*.png")} == GRAFICOS_AVANCADOS
     assert not (pasta / "advanced_charts_logico_4x4").exists()  # o agente lógico não tem dados extras
     assert GRAFICOS_BASICOS <= {p.stem for p in pasta.glob("*.png")}
-    for arquivo in ("resultados_benchmark.csv", "terminal_output.txt", "metadata.json",
-                    "dados_extra_genetico_4x4.npz"):
+    for arquivo in ("resultados_benchmark.csv", "terminal_output.txt", "metadata.json", "dados_extra_genetico_4x4.npz"):
         assert (pasta / arquivo).exists(), arquivo
     assert len(list(pasta.glob("logico_*.log"))) == 1 and len(list(pasta.glob("genetico_*.log"))) == 1
     assert not list(pasta.rglob("*.tmp"))
@@ -95,8 +112,9 @@ def test_log_e_gravado_durante_a_execucao(tmp_path):
 
 def test_graficos_avancados_valem_para_qualquer_agente_com_dados_extras(tmp_path, monkeypatch):
     dados = GeneticAgent(World(size=4, seed=1), population_size=10, gens=3, chrom_length=10).run()["dados_extra"]
-    benchmark_falso(monkeypatch, lambda agente, tamanho, execucoes, parametros_agentes=None:
-                    resultado_falso(agente, tamanho, dados))
+    benchmark_falso(
+        monkeypatch, lambda agente, tamanho, execucoes, parametros_agentes=None: resultado_falso(agente, tamanho, dados)
+    )
     pasta = tmp_path / "run"
     main.rodar_benchmark(["--agentes", "logico", "--sizes", "4", "--execucoes", "1", "--saida", str(pasta)])
     assert {p.stem for p in (pasta / "advanced_charts_logico_4x4").glob("*.png")} == GRAFICOS_AVANCADOS
@@ -105,8 +123,24 @@ def test_graficos_avancados_valem_para_qualquer_agente_com_dados_extras(tmp_path
 
 def test_mensagem_conta_os_graficos_realmente_gerados(tmp_path, capsys):
     pasta = tmp_path / "run"
-    main.rodar_benchmark(["--agentes", "genetico", "--sizes", "4", "--execucoes", "1", "--populacao", "1",
-                          "--geracoes", "3", "--cromossomo", "10", "--saida", str(pasta)])
+    main.rodar_benchmark(
+        [
+            "--agentes",
+            "genetico",
+            "--sizes",
+            "4",
+            "--execucoes",
+            "1",
+            "--populacao",
+            "1",
+            "--geracoes",
+            "3",
+            "--cromossomo",
+            "10",
+            "--saida",
+            str(pasta),
+        ]
+    )
     saida = capsys.readouterr().out
     assert "8 salvos em" in saida  # o PCA é pulado com um único indivíduo
     assert "pca_populacao_final" in saida

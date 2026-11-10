@@ -1,7 +1,7 @@
 # ==============================
 # tests/test_trajectory_length.py
 # ==============================
-'''
+"""
 # Este arquivo contém um teste unitário para verificar o comprimento da trajetória (sequência de ações)
 # executada pelo agente genético (GeneticAgent) no ambiente Wumpus World.
 #
@@ -15,11 +15,11 @@
 # - Extrai o histórico de ações executadas (trajectory) do resultado.
 # - Imprime o número de ações executadas para análise didática.
 # - Garante que pelo menos uma ação foi executada (histórico não vazio).
-'''
+"""
 
 from agents.genetic_agent import GeneticAgent
-from world.world import World
 from tests.conftest import GA_RAPIDO
+from world.world import World
 
 
 def test_action_sequence_length():
