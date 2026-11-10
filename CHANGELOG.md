@@ -14,6 +14,8 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
 - Teste de referência (`tests/test_referencia.py`): mundos, sequências de ações e regras do fitness não podem mudar
   sem decisão explícita.
 - Cobertura de testes no CI com `pytest-cov`: 79% hoje, mínimo de 78%.
+- Padronização com `ruff format`, verificada no CI, e regras de lint para imports, espaços e sintaxe antiga. Os commits só de
+  formatação ficam em `.git-blame-ignore-revs`.
 
 ---
 

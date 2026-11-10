@@ -16,6 +16,7 @@ Python 3.12 ou superior, com o ambiente em `.venv`.
 pip install -r requirements-dev.txt
 python -m pytest
 ruff check .
+ruff format .
 python main.py
 python reproduzir.py logs/run_AAAAMMDD_HHMMSS
 python -m experimentos.comparar_metodos --fase confirmacao

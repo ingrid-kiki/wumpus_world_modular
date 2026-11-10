@@ -85,6 +85,7 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt
 python -m pytest
 ruff check .
+ruff format .
 ```
 
 Para ver a cobertura de testes: `python -m pytest --cov --cov-report=term`.

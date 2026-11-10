@@ -44,6 +44,9 @@ jobs:
       - name: Lint (ruff)
         run: ruff check .
 
+      - name: Formatação (ruff format)
+        run: ruff format --check .
+
       - name: Testes (pytest)
         if: ${{ !(matrix.os == 'ubuntu-latest' && matrix.python == '3.13') }}
         run: python -m pytest
