@@ -18,6 +18,7 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   formatação ficam em `.git-blame-ignore-revs`.
 - Regras de lint para possíveis erros (`B`) e simplificações (`SIM`), e limite de complexidade 10 por função.
   `gerar_graficos_avancados` e `draw_world` ficam como exceções até a refatoração.
+- Checagem automática com `pre-commit` antes de cada commit e guia de estilo no `CONTRIBUTING.md`.
 
 ---
 

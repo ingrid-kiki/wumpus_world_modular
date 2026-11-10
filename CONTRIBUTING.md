@@ -43,6 +43,52 @@ Regras:
 - Correção de bug vem acompanhada do teste que mostra o bug.
 - Antes do commit, rode `ruff format .` e `ruff check .`: o CI recusa código fora do padrão.
 
+### Checagem automática antes do commit
+
+O `pre-commit` roda as checagens do `ruff` em cada commit. Basta instalar uma vez em cada clone:
+
+```bash
+pip install -r requirements-dev.txt
+pre-commit install
+```
+
+Se o `ruff` recusar o commit, corrija o que ele apontou. Quando ele só reformatar os arquivos, adicione-os de novo com
+`git add` e repita o commit. Os testes não rodam nessa etapa: use `python -m pytest` antes de abrir a PR.
+
+Ao atualizar o `ruff` em `requirements-dev.txt`, atualize também o `rev` em `.pre-commit-config.yaml`.
+
+## Guia de estilo
+
+As regras marcadas com **(CI)** são verificadas pelo `ruff`. As demais valem na revisão da PR.
+
+### Nomes
+
+- Variáveis e funções em `snake_case`, classes em `PascalCase`, constantes em `MAIUSCULAS`.
+- Código novo usa nomes em português e sem abreviações obscuras: `taxa_mutacao`, não `tm`.
+- Há nomes antigos em inglês, como `agent_pos` e `draw_world`. Não os renomeie junto com outra mudança: a padronização
+  fica para a refatoração.
+- Dê nome aos números com significado: `TAMANHO_MINIMO`, em vez de um `2` solto no código.
+
+### Funções
+
+- Cada função faz uma coisa só. Se o nome precisa de "e", provavelmente são duas.
+- Procure ficar em até 30 linhas.
+- **(CI)** Complexidade de no máximo 10 por função. Exceções levam `# noqa: C901` e o motivo no mesmo comentário.
+- **(CI)** Linhas de até 120 caracteres.
+
+### Docstrings
+
+- Toda função pública e toda classe nova têm docstring, começando pelo que ela faz.
+- Explique parâmetros e retorno quando o nome não bastar, como em `coletar_metadados`.
+- Cada arquivo começa com um cabeçalho dizendo para que ele serve.
+
+### Comentários
+
+- Explique o **porquê**: a regra do jogo, a decisão do método, o motivo de um caminho menos óbvio.
+- Em algoritmos, como o genético, um comentário curto por etapa ajuda quem está aprendendo a acompanhar.
+- Não repita o que o código já diz, nem deixe código antigo comentado: o git guarda o histórico.
+- Toda exceção do lint (`# noqa`) indica a regra e, quando ela não for óbvia, o motivo.
+
 ## Resultados de execução
 
 As pastas `logs/`, `results/` e `run_*/` são ignoradas pelo git. Para compartilhar resultados:

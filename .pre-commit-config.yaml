@@ -1,0 +1,9 @@
+# Checagens rápidas antes de cada commit. Instalação: pre-commit install
+# Manter "rev" igual à versão do ruff em requirements-dev.txt, para dar o mesmo resultado do CI.
+# Os testes ficam de fora, porque são demorados para cada commit: rodam com python -m pytest e no CI.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.4
+    hooks:
+      - id: ruff-check
+      - id: ruff-format

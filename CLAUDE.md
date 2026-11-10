@@ -14,6 +14,7 @@ Python 3.12 ou superior, com o ambiente em `.venv`.
 
 ```bash
 pip install -r requirements-dev.txt
+pre-commit install
 python -m pytest
 ruff check .
 ruff format .
