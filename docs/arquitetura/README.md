@@ -7,8 +7,8 @@ Diagramas que explicam como o programa é organizado e como uma execução acont
 
 | Diagrama | Arquivo | Situação |
 |---|---|---|
-| Caso de uso | `caso-de-uso.md` | A fazer |
-| Fluxograma geral | `fluxo-geral.md` | A fazer |
+| Caso de uso | [`caso-de-uso.md`](caso-de-uso.md) | Pronto |
+| Fluxograma geral | [`fluxo-geral.md`](fluxo-geral.md) | Pronto |
 | Diagrama de classes | `classes.md` | A fazer |
 | Fluxograma do algoritmo genético | `fluxo-ag.md` | A fazer |
 | Sequência de uma execução do algoritmo genético | `sequencia-ag.md` | A fazer |
