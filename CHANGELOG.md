@@ -24,6 +24,7 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   `gerar_graficos_avancados` e `draw_world` ficam como exceções até a refatoração.
 - Checagem automática com `pre-commit` antes de cada commit e guia de estilo no `CONTRIBUTING.md`.
 - Pasta `docs/arquitetura/`, com índice e convenções, e teste que compara o diagrama de classes com o código.
+- Diagrama de caso de uso e fluxograma geral em `docs/arquitetura/`.
 
 ---
 
