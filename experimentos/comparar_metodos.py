@@ -190,7 +190,7 @@ def comparar(tentativas):
             p = binomtest(so_metodo, discordantes, 0.5).pvalue if discordantes else 1.0
             linhas.append(
                 {
-                    **dict(zip(chaves, cenario)),
+                    **dict(zip(chaves, cenario, strict=True)),
                     "metodo": metodo,
                     "vitorias_metodo": int(pivo[metodo].sum()),
                     "vitorias_aleatoria": int(pivo[base].sum()),

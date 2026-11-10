@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 09/11/2026:** Etapa 0 concluída com a v1.7.0; Etapa 1 em andamento (PR A concluída; PR B: formatação).
+**Status em 09/11/2026:** Etapa 0 concluída com a v1.7.0; Etapa 1 em andamento (PRs A e B concluídas; PR C: regras de lint e complexidade).
 
 ## Objetivo
 
