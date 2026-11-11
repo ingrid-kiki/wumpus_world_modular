@@ -110,6 +110,8 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 - Anotações de tipos nas funções públicas.
 - Nomes em um idioma só e sem acentos em chaves e arquivos.
 - Decidir o destino de `pygad/`, que não é usado. `visual/` e o `logger` estão decididos abaixo.
+- Decidir o uso do `dados_extra_AGENTE_NxN.npz`: hoje ele é gravado em todo run, mas nenhuma parte do programa o lê.
+  Uma opção é gerar os gráficos avançados a partir dele, o que também ajudaria na [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29).
 - Organizar em pacote, com `pyproject.toml` completo.
 
 **Ajustes apontados pelo diagrama de classes (decididos em 11/11/2026, para depois da tese):**
