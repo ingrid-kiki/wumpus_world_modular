@@ -13,12 +13,18 @@ import argparse
 
 from agents.genetic_agent import GeneticAgent
 from agents.logic_agent import LogicAgent
+from agents.logico_seguro import AgenteLogicoSeguro
 from agents.random_search_agent import RandomSearchAgent
 from utils.execucao import contar, executar_uma
 from world.world import World
 
 # Dicionário que associa nomes de agentes às suas classes
-AGENTES_DISPONIVEIS = {"logico": LogicAgent, "genetico": GeneticAgent, "aleatorio": RandomSearchAgent}
+AGENTES_DISPONIVEIS = {
+    "logico": LogicAgent,
+    "logico_seguro": AgenteLogicoSeguro,
+    "genetico": GeneticAgent,
+    "aleatorio": RandomSearchAgent,
+}
 
 
 def executar_benchmark(agente_nome, world_size, num_execucoes, silent=False, parametros_agentes=None):

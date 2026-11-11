@@ -95,7 +95,8 @@ ruff check .
 ruff format .
 ```
 
-Para ver a cobertura de testes: `python -m pytest --cov --cov-report=term`.
+Para ver a cobertura de testes: `python -m pytest --cov --cov-report=term`. O que cada teste verifica está em
+[`docs/testes.md`](docs/testes.md).
 
 Para quem vai contribuir: o gancho do `pre-commit` não vem ativado ao clonar. Rode `pre-commit install` uma vez em cada
 clone, como explicado em [CONTRIBUTING.md](CONTRIBUTING.md#checagem-automática-antes-do-commit).
@@ -194,7 +195,9 @@ python main.py manual
 |-----------|-----------|
 | `manual`  | Agente controlado pelo teclado do usuário. |
 | `logico`  | Agente baseado em lógica simbólica simples (regras IF/ELSE). |
+| `logico_seguro` | Agente lógico que deduz quais casas não têm poço antes de andar e só arrisca quando não há casa segura. |
 | `genetico`| Agente baseado em algoritmo genético com avaliação de desempenho. |
+| `aleatorio` | Busca aleatória com o mesmo orçamento do genético, usada como referência para ele. |
 
 ### ⚖️ Os agentes não jogam nas mesmas condições
 

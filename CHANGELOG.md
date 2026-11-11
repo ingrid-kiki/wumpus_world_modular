@@ -15,6 +15,11 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   A revisão de outra pessoa é recomendada, mas não obrigatória.
 
 ### Adicionado
+- Lista dos testes automáticos em [`docs/testes.md`](docs/testes.md), com o que cada um garante. O teste
+  `tests/test_lista_de_testes.py` falha quando a lista fica desatualizada.
+- Agente `logico_seguro`: deduz quais casas não têm poço antes de andar e só arrisca quando não há casa segura nova.
+  Venceu 83,4%, 86,4% e 91,9% dos mundos 4x4, 6x6 e 8x8, contra 33,3%, 24,2% e 19,4% do `logico`, que não muda.
+  Detalhes em [`docs/investigacao-agente-logico-2026-11.md`](docs/investigacao-agente-logico-2026-11.md).
 - Teste de referência (`tests/test_referencia.py`): mundos, sequências de ações e regras do fitness não podem mudar
   sem decisão explícita.
 - Cobertura de testes no CI com `pytest-cov`: 79% hoje, mínimo de 78%.
@@ -25,7 +30,7 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
 - Checagem automática com `pre-commit` antes de cada commit e guia de estilo no `CONTRIBUTING.md`.
 - Pasta `docs/arquitetura/`, com índice e convenções, e teste que compara o diagrama de classes com o código.
 - Diagramas em `docs/arquitetura/`: caso de uso, classes, fluxograma geral, fluxograma do algoritmo genético e sequências do AG, do
-  benchmark e do agente lógico, e fluxo de dados. O teste do diagrama de classes confere as 11 classes do programa.
+  benchmark e do agente lógico, e fluxo de dados. O teste do diagrama de classes confere todas as classes do programa.
 
 ---
 

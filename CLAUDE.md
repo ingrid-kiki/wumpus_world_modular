@@ -40,6 +40,7 @@ python -m experimentos.comparar_metodos --fase confirmacao
 **Qualidade**
 - Só fazer commit se `python -m pytest` passar, checando o código de saída; não encadear com `| tail`, que esconde a falha.
 - Correção de bug vem com o teste que a prova, e o teste deve falhar no código anterior.
+- Ao criar, renomear ou remover um teste, atualizar `docs/testes.md` na mesma PR.
 - Documentar só o que foi executado de fato.
 - Registrar mudanças visíveis na seção `[Não lançado]` do `CHANGELOG.md`, na mesma PR. A versão fica em `utils/versao.py`.
 

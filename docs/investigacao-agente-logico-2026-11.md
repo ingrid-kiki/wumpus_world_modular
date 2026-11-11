@@ -89,14 +89,14 @@ Em todas, as regras de `BRILHO` e `FEDOR` continuam em primeiro lugar.
 
 **Decidido em 11/11/2026:** criar um agente novo, mantendo o `logico` como está (opção 2).
 
-Em aberto:
+Também decidido em 11/11/2026:
 
-1. Confirmar a regra do agente novo. A recomendação é a D; a C pode entrar como variante se a segurança importar mais que a taxa de
-   vitórias.
-2. Definir o nome do agente. A sugestão é `logico_seguro`.
-3. Definir se ele entra na comparação final da tese ([#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31)). Com
-   ele, a comparação com o algoritmo genético pode mudar, o que ainda precisa ser medido.
-4. Corrigir os comentários que falam em "inferir ações seguras" no agente atual.
+1. A regra do agente novo é a D.
+2. O nome do agente é `logico_seguro`.
+3. Ele entra na comparação final da tese ([#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31)). Com ele, a
+   comparação com o algoritmo genético pode mudar, o que ainda precisa ser medido.
+4. No empate entre casas igualmente suspeitas, vence a de menor linha e, depois, de menor coluna (seção 8).
+5. Os comentários do agente atual que falavam em "inferir ações seguras" foram corrigidos.
 
 ## 7. Como repetir a medição
 
@@ -256,3 +256,23 @@ for tam in (4, 6, 8):
 ```
 
 </details>
+
+## 8. Implementação
+
+O agente foi implementado em `agents/logico_seguro.py` (classes `AgenteLogicoSeguro` e `BaseConhecimentoSegura`) e pode ser usado
+com `--agentes logico_seguro`.
+
+A regra D do protótipo não dizia o que fazer quando duas casas da fronteira são igualmente suspeitas. No protótipo, o empate
+dependia da ordem interna de um conjunto do Python, que não é garantida entre versões. Na implementação, vence a casa de menor
+linha e, depois, de menor coluna. Assim o resultado é o mesmo em qualquer versão, e a regra fica fácil de descrever.
+
+Com esse desempate, nos mesmos 1000 mundos por tamanho:
+
+| Tamanho | Vitórias | Mortes | Sobreviveu sem vencer |
+|---|---|---|---|
+| 4x4 | 83,4% | 16,4% | 0,2% |
+| 6x6 | 86,4% | 13,6% | 0,0% |
+| 8x8 | 91,9% | 8,1% | 0,0% |
+
+Em relação ao protótipo, as vitórias variam de −0,9 a +2,9 pontos percentuais. Esses números são conferidos por
+`tests/test_logico_seguro.py`: uma mudança no comportamento do agente faz o teste falhar.

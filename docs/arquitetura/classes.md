@@ -1,6 +1,6 @@
 # Diagrama de classes
 
-Mostra as 11 classes do programa, com seus atributos, métodos e relações. Ficam de fora as funções soltas de módulos como
+Mostra as 13 classes do programa, com seus atributos, métodos e relações. Ficam de fora as funções soltas de módulos como
 `main.py` e `utils/`, a classe interna `DualWriter` de `main.py`, a pasta `pygad/` e os testes.
 
 ```mermaid
@@ -53,6 +53,22 @@ classDiagram
         +update_knowledge(perception)
         +infer_action(perception)
         +update_position(action, new_pos)
+    }
+
+    class AgenteLogicoSeguro {
+        +knowledge
+    }
+
+    class BaseConhecimentoSegura {
+        +vizinhas_de(pos)
+        +casas_seguras()
+        +fronteira()
+        +suspeita(casa)
+        +poco_certo(casa, seguras)
+        +primeiro_passo_ate(alvos)
+        +arriscar(fronteira, seguras)
+        +permanecer()
+        +infer_action(perception)
     }
 
     class GeneticAgent {
@@ -135,6 +151,9 @@ classDiagram
     LogicAgent *-- LogicKnowledgeBase : knowledge
     GeneticAgent *-- GeneticAlgorithm : ga
     AGVariante --|> GeneticAlgorithm
+    AgenteLogicoSeguro --|> LogicAgent
+    BaseConhecimentoSegura --|> LogicKnowledgeBase
+    AgenteLogicoSeguro *-- BaseConhecimentoSegura : knowledge
 
     GeneticAlgorithm ..> Individual : cria e evolui
     RandomSearchAgent ..> Individual : sorteia e avalia
@@ -164,6 +183,8 @@ classDiagram
 | `ManualAgent` | `agents/manual_agent.py` |
 | `LogicAgent` | `agents/logic_agent.py` |
 | `LogicKnowledgeBase` | `agents/logic_knowledge_base.py` |
+| `AgenteLogicoSeguro` | `agents/logico_seguro.py` |
+| `BaseConhecimentoSegura` | `agents/logico_seguro.py` |
 | `GeneticAgent` | `agents/genetic_agent.py` |
 | `RandomSearchAgent` | `agents/random_search_agent.py` |
 | `GeneticAlgorithm` | `ga/ga_core.py` |
@@ -174,8 +195,10 @@ classDiagram
 
 ## Observações sobre o código atual
 
-- **Não há classe base de agente.** Os quatro agentes recebem o `World` no construtor e têm um método `run()`, mas isso é
+- **Não há classe base de agente.** Os cinco agentes recebem o `World` no construtor e têm um método `run()`, mas isso é
   só uma convenção. O dicionário `AGENTES_DISPONIVEIS` os escolhe pelo nome.
+- **`AgenteLogicoSeguro` herda de `LogicAgent`** e só troca a base de conhecimento: o laço de percepção e ação é o mesmo,
+  e a decisão passa a evitar poços ([investigação de 11/11/2026](../investigacao-agente-logico-2026-11.md)).
 - **Os agentes não usam o `Logger`.** `main.py` e os benchmarks deixam `LogicAgent.logger` como `None`, e
   `GeneticAgent` chama `GeneticAlgorithm.run` sem informar um logger. Quem cria e usa o `Logger` é `rodar_benchmark`, função
   de `main.py`.

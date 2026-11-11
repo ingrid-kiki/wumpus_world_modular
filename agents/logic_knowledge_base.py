@@ -4,7 +4,8 @@
 """
 # Este arquivo implementa a classe LogicKnowledgeBase, responsável por manter e atualizar
 # a base de conhecimento lógica do agente simbólico no Wumpus World. Ela armazena percepções,
-# estados conhecidos do ambiente e permite inferir ações seguras a partir das informações coletadas.
+# estados conhecidos do ambiente e escolhe a próxima ação com regras simples. A marca "seguro" é
+# registrada, mas a decisão não a consulta: o agente logico_seguro (agents/logico_seguro.py) faz isso.
 # Serve como núcleo de raciocínio lógico para o LogicAgent, facilitando decisões baseadas em regras.
 """
 
