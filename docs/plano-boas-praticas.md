@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 09/11/2026:** Etapa 0 concluída com a v1.7.0; Etapa 1 concluída (PRs A a D); Etapa 2 em andamento (PRs A e B concluídas; próxima: PR C, diagrama de classes).
+**Status em 09/11/2026:** Etapa 0 concluída com a v1.7.0; Etapa 1 concluída (PRs A a D); Etapa 2 em andamento (PRs A a C concluídas; próxima: PR D, fluxograma e sequência do AG).
 
 ## Objetivo
 
@@ -90,7 +90,7 @@ Os diagramas descrevem o código atual e serão revistos depois da refatoração
 | A | 2.2 Criar o teste que compara o diagrama de classes com o código | 30 min | Concluída (#58) |
 | B | 2.3 Diagrama de caso de uso | 25 min | Concluída (#60) |
 | B | 2.4 Fluxograma geral | 40 min | Concluída (#60) |
-| C | 2.5 Diagrama de classes, com as 11 classes e suas relações | 45 min | A fazer |
+| C | 2.5 Diagrama de classes, com as 11 classes e suas relações | 45 min | Concluída (#62) |
 | D | 2.6 Fluxograma do AG | 30 min | A fazer |
 | D | 2.7 Sequência de uma execução do AG | 25 min | A fazer |
 | E | 2.8 Sequência de um benchmark completo | 30 min | A fazer |
@@ -98,7 +98,7 @@ Os diagramas descrevem o código atual e serão revistos depois da refatoração
 | F | 2.10 Fluxo de dados | 30 min | A fazer |
 | F | 2.11 Ligar os diagramas no README e atualizar o status do plano | 15 min | A fazer |
 
-Restam 4 PRs (C a F), com cerca de 3 h 20 previstas.
+Restam 3 PRs (D a F), com cerca de 2 h 35 previstas.
 
 ### Etapa 3. Código limpo (10 a 18 h)
 É a Fase 5 do plano original e a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42). Só avança com o teste de referência passando.
@@ -152,7 +152,7 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 |---|---|---|---|
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
-| 2. Documentação e diagramas | Restam cerca de 3 h 20 | Baixo | Etapa 0 |
+| 2. Documentação e diagramas | Restam cerca de 2 h 35 | Baixo | Etapa 0 |
 | 3. Código limpo | 10–18 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |

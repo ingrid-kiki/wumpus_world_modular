@@ -11,8 +11,6 @@ import os
 import re
 from pathlib import Path
 
-import pytest
-
 RAIZ = Path(__file__).resolve().parent.parent
 DIAGRAMA_DE_CLASSES = RAIZ / "docs" / "arquitetura" / "classes.md"
 
@@ -95,7 +93,6 @@ def test_nao_conta_classe_aninhada(tmp_path):
 # ---------------------------------------------------------------- Conferência real
 
 
-@pytest.mark.xfail(strict=True, raises=FileNotFoundError, reason="O diagrama de classes entra na tarefa 2.5")
 def test_diagrama_de_classes_bate_com_o_codigo():
     citadas = classes_do_diagrama(DIAGRAMA_DE_CLASSES.read_text(encoding="utf-8"))
     codigo = classes_do_codigo()
