@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 09/11/2026:** Etapa 0 concluída com a v1.7.0; Etapa 1 concluída (PRs A a D); Etapa 2 em andamento (PR A concluída; PR B: caso de uso e fluxograma geral).
+**Status em 09/11/2026:** Etapa 0 concluída com a v1.7.0; Etapa 1 concluída (PRs A a D); Etapa 2 em andamento (PRs A e B concluídas; próxima: PR C, diagrama de classes).
 
 ## Objetivo
 
@@ -35,7 +35,7 @@ caso de uso, fluxogramas, código comentado para aprendizado e etapas do process
 ### Etapa 0. Pré-requisitos (concluída)
 - Mesclar as PRs #46 a #49 e lançar a v1.7.0.
 
-### Etapa 1. Padrões e medição (3 a 4 h)
+### Etapa 1. Padrões e medição (concluída)
 A base que protege todo o resto.
 
 - **Teste de referência:** um benchmark fixo cujos resultados não podem mudar sem decisão explícita.
@@ -48,30 +48,30 @@ A base que protege todo o resto.
 
 **Divisão em tarefas (a PR A vem primeiro, porque protege as demais):**
 
-| PR | Tarefa | Tempo |
-|---|---|---|
-| A | 1.1 Definir o cenário de referência (agentes, tamanhos, sementes e parâmetros) | 10 min |
-| A | 1.2 Gerar e guardar os valores esperados (vitórias, mortes, sobrevivências e erros; só números, porque os PNGs mudam entre Windows e Linux) | 15 min |
-| A | 1.3 Criar o teste que compara com esses valores e explicar como atualizar numa mudança intencional | 20 min |
-| A | 1.4 Medir a cobertura atual com `pytest-cov` | 10 min |
-| A | 1.5 Colocar a cobertura no CI, com o valor atual como mínimo | 15 min |
-| B | 1.6 Aplicar `ruff format` num commit só de formatação | 15 min |
-| B | 1.7 Aplicar as correções automáticas (imports, espaços, sintaxe antiga) | 15 min |
-| C | 1.8 Corrigir à mão os avisos de possíveis erros e simplificações | 30 min |
-| C | 1.9 Ativar a regra de complexidade, com as 2 funções acima do limite como exceções até a refatoração | 15 min |
-| D | 1.10 Configurar o `pre-commit` e explicar como instalar | 30 min |
-| D | 1.11 Escrever o guia de estilo no CONTRIBUTING | 30 min |
+| PR | Tarefa | Tempo previsto | Situação |
+|---|---|---|---|
+| A | 1.1 Definir o cenário de referência (agentes, tamanhos, sementes e parâmetros) | 10 min | Concluída (#53) |
+| A | 1.2 Gerar e guardar os valores esperados (vitórias, mortes, sobrevivências e erros; só números, porque os PNGs mudam entre Windows e Linux) | 15 min | Concluída (#53) |
+| A | 1.3 Criar o teste que compara com esses valores e explicar como atualizar numa mudança intencional | 20 min | Concluída (#53) |
+| A | 1.4 Medir a cobertura atual com `pytest-cov` | 10 min | Concluída (#53) |
+| A | 1.5 Colocar a cobertura no CI, com o valor atual como mínimo | 15 min | Concluída (#53) |
+| B | 1.6 Aplicar `ruff format` num commit só de formatação | 15 min | Concluída (#54) |
+| B | 1.7 Aplicar as correções automáticas (imports, espaços, sintaxe antiga) | 15 min | Concluída (#54) |
+| C | 1.8 Corrigir à mão os avisos de possíveis erros e simplificações | 30 min | Concluída (#55) |
+| C | 1.9 Ativar a regra de complexidade, com as 2 funções acima do limite como exceções até a refatoração | 15 min | Concluída (#55) |
+| D | 1.10 Configurar o `pre-commit` e explicar como instalar | 30 min | Concluída (#56) |
+| D | 1.11 Escrever o guia de estilo no CONTRIBUTING | 30 min | Concluída (#56) |
 
 Os 33 números soltos no código ficam para a refatoração, depois da tese.
 
-### Etapa 2. Documentação de arquitetura e diagramas (4 a 6 h)
+### Etapa 2. Documentação de arquitetura e diagramas (4 a 6 h, em andamento)
 Em `docs/arquitetura/`, com **Mermaid**, que o GitHub desenha direto e o git versiona como texto.
 
 | Diagrama | Conteúdo |
 |---|---|
 | **Fluxograma geral** | Do menu do `main.py` aos resultados na pasta do run |
 | **Fluxograma do AG** | População, avaliação, seleção, cruzamento, mutação e fim |
-| **Diagrama de classes** | `World`, agentes, `GeneticAlgorithm`, `Individual`, `Logger` e relações |
+| **Diagrama de classes** | As 11 classes do programa e suas relações: `World`, agentes, `LogicKnowledgeBase`, `GeneticAlgorithm`, `Individual`, `AGVariante`, `Logger` e `Visualizer` |
 | **Diagrama de sequência** | Um benchmark completo; uma execução do AG; um passo do agente lógico |
 | **Diagrama de caso de uso** | Quem faz o quê: jogar, comparar agentes, reproduzir um run, rodar experimentos |
 | **Fluxo de dados** | O que vira CSV, `.npz`, gráficos e `metadata.json` |
@@ -80,23 +80,25 @@ O Mermaid não tem um tipo próprio para caso de uso; ele é feito com um fluxog
 Um teste compara o diagrama de classes com o código, nos dois sentidos, para ele não ficar desatualizado sem aviso.
 Os diagramas descrevem o código atual e serão revistos depois da refatoração.
 
-**Meta:** os 6 diagramas publicados e ligados no README.
+**Meta:** os 6 tipos de diagrama publicados, em 8 arquivos, e ligados no README.
 
 **Divisão em tarefas (cada PR é mesclada antes de abrir a próxima):**
 
-| PR | Tarefa | Tempo |
-|---|---|---|
-| A | 2.1 Criar `docs/arquitetura/`, com índice e convenções | 15 min |
-| A | 2.2 Criar o teste que compara o diagrama de classes com o código | 30 min |
-| B | 2.3 Diagrama de caso de uso | 25 min |
-| B | 2.4 Fluxograma geral | 40 min |
-| C | 2.5 Diagrama de classes, com as 11 classes e suas relações | 45 min |
-| D | 2.6 Fluxograma do AG | 30 min |
-| D | 2.7 Sequência de uma execução do AG | 25 min |
-| E | 2.8 Sequência de um benchmark completo | 30 min |
-| E | 2.9 Sequência de um passo do agente lógico | 25 min |
-| F | 2.10 Fluxo de dados | 30 min |
-| F | 2.11 Ligar os diagramas no README e atualizar o status do plano | 15 min |
+| PR | Tarefa | Tempo previsto | Situação |
+|---|---|---|---|
+| A | 2.1 Criar `docs/arquitetura/`, com índice e convenções | 15 min | Concluída (#58) |
+| A | 2.2 Criar o teste que compara o diagrama de classes com o código | 30 min | Concluída (#58) |
+| B | 2.3 Diagrama de caso de uso | 25 min | Concluída (#60) |
+| B | 2.4 Fluxograma geral | 40 min | Concluída (#60) |
+| C | 2.5 Diagrama de classes, com as 11 classes e suas relações | 45 min | A fazer |
+| D | 2.6 Fluxograma do AG | 30 min | A fazer |
+| D | 2.7 Sequência de uma execução do AG | 25 min | A fazer |
+| E | 2.8 Sequência de um benchmark completo | 30 min | A fazer |
+| E | 2.9 Sequência de um passo do agente lógico | 25 min | A fazer |
+| F | 2.10 Fluxo de dados | 30 min | A fazer |
+| F | 2.11 Ligar os diagramas no README e atualizar o status do plano | 15 min | A fazer |
+
+Restam 4 PRs (C a F), com cerca de 3 h 20 previstas.
 
 ### Etapa 3. Código limpo (10 a 18 h)
 É a Fase 5 do plano original e a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42). Só avança com o teste de referência passando.
@@ -149,12 +151,12 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 | Etapa | Esforço | Risco | Depende de |
 |---|---|---|---|
 | 0. Pré-requisitos | Concluída | — | — |
-| 1. Padrões e medição | 3–4 h | Baixo | Etapa 0 |
-| 2. Documentação e diagramas | 4–6 h | Baixo | Etapa 0 |
+| 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
+| 2. Documentação e diagramas | Restam cerca de 3 h 20 | Baixo | Etapa 0 |
 | 3. Código limpo | 10–18 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Total** | **cerca de 26 a 44 h** | | |
+| **Restante** | **cerca de 22 a 36 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 
