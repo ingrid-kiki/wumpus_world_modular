@@ -151,7 +151,7 @@ python main.py --agentes logico --sizes 4 --execucoes 3
 |---|---|---|
 | `--execucoes N` | 32 | Execuções por agente e tamanho |
 | `--sizes A B ...` | 4 6 8 | Tamanhos do mundo (mínimo 2) |
-| `--agentes A B ...` | logico genetico | `logico`, `genetico`, `aleatorio` (busca aleatória, a referência do genético) |
+| `--agentes A B ...` | logico genetico | `logico`, `logico_seguro` (lógico que evita poços), `genetico`, `aleatorio` (busca aleatória, a referência do genético) |
 | `--benchmark ARQUIVO` | benchmark.py | Qual dos 5 arquivos de benchmark usar; `benchmark_fast.py` roda em paralelo |
 | `--saida PASTA` | `logs/run_AAAAMMDD_HHMMSS` | Pasta dos resultados |
 | `--populacao N` | 100 | Tamanho da população do genético |

@@ -194,7 +194,9 @@ python main.py manual
 |-----------|-----------|
 | `manual`  | Agente controlado pelo teclado do usuário. |
 | `logico`  | Agente baseado em lógica simbólica simples (regras IF/ELSE). |
+| `logico_seguro` | Agente lógico que deduz quais casas não têm poço antes de andar e só arrisca quando não há casa segura. |
 | `genetico`| Agente baseado em algoritmo genético com avaliação de desempenho. |
+| `aleatorio` | Busca aleatória com o mesmo orçamento do genético, usada como referência para ele. |
 
 ### ⚖️ Os agentes não jogam nas mesmas condições
 
