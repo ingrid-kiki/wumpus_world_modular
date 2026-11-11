@@ -4,7 +4,7 @@
 """
 # Este arquivo implementa o LogicAgent, um agente inteligente para o Wumpus World
 # baseado em lógica simbólica. O agente utiliza uma base de conhecimento lógica
-# para inferir ações seguras a partir das percepções do ambiente, atualizando seu
+# para decidir cada ação com regras simples a partir das percepções do ambiente, atualizando seu
 # conhecimento a cada passo. O histórico de percepções é registrado para análise,
 # e o agente pode integrar-se ao sistema de logs e benchmarks do projeto.
 """
@@ -27,7 +27,7 @@ class LogicAgent:
     def run(self):
         """
         Executa o ciclo de vida do agente lógico.
-        Atualiza a base de conhecimento e decide ações seguras.
+        Atualiza a base de conhecimento e decide a próxima ação com regras simples.
         """
         passo = 1  # Contador de passos do agente
         # Continua enquanto o jogo não termina (vitória ou morte) e há passos disponíveis

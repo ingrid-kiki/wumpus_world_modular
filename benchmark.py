@@ -10,6 +10,7 @@ e retorna um resumo com as taxas de vitória, morte, sobrevivência e tempos mé
 
 from agents.genetic_agent import GeneticAgent
 from agents.logic_agent import LogicAgent
+from agents.logico_seguro import AgenteLogicoSeguro
 from agents.manual_agent import ManualAgent
 from agents.random_search_agent import RandomSearchAgent
 from utils.execucao import contar, executar_uma
@@ -19,6 +20,7 @@ from world.world import World
 AGENTES_DISPONIVEIS = {
     "manual": ManualAgent,
     "logico": LogicAgent,
+    "logico_seguro": AgenteLogicoSeguro,
     "genetico": GeneticAgent,
     "aleatorio": RandomSearchAgent,
 }

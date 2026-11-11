@@ -18,6 +18,7 @@ import pandas as pd
 
 from agents.genetic_agent import GeneticAgent
 from agents.logic_agent import LogicAgent
+from agents.logico_seguro import AgenteLogicoSeguro
 from agents.manual_agent import ManualAgent
 from agents.random_search_agent import RandomSearchAgent
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
@@ -29,6 +30,7 @@ from world.world import TAMANHO_MINIMO, World
 AGENTES_DISPONIVEIS = {
     "manual": ManualAgent,
     "logico": LogicAgent,
+    "logico_seguro": AgenteLogicoSeguro,
     "genetico": GeneticAgent,
     "aleatorio": RandomSearchAgent,
 }
