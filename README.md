@@ -67,6 +67,13 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 
 ---
 
+## 🏗️ Arquitetura
+
+Os diagramas de caso de uso, classes, fluxogramas, sequências e fluxo de dados estão em
+[`docs/arquitetura/`](docs/arquitetura/README.md).
+
+---
+
 ## 🧪 Requisitos
 
 - Python 3.12 ou superior (testado em 3.12 e 3.13; o numpy 2.5 exige 3.12, ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17))

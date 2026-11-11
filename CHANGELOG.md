@@ -25,7 +25,7 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
 - Checagem automática com `pre-commit` antes de cada commit e guia de estilo no `CONTRIBUTING.md`.
 - Pasta `docs/arquitetura/`, com índice e convenções, e teste que compara o diagrama de classes com o código.
 - Diagramas em `docs/arquitetura/`: caso de uso, classes, fluxograma geral, fluxograma do algoritmo genético e sequências do AG, do
-  benchmark e do agente lógico. O teste do diagrama de classes confere as 11 classes do programa.
+  benchmark e do agente lógico, e fluxo de dados. O teste do diagrama de classes confere as 11 classes do programa.
 
 ---
 
