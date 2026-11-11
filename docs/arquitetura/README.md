@@ -14,7 +14,7 @@ Diagramas que explicam como o programa é organizado e como uma execução acont
 | Sequência de uma execução do algoritmo genético | [`sequencia-ag.md`](sequencia-ag.md) | Pronto |
 | Sequência de um benchmark completo | [`sequencia-benchmark.md`](sequencia-benchmark.md) | Pronto |
 | Sequência de um passo do agente lógico | [`sequencia-agente-logico.md`](sequencia-agente-logico.md) | Pronto |
-| Fluxo de dados | `fluxo-de-dados.md` | A fazer |
+| Fluxo de dados | [`fluxo-de-dados.md`](fluxo-de-dados.md) | Pronto |
 
 ## Convenções
 

@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 09/11/2026:** Etapa 0 concluída com a v1.7.0; Etapa 1 concluída (PRs A a D); Etapa 2 em andamento (PRs A a E concluídas; próxima: PR F, fluxo de dados e links no README).
+**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; próximos passos: comparação final da tese e agente lógico novo; Etapas 3 a 5 depois da tese.
 
 ## Objetivo
 
@@ -64,7 +64,7 @@ A base que protege todo o resto.
 
 Os 33 números soltos no código ficam para a refatoração, depois da tese.
 
-### Etapa 2. Documentação de arquitetura e diagramas (4 a 6 h, em andamento)
+### Etapa 2. Documentação de arquitetura e diagramas (concluída)
 Em `docs/arquitetura/`, com **Mermaid**, que o GitHub desenha direto e o git versiona como texto.
 
 | Diagrama | Conteúdo |
@@ -95,10 +95,10 @@ Os diagramas descrevem o código atual e serão revistos depois da refatoração
 | D | 2.7 Sequência de uma execução do AG | 25 min | Concluída (#64) |
 | E | 2.8 Sequência de um benchmark completo | 30 min | Concluída (#65) |
 | E | 2.9 Sequência de um passo do agente lógico | 25 min | Concluída (#65) |
-| F | 2.10 Fluxo de dados | 30 min | A fazer |
-| F | 2.11 Ligar os diagramas no README e atualizar o status do plano | 15 min | A fazer |
+| F | 2.10 Fluxo de dados | 30 min | Concluída (#67) |
+| F | 2.11 Ligar os diagramas no README e atualizar o status do plano | 15 min | Concluída (#67) |
 
-Resta a PR F, com cerca de 45 min previstos.
+Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 
 ### Etapa 3. Código limpo (10 a 18 h)
 É a Fase 5 do plano original e a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42). Só avança com o teste de referência passando.
@@ -110,6 +110,8 @@ Resta a PR F, com cerca de 45 min previstos.
 - Anotações de tipos nas funções públicas.
 - Nomes em um idioma só e sem acentos em chaves e arquivos.
 - Decidir o destino de `pygad/`, que não é usado. `visual/` e o `logger` estão decididos abaixo.
+- Decidir o uso do `dados_extra_AGENTE_NxN.npz`: hoje ele é gravado em todo run, mas nenhuma parte do programa o lê.
+  Uma opção é gerar os gráficos avançados a partir dele, o que também ajudaria na [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29).
 - Organizar em pacote, com `pyproject.toml` completo.
 
 **Ajustes apontados pelo diagrama de classes (decididos em 11/11/2026, para depois da tese):**
@@ -164,11 +166,11 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 |---|---|---|---|
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
-| 2. Documentação e diagramas | Restam cerca de 45 min | Baixo | Etapa 0 |
+| 2. Documentação e diagramas | Concluída | Baixo | Etapa 0 |
 | 3. Código limpo | 10–18 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Restante** | **cerca de 20 a 34 h** | | |
+| **Restante** | **cerca de 19 a 33 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 
