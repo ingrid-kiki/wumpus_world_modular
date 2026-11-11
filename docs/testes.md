@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026, já com o agente `logico_seguro`: **167 casos
-de teste**, vindos de **116 funções** em **21 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **169 casos de teste**, vindos de
+**118 funções** em **22 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -47,6 +47,7 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | `test_logger.py` | 1 | Arquivo de log |
 | `test_experimento_31.py` | 7 | Script de comparação de métodos da #31 |
 | `test_diagramas.py` | 7 | Diagrama de classes alinhado com o código |
+| `test_lista_de_testes.py` | 2 | Esta lista alinhada com os testes |
 
 ## Resultados não mudam sem decisão
 
@@ -258,9 +259,17 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_nao_conta_classe_aninhada` | 1 | Classes dentro de funções ou de outras classes não contam |
 | `test_diagrama_de_classes_bate_com_o_codigo` | 1 | Toda classe do diagrama existe no código, e toda classe do código está no diagrama |
 
+### `test_lista_de_testes.py`
+
+| Teste | Casos | O que garante |
+|---|---|---|
+| `test_lista_tem_todos_os_testes_com_os_casos_certos` | 1 | Todo teste existente está nesta lista, nenhum teste removido continua nela, e o número de casos de cada um está certo |
+| `test_totais_da_lista_batem` | 1 | O resumo por arquivo e os totais do início desta página batem com os testes reais |
+
 ## Como manter esta lista
 
-Ao criar, renomear ou remover um teste, atualize esta página na mesma PR. Para conferir os totais:
+Ao criar, renomear ou remover um teste, atualize esta página na mesma PR. O teste `tests/test_lista_de_testes.py` falha
+enquanto a lista estiver desatualizada e mostra o que mudou. Para ver os testes que o pytest encontra:
 
 ```bash
 python -m pytest --collect-only -q
