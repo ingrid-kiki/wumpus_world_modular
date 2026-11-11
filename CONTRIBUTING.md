@@ -43,6 +43,7 @@ Regras:
 - **Um assunto por commit.** Evite mensagens como "melhorias" ou "fix typo" sem dizer o quê.
 - **Nunca misture código e resultados de execução no mesmo commit.**
 - Correção de bug vem acompanhada do teste que mostra o bug.
+- Ao criar, renomear ou remover um teste, atualize [`docs/testes.md`](docs/testes.md) na mesma PR.
 - Antes do commit, rode `ruff format .` e `ruff check .`: o CI recusa código fora do padrão.
 
 ### Checagem automática antes do commit

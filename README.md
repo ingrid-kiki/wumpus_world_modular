@@ -95,7 +95,8 @@ ruff check .
 ruff format .
 ```
 
-Para ver a cobertura de testes: `python -m pytest --cov --cov-report=term`.
+Para ver a cobertura de testes: `python -m pytest --cov --cov-report=term`. O que cada teste verifica está em
+[`docs/testes.md`](docs/testes.md).
 
 Para quem vai contribuir: o gancho do `pre-commit` não vem ativado ao clonar. Rode `pre-commit install` uma vez em cada
 clone, como explicado em [CONTRIBUTING.md](CONTRIBUTING.md#checagem-automática-antes-do-commit).

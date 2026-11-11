@@ -15,6 +15,7 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   A revisão de outra pessoa é recomendada, mas não obrigatória.
 
 ### Adicionado
+- Lista dos testes automáticos em [`docs/testes.md`](docs/testes.md), com o que cada um garante.
 - Agente `logico_seguro`: deduz quais casas não têm poço antes de andar e só arrisca quando não há casa segura nova.
   Venceu 83,4%, 86,4% e 91,9% dos mundos 4x4, 6x6 e 8x8, contra 33,3%, 24,2% e 19,4% do `logico`, que não muda.
   Detalhes em [`docs/investigacao-agente-logico-2026-11.md`](docs/investigacao-agente-logico-2026-11.md).
