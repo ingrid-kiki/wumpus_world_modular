@@ -10,8 +10,8 @@ Diagramas que explicam como o programa é organizado e como uma execução acont
 | Caso de uso | [`caso-de-uso.md`](caso-de-uso.md) | Pronto |
 | Fluxograma geral | [`fluxo-geral.md`](fluxo-geral.md) | Pronto |
 | Diagrama de classes | [`classes.md`](classes.md) | Pronto |
-| Fluxograma do algoritmo genético | `fluxo-ag.md` | A fazer |
-| Sequência de uma execução do algoritmo genético | `sequencia-ag.md` | A fazer |
+| Fluxograma do algoritmo genético | [`fluxo-ag.md`](fluxo-ag.md) | Pronto |
+| Sequência de uma execução do algoritmo genético | [`sequencia-ag.md`](sequencia-ag.md) | Pronto |
 | Sequência de um benchmark completo | `sequencia-benchmark.md` | A fazer |
 | Sequência de um passo do agente lógico | `sequencia-agente-logico.md` | A fazer |
 | Fluxo de dados | `fluxo-de-dados.md` | A fazer |
