@@ -104,13 +104,25 @@ Restam 3 PRs (D a F), com cerca de 2 h 35 previstas.
 É a Fase 5 do plano original e a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42). Só avança com o teste de referência passando.
 
 - Constantes únicas para ações, percepções e status.
-- Classe base de agente, com um contrato único para `run()`.
+- Classe base de agente, com um contrato único para `run()` (detalhes abaixo).
 - Um runner único no lugar dos 5 benchmarks, com as opções atuais.
 - Dividir as funções grandes: `gerar_graficos_avancados`, `GeneticAlgorithm.run`, `rodar_benchmark`.
 - Anotações de tipos nas funções públicas.
 - Nomes em um idioma só e sem acentos em chaves e arquivos.
-- Decidir o destino do código sem uso: `visual/`, `pygad/` e o parâmetro `logger`.
+- Decidir o destino de `pygad/`, que não é usado. `visual/` e o `logger` estão decididos abaixo.
 - Organizar em pacote, com `pyproject.toml` completo.
+
+**Ajustes apontados pelo diagrama de classes (decididos em 11/11/2026, para depois da tese):**
+
+| Ordem | Ajuste | Situação em 11/11/2026 | O que fazer | Tempo |
+|---|---|---|---|---|
+| 1 | Classe base de agente | Os 4 agentes só têm em comum `world` e `run()`; cada `run()` devolve um formato, e a lista de agentes está repetida em 6 arquivos | Criar uma classe abstrata com `world` e `run()`, um formato único de retorno, com as posições no histórico, e uma lista única de agentes | 2 a 3 h |
+| 2 | `Logger` | `LogicAgent.logger` fica sempre `None`, o parâmetro `logger` do AG nunca é informado e os `.log` só repetem início e fim, que já estão no `terminal_output.txt` | Retirar o atributo, o parâmetro e os arquivos `.log`, deixando o `terminal_output.txt` como registro único | cerca de 1 h |
+| 3 | `Visualizer` | Nenhum arquivo do programa o importa, e ele só desenha o estado atual do mundo | Ligar ao `--vis` nas execuções únicas, reproduzindo na janela os passos do agente depois que ele termina | 2 a 3 h |
+
+A classe base vem primeiro porque o `--vis` depende do histórico com as posições. Esses 5 a 7 h já estão contados na estimativa
+da etapa. O teste de referência precisa continuar passando em cada ajuste, cada classe nova entra no diagrama de classes, e a saída dos
+`.log` muda o conteúdo da pasta do run, então entra na v2.0.0.
 
 **Meta:** nenhuma função acima de 40 linhas, nenhuma com complexidade acima de 10, nenhuma lista repetida. Lançamento: v2.0.0.
 
