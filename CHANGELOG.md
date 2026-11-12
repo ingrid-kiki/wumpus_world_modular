@@ -58,6 +58,11 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
 - A pasta `pygad/`, que não rodava sem o módulo `WumpsimAG`, ausente do projeto. Ela está guardada na tag
   `archive/pygad-original` para ser retomada na [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15). A biblioteca `pygad` continua nas dependências.
 
+### Corrigido
+- No Windows, redirecionar a saída para um arquivo (`python main.py > saida.txt`) ou lê-la de outro programa derrubava o
+  `main.py`, o `reproduzir.py`, o `benchmark.py` e os experimentos com `UnicodeEncodeError`, porque a codificação usada
+  (cp1252) não tem emojis. Os scripts passam a saída para UTF-8 ao começar (`utils/terminal.py`).
+
 ### Documentação
 - README e LICENSE sem as inconsistências da [#41](https://github.com/ingrid-kiki/wumpus_world_modular/issues/41): a LICENSE passa a citar as duas autoras, o README
   explica como ativar o `.venv` e descreve a janela como ela é, e os títulos "(Novo)" saíram.

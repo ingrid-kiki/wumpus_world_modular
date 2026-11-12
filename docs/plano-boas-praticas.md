@@ -209,7 +209,7 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 
 Todas as PRs feitas desde a Etapa 0, na ordem. A data é a do merge no GitHub, em UTC; na coluna Etapa, a letra entre
 parênteses é a da tabela de tarefas da etapa. "Plano", "Versão" e "Geral" são PRs de registro, lançamento ou regras do projeto; "Issues" resolve pendências de
-issues antes da v2.0.0.
+issues antes da v2.0.0, e "Correção" corrige um erro achado durante o trabalho.
 
 | PR | Merge | Etapa | Assunto |
 |---|---|---|---|
@@ -244,7 +244,8 @@ issues antes da v2.0.0.
 | [#78](https://github.com/ingrid-kiki/wumpus_world_modular/pull/78) | 2026-11-12 | 3 (F) | Janela que reproduz a partida, oferecida no menu |
 | [#79](https://github.com/ingrid-kiki/wumpus_world_modular/pull/79) | 2026-11-12 | Geral | Regra de manter o histórico e os planos em dia |
 | [#80](https://github.com/ingrid-kiki/wumpus_world_modular/pull/80) | 2026-11-12 | Issues | README e LICENSE (#41) e `pygad/` guardada numa tag (#15) |
-| [#81](https://github.com/ingrid-kiki/wumpus_world_modular/pull/81) | em revisão | 3 (G1) | Saídas sem acento e em português, com regra automática |
+| [#81](https://github.com/ingrid-kiki/wumpus_world_modular/pull/81) | 2026-11-12 | 3 (G1) | Saídas sem acento e em português, com regra automática |
+| [#82](https://github.com/ingrid-kiki/wumpus_world_modular/pull/82) | em revisão | Correção | Saída redirecionada no Windows não quebra mais com emojis |
 
 Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 

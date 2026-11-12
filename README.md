@@ -36,8 +36,10 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │   └── world.py
 │
 ├── utils/                # Utilitários do projeto
+│   ├── execucao.py       # Roda um agente uma vez e classifica o resultado
 │   ├── graficos.py       # Geração de gráficos básicos e avançados
 │   ├── reprodutibilidade.py  # metadados.json de cada execução
+│   ├── terminal.py       # Saída em UTF-8, também quando redirecionada
 │   └── versao.py         # Versão do projeto (fonte única)
 │
 ├── docs/                 # Análises, plano de ação e relato das decisões (comece por docs/README.md)

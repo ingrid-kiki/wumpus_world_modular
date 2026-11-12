@@ -20,6 +20,7 @@ from agents.genetic_agent import GeneticAgent
 from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
 from utils.reprodutibilidade import coletar_metadados, parametros_efetivos, salvar_metadados
+from utils.terminal import usar_utf8_na_saida
 from world.world import TAMANHO_MINIMO, World
 
 
@@ -465,4 +466,5 @@ def rodar_benchmark(cli_args):
 
 
 if __name__ == "__main__":
+    usar_utf8_na_saida()  # a saída redirecionada no Windows não aceitava emojis
     main()

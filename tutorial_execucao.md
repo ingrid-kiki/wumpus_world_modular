@@ -351,7 +351,11 @@ Para resolver de vez, reinstale o Python marcando a opção "tcl/tk and IDLE".
 
 ### Acentos e emojis trocados no terminal
 
-Defina a codificação antes de rodar. No PowerShell:
+Os scripts do projeto passam a saída para UTF-8 ao começar, inclusive quando ela é redirecionada para um arquivo
+(`python main.py > saida.txt`): até a v1.8.0, nesse caso, o programa quebrava com `UnicodeEncodeError` no Windows. O arquivo
+redirecionado sai em UTF-8, como o `saida_terminal.txt`.
+
+Se o terminal ainda mostrar símbolos trocados, defina a codificação antes de rodar. No PowerShell:
 
 ```bash
 $env:PYTHONIOENCODING = "utf-8"

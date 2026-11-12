@@ -22,6 +22,7 @@ import sys
 import pandas as pd
 
 from utils.reprodutibilidade import carregar_metadados, estado_do_git, versoes_das_bibliotecas
+from utils.terminal import usar_utf8_na_saida
 from utils.versao import __version__
 
 COLUNAS_COMPARADAS = ["agente", "tamanho_mundo", "vitorias", "mortes", "sobreviveu"]
@@ -154,4 +155,5 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    usar_utf8_na_saida()  # a saída redirecionada no Windows não aceitava emojis
     sys.exit(main())
