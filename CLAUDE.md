@@ -50,7 +50,9 @@ python -m experimentos.comparar_metodos --fase confirmacao
 - `logs/` e saídas de execução não vão para o git.
 - Ao rodar experimentos, não trocar de branch na mesma pasta; usar `git worktree` para trabalhar em paralelo.
 
-**Refatoração:** a estrutural (Etapa 3 do plano de boas práticas) só depois dos experimentos da tese.
+**Refatoração:** a Etapa 3 do plano de boas práticas foi antecipada em 11/11/2026 e vem antes da comparação final da tese.
+Cada PR precisa manter os resultados idênticos (teste de referência e números do `logico_seguro`). Nomes em português, sem acentos
+em identificadores, chaves, colunas e nomes de arquivos gerados; mensagens e documentação mantêm os acentos.
 
 ## Windows
 

@@ -73,6 +73,8 @@ As regras marcadas com **(CI)** são verificadas pelo `ruff`. As demais valem na
 
 - Variáveis e funções em `snake_case`, classes em `PascalCase`, constantes em `MAIUSCULAS`.
 - Código novo usa nomes em português e sem abreviações obscuras: `taxa_mutacao`, não `tm`.
+- Sem acentos em identificadores, chaves de dicionário, colunas do CSV e nomes de arquivos. Mensagens para as pessoas e
+  documentação mantêm os acentos.
 - Há nomes antigos em inglês, como `agent_pos` e `draw_world`. Não os renomeie junto com outra mudança: a padronização
   fica para a refatoração.
 - Dê nome aos números com significado: `TAMANHO_MINIMO`, em vez de um `2` solto no código.
