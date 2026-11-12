@@ -26,21 +26,21 @@ from joblib import Parallel, delayed
 from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
 from utils.execucao import contar, executar_uma, relatar_erro
 from utils.terminal import usar_utf8_na_saida
-from world.world import World
+from world.world import Mundo
 
 
-def simular_execucao(agente_cls, world_size, seed, parametros=None, silencioso=False, relatar=True, rotulo=""):
+def simular_execucao(classe_agente, tamanho_mundo, semente, parametros=None, silencioso=False, relatar=True, rotulo=""):
     """
     Uma execução: cria o mundo com a semente, roda o agente e classifica o resultado.
     :param relatar: False em outro processo, onde o stderr não chega ao saida_terminal.txt;
                     o relato do erro volta em "detalhe_erro" para ser escrito no processo principal (#40)
     """
-    mundo = World(size=world_size, seed=seed)
-    agente = agente_cls(mundo, **(parametros or {}))
+    mundo = Mundo(tamanho=tamanho_mundo, semente=semente)
+    agente = classe_agente(mundo, **(parametros or {}))
     saida = contextlib.redirect_stdout(io.StringIO()) if silencioso else contextlib.nullcontext()
     with saida:
         # Um erro vira status "erro" e não derruba o benchmark (#30)
-        execucao = executar_uma(agente, mundo, rotulo=rotulo or f"com semente {seed}", relatar=relatar)
+        execucao = executar_uma(agente, mundo, rotulo=rotulo or f"com semente {semente}", relatar=relatar)
     resultado = execucao["resultado"]
     return {
         "status": execucao["status"],
@@ -50,11 +50,11 @@ def simular_execucao(agente_cls, world_size, seed, parametros=None, silencioso=F
     }
 
 
-def resumir(agente_nome, world_size, execucoes, tempo_de_relogio):
+def resumir(agente_nome, tamanho_mundo, execucoes, tempo_de_relogio):
     """Resultado de uma combinação de agente e tamanho, no formato que o main.py grava no CSV."""
     return {
         "agente": agente_nome,
-        "tamanho_mundo": world_size,
+        "tamanho_mundo": tamanho_mundo,
         **contar([e["status"] for e in execucoes]),
         "tempo_total": tempo_de_relogio,
         "tempo_medio": sum(e["tempo"] for e in execucoes) / len(execucoes) if execucoes else 0.0,
@@ -64,15 +64,15 @@ def resumir(agente_nome, world_size, execucoes, tempo_de_relogio):
 
 
 def executar_benchmark(
-    agente_nome, world_size=4, num_execucoes=10, parametros_agentes=None, paralelo=False, silencioso=False
+    agente_nome, tamanho_mundo=4, num_execucoes=10, parametros_agentes=None, paralelo=False, silencioso=False
 ):
-    """Roda `num_execucoes` partidas do agente em mundos `world_size` x `world_size` e devolve o resumo."""
-    agente_cls = AGENTES_DISPONIVEIS[agente_nome]
+    """Roda `num_execucoes` partidas do agente em mundos `tamanho_mundo` x `tamanho_mundo` e devolve o resumo."""
+    classe_agente = AGENTES_DISPONIVEIS[agente_nome]
     parametros = (parametros_agentes or {}).get(agente_nome, {})
     inicio = time.perf_counter()
     if paralelo:
         execucoes = Parallel(n_jobs=-1)(
-            delayed(simular_execucao)(agente_cls, world_size, semente, parametros, silencioso, relatar=False)
+            delayed(simular_execucao)(classe_agente, tamanho_mundo, semente, parametros, silencioso, relatar=False)
             for semente in range(num_execucoes)
         )
         for execucao in execucoes:
@@ -84,15 +84,17 @@ def executar_benchmark(
             rotulo = f"{semente + 1}/{num_execucoes} [{agente_nome}]"
             if not silencioso:
                 print(f"🚀 Execução {rotulo}")
-            execucoes.append(simular_execucao(agente_cls, world_size, semente, parametros, silencioso, rotulo=rotulo))
-    return resumir(agente_nome, world_size, execucoes, time.perf_counter() - inicio)
+            execucoes.append(
+                simular_execucao(classe_agente, tamanho_mundo, semente, parametros, silencioso, rotulo=rotulo)
+            )
+    return resumir(agente_nome, tamanho_mundo, execucoes, time.perf_counter() - inicio)
 
 
 if __name__ == "__main__":
     usar_utf8_na_saida()  # a saída redirecionada no Windows não aceitava emojis
     # Só agentes automáticos: o manual pede ações pelo teclado e não faz sentido num benchmark (#30)
     for nome in AGENTES_AUTOMATICOS:
-        resultado = executar_benchmark(nome, world_size=4, num_execucoes=3, silencioso=True)
+        resultado = executar_benchmark(nome, tamanho_mundo=4, num_execucoes=3, silencioso=True)
         print(f"\nResumo para {nome}:")
         print(f"Vitórias: {resultado['vitorias']}")
         print(f"Mortes: {resultado['mortes']}")

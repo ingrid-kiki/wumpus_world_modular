@@ -12,27 +12,27 @@
 import random
 
 from agents.agente import Agente
-from ga.individual import Individual
+from ga.individual import Individuo
 
 
-class RandomSearchAgent(Agente):
-    def __init__(self, world, avaliacoes=50000, chrom_length=100, seed=None):
-        super().__init__(world)
+class AgenteAleatorio(Agente):
+    def __init__(self, mundo, avaliacoes=50000, tamanho_cromossomo=100, semente=None):
+        super().__init__(mundo)
         # Pelo menos uma sequência precisa ser avaliada para haver o que executar
         self.avaliacoes = max(1, avaliacoes)
-        self.chrom_length = chrom_length
+        self.tamanho_cromossomo = tamanho_cromossomo
         # Sem semente explícita, usa a do mundo, como o agente genético: mesma semente -> mesmo resultado
-        self.rng = random.Random(getattr(world, "seed", None) if seed is None else seed)
+        self.gerador = random.Random(getattr(mundo, "semente", None) if semente is None else semente)
 
-    def run(self):
+    def executar(self):
         """Avalia sequências aleatórias e executa a melhor no mundo real."""
         melhor = None
         for _ in range(self.avaliacoes):
-            candidato = Individual(self.chrom_length, self.rng)
-            candidato.evaluate(self.world)
+            candidato = Individuo(self.tamanho_cromossomo, self.gerador)
+            candidato.avaliar(self.mundo)
             if melhor is None or candidato.fitness > melhor.fitness:
                 melhor = candidato
 
         print(f"🎲 Busca aleatória: melhor pontuação {melhor.fitness} em {self.avaliacoes} avaliações")
-        self.executar_sequencia(melhor.chromosome)
+        self.executar_sequencia(melhor.cromossomo)
         return self.resultado(fitness=melhor.fitness, avaliacoes=self.avaliacoes)

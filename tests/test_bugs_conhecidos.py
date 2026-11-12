@@ -19,33 +19,33 @@ import pytest
 
 import benchmark
 import main
-from agents.genetic_agent import GeneticAgent
-from agents.logic_agent import LogicAgent
-from agents.logic_knowledge_base import LogicKnowledgeBase
-from ga.ga_core import GeneticAlgorithm
-from ga.individual import Individual
+from agents.genetic_agent import AgenteGenetico
+from agents.logic_agent import AgenteLogico
+from agents.logic_knowledge_base import BaseConhecimento
+from ga.ga_core import AlgoritmoGenetico
+from ga.individual import Individuo
 from tests.conftest import GA_RAPIDO
-from world.world import World
+from world.world import Mundo
 
 ISSUE = "https://github.com/ingrid-kiki/wumpus_world_modular/issues/"
 
 
 def mundo_controlado():
     """Mundo 4x4 com posições fixas: ouro em (0,1), poço em (0,2), Wumpus em (3,3)."""
-    w = World(size=4, seed=0)
-    w.gold_pos = (0, 1)
-    w.pits = [(0, 2)]
-    w.wumpus_pos = (3, 3)
+    w = Mundo(tamanho=4, semente=0)
+    w.posicao_ouro = (0, 1)
+    w.pocos = [(0, 2)]
+    w.posicao_wumpus = (3, 3)
     return w
 
 
 class AgenteFalso:
     """Agente que não faz nada: permite testar os benchmarks sem rodar a IA."""
 
-    def __init__(self, world):
-        self.world = world
+    def __init__(self, mundo):
+        self.mundo = mundo
 
-    def run(self):
+    def executar(self):
         return {"dados_extra": {"fitness": [1.0, 2.0]}}
 
 
@@ -54,33 +54,33 @@ class AgenteFalso:
 
 def test_logico_mantem_posicao_sincronizada_com_o_mundo():
     """#18 (corrigido)."""
-    w = World(size=4, seed=0)
-    kb = LogicKnowledgeBase(size=w.size)
+    w = Mundo(tamanho=4, semente=0)
+    kb = BaseConhecimento(tamanho=w.tamanho)
     for _ in range(20):
-        if w.is_done():
+        if w.terminou():
             break
-        acao = kb.infer_action(w.perceive())
-        w.step(acao)
-        kb.update_position(acao, w.agent_pos)
-        assert kb.current_pos == w.agent_pos
+        acao = kb.inferir_acao(w.perceber())
+        w.agir(acao)
+        kb.atualizar_posicao(acao, w.posicao_agente)
+        assert kb.posicao_atual == w.posicao_agente
 
 
-def test_kb_nao_sai_do_grid_mesmo_sem_a_posicao_do_mundo():
+def test_base_nao_sai_do_mundo_mesmo_sem_a_posicao_real():
     """#18: com o tamanho conhecido, um movimento contra a parede não move a KB."""
-    kb = LogicKnowledgeBase(size=4)
-    kb.update_position("CIMA")
-    kb.update_position("ESQUERDA")
-    assert kb.current_pos == (0, 0)
+    kb = BaseConhecimento(tamanho=4)
+    kb.atualizar_posicao("CIMA")
+    kb.atualizar_posicao("ESQUERDA")
+    assert kb.posicao_atual == (0, 0)
 
 
 @pytest.mark.parametrize("tamanho", [4, 6, 8])
 def test_logico_sempre_termina(tamanho):
     """#18: em todo mundo, o agente vence, morre ou esgota o limite de passos."""
     for semente in range(30):
-        w = World(size=tamanho, seed=semente)
-        agente = LogicAgent(w)
-        resultado = agente.run()
-        assert w.is_done() or resultado["passos"] == agente.max_steps
+        w = Mundo(tamanho=tamanho, semente=semente)
+        agente = AgenteLogico(w)
+        resultado = agente.executar()
+        assert w.terminou() or resultado["passos"] == agente.max_passos
 
 
 # ---------------------------------------------------------------- Algoritmo genético
@@ -88,33 +88,37 @@ def test_logico_sempre_termina(tamanho):
 
 def test_mutacao_invalida_o_fitness():
     """#19 (corrigido)."""
-    ga = GeneticAlgorithm(pop_size=4, gens=1, chrom_length=10, mutation_rate=1.0, crossover_rate=0.0)
-    ind = Individual(10)
+    ag = AlgoritmoGenetico(
+        tamanho_populacao=4, geracoes=1, tamanho_cromossomo=10, taxa_mutacao=1.0, taxa_cruzamento=0.0
+    )
+    ind = Individuo(10)
     ind.fitness = 123.0
-    ga.mutate(ind)
+    ag.mutar(ind)
     assert ind.fitness is None
 
 
 @pytest.mark.parametrize("semente", range(5))
 def test_fitness_do_melhor_individuo_corresponde_ao_cromossomo(semente):
     """#19: reavaliar o melhor indivíduo devolvido pelo AG dá o mesmo fitness (proteção contra regressão)."""
-    w = World(size=4, seed=semente)
-    ga = GeneticAlgorithm(pop_size=20, gens=10, chrom_length=20, mutation_rate=0.1, crossover_rate=0.3, seed=semente)
-    melhor = ga.run(w)["best"]
-    reavaliado = Individual(0)
-    reavaliado.chromosome = list(melhor.chromosome)
-    reavaliado.evaluate(w)
+    w = Mundo(tamanho=4, semente=semente)
+    ag = AlgoritmoGenetico(
+        tamanho_populacao=20, geracoes=10, tamanho_cromossomo=20, taxa_mutacao=0.1, taxa_cruzamento=0.3, semente=semente
+    )
+    melhor = ag.executar(w)["melhor"]
+    reavaliado = Individuo(0)
+    reavaliado.cromossomo = list(melhor.cromossomo)
+    reavaliado.avaliar(w)
     assert reavaliado.fitness == melhor.fitness
 
 
 def test_ouro_pontua_uma_vez_so():
     """#20 (corrigido)."""
     w = mundo_controlado()
-    uma_vez, tres_vezes = Individual(0), Individual(0)
-    uma_vez.chromosome = ["DIREITA", "AGARRAR"]
-    tres_vezes.chromosome = ["DIREITA", "AGARRAR", "AGARRAR", "AGARRAR"]
-    uma_vez.evaluate(w)
-    tres_vezes.evaluate(w)
+    uma_vez, tres_vezes = Individuo(0), Individuo(0)
+    uma_vez.cromossomo = ["DIREITA", "AGARRAR"]
+    tres_vezes.cromossomo = ["DIREITA", "AGARRAR", "AGARRAR", "AGARRAR"]
+    uma_vez.avaliar(w)
+    tres_vezes.avaliar(w)
     # Agarrar de novo não pode render outro bônus de +100: o jogo termina na vitória.
     assert tres_vezes.fitness == uma_vez.fitness
 
@@ -122,52 +126,52 @@ def test_ouro_pontua_uma_vez_so():
 def test_mundo_nao_muda_depois_da_vitoria():
     """#20 (corrigido)."""
     w = mundo_controlado()
-    w.step("DIREITA")
-    _, status = w.step("AGARRAR")
+    w.agir("DIREITA")
+    _, status = w.agir("AGARRAR")
     assert status == "GANHOU"
-    _, status = w.step("DIREITA")  # anda para o poço depois de vencer
-    assert w.won and w.is_alive
+    _, status = w.agir("DIREITA")  # anda para o poço depois de vencer
+    assert w.ganhou and w.agente_vivo
     assert status == "GANHOU"
 
 
 def test_mundo_nao_muda_depois_da_morte():
     """#20: morto continua morto e parado."""
     w = mundo_controlado()
-    w.gold_pos = (3, 0)
-    w.pits = [(0, 1)]
-    _, status = w.step("DIREITA")
+    w.posicao_ouro = (3, 0)
+    w.pocos = [(0, 1)]
+    _, status = w.agir("DIREITA")
     assert status == "MORTO"
-    _, status = w.step("ESQUERDA")
-    assert status == "MORTO" and w.agent_pos == (0, 1) and not w.won
+    _, status = w.agir("ESQUERDA")
+    assert status == "MORTO" and w.posicao_agente == (0, 1) and not w.ganhou
 
 
 def test_matar_o_wumpus_recebe_bonus():
     """#21 (corrigido): +25 quando o tiro mata o Wumpus."""
-    w = World(size=4, seed=0)
-    w.wumpus_pos = (0, 1)  # adjacente ao agente em (0,0): há FEDOR
-    w.pits = [(3, 3)]
-    w.gold_pos = (3, 0)
-    assert "FEDOR" in w.perceive()
-    ind = Individual(0)
-    ind.chromosome = ["TIRO"]
-    ind.evaluate(w)
+    w = Mundo(tamanho=4, semente=0)
+    w.posicao_wumpus = (0, 1)  # adjacente ao agente em (0,0): há FEDOR
+    w.pocos = [(3, 3)]
+    w.posicao_ouro = (3, 0)
+    assert "FEDOR" in w.perceber()
+    ind = Individuo(0)
+    ind.cromossomo = ["TIRO"]
+    ind.avaliar(w)
     # -1 (ação) + 25 (matou o Wumpus) + 10 (sobreviveu)
     assert ind.fitness == 34
 
 
 def test_tiro_sem_acertar_nao_recebe_bonus():
     """#21: errar o tiro (ou atirar com o Wumpus já morto) custa só a ação."""
-    w = World(size=4, seed=0)
-    w.wumpus_pos = (3, 3)  # longe do agente
-    w.pits = [(2, 2)]
-    w.gold_pos = (3, 0)
-    ind = Individual(0)
-    ind.chromosome = ["TIRO"]
-    ind.evaluate(w)
+    w = Mundo(tamanho=4, semente=0)
+    w.posicao_wumpus = (3, 3)  # longe do agente
+    w.pocos = [(2, 2)]
+    w.posicao_ouro = (3, 0)
+    ind = Individuo(0)
+    ind.cromossomo = ["TIRO"]
+    ind.avaliar(w)
     assert ind.fitness == 9  # -1 + 10
-    w.wumpus_pos = (0, 1)
-    ind.chromosome = ["TIRO", "TIRO"]
-    ind.evaluate(w)
+    w.posicao_wumpus = (0, 1)
+    ind.cromossomo = ["TIRO", "TIRO"]
+    ind.avaliar(w)
     assert ind.fitness == 33  # -1 + 25, depois -1, + 10
 
 
@@ -178,23 +182,23 @@ def test_pocos_nao_se_sobrepoem():
     """#22 (corrigido)."""
     for tamanho in (4, 6, 8):
         for semente in range(300):
-            w = World(size=tamanho, seed=semente)
-            assert len(set(w.pits)) == len(w.pits) == tamanho // 2
-            assert not {w.agent_pos, w.gold_pos, w.wumpus_pos} & set(w.pits)
+            w = Mundo(tamanho=tamanho, semente=semente)
+            assert len(set(w.pocos)) == len(w.pocos) == tamanho // 2
+            assert not {w.posicao_agente, w.posicao_ouro, w.posicao_wumpus} & set(w.pocos)
 
 
-def test_world_nao_altera_o_random_global():
+def test_mundo_nao_altera_o_random_global():
     """#23 (corrigido)."""
     random.seed(123)
     esperado = random.random()
     random.seed(123)
-    World(size=4, seed=0)
+    Mundo(tamanho=4, semente=0)
     assert random.random() == esperado
 
 
 def test_mesma_semente_gera_o_mesmo_mundo():
-    a, b = World(size=6, seed=7), World(size=6, seed=7)
-    assert (a.gold_pos, a.wumpus_pos, a.pits) == (b.gold_pos, b.wumpus_pos, b.pits)
+    a, b = Mundo(tamanho=6, semente=7), Mundo(tamanho=6, semente=7)
+    assert (a.posicao_ouro, a.posicao_wumpus, a.pocos) == (b.posicao_ouro, b.posicao_wumpus, b.pocos)
 
 
 def test_ag_reprodutivel_com_a_semente_do_mundo():
@@ -202,8 +206,8 @@ def test_ag_reprodutivel_com_a_semente_do_mundo():
     resultados = []
     for lixo in (1, 2):
         random.seed(lixo)  # estado global diferente a cada rodada
-        agente = GeneticAgent(World(size=4, seed=3), **GA_RAPIDO)
-        r = agente.run()
+        agente = AgenteGenetico(Mundo(tamanho=4, semente=3), **GA_RAPIDO)
+        r = agente.executar()
         resultados.append([passo["acao"] for passo in r["historico"]])
     assert resultados[0] == resultados[1]
 
@@ -231,8 +235,8 @@ def _paralelo_sequencial(n_jobs=None):
     return lambda tarefas: [funcao(*args, **kwargs) for funcao, args, kwargs in tarefas]
 
 
-def _rodar(modo, monkeypatch, agente_cls, execucoes):
-    monkeypatch.setitem(benchmark.AGENTES_DISPONIVEIS, "falso", agente_cls)
+def _rodar(modo, monkeypatch, classe_agente, execucoes):
+    monkeypatch.setitem(benchmark.AGENTES_DISPONIVEIS, "falso", classe_agente)
     monkeypatch.setattr(benchmark, "Parallel", _paralelo_sequencial)
     return benchmark.executar_benchmark("falso", 4, execucoes, paralelo=MODOS[modo])
 
@@ -240,10 +244,10 @@ def _rodar(modo, monkeypatch, agente_cls, execucoes):
 class AgenteQueFalha(AgenteFalso):
     """Falha na execução com semente 1; as outras terminam normalmente."""
 
-    def run(self):
-        if self.world.seed == 1:
+    def executar(self):
+        if self.mundo.semente == 1:
             raise RuntimeError("falha de propósito")
-        return super().run()
+        return super().executar()
 
 
 @pytest.mark.parametrize("modo", MODOS)
@@ -271,10 +275,10 @@ def test_dados_extra_vem_da_primeira_execucao_sem_erro(modo, monkeypatch):
     """#30: se a primeira execução falha, os dados extras vêm da seguinte."""
 
     class FalhaNaPrimeira(AgenteFalso):
-        def run(self):
-            if self.world.seed == 0:
+        def executar(self):
+            if self.mundo.semente == 0:
                 raise RuntimeError("falha de propósito")
-            return super().run()
+            return super().executar()
 
     resultado = _rodar(modo, monkeypatch, FalhaNaPrimeira, 2)
     assert resultado["erros"] == 1 and resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
@@ -347,9 +351,9 @@ def test_csv_do_main_so_tem_colunas_escalares(tmp_path):
         },
         None,  # benchmark que falhou não derruba a gravação
     ]
-    df, csv_path = main.salvar_resultados(resultados, str(tmp_path))
+    df, caminho_csv = main.salvar_resultados(resultados, str(tmp_path))
     assert "dados_extra" not in df.columns and len(df) == 2
-    with open(csv_path, encoding="utf-8") as csv:
+    with open(caminho_csv, encoding="utf-8") as csv:
         assert "..." not in csv.read()
     dados = np.load(tmp_path / "dados_extra_genetico_4x4.npz")
     assert list(dados["fitness"]) == [1.0, 2.0]

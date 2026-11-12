@@ -59,13 +59,13 @@ def diagrama(corpo):
 
 
 def test_le_classes_declaradas_e_relacoes():
-    texto = diagrama('    class World\n    A --|> B\n    C "1" *-- "n" D : tem\n    E ..> F')
-    assert classes_do_diagrama(texto) == {"World", "A", "B", "C", "D", "E", "F"}
+    texto = diagrama('    class Mundo\n    A --|> B\n    C "1" *-- "n" D : tem\n    E ..> F')
+    assert classes_do_diagrama(texto) == {"Mundo", "A", "B", "C", "D", "E", "F"}
 
 
 def test_membros_e_comentarios_nao_contam_como_classes():
-    texto = diagrama("    class World {\n        +int size\n        +step(action) str\n    }\n    %% A --> B")
-    assert classes_do_diagrama(texto) == {"World"}
+    texto = diagrama("    class Mundo {\n        +int tamanho\n        +agir(acao) str\n    }\n    %% A --> B")
+    assert classes_do_diagrama(texto) == {"Mundo"}
 
 
 def test_ignora_outros_tipos_de_diagrama():
@@ -73,7 +73,7 @@ def test_ignora_outros_tipos_de_diagrama():
 
 
 def test_le_arquivo_com_quebra_de_linha_do_windows():
-    assert classes_do_diagrama(diagrama("    class World").replace("\n", "\r\n")) == {"World"}
+    assert classes_do_diagrama(diagrama("    class Mundo").replace("\n", "\r\n")) == {"Mundo"}
 
 
 # ---------------------------------------------------------------- Leitura do código
@@ -81,7 +81,7 @@ def test_le_arquivo_com_quebra_de_linha_do_windows():
 
 def test_encontra_classes_do_programa_e_ignora_pastas_de_fora():
     classes = classes_do_codigo()
-    assert {"World", "GeneticAlgorithm", "AGVariante", "Agente"} <= classes
+    assert {"Mundo", "AlgoritmoGenetico", "AGVariante", "Agente"} <= classes
     assert "GA" not in classes  # classe principal de pygad/
 
 

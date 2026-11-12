@@ -31,13 +31,13 @@ import pandas as pd
 from joblib import Parallel, delayed
 from scipy.stats import binomtest
 
-from ga.ga_core import GeneticAlgorithm
-from ga.individual import Individual
+from ga.ga_core import AlgoritmoGenetico
+from ga.individual import Individuo
 from utils.reprodutibilidade import estado_do_git, versoes_das_bibliotecas
 from utils.terminal import usar_utf8_na_saida
 from utils.versao import __version__
 from world.constantes import ACOES, FIM_DE_JOGO
-from world.world import World
+from world.world import Mundo
 
 REFERENCIA = "busca_aleatoria"
 
@@ -47,11 +47,16 @@ def resolvivel(mundo):
     fila, vistos = deque([(0, 0)]), {(0, 0)}
     while fila:
         x, y = fila.popleft()
-        if (x, y) == mundo.gold_pos:
+        if (x, y) == mundo.posicao_ouro:
             return True
         for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
             viz = (x + dx, y + dy)
-            if 0 <= viz[0] < mundo.size and 0 <= viz[1] < mundo.size and viz not in vistos and viz not in mundo.pits:
+            if (
+                0 <= viz[0] < mundo.tamanho
+                and 0 <= viz[1] < mundo.tamanho
+                and viz not in vistos
+                and viz not in mundo.pocos
+            ):
                 vistos.add(viz)
                 fila.append(viz)
     return False
@@ -59,39 +64,39 @@ def resolvivel(mundo):
 
 def venceu(mundo, cromossomo):
     """Executa a sequência numa cópia do mundo e diz se o agente venceu."""
-    copia = mundo.clone()
+    copia = mundo.clonar()
     for acao in cromossomo:
-        _, status = copia.step(acao)
+        _, status = copia.agir(acao)
         if status in FIM_DE_JOGO:
             break
-    return copia.won
+    return copia.ganhou
 
 
 def fitness_real(mundo, cromossomo):
-    ind = Individual(0)
-    ind.chromosome = list(cromossomo)
-    ind.evaluate(mundo)
+    ind = Individuo(0)
+    ind.cromossomo = list(cromossomo)
+    ind.avaliar(mundo)
     return ind.fitness
 
 
-class AGVariante(GeneticAlgorithm):
-    """O GeneticAlgorithm do projeto, com seleção e fitness trocáveis para testar as hipóteses."""
+class AGVariante(AlgoritmoGenetico):
+    """O AlgoritmoGenetico do projeto, com seleção e fitness trocáveis para testar as hipóteses."""
 
     def __init__(self, *args, selecao="truncamento", torneio_k=3, **kwargs):
         super().__init__(*args, **kwargs)
         self.selecao, self.torneio_k = selecao, torneio_k
 
-    def select(self, population):
+    def selecionar(self, populacao):
         if self.selecao == "truncamento":
-            return super().select(population)
-        competidores = self.rng.sample(population, min(self.torneio_k, len(population)))
+            return super().selecionar(populacao)
+        competidores = self.gerador.sample(populacao, min(self.torneio_k, len(populacao)))
         return max(competidores, key=lambda ind: ind.fitness).copia()
 
 
 def busca_aleatoria(mundo, orcamento, genes, semente, **_):
-    rng, melhor, melhor_f = random.Random(semente), None, None
+    gerador, melhor, melhor_f = random.Random(semente), None, None
     for _ in range(orcamento):
-        c = [rng.choice(ACOES) for _ in range(genes)]
+        c = [gerador.choice(ACOES) for _ in range(genes)]
         f = fitness_real(mundo, c)
         if melhor_f is None or f > melhor_f:
             melhor, melhor_f = c, f
@@ -101,10 +106,10 @@ def busca_aleatoria(mundo, orcamento, genes, semente, **_):
 def genetico(mundo, orcamento, genes, semente, populacao=40, mutacao=0.02, cruzamento=0.8, **variante):
     # A população inicial e a última geração entram no orçamento: populacao x (geracoes + 1) <= orcamento
     geracoes = max(1, orcamento // populacao - 1)
-    ag = AGVariante(populacao, geracoes, genes, mutacao, cruzamento, seed=semente, **variante)
-    resultado = ag.run(mundo)
+    ag = AGVariante(populacao, geracoes, genes, mutacao, cruzamento, semente=semente, **variante)
+    resultado = ag.executar(mundo)
     total = ag.avaliacoes + ag.acertos_cache
-    return resultado["best"].chromosome, {"repetidas": ag.acertos_cache / total if total else 0.0}
+    return resultado["melhor"].cromossomo, {"repetidas": ag.acertos_cache / total if total else 0.0}
 
 
 def _ag(**parametros):
@@ -125,7 +130,7 @@ METODOS = {
     # H4, parâmetros: população
     "ag_pop_20": _ag(populacao=20),
     "ag_pop_100": _ag(populacao=100),
-    # Padrão do GeneticAgent (100 x 500 x 100), para a fase "padrao"
+    # Padrão do AgenteGenetico (100 x 500 x 100), para a fase "padrao"
     "ag_padrao": _ag(populacao=100),
     "ag_padrao_mut_0.1": _ag(populacao=100, mutacao=0.1),
     "ag_padrao_proximidade": _ag(populacao=100, proximidade=20.0),
@@ -150,7 +155,7 @@ FASES = {
 
 
 def tentar(nome, mundo_n, genes, orcamento, semente):
-    mundo = World(size=mundo_n, seed=semente)
+    mundo = Mundo(tamanho=mundo_n, semente=semente)
     funcao, parametros = METODOS[nome]
     inicio = time.perf_counter()
     cromossomo, extra = funcao(mundo, orcamento, genes, semente, **parametros)

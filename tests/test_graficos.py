@@ -10,9 +10,9 @@ import pytest
 import seaborn as sns
 
 import main
-from agents.genetic_agent import GeneticAgent
+from agents.genetic_agent import AgenteGenetico
 from utils import graficos
-from world.world import World
+from world.world import Mundo
 
 GRAFICOS = {
     "memoria_cpu",
@@ -28,12 +28,12 @@ GRAFICOS = {
 
 
 def dados_do_ag(**parametros):
-    return GeneticAgent(World(size=4, seed=1), **parametros).run()["dados_extra"]
+    return AgenteGenetico(Mundo(tamanho=4, semente=1), **parametros).executar()["dados_extra"]
 
 
 def test_caso_normal_gera_os_nove_graficos(tmp_path):
     relatorio = graficos.gerar_graficos_avancados(
-        dados_do_ag(population_size=20, gens=5, chrom_length=20), str(tmp_path)
+        dados_do_ag(tamanho_populacao=20, geracoes=5, tamanho_cromossomo=20), str(tmp_path)
     )
     assert set(relatorio["gerados"]) == GRAFICOS
     assert relatorio["pulados"] == [] and relatorio["falhas"] == []
@@ -43,10 +43,13 @@ def test_caso_normal_gera_os_nove_graficos(tmp_path):
 @pytest.mark.parametrize(
     "parametros, pulados",
     [
-        ({"population_size": 1, "gens": 5, "chrom_length": 10}, {"pca_populacao_final"}),
-        ({"population_size": 10, "gens": 5, "chrom_length": 1, "crossover_rate": 0.0}, {"pca_populacao_final"}),
+        ({"tamanho_populacao": 1, "geracoes": 5, "tamanho_cromossomo": 10}, {"pca_populacao_final"}),
         (
-            {"population_size": 10, "gens": 0, "chrom_length": 10},
+            {"tamanho_populacao": 10, "geracoes": 5, "tamanho_cromossomo": 1, "taxa_cruzamento": 0.0},
+            {"pca_populacao_final"},
+        ),
+        (
+            {"tamanho_populacao": 10, "geracoes": 0, "tamanho_cromossomo": 10},
             {
                 "memoria_cpu",
                 "evolucao_fitness",
@@ -74,7 +77,7 @@ def test_falha_de_um_grafico_nao_impede_os_outros(tmp_path, monkeypatch, capsys)
 
     monkeypatch.setattr(sns, "ecdfplot", explode)
     relatorio = graficos.gerar_graficos_avancados(
-        dados_do_ag(population_size=20, gens=5, chrom_length=20), str(tmp_path)
+        dados_do_ag(tamanho_populacao=20, geracoes=5, tamanho_cromossomo=20), str(tmp_path)
     )
     assert relatorio["falhas"] == ["ecdf_fitness_final"]
     assert set(relatorio["gerados"]) == GRAFICOS - {"ecdf_fitness_final"}

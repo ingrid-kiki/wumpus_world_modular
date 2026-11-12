@@ -1,68 +1,68 @@
 # Diagrama de classes
 
 Mostra as 13 classes do programa, com seus atributos, métodos e relações. Ficam de fora as funções soltas de módulos como
-`main.py` e `utils/`, a classe interna `DualWriter` de `main.py` e os testes.
+`main.py` e `utils/`, a classe interna `SaidaDupla` de `main.py` e os testes.
 
 ```mermaid
 classDiagram
-    class World {
-        +size
-        +seed
-        +rng
-        +agent_pos
-        +gold_pos
-        +wumpus_pos
-        +pits
-        +is_alive
-        +wumpus_alive
-        +last_scream
-        +won
-        +random_pos(exclude)
-        +step(action)
-        +move_agent(action)
-        +interact(action)
-        +perceive()
-        +is_done()
-        +clone()
-        +is_adjacent(pos1, pos2)
+    class Mundo {
+        +tamanho
+        +semente
+        +gerador
+        +posicao_agente
+        +posicao_ouro
+        +posicao_wumpus
+        +pocos
+        +agente_vivo
+        +wumpus_vivo
+        +grito
+        +ganhou
+        +posicao_aleatoria(excluir)
+        +agir(acao)
+        +mover_agente(acao)
+        +interagir(acao)
+        +perceber()
+        +terminou()
+        +clonar()
+        +adjacentes(pos_a, pos_b)
     }
 
     class Agente {
         <<abstrata>>
-        +world
+        +mundo
         +historico
-        +run()
+        +executar()
         +registrar_passo(acao, percepcao, status)
         +executar_sequencia(acoes, mostrar)
         +resultado(dados_extra)
     }
 
-    class ManualAgent {
-        +run()
+    class AgenteManual {
+        +executar()
     }
 
-    class LogicAgent {
-        +knowledge
-        +max_steps
-        +run()
-        +decide(perception)
+    class AgenteLogico {
+        +conhecimento
+        +max_passos
+        +executar()
+        +decidir_acao(percepcao)
     }
 
-    class LogicKnowledgeBase {
-        +size
-        +perceptions
-        +known
-        +visits
-        +current_pos
-        +in_grid(pos)
-        +neighbors()
-        +update_knowledge(perception)
-        +infer_action(perception)
-        +update_position(action, new_pos)
+    class BaseConhecimento {
+        +tamanho
+        +percepcoes
+        +conhecidas
+        +visitas
+        +posicao_atual
+        +dentro_do_mundo(pos)
+        +vizinhas_validas()
+        +atualizar_conhecimento(percepcao)
+        +inferir_acao(percepcao)
+        +atualizar_posicao(acao, nova_posicao)
     }
 
     class AgenteLogicoSeguro {
-        +knowledge
+        +conhecimento
     }
 
     class BaseConhecimentoSegura {
@@ -74,71 +74,71 @@ classDiagram
         +primeiro_passo_ate(alvos)
         +arriscar(fronteira, seguras)
         +permanecer()
-        +infer_action(perception)
+        +inferir_acao(percepcao)
     }
 
-    class GeneticAgent {
-        +ga
-        +run()
+    class AgenteGenetico {
+        +ag
+        +executar()
     }
 
-    class RandomSearchAgent {
+    class AgenteAleatorio {
         +avaliacoes
-        +chrom_length
-        +rng
-        +run()
+        +tamanho_cromossomo
+        +gerador
+        +executar()
     }
 
-    class GeneticAlgorithm {
-        +rng
+    class AlgoritmoGenetico {
+        +gerador
         +proximidade
-        +pop_size
-        +gens
-        +chrom_length
-        +mutation_rate
-        +crossover_rate
-        +fitness_history
-        +fitness_pop
-        +memory_history
-        +cpu_history
-        +diversidade_history
+        +tamanho_populacao
+        +geracoes
+        +tamanho_cromossomo
+        +taxa_mutacao
+        +taxa_cruzamento
+        +historico_fitness
+        +fitness_populacao
+        +historico_memoria
+        +historico_cpu
+        +historico_diversidade
         +avaliacoes
         +acertos_cache
         -_cache_fitness
-        +avaliar(individual, world)
-        +run(world)
-        +select(population)
-        +crossover(p1, p2)
-        +mutate(individual)
-        +random_action()
+        +avaliar(individuo, mundo)
+        +executar(mundo)
+        +selecionar(populacao)
+        +cruzar(p1, p2)
+        +mutar(individuo)
+        +acao_aleatoria()
         -_registrar_recursos(processo)
-        -_registrar_geracao(population)
-        -_proxima_geracao(population)
-        -_resultado(best_individual, population)
+        -_registrar_geracao(populacao)
+        -_proxima_geracao(populacao)
+        -_resultado(melhor_individuo, populacao)
     }
 
     class AGVariante {
         +selecao
         +torneio_k
-        +select(population)
+        +selecionar(populacao)
     }
 
-    class Individual {
-        +chromosome
+    class Individuo {
+        +cromossomo
         +fitness
         +copia()
-        +evaluate(world, proximidade)
+        +avaliar(mundo, proximidade)
     }
 
-    class Visualizer {
-        +world
-        +cell_size
-        +screen
-        +font
+    class Visualizador {
+        +mundo
+        +tamanho_casa
+        +tela
+        +fonte
         +fonte_pequena
-        +clock
-        +draw_cell(x, y, color, text)
-        +draw_world(passo)
+        +relogio
+        +desenhar_casa(x, y, cor, texto)
+        +desenhar_mundo(passo)
         +reproduzir(historico, passos_por_segundo, esperar_fechar)
         -_percepcao_na_casa(pos)
         -_desenhar_percepcoes()
@@ -148,24 +148,24 @@ classDiagram
         -_esperar_fechar()
     }
 
-    Agente --> World : world
-    ManualAgent --|> Agente
-    LogicAgent --|> Agente
-    GeneticAgent --|> Agente
-    RandomSearchAgent --|> Agente
-    Visualizer --> World : world
+    Agente --> Mundo : mundo
+    AgenteManual --|> Agente
+    AgenteLogico --|> Agente
+    AgenteGenetico --|> Agente
+    AgenteAleatorio --|> Agente
+    Visualizador --> Mundo : mundo
 
-    LogicAgent *-- LogicKnowledgeBase : knowledge
-    GeneticAgent *-- GeneticAlgorithm : ga
-    AGVariante --|> GeneticAlgorithm
-    AgenteLogicoSeguro --|> LogicAgent
-    BaseConhecimentoSegura --|> LogicKnowledgeBase
-    AgenteLogicoSeguro *-- BaseConhecimentoSegura : knowledge
+    AgenteLogico *-- BaseConhecimento : conhecimento
+    AgenteGenetico *-- AlgoritmoGenetico : ag
+    AGVariante --|> AlgoritmoGenetico
+    AgenteLogicoSeguro --|> AgenteLogico
+    BaseConhecimentoSegura --|> BaseConhecimento
+    AgenteLogicoSeguro *-- BaseConhecimentoSegura : conhecimento
 
-    GeneticAlgorithm ..> Individual : cria e evolui
-    RandomSearchAgent ..> Individual : sorteia e avalia
-    GeneticAlgorithm ..> World : recebe em run
-    Individual ..> World : simula em uma cópia
+    AlgoritmoGenetico ..> Individuo : cria e evolui
+    AgenteAleatorio ..> Individuo : sorteia e avalia
+    AlgoritmoGenetico ..> Mundo : recebe em executar
+    Individuo ..> Mundo : simula em uma cópia
 
 
 ```
@@ -174,37 +174,37 @@ classDiagram
 
 | Seta | Significado | Exemplo |
 |---|---|---|
-| `-->` | A classe guarda uma referência a outra | `LogicAgent` guarda o `World` que recebe |
-| `*--` | A classe cria a outra e é dona dela | `GeneticAgent` cria seu `GeneticAlgorithm` |
-| `--\|>` | Herança | `AGVariante` herda de `GeneticAlgorithm` |
-| `..>` | A classe usa a outra sem guardá-la como parte permanente | `Individual` usa o `World` para avaliar um cromossomo |
+| `-->` | A classe guarda uma referência a outra | `AgenteLogico` guarda o `Mundo` que recebe |
+| `*--` | A classe cria a outra e é dona dela | `AgenteGenetico` cria seu `AlgoritmoGenetico` |
+| `--\|>` | Herança | `AGVariante` herda de `AlgoritmoGenetico` |
+| `..>` | A classe usa a outra sem guardá-la como parte permanente | `Individuo` usa o `Mundo` para avaliar um cromossomo |
 
 ## Onde está cada classe
 
 | Classe | Arquivo |
 |---|---|
-| `World` | `world/world.py` |
-| `ManualAgent` | `agents/manual_agent.py` |
-| `LogicAgent` | `agents/logic_agent.py` |
-| `LogicKnowledgeBase` | `agents/logic_knowledge_base.py` |
+| `Mundo` | `world/world.py` |
+| `AgenteManual` | `agents/manual_agent.py` |
+| `AgenteLogico` | `agents/logic_agent.py` |
+| `BaseConhecimento` | `agents/logic_knowledge_base.py` |
 | `Agente` | `agents/agente.py` |
 | `AgenteLogicoSeguro` | `agents/logico_seguro.py` |
 | `BaseConhecimentoSegura` | `agents/logico_seguro.py` |
-| `GeneticAgent` | `agents/genetic_agent.py` |
-| `RandomSearchAgent` | `agents/random_search_agent.py` |
-| `GeneticAlgorithm` | `ga/ga_core.py` |
-| `Individual` | `ga/individual.py` |
+| `AgenteGenetico` | `agents/genetic_agent.py` |
+| `AgenteAleatorio` | `agents/random_search_agent.py` |
+| `AlgoritmoGenetico` | `ga/ga_core.py` |
+| `Individuo` | `ga/individual.py` |
 | `AGVariante` | `experimentos/comparar_metodos.py` |
-| `Visualizer` | `visual/visualizer.py` |
+| `Visualizador` | `visual/visualizer.py` |
 
 ## Observações sobre o código atual
 
-- **Todos os agentes herdam de `Agente`**, a classe base abstrata. Ela guarda o `World` e o `historico`, e `run()` devolve o
+- **Todos os agentes herdam de `Agente`**, a classe base abstrata. Ela guarda o `Mundo` e o `historico`, e `executar()` devolve o
   resultado no formato único: `historico`, `passos` e `dados_extra`. A lista única `AGENTES_DISPONIVEIS`, em
   `agents/registro.py`, escolhe os agentes pelo nome em todo o programa.
-- **`AgenteLogicoSeguro` herda de `LogicAgent`** e só troca a base de conhecimento: o laço de percepção e ação é o mesmo,
+- **`AgenteLogicoSeguro` herda de `AgenteLogico`** e só troca a base de conhecimento: o laço de percepção e ação é o mesmo,
   e a decisão passa a evitar poços ([investigação de 11/11/2026](../investigacao-agente-logico-2026-11.md)).
-- **`GeneticAlgorithm` e `RandomSearchAgent` avaliam com o mesmo fitness**, o método `Individual.evaluate`.
+- **`AlgoritmoGenetico` e `AgenteAleatorio` avaliam com o mesmo fitness**, o método `Individuo.avaliar`.
 - **`AGVariante` só é usada nos experimentos**, para trocar a seleção por torneio. Ela não entra no menu do `main.py`.
-- **`Visualizer` reproduz uma partida já jogada.** O `main.py` a oferece no fim das execuções únicas, com uma cópia do mundo
+- **`Visualizador` reproduz uma partida já jogada.** O `main.py` a oferece no fim das execuções únicas, com uma cópia do mundo
   no estado inicial e o histórico do agente.

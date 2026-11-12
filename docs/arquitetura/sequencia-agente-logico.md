@@ -1,43 +1,43 @@
 # Sequência de um passo do agente lógico
 
-Mostra o que acontece em uma volta do laço de `LogicAgent.run`. O laço se repete até o jogo terminar ou até atingir `max_steps`,
+Mostra o que acontece em uma volta do laço de `AgenteLogico.executar`. O laço se repete até o jogo terminar ou até atingir `max_passos`,
 que por padrão é 4 vezes o número de casas do mundo.
 
 ```mermaid
 sequenceDiagram
-    participant A as LogicAgent
-    participant M as World
-    participant K as LogicKnowledgeBase
+    participant A as AgenteLogico
+    participant M as Mundo
+    participant K as BaseConhecimento
 
-    A->>M: is_done()
+    A->>M: terminou()
     M-->>A: jogo ainda em andamento
-    A->>M: perceive()
+    A->>M: perceber()
     M-->>A: percepção da casa atual
-    A->>A: decide(perception)
-    A->>K: infer_action(perception)
-    K->>K: update_knowledge(perception)
+    A->>A: decidir_acao(percepcao)
+    A->>K: inferir_acao(percepcao)
+    K->>K: atualizar_conhecimento(percepcao)
     alt sente BRILHO
         K-->>A: AGARRAR
     else sente FEDOR
         K-->>A: TIRO
     else há vizinha ainda não visitada
-        K->>K: neighbors()
+        K->>K: vizinhas_validas()
         K-->>A: movimento até ela
     else todas as vizinhas já visitadas
-        K->>K: neighbors()
+        K->>K: vizinhas_validas()
         K-->>A: movimento até a menos visitada
     end
-    A->>M: step(action)
-    M->>M: move_agent(action) e interact(action)
-    M->>M: perceive()
+    A->>M: agir(acao)
+    M->>M: mover_agente(acao) e interagir(acao)
+    M->>M: perceber()
     M-->>A: percepção e status
-    A->>A: registrar_passo(action, percepção, status)
-    A->>K: update_position(action, agent_pos)
+    A->>A: registrar_passo(acao, percepção, status)
+    A->>K: atualizar_posicao(acao, posicao_agente)
 ```
 
 ## Regras de decisão
 
-`LogicKnowledgeBase.infer_action` testa as regras nesta ordem e usa a primeira que valer:
+`BaseConhecimento.inferir_acao` testa as regras nesta ordem e usa a primeira que valer:
 
 | Ordem | Condição | Ação |
 |---|---|---|
@@ -48,14 +48,14 @@ sequenceDiagram
 
 ## Observações
 
-- A base marca cada casa como `seguro` ou não, mas `infer_action` não consulta essa marca. A `BRISA` não muda a decisão, então
+- A base marca cada casa como `seguro` ou não, mas `inferir_acao` não consulta essa marca. A `BRISA` não muda a decisão, então
   o agente pode andar para um poço.
-- A posição na base vem de `World.agent_pos`, para um movimento bloqueado pela parede não desencontrar a base do mundo.
-- A percepção devolvida por `step` não é usada: a próxima volta do laço chama `perceive` de novo.
+- A posição na base vem de `Mundo.posicao_agente`, para um movimento bloqueado pela parede não desencontrar a base do mundo.
+- A percepção devolvida por `agir` não é usada: a próxima volta do laço chama `perceber` de novo.
 
 ## Agente `logico_seguro`
 
-`AgenteLogicoSeguro` usa este mesmo laço. Só muda `infer_action`, em `BaseConhecimentoSegura`. Para ela, uma casa é segura se
+`AgenteLogicoSeguro` usa este mesmo laço. Só muda `inferir_acao`, em `BaseConhecimentoSegura`. Para ela, uma casa é segura se
 foi visitada ou se é vizinha de casa visitada sem `BRISA`.
 
 | Ordem | Condição | Ação |

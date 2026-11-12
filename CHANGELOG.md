@@ -20,6 +20,23 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   O `Visualizer` existia, mas não estava ligado ao programa; agora refaz a partida a partir do estado inicial do mundo.
 
 ### Alterado
+- **Os nomes do código estão em português**: classes, métodos, atributos, parâmetros e variáveis. Quem importa o código
+  precisa usar os nomes novos; os nomes dos arquivos `.py` e das pastas mudam na organização em pacote. Os principais:
+
+  | Até a v1.8.0 | Agora |
+  |---|---|
+  | `World`, com `size`, `seed`, `agent_pos`, `gold_pos`, `wumpus_pos`, `pits`, `is_alive`, `won` | `Mundo`, com `tamanho`, `semente`, `posicao_agente`, `posicao_ouro`, `posicao_wumpus`, `pocos`, `agente_vivo`, `ganhou` |
+  | `World.step`, `perceive`, `clone`, `is_done` | `Mundo.agir`, `perceber`, `clonar`, `terminou` |
+  | `run()` dos agentes e do algoritmo genético | `executar()` |
+  | `LogicAgent`, `GeneticAgent`, `ManualAgent`, `RandomSearchAgent` | `AgenteLogico`, `AgenteGenetico`, `AgenteManual`, `AgenteAleatorio` |
+  | `LogicKnowledgeBase` e `infer_action` | `BaseConhecimento` e `inferir_acao` |
+  | `GeneticAlgorithm`, com `pop_size`, `gens`, `chrom_length`, `mutation_rate`, `crossover_rate` | `AlgoritmoGenetico`, com `tamanho_populacao`, `geracoes`, `tamanho_cromossomo`, `taxa_mutacao`, `taxa_cruzamento` |
+  | `Individual`, com `chromosome` e `evaluate` | `Individuo`, com `cromossomo` e `avaliar` |
+  | `Visualizer` | `Visualizador` |
+
+  No `metadados.json`, os parâmetros do agente genético passam a usar os nomes novos (`tamanho_populacao`, `geracoes`...).
+  As opções de linha de comando não mudam. Os resultados também não: o teste de referência passa, e o mesmo benchmark deu
+  contagens, `.npz`, 19 gráficos e saída do terminal idênticos.
 - **As saídas não têm mais acento e estão em português.** Os números e os gráficos são os mesmos; mudam só os nomes:
 
   | Até a v1.8.0 | Agora |

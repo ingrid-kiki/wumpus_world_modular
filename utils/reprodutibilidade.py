@@ -30,7 +30,7 @@ BIBLIOTECAS = ["numpy", "pandas", "matplotlib", "seaborn", "scikit-learn", "jobl
 
 # Descrição de como as sementes são usadas (vale para todos os benchmarks do projeto)
 REGRA_DAS_SEMENTES = (
-    "Execução i (i = 0 .. execucoes-1) usa World(size, seed=i). "
+    "Execução i (i = 0 .. execucoes-1) usa Mundo(tamanho, semente=i). "
     "O agente genético, sem semente explícita, usa a semente do mundo."
 )
 
@@ -86,7 +86,7 @@ def coletar_metadados(argumentos_cli, argumentos, parametros_ag, cwd=None):
     Monta o dicionário salvo em metadados.json.
     :param argumentos_cli: lista de argumentos como digitados (ex.: ["--tamanhos", "4", "6"])
     :param argumentos: dict com os argumentos já interpretados (vars(args))
-    :param parametros_ag: parâmetros efetivos do GeneticAgent (ou None se ele não rodou)
+    :param parametros_ag: parâmetros efetivos do AgenteGenetico (ou None se ele não rodou)
     """
     return {
         "versao": __version__,

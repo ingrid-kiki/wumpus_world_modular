@@ -6,18 +6,18 @@
 # este mesmo dicionário: um agente novo entra aqui e passa a valer em todo o programa.
 """
 
-from agents.genetic_agent import GeneticAgent
-from agents.logic_agent import LogicAgent
+from agents.genetic_agent import AgenteGenetico
+from agents.logic_agent import AgenteLogico
 from agents.logico_seguro import AgenteLogicoSeguro
-from agents.manual_agent import ManualAgent
-from agents.random_search_agent import RandomSearchAgent
+from agents.manual_agent import AgenteManual
+from agents.random_search_agent import AgenteAleatorio
 
 AGENTES_DISPONIVEIS = {
-    "manual": ManualAgent,
-    "logico": LogicAgent,
+    "manual": AgenteManual,
+    "logico": AgenteLogico,
     "logico_seguro": AgenteLogicoSeguro,
-    "genetico": GeneticAgent,
-    "aleatorio": RandomSearchAgent,
+    "genetico": AgenteGenetico,
+    "aleatorio": AgenteAleatorio,
 }
 
 # O agente manual pede ações pelo teclado: não faz sentido em benchmarks (#30, #38)

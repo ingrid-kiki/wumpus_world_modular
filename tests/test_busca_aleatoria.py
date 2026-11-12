@@ -11,9 +11,9 @@ import random
 import pandas as pd
 
 import main
-from agents.random_search_agent import RandomSearchAgent
-from ga.individual import Individual
-from world.world import World
+from agents.random_search_agent import AgenteAleatorio
+from ga.individual import Individuo
+from world.world import Mundo
 
 
 def acoes(resultado):
@@ -24,37 +24,39 @@ def test_mesma_semente_mesmo_resultado_sem_depender_do_random_global():
     execucoes = []
     for lixo in (1, 2):
         random.seed(lixo)
-        execucoes.append(acoes(RandomSearchAgent(World(size=4, seed=3), avaliacoes=200, chrom_length=20).run()))
+        execucoes.append(
+            acoes(AgenteAleatorio(Mundo(tamanho=4, semente=3), avaliacoes=200, tamanho_cromossomo=20).executar())
+        )
     assert execucoes[0] == execucoes[1]
 
 
 def test_executa_a_melhor_sequencia_e_respeita_o_orcamento(monkeypatch):
     avaliacoes = []
-    original = Individual.evaluate
+    original = Individuo.avaliar
 
-    def contar(self, world):
+    def contar(self, mundo):
         avaliacoes.append(1)
-        return original(self, world)
+        return original(self, mundo)
 
-    monkeypatch.setattr(Individual, "evaluate", contar)
-    w = World(size=4, seed=1)
-    resultado = RandomSearchAgent(w, avaliacoes=300, chrom_length=20).run()
+    monkeypatch.setattr(Individuo, "avaliar", contar)
+    w = Mundo(tamanho=4, semente=1)
+    resultado = AgenteAleatorio(w, avaliacoes=300, tamanho_cromossomo=20).executar()
     assert len(avaliacoes) == 300
-    assert w.won or not w.is_alive or len(resultado["historico"]) == 20
+    assert w.ganhou or not w.agente_vivo or len(resultado["historico"]) == 20
 
 
 def test_fitness_informado_corresponde_a_sequencia_executada():
-    w = World(size=4, seed=2)
-    referencia = w.clone()
-    resultado = RandomSearchAgent(w, avaliacoes=300, chrom_length=20).run()
-    individuo = Individual(0)
-    individuo.chromosome = acoes(resultado)
-    individuo.evaluate(referencia)
+    w = Mundo(tamanho=4, semente=2)
+    referencia = w.clonar()
+    resultado = AgenteAleatorio(w, avaliacoes=300, tamanho_cromossomo=20).executar()
+    individuo = Individuo(0)
+    individuo.cromossomo = acoes(resultado)
+    individuo.avaliar(referencia)
     assert individuo.fitness == resultado["fitness"]
 
 
 def test_orcamento_zero_ainda_avalia_uma_sequencia():
-    assert RandomSearchAgent(World(size=4, seed=0), avaliacoes=0, chrom_length=5).avaliacoes == 1
+    assert AgenteAleatorio(Mundo(tamanho=4, semente=0), avaliacoes=0, tamanho_cromossomo=5).avaliacoes == 1
 
 
 def test_benchmark_usa_o_mesmo_orcamento_do_ag(tmp_path):
@@ -81,7 +83,7 @@ def test_benchmark_usa_o_mesmo_orcamento_do_ag(tmp_path):
     assert list(df["agente"]) == ["aleatorio", "genetico"]
     assert df["erros"].sum() == 0
     meta = json.loads((pasta / "metadados.json").read_text(encoding="utf-8"))
-    assert meta["parametros_busca_aleatoria"] == {"chrom_length": 15, "avaliacoes": 50}
+    assert meta["parametros_busca_aleatoria"] == {"tamanho_cromossomo": 15, "avaliacoes": 50}
     assert not (pasta / "graficos_avancados_aleatorio_4x4").exists()  # não tem dados extras
     assert len(pd.read_csv(pasta / "resultados_benchmark.csv")) == 2
 
@@ -105,4 +107,4 @@ def test_orcamento_explicito_tem_prioridade(tmp_path):
         ]
     )
     meta = json.loads((pasta / "metadados.json").read_text(encoding="utf-8"))
-    assert meta["parametros_busca_aleatoria"] == {"chrom_length": 5, "avaliacoes": 7}
+    assert meta["parametros_busca_aleatoria"] == {"tamanho_cromossomo": 5, "avaliacoes": 7}

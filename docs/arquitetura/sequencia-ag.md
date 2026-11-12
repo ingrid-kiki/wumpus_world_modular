@@ -6,26 +6,26 @@ fitness estão no [fluxograma do algoritmo genético](fluxo-ag.md).
 ```mermaid
 sequenceDiagram
     participant Q as Quem chama
-    participant GA as GeneticAgent
-    participant AG as GeneticAlgorithm
-    participant I as Individual
-    participant M as World
+    participant GA as AgenteGenetico
+    participant AG as AlgoritmoGenetico
+    participant I as Individuo
+    participant M as Mundo
 
-    Q->>GA: run()
-    GA->>AG: run(world)
-    AG->>I: cria pop_size indivíduos aleatórios
+    Q->>GA: executar()
+    GA->>AG: executar(mundo)
+    AG->>I: cria tamanho_populacao indivíduos aleatórios
 
-    loop gens gerações
+    loop geracoes gerações
         loop cada indivíduo da população
-            AG->>AG: avaliar(individual, world)
+            AG->>AG: avaliar(individuo, mundo)
             alt cromossomo já está no cache
                 AG->>I: define o fitness guardado
             else cromossomo novo
-                AG->>I: evaluate(world, proximidade)
-                I->>M: clone()
+                AG->>I: avaliar(mundo, proximidade)
+                I->>M: clonar()
                 M-->>I: cópia do mundo
                 loop cada ação, até morrer ou vencer
-                    I->>M: step(action) na cópia
+                    I->>M: agir(acao) na cópia
                     M-->>I: percepção e status
                 end
                 I-->>AG: fitness atualizado
@@ -33,14 +33,14 @@ sequenceDiagram
         end
         AG->>AG: ordena e registra os históricos
         loop até completar a próxima geração
-            AG->>AG: select(population), duas vezes
+            AG->>AG: selecionar(populacao), duas vezes
             AG->>I: copia() de cada pai escolhido
-            alt sorteio menor que crossover_rate
-                AG->>AG: crossover(p1, p2)
+            alt sorteio menor que taxa_cruzamento
+                AG->>AG: cruzar(p1, p2)
             else
                 AG->>I: copia() dos dois pais
             end
-            AG->>AG: mutate(), em cada filho
+            AG->>AG: mutar(), em cada filho
         end
     end
 
@@ -48,7 +48,7 @@ sequenceDiagram
     AG-->>GA: melhor indivíduo e históricos
 
     loop cada ação do melhor, até morrer ou vencer
-        GA->>M: step(action) no mundo real
+        GA->>M: agir(acao) no mundo real
         M-->>GA: percepção e status
     end
     GA-->>Q: historico, passos e dados_extra
@@ -57,6 +57,6 @@ sequenceDiagram
 ## Observações
 
 - **Quem chama** é `executar_uma`, nos benchmarks, ou `execucao_unica`, nas opções 3 e 4 do menu.
-- Toda a evolução acontece em cópias criadas por `World.clone`. O mundo real só é alterado no final, ao executar o melhor
+- Toda a evolução acontece em cópias criadas por `Mundo.clonar`. O mundo real só é alterado no final, ao executar o melhor
   indivíduo.
 - Os `dados_extra` devolvidos alimentam os gráficos avançados e o arquivo `.npz` do run.

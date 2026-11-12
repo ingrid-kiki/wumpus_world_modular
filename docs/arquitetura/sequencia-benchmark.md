@@ -9,7 +9,7 @@ sequenceDiagram
     participant R as rodar_benchmark
     participant B as executar_benchmark
     participant E as executar_uma
-    participant M as World
+    participant M as Mundo
     participant A as Agente
     participant S as salvar_resultados
     participant G as utils/graficos
@@ -20,13 +20,13 @@ sequenceDiagram
         R->>R: mostra o início da combinação no terminal
         R->>B: executar_benchmark(agente, tamanho, execucoes, parametros)
         loop execução i, de 0 a N-1
-            B->>M: World(size, seed=i)
+            B->>M: Mundo(tamanho, semente=i)
             B->>A: cria o agente com os parâmetros
             B->>E: executar_uma(agente, mundo, rotulo)
-            E->>A: run()
+            E->>A: executar()
             alt terminou sem erro
                 A-->>E: resultado
-                E->>M: classificar: lê won e is_alive
+                E->>M: classificar: lê ganhou e agente_vivo
                 M-->>E: vitória, morte ou sobreviveu
             else lançou uma exceção
                 A--xE: erro registrado no stderr

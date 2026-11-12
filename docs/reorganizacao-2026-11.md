@@ -151,6 +151,7 @@ Depois da v1.7.0, o trabalho seguiu o [plano de boas práticas](plano-boas-prati
 | 12/11 | Issues: #41 fechada, `pygad/` guardada numa tag, 45 branches mescladas apagadas | #79, #80 |
 | 12/11 | Etapa 3, PR G1: saídas sem acento e em português, regra automática e leitura de runs antigos | #81 |
 | 12/11 | Saída redirecionada no Windows (`python main.py > arquivo`) não quebra mais com os emojis | #82 |
+| 12/11 | Etapa 3, PR G2: nomes do código em português (classes, métodos, atributos, parâmetros e variáveis) | #83 |
 
 Em toda a Etapa 3, o teste de referência, os números do `logico_seguro` e a comparação byte a byte dos gráficos provaram
 que os resultados não mudaram. A única regeneração da referência (#73) foi de formato, com as 165 execuções conferidas antes.
@@ -192,7 +193,7 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 
 | Item | Onde |
 |---|---|
-| Etapa 3: PRs G2 a J (nomes no código, tipos, pacote e `.npz`) e lançamento da v2.0.0 | [plano de boas práticas](plano-boas-praticas.md), #42 |
+| Etapa 3: PRs H a J (tipos, pacote com nomes de arquivos em português, `.npz` e #29) e lançamento da v2.0.0 | [plano de boas práticas](plano-boas-praticas.md), #42 |
 | Comparação final para a tese: busca aleatória, AG original, AG com proximidade e `logico_seguro`, em orçamentos menores | #31 |
 | Testar proximidade com mutação 0,1 e medir a variação do próprio AG (várias execuções por mundo) | #31 |
 | Rodar de novo os experimentos da tese com o código da v2.0.0 | Fase 4.6 |

@@ -45,45 +45,45 @@ def _relatorio_vazio():
     return {"gerados": [], "pulados": [], "falhas": []}
 
 
-def _salvar(output_dir, nome):
+def _salvar(pasta_saida, nome):
     """Ajusta o layout, salva a figura atual como <nome>.png e a fecha."""
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, f"{nome}.png"))
+    plt.savefig(os.path.join(pasta_saida, f"{nome}.png"))
     plt.close()
 
 
 # ---------------------------------------------------------------- Gráficos básicos
 
 
-def _barras_por_tamanho(df, coluna, titulo, rotulo_y, nome, output_dir):
+def _barras_por_tamanho(df, coluna, titulo, rotulo_y, nome, pasta_saida):
     """Barras de uma coluna do resumo, com um grupo por tamanho de mundo e uma barra por agente."""
     plt.figure(figsize=(8, 5))
     for tamanho in sorted(df["tamanho_mundo"].unique()):
-        subset = df[df["tamanho_mundo"] == tamanho]
+        subconjunto = df[df["tamanho_mundo"] == tamanho]
         plt.bar(
-            [f"{row['agente']}-{tamanho}" for _, row in subset.iterrows()],
-            subset[coluna],
+            [f"{linha['agente']}-{tamanho}" for _, linha in subconjunto.iterrows()],
+            subconjunto[coluna],
             label=f"{tamanho}x{tamanho}",
         )
     plt.title(titulo)
     plt.ylabel(rotulo_y)
     plt.xlabel("Agente-Tamanho")
     plt.xticks(rotation=45)
-    _salvar(output_dir, nome)
+    _salvar(pasta_saida, nome)
 
 
-def gerar_graficos(df, output_dir):
+def gerar_graficos(df, pasta_saida):
     """
     Gera gráficos básicos de barras para vitórias, mortes, sobrevivências e tempo médio.
     Salva cada gráfico na pasta de saída especificada.
     :return: dict com os nomes em "gerados", "pulados" e "falhas"
     """
     relatorio = _relatorio_vazio()
-    for metric, rotulo in METRICAS_BASICAS.items():
+    for metrica, rotulo in METRICAS_BASICAS.items():
         titulo = f"Comparação de {rotulo} por agente e tamanho do mundo"
         _desenhar(
-            f"grafico_{metric}",
-            lambda m=metric, t=titulo: _barras_por_tamanho(df, m, t, "Quantidade", f"grafico_{m}", output_dir),
+            f"grafico_{metrica}",
+            lambda m=metrica, t=titulo: _barras_por_tamanho(df, m, t, "Quantidade", f"grafico_{m}", pasta_saida),
             relatorio,
         )
     _desenhar(
@@ -94,7 +94,7 @@ def gerar_graficos(df, output_dir):
             "Tempo médio de execução por agente e tamanho do mundo",
             "Tempo médio (s)",
             "grafico_tempo_medio",
-            output_dir,
+            pasta_saida,
         ),
         relatorio,
     )
@@ -131,7 +131,7 @@ def _dados_avancados(dados_extra):
     }
 
 
-def _memoria_cpu(d, output_dir):
+def _memoria_cpu(d, pasta_saida):
     """Uso de memória e de CPU ao longo das gerações."""
     plt.figure(figsize=(10, 5))
     plt.plot(d["memoria"], label="Memória (MB)")
@@ -140,77 +140,77 @@ def _memoria_cpu(d, output_dir):
     plt.xlabel("Iteração")
     plt.ylabel("Uso")
     plt.legend()
-    _salvar(output_dir, "memoria_cpu")
+    _salvar(pasta_saida, "memoria_cpu")
 
 
-def _evolucao_fitness(d, output_dir):
+def _evolucao_fitness(d, pasta_saida):
     """Fitness médio por geração (convergência)."""
     plt.figure(figsize=(8, 5))
     plt.plot(d["fitness"])
     plt.title("Evolução do Fitness (Convergência)")
     plt.xlabel("Geração")
     plt.ylabel("Fitness")
-    _salvar(output_dir, "evolucao_fitness")
+    _salvar(pasta_saida, "evolucao_fitness")
 
 
-def _convergencia_populacao(d, output_dir):
+def _convergencia_populacao(d, pasta_saida):
     """Fitness mínimo, médio e máximo da população em cada geração."""
-    fitness_pop = d["fitness_pop"]
+    fitness_populacao = d["fitness_pop"]
     plt.figure(figsize=(8, 5))
-    plt.plot(np.min(fitness_pop, axis=1), label="Mínimo")
-    plt.plot(np.mean(fitness_pop, axis=1), label="Médio")
-    plt.plot(np.max(fitness_pop, axis=1), label="Máximo")
+    plt.plot(np.min(fitness_populacao, axis=1), label="Mínimo")
+    plt.plot(np.mean(fitness_populacao, axis=1), label="Médio")
+    plt.plot(np.max(fitness_populacao, axis=1), label="Máximo")
     plt.title("Comportamento de Convergência da População")
     plt.xlabel("Geração")
     plt.ylabel("Fitness")
     plt.legend()
-    _salvar(output_dir, "convergencia_populacao")
+    _salvar(pasta_saida, "convergencia_populacao")
 
 
-def _curva_convergencia_desvio_padrao(d, output_dir):
+def _curva_convergencia_desvio_padrao(d, pasta_saida):
     """Média do fitness por geração, com uma faixa de um desvio padrão."""
-    mean = np.mean(d["fitness_pop"], axis=1)
-    std = np.std(d["fitness_pop"], axis=1)
+    media = np.mean(d["fitness_pop"], axis=1)
+    desvio = np.std(d["fitness_pop"], axis=1)
     plt.figure(figsize=(8, 5))
-    plt.plot(mean, label="Média")
-    plt.fill_between(range(len(mean)), mean - std, mean + std, alpha=0.3, label="Desvio Padrão")
+    plt.plot(media, label="Média")
+    plt.fill_between(range(len(media)), media - desvio, media + desvio, alpha=0.3, label="Desvio Padrão")
     plt.title("Média das Curvas de Convergência com Desvio Padrão")
     plt.xlabel("Geração")
     plt.ylabel("Fitness")
     plt.legend()
-    _salvar(output_dir, "curva_convergencia_desvio_padrao")
+    _salvar(pasta_saida, "curva_convergencia_desvio_padrao")
 
 
-def _violino_fitness(d, output_dir):
+def _violino_fitness(d, pasta_saida):
     """Distribuição do fitness da população em cada geração."""
     plt.figure(figsize=(8, 5))
     sns.violinplot(data=d["fitness_pop"].T)
     plt.title("Distribuição do Fitness por Geração (Violin Plot)")
     plt.xlabel("Geração")
     plt.ylabel("Fitness")
-    _salvar(output_dir, "violino_fitness")
+    _salvar(pasta_saida, "violino_fitness")
 
 
-def _ecdf_fitness_final(d, output_dir):
+def _ecdf_fitness_final(d, pasta_saida):
     """Função de distribuição acumulada do fitness da última geração."""
     plt.figure(figsize=(8, 5))
     sns.ecdfplot(d["fitness_final"])
     plt.title("Função de Distribuição Acumulada do Fitness Final")
     plt.xlabel("Fitness")
-    _salvar(output_dir, "ecdf_fitness_final")
+    _salvar(pasta_saida, "ecdf_fitness_final")
 
 
-def _mapa_de_calor_diversidade(d, output_dir):
+def _mapa_de_calor_diversidade(d, pasta_saida):
     """Quantos genes diferentes há em cada posição do cromossomo, geração a geração."""
     plt.figure(figsize=(10, 6))
     sns.heatmap(d["diversidade"], cmap="viridis")
     plt.title("Mapa de Calor da Diversidade por Variável")
     plt.xlabel("Variável")
     plt.ylabel("Geração")
-    _salvar(output_dir, "mapa_de_calor_diversidade")
+    _salvar(pasta_saida, "mapa_de_calor_diversidade")
 
 
-def _area_empilhada_diversidade(d, output_dir):
+def _area_empilhada_diversidade(d, pasta_saida):
     """A mesma diversidade do mapa de calor, empilhada por geração."""
     diversidade = d["diversidade"]
     plt.figure(figsize=(10, 6))
@@ -219,10 +219,10 @@ def _area_empilhada_diversidade(d, output_dir):
     plt.title("Área Empilhada da Diversidade por Variável")
     plt.xlabel("Geração")
     plt.ylabel("Diversidade")
-    _salvar(output_dir, "area_empilhada_diversidade")
+    _salvar(pasta_saida, "area_empilhada_diversidade")
 
 
-def _pca_populacao_final(d, output_dir):
+def _pca_populacao_final(d, pasta_saida):
     """Projeção em duas dimensões (PCA) dos cromossomos da população final."""
     x_pca = PCA(n_components=2).fit_transform(d["pop_final"])
     plt.figure(figsize=(8, 6))
@@ -230,7 +230,7 @@ def _pca_populacao_final(d, output_dir):
     plt.title("PCA dos Indivíduos da População Final")
     plt.xlabel("PC1")
     plt.ylabel("PC2")
-    _salvar(output_dir, "pca_populacao_final")
+    _salvar(pasta_saida, "pca_populacao_final")
 
 
 # Cada gráfico com a condição para existir: com dados insuficientes, ele é pulado
@@ -252,7 +252,7 @@ GRAFICOS_AVANCADOS = [
 ]
 
 
-def gerar_graficos_avancados(dados_extra, output_dir):
+def gerar_graficos_avancados(dados_extra, pasta_saida):
     """
     Gera gráficos avançados a partir dos dados extras coletados durante as execuções.
     Cada gráfico é salvo na pasta de saída. Os dados esperados devem estar em arrays/listas.
@@ -263,7 +263,7 @@ def gerar_graficos_avancados(dados_extra, output_dir):
     dados = _dados_avancados(dados_extra)
     for nome, funcao, tem_dados in GRAFICOS_AVANCADOS:
         if tem_dados(dados):
-            _desenhar(nome, lambda f=funcao: f(dados, output_dir), relatorio)
+            _desenhar(nome, lambda f=funcao: f(dados, pasta_saida), relatorio)
         else:
             relatorio["pulados"].append(nome)
 

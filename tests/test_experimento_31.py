@@ -9,13 +9,13 @@ import pandas as pd
 import pytest
 
 from experimentos import comparar_metodos as exp
-from ga.ga_core import GeneticAlgorithm
-from world.world import World
+from ga.ga_core import AlgoritmoGenetico
+from world.world import Mundo
 
 
 def mundo_fixo(pocos, ouro=(1, 1)):
-    w = World(size=3, seed=0)
-    w.pits, w.gold_pos, w.wumpus_pos = pocos, ouro, (2, 2)
+    w = Mundo(tamanho=3, semente=0)
+    w.pocos, w.posicao_ouro, w.posicao_wumpus = pocos, ouro, (2, 2)
     return w
 
 
@@ -29,7 +29,7 @@ def test_venceu_e_fitness_real_usam_o_mundo_sem_altera_lo():
     assert exp.venceu(w, ["DIREITA", "BAIXO", "AGARRAR"])
     assert not exp.venceu(w, ["DIREITA", "AGARRAR"])
     assert exp.fitness_real(w, ["DIREITA", "BAIXO", "AGARRAR"]) > 0
-    assert w.agent_pos == (0, 0) and not w.won
+    assert w.posicao_agente == (0, 0) and not w.ganhou
 
 
 def test_holm_ajusta_na_ordem_original():
@@ -48,20 +48,20 @@ def test_comparar_conta_mundos_discordantes():
 
 
 def test_variante_truncamento_e_o_ag_do_projeto():
-    """Sem variações, AGVariante precisa dar exatamente o mesmo resultado do GeneticAlgorithm."""
+    """Sem variações, AGVariante precisa dar exatamente o mesmo resultado do AlgoritmoGenetico."""
     args = (20, 8, 20, 0.05, 0.8)
-    w = World(size=4, seed=2)
-    original = GeneticAlgorithm(*args, seed=2).run(w)["best"].chromosome
-    variante = exp.AGVariante(*args, seed=2).run(w)["best"].chromosome
+    w = Mundo(tamanho=4, semente=2)
+    original = AlgoritmoGenetico(*args, semente=2).executar(w)["melhor"].cromossomo
+    variante = exp.AGVariante(*args, semente=2).executar(w)["melhor"].cromossomo
     assert variante == original
 
 
 def test_orcamento_do_ag_nao_e_ultrapassado():
-    w = World(size=4, seed=1)
+    w = Mundo(tamanho=4, semente=1)
     _, extra = exp.genetico(w, 400, 20, 1)
     assert 0 <= extra["repetidas"] <= 1
-    ag = exp.AGVariante(40, 400 // 40 - 1, 20, 0.02, 0.8, seed=1)
-    ag.run(w)
+    ag = exp.AGVariante(40, 400 // 40 - 1, 20, 0.02, 0.8, semente=1)
+    ag.executar(w)
     assert ag.avaliacoes + ag.acertos_cache <= 400
 
 

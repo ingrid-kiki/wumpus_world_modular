@@ -2,32 +2,32 @@
 # tests/test_logic_agent.py
 # ==============================
 """
-# Este arquivo contém testes unitários para o agente LogicAgent do projeto Wumpus World.
+# Este arquivo contém testes unitários para o agente AgenteLogico do projeto Wumpus World.
 # O objetivo é garantir que o agente lógico é inicializado corretamente e possui os principais
 # atributos e métodos necessários para operar no ambiente.
 #
 # Explicação do teste:
-# - Cria uma instância do mundo (World) com tamanho 4x4 e semente fixa para reprodutibilidade.
-# - Cria uma instância do agente lógico (LogicAgent) passando o mundo criado.
-# - Verifica se o agente possui o atributo 'world' (referência ao ambiente).
-# - Verifica se o agente possui o atributo 'knowledge' (base de conhecimento lógica).
-# - Verifica se o agente possui o método 'decide' (responsável por decidir a próxima ação).
+# - Cria uma instância do mundo (Mundo) com tamanho 4x4 e semente fixa para reprodutibilidade.
+# - Cria uma instância do agente lógico (AgenteLogico) passando o mundo criado.
+# - Verifica se o agente possui o atributo 'mundo' (referência ao ambiente).
+# - Verifica se o agente possui o atributo 'conhecimento' (base de conhecimento lógica).
+# - Verifica se o agente possui o método 'decidir_acao' (responsável por decidir a próxima ação).
 #
 # Esses testes asseguram que o agente lógico está pronto para ser utilizado em simulações e benchmarks.
 """
 
-from agents.logic_agent import LogicAgent
-from world.world import World
+from agents.logic_agent import AgenteLogico
+from world.world import Mundo
 
 
-def test_logic_agent_initialization():
+def test_criacao_do_agente_logico():
     # Cria um mundo de tamanho 4x4 com semente fixa
-    world = World(size=4, seed=42)
+    mundo = Mundo(tamanho=4, semente=42)
     # Cria o agente lógico passando o mundo
-    agent = LogicAgent(world)
-    # Verifica se o agente possui o atributo 'world'
-    assert hasattr(agent, "world")
-    # Verifica se o agente possui o atributo 'knowledge'
-    assert hasattr(agent, "knowledge")
-    # Verifica se o agente possui o método 'decide'
-    assert hasattr(agent, "decide")
+    agente = AgenteLogico(mundo)
+    # Verifica se o agente possui o atributo 'mundo'
+    assert hasattr(agente, "mundo")
+    # Verifica se o agente possui o atributo 'conhecimento'
+    assert hasattr(agente, "conhecimento")
+    # Verifica se o agente possui o método 'decidir_acao'
+    assert hasattr(agente, "decidir_acao")

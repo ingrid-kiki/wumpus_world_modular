@@ -78,14 +78,14 @@ referência numa mudança intencional, veja o CONTRIBUTING.
 | `test_parametros_do_ag_vem_da_linha_de_comando` | 1 | Opções como `--populacao` e `--cruzamento` viram os parâmetros do agente genético |
 | `test_sem_opcoes_do_ag_valem_os_padroes` | 1 | Sem essas opções, o agente genético usa os próprios padrões |
 | `test_benchmark_repassa_os_parametros_so_para_o_agente_certo` | 1 | Os parâmetros de um agente não chegam aos outros |
-| `test_run_grava_metadata_completo` | 1 | O `metadados.json` traz versão, estado do git, argumentos, parâmetros do AG, sementes e bibliotecas |
+| `test_run_grava_metadados_completos` | 1 | O `metadados.json` traz versão, estado do git, argumentos, parâmetros do AG, sementes e bibliotecas |
 | `test_sem_agente_genetico_nao_ha_parametros_do_ag` | 1 | Sem o agente genético no run, o `metadados.json` não inventa parâmetros do AG |
 | `test_reproduzir_da_o_mesmo_resultado` | 1 | `reproduzir.py` refaz um run e encontra os mesmos resultados |
 | `test_reproduzir_detecta_resultado_diferente` | 1 | `reproduzir.py` acusa um CSV adulterado |
 | `test_reproduzir_le_um_run_antigo` | 1 | `reproduzir.py` refaz um run no formato da v1.8.0: `metadata.json`, `--sizes` e colunas com acento |
 | `test_atualizar_opcoes_troca_as_opcoes_antigas` | 1 | Opções antigas, como `--sizes`, viram as atuais, como `--tamanhos` |
 | `test_atualizar_opcoes_troca_benchmarks_retirados` | 1 | Um run feito com um dos 4 benchmarks retirados é refeito com o `benchmark.py`; outros arquivos não mudam |
-| `test_reproduzir_sem_metadata` | 1 | `reproduzir.py` avisa quando a pasta não tem `metadados.json` nem `metadata.json` |
+| `test_reproduzir_sem_metadados` | 1 | `reproduzir.py` avisa quando a pasta não tem `metadados.json` nem `metadata.json` |
 | `test_sem_opcao_remove_opcao_e_valor` | 1 | Ao reproduzir, a opção `--saida` original é trocada pela nova pasta |
 | `test_clone_do_mundo_e_independente` | 1 | Mexer na cópia do mundo não altera o original |
 | `test_copia_do_individuo_e_independente` | 1 | Mexer na cópia de um indivíduo não altera o original |
@@ -101,7 +101,7 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 | Teste | Casos | O que garante |
 |---|---|---|
 | `test_logico_mantem_posicao_sincronizada_com_o_mundo` | 1 | A base do agente lógico acompanha a posição real do agente no mundo (#18) |
-| `test_kb_nao_sai_do_grid_mesmo_sem_a_posicao_do_mundo` | 1 | A base não "anda" para fora do mapa (#18) |
+| `test_base_nao_sai_do_mundo_mesmo_sem_a_posicao_real` | 1 | A base não "anda" para fora do mapa (#18) |
 | `test_logico_sempre_termina` | 3 | Nos tamanhos 4, 6 e 8, o agente lógico vence, morre ou para no limite de passos (#18) |
 | `test_mutacao_invalida_o_fitness` | 1 | Um indivíduo que sofreu mutação perde o fitness antigo (#19) |
 | `test_fitness_do_melhor_individuo_corresponde_ao_cromossomo` | 5 | Em 5 sementes, o fitness do melhor indivíduo é o da sua própria sequência (#19) |
@@ -111,7 +111,7 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 | `test_matar_o_wumpus_recebe_bonus` | 1 | Matar o Wumpus vale +25 no fitness (#21) |
 | `test_tiro_sem_acertar_nao_recebe_bonus` | 1 | Errar o tiro só custa a ação (#21) |
 | `test_pocos_nao_se_sobrepoem` | 1 | Em 900 mundos, há metade do tamanho em poços, sem repetir casa nem cair sobre o agente, o ouro ou o Wumpus (#22) |
-| `test_world_nao_altera_o_random_global` | 1 | Criar um mundo não mexe no gerador aleatório global do Python (#23) |
+| `test_mundo_nao_altera_o_random_global` | 1 | Criar um mundo não mexe no gerador aleatório global do Python (#23) |
 | `test_mesma_semente_gera_o_mesmo_mundo` | 1 | A mesma semente sempre gera o mesmo mundo (#23) |
 | `test_ag_reprodutivel_com_a_semente_do_mundo` | 1 | O AG dá o mesmo resultado qualquer que seja o estado do gerador global (#23) |
 | `test_benchmarks_cumprem_o_contrato_do_main` | 2 | Nos modos sequencial e paralelo, o benchmark recebe e devolve os dados no formato que o `main.py` espera (#24) |
@@ -162,7 +162,7 @@ Os nomes do código (variáveis, funções e classes) são conferidos pelo `ruff
 
 | Teste | Casos | O que garante |
 |---|---|---|
-| `test_world_initialization` | 1 | O mundo tem o tamanho pedido e as posições do agente, do ouro, do Wumpus e dos poços |
+| `test_criacao_do_mundo` | 1 | O mundo tem o tamanho pedido e as posições do agente, do ouro, do Wumpus e dos poços |
 
 ## Agentes
 
@@ -185,8 +185,8 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 
 | Teste | Casos | O que garante |
 |---|---|---|
-| `test_logic_agent_initialization` | 1 | O agente lógico guarda o mundo, cria a base de conhecimento e tem o método `decide` |
-| `test_manual_agent_receives_world` | 1 | O agente manual guarda o mundo recebido |
+| `test_criacao_do_agente_logico` | 1 | O agente lógico guarda o mundo, cria a base de conhecimento e tem o método `decidir_acao` |
+| `test_agente_manual_recebe_o_mundo` | 1 | O agente manual guarda o mundo recebido |
 
 ### `test_logico_seguro.py`
 
@@ -210,12 +210,12 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 
 | Teste | Casos | O que garante |
 |---|---|---|
-| `test_genetic_agent_initialization` | 1 | O agente genético guarda os parâmetros e devolve histórico e dados para os gráficos |
-| `test_action_distribution` | 1 | O agente genético executa pelo menos uma ação |
-| `test_execution_time` | 1 | Com parâmetros pequenos, o agente genético termina em menos de 10 segundos |
-| `test_final_agent_status` | 1 | O último status é `MORTO`, `GANHOU` ou `OK` |
-| `test_fitness_history_tracking` | 1 | O agente genético devolve o histórico de fitness |
-| `test_action_sequence_length` | 1 | O histórico de ações não é vazio |
+| `test_criacao_do_agente_genetico` | 1 | O agente genético guarda os parâmetros e devolve histórico e dados para os gráficos |
+| `test_distribuicao_das_acoes` | 1 | O agente genético executa pelo menos uma ação |
+| `test_tempo_de_execucao` | 1 | Com parâmetros pequenos, o agente genético termina em menos de 10 segundos |
+| `test_estado_final_do_agente` | 1 | O último status é `MORTO`, `GANHOU` ou `OK` |
+| `test_historico_de_fitness_registrado` | 1 | O agente genético devolve o histórico de fitness |
+| `test_tamanho_da_sequencia_de_acoes` | 1 | O histórico de ações não é vazio |
 
 ### `test_busca_aleatoria.py`
 
@@ -238,7 +238,7 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_bonus_conta_ate_a_morte` | 1 | O bônus considera o caminho feito até a morte |
 | `test_ag_sem_proximidade_nao_muda` | 1 | Sem a opção, o AG dá o mesmo resultado de antes |
 | `test_agente_com_proximidade_e_reprodutivel` | 1 | Com a opção, o agente genético é reproduzível |
-| `test_opcao_chega_ao_agente_e_ao_metadata` | 1 | `--proximidade 20` aparece nos parâmetros efetivos do AG gravados no `metadados.json` |
+| `test_opcao_chega_ao_agente_e_aos_metadados` | 1 | `--proximidade 20` aparece nos parâmetros efetivos do AG gravados no `metadados.json` |
 | `test_sem_a_opcao_o_padrao_e_o_fitness_original` | 1 | Sem `--proximidade`, o `metadados.json` registra peso 0, isto é, o fitness original |
 | `test_peso_negativo_e_recusado` | 1 | Peso negativo é recusado com mensagem clara |
 
@@ -276,7 +276,7 @@ Os dois rodam os scripts como processos novos, com `PYTHONIOENCODING=cp1252`, a 
 
 | Teste | Casos | O que garante |
 |---|---|---|
-| `test_layout_completo_de_um_run` | 1 | Um run grava todos os arquivos e pastas esperados, e nenhum arquivo `.log` |
+| `test_pastas_e_arquivos_completos_de_um_run` | 1 | Um run grava todos os arquivos e pastas esperados, e nenhum arquivo `.log` |
 | `test_queda_na_segunda_etapa_preserva_a_primeira` | 1 | Se uma combinação falha, os resultados das anteriores ficam gravados |
 | `test_ctrl_c_tambem_preserva_resultados_e_log` | 1 | Interromper com Ctrl+C preserva os resultados e o registro no `saida_terminal.txt` |
 | `test_log_e_gravado_durante_a_execucao` | 1 | O `saida_terminal.txt` é gravado durante a execução, e não só no fim |

@@ -200,7 +200,7 @@ execuções únicas são escolhidas pelo menu.
 - O **agente lógico** só conhece o que percebe: decide passo a passo a partir de `FEDOR`, `BRISA` e `BRILHO`.
   Ele tem um limite de `4 × N²` passos; se não vencer nem morrer até lá, conta como "sobreviveu".
 - O **agente genético** planeja *antes* de jogar: avalia milhares de sequências de ações simulando cópias do
-  mundo real (`world.clone()`), ou seja, conhece indiretamente onde estão o Wumpus, os poços e o ouro.
+  mundo real (`mundo.clonar()`), ou seja, conhece indiretamente onde estão o Wumpus, os poços e o ouro.
   Depois executa a melhor sequência encontrada.
 
 Por isso, comparar as taxas de vitória dos dois mede "planejar com o mapa" contra "reagir às percepções",
@@ -223,7 +223,7 @@ e afetam os resultados:
 | Tiro | Flechas ilimitadas; sem direção: mata o Wumpus se ele estiver em qualquer casa adjacente | Uma flecha, em linha reta |
 | Vitória | Agarrar o ouro termina o jogo | Agarrar o ouro e voltar a (0,0) |
 | Fim de jogo | Depois de vencer ou morrer, nenhuma ação tem efeito | — |
-| Aleatoriedade | `World(N, seed)` usa um gerador próprio; a mesma semente gera sempre o mesmo mundo | — |
+| Aleatoriedade | `Mundo(N, semente)` usa um gerador próprio; a mesma semente gera sempre o mesmo mundo | — |
 
 ### Fitness do agente genético
 

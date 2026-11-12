@@ -8,9 +8,9 @@ flowchart TD
     inicio(["python main.py"]) --> menu{"menu_interativo:<br/>qual opção?"}
 
     menu -- "2, 3 ou 4" --> unica["execucao_unica:<br/>pede tamanho e semente"]
-    unica --> executa["agente.run() no terminal"]
+    unica --> executa["agente.executar() no terminal"]
     executa --> janela{"Ver a partida<br/>numa janela?"}
-    janela -- "s" --> reproduz["Visualizer.reproduzir:<br/>refaz a partida na janela"]
+    janela -- "s" --> reproduz["Visualizador.reproduzir:<br/>refaz a partida na janela"]
     janela -- "não" --> fimUnico(["Fim: nenhum arquivo é gravado"])
     reproduz --> fimUnico
 
@@ -51,7 +51,7 @@ flowchart TD
 - `metadados.json` é gravado antes das execuções. Se algo falhar, o registro do que foi pedido continua lá.
 - A gravação parcial acontece depois de cada combinação de tamanho e agente, então uma queda perde no máximo a combinação
   em andamento.
-- Se `agente.run()` lançar um erro durante o benchmark, `executar_uma` o registra na coluna `erros` e o benchmark continua
+- Se `agente.executar()` lançar um erro durante o benchmark, `executar_uma` o registra na coluna `erros` e o benchmark continua
   na execução seguinte.
 - `carregar_benchmark` usa `benchmark.py` por padrão. A opção `--benchmark` aceita outro arquivo com a mesma função
   `executar_benchmark`. As opções `--paralelo` e `--silencioso` só são repassadas quando usadas.

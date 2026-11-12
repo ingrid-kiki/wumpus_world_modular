@@ -10,31 +10,31 @@ import json
 import pytest
 
 import main
-from agents.genetic_agent import GeneticAgent
-from ga.ga_core import GeneticAlgorithm
-from ga.individual import Individual
-from world.world import World
+from agents.genetic_agent import AgenteGenetico
+from ga.ga_core import AlgoritmoGenetico
+from ga.individual import Individuo
+from world.world import Mundo
 
 
 def mundo():
     """Mundo 5x5: ouro em (4,4), poço em (2,2), Wumpus em (4,0). Distância máxima: 8."""
-    w = World(size=5, seed=0)
-    w.gold_pos, w.pits, w.wumpus_pos = (4, 4), [(2, 2)], (4, 0)
+    w = Mundo(tamanho=5, semente=0)
+    w.posicao_ouro, w.pocos, w.posicao_wumpus = (4, 4), [(2, 2)], (4, 0)
     return w
 
 
 def nota(cromossomo, proximidade=0.0):
-    ind = Individual(0)
-    ind.chromosome = list(cromossomo)
-    ind.evaluate(mundo(), proximidade)
+    ind = Individuo(0)
+    ind.cromossomo = list(cromossomo)
+    ind.avaliar(mundo(), proximidade)
     return ind.fitness
 
 
 def test_peso_zero_mantem_o_fitness_original():
     cromossomo = ["DIREITA", "BAIXO", "TIRO"]
-    ind = Individual(0)
-    ind.chromosome = cromossomo
-    ind.evaluate(mundo())
+    ind = Individuo(0)
+    ind.cromossomo = cromossomo
+    ind.avaliar(mundo())
     assert nota(cromossomo, 0.0) == ind.fitness
 
 
@@ -58,9 +58,9 @@ def test_bonus_conta_ate_a_morte():
 
 
 def test_ag_sem_proximidade_nao_muda():
-    w = World(size=4, seed=2)
-    a = GeneticAlgorithm(20, 8, 20, 0.05, 0.8, seed=2).run(w)["best"].chromosome
-    b = GeneticAlgorithm(20, 8, 20, 0.05, 0.8, seed=2, proximidade=0.0).run(w)["best"].chromosome
+    w = Mundo(tamanho=4, semente=2)
+    a = AlgoritmoGenetico(20, 8, 20, 0.05, 0.8, semente=2).executar(w)["melhor"].cromossomo
+    b = AlgoritmoGenetico(20, 8, 20, 0.05, 0.8, semente=2, proximidade=0.0).executar(w)["melhor"].cromossomo
     assert a == b
 
 
@@ -68,16 +68,16 @@ def test_agente_com_proximidade_e_reprodutivel():
     execucoes = [
         [
             p["acao"]
-            for p in GeneticAgent(
-                World(size=6, seed=4), population_size=20, gens=10, chrom_length=30, proximidade=20.0
-            ).run()["historico"]
+            for p in AgenteGenetico(
+                Mundo(tamanho=6, semente=4), tamanho_populacao=20, geracoes=10, tamanho_cromossomo=30, proximidade=20.0
+            ).executar()["historico"]
         ]
         for _ in range(2)
     ]
     assert execucoes[0] == execucoes[1]
 
 
-def test_opcao_chega_ao_agente_e_ao_metadata(tmp_path):
+def test_opcao_chega_ao_agente_e_aos_metadados(tmp_path):
     pasta = tmp_path / "run"
     main.rodar_benchmark(
         [

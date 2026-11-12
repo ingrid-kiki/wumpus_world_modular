@@ -2,7 +2,7 @@
 # agents/genetic_agent.py
 # ==============================
 """
-# Este arquivo implementa o GeneticAgent, um agente inteligente para o Wumpus World
+# Este arquivo implementa o AgenteGenetico, um agente inteligente para o Wumpus World
 # baseado em algoritmos genéticos. O agente utiliza o núcleo do algoritmo genético
 # para evoluir sequências de ações, buscando maximizar o desempenho no ambiente.
 # Durante a execução, o agente coleta histórico de ações, percepções e status,
@@ -12,69 +12,69 @@
 import numpy as np
 
 from agents.agente import Agente
-from ga.ga_core import GeneticAlgorithm  # Importa o núcleo do algoritmo genético
+from ga.ga_core import AlgoritmoGenetico  # Importa o núcleo do algoritmo genético
 from world.constantes import ACOES
 
 
-class GeneticAgent(Agente):
+class AgenteGenetico(Agente):
     def __init__(
         self,
-        world,
-        population_size=100,
-        gens=500,
-        chrom_length=100,
-        mutation_rate=0.02,
-        crossover_rate=0.8,
-        seed=None,
+        mundo,
+        tamanho_populacao=100,
+        geracoes=500,
+        tamanho_cromossomo=100,
+        taxa_mutacao=0.02,
+        taxa_cruzamento=0.8,
+        semente=None,
         proximidade=0.0,
     ):
-        super().__init__(world)
+        super().__init__(mundo)
         # Sem semente explícita, usa a do mundo: mesma semente -> mesmo resultado (#23)
-        if seed is None:
-            seed = getattr(world, "seed", None)
+        if semente is None:
+            semente = getattr(mundo, "semente", None)
         # Instancia o algoritmo genético com parâmetros de população, gerações e tamanho do cromossomo
-        self.ga = GeneticAlgorithm(
-            pop_size=population_size,
-            gens=gens,
-            chrom_length=chrom_length,
-            mutation_rate=mutation_rate,
-            crossover_rate=crossover_rate,
-            seed=seed,
+        self.ag = AlgoritmoGenetico(
+            tamanho_populacao=tamanho_populacao,
+            geracoes=geracoes,
+            tamanho_cromossomo=tamanho_cromossomo,
+            taxa_mutacao=taxa_mutacao,
+            taxa_cruzamento=taxa_cruzamento,
+            semente=semente,
             proximidade=proximidade,
         )
 
-    def run(self):
+    def executar(self):
         """
         Executa o algoritmo genético para encontrar a melhor sequência de ações.
         """
         # Executa o algoritmo genético e obtém o melhor indivíduo (sequência de ações)
-        ga_results = self.ga.run(self.world)
-        best = ga_results["best"]
+        resultado_ag = self.ag.executar(self.mundo)
+        melhor = resultado_ag["melhor"]
         print("\n🧬 Melhor sequência encontrada pelo algoritmo genético:")
-        print(best.chromosome, "\n")
-        print("🏆 Pontuação:", best.fitness)
+        print(melhor.cromossomo, "\n")
+        print("🏆 Pontuação:", melhor.fitness)
         # Executa a melhor sequência de ações no mundo real
-        self.executar_sequencia(best.chromosome, mostrar=True)
+        self.executar_sequencia(melhor.cromossomo, mostrar=True)
 
         # Salva dados de fitness médio e final
-        mean_fitness_per_gen = [gen_stats["mean"] for gen_stats in ga_results["fitness_history"]]
-        final_fitness_dist = ga_results["fitness_pop"][-1] if ga_results["fitness_pop"] else []
+        fitness_medio_por_geracao = [estatisticas["media"] for estatisticas in resultado_ag["historico_fitness"]]
+        fitness_final = resultado_ag["fitness_pop"][-1] if resultado_ag["fitness_pop"] else []
 
         # Mapeia ações para números para que o PCA possa processar os dados
-        ACTION_MAP = {action: i for i, action in enumerate(ACOES)}
-        final_pop_numeric = [
-            [ACTION_MAP.get(gene, -1) for gene in chromosome]  # Usa .get para segurança
-            for chromosome in ga_results["final_pop"]
+        INDICE_DA_ACAO = {acao: i for i, acao in enumerate(ACOES)}
+        populacao_final_numerica = [
+            [INDICE_DA_ACAO.get(gene, -1) for gene in cromossomo]  # Usa .get para segurança
+            for cromossomo in resultado_ag["populacao_final"]
         ]
 
         dados_extra_formatado = {
-            "fitness": mean_fitness_per_gen,
-            "fitness_pop": np.array(ga_results["fitness_pop"]),
-            "fitness_final": final_fitness_dist,
-            "pop_final": final_pop_numeric,
-            "memoria": ga_results.get("memoria", []),
-            "cpu": ga_results.get("cpu", []),
-            "diversidade_vars": ga_results.get("diversidade_vars"),
+            "fitness": fitness_medio_por_geracao,
+            "fitness_pop": np.array(resultado_ag["fitness_pop"]),
+            "fitness_final": fitness_final,
+            "pop_final": populacao_final_numerica,
+            "memoria": resultado_ag.get("memoria", []),
+            "cpu": resultado_ag.get("cpu", []),
+            "diversidade_vars": resultado_ag.get("diversidade_vars"),
         }
 
         # Retorna o histórico de ações e os dados extras
