@@ -34,6 +34,7 @@ from scipy.stats import binomtest
 from ga.ga_core import GeneticAlgorithm
 from ga.individual import Individual
 from utils.reprodutibilidade import estado_do_git, versoes_das_bibliotecas
+from utils.terminal import usar_utf8_na_saida
 from utils.versao import __version__
 from world.constantes import ACOES, FIM_DE_JOGO
 from world.world import World
@@ -271,4 +272,5 @@ def main():
 
 
 if __name__ == "__main__":
+    usar_utf8_na_saida()  # a saída redirecionada no Windows não aceitava emojis
     main()

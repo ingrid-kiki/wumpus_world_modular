@@ -25,6 +25,7 @@ from joblib import Parallel, delayed
 
 from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
 from utils.execucao import contar, executar_uma, relatar_erro
+from utils.terminal import usar_utf8_na_saida
 from world.world import World
 
 
@@ -88,6 +89,7 @@ def executar_benchmark(
 
 
 if __name__ == "__main__":
+    usar_utf8_na_saida()  # a saída redirecionada no Windows não aceitava emojis
     # Só agentes automáticos: o manual pede ações pelo teclado e não faz sentido num benchmark (#30)
     for nome in AGENTES_AUTOMATICOS:
         resultado = executar_benchmark(nome, world_size=4, num_execucoes=3, silencioso=True)

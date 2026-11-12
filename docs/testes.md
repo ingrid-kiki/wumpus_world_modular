@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 12/11/2026: **190 casos de teste**, vindos de
-**143 funções** em **27 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 12/11/2026: **192 casos de teste**, vindos de
+**145 funções** em **28 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -48,6 +48,7 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | `test_benchmark.py` | 4 | Benchmark único: modos sequencial e paralelo, silencioso e tempos |
 | `test_visualizer.py` | 6 | Janela que reproduz a partida e pergunta no menu |
 | `test_main_etapas.py` | 7 | Arquivos de cada run e resistência a quedas |
+| `test_saida_redirecionada.py` | 2 | Saída redirecionada para arquivo sem quebrar no Windows |
 | `test_graficos.py` | 9 | Gráficos nunca interrompem o benchmark |
 | `test_experimento_31.py` | 7 | Script de comparação de métodos da #31 |
 | `test_diagramas.py` | 7 | Diagrama de classes alinhado com o código |
@@ -260,6 +261,16 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_janela_pinta_o_agente_na_casa_dele` | 1 | O agente aparece na casa certa, com a cor do agente |
 | `test_menu_so_abre_a_janela_quando_pedido` | 3 | A janela abre com `s` ou `sim` e não abre com a resposta em branco |
 | `test_sem_pygame_a_janela_so_avisa` | 1 | Sem o pygame, o programa avisa e segue, sem quebrar |
+
+### `test_saida_redirecionada.py`
+
+Os dois rodam os scripts como processos novos, com `PYTHONIOENCODING=cp1252`, a codificação que o Windows usa quando a saída
+é redirecionada. Assim o problema aparece em qualquer sistema, inclusive no CI do Linux.
+
+| Teste | Casos | O que garante |
+|---|---|---|
+| `test_benchmark_com_saida_redirecionada_nao_quebra` | 1 | O benchmark do `main.py` e o `reproduzir.py` terminam, e as mensagens com emoji saem em UTF-8 |
+| `test_partida_do_menu_com_saida_redirecionada_nao_quebra` | 1 | Uma partida pelo menu (opção 3) termina com a saída redirecionada |
 
 ### `test_main_etapas.py`
 

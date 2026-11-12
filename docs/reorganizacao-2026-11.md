@@ -150,6 +150,7 @@ Depois da v1.7.0, o trabalho seguiu o [plano de boas práticas](plano-boas-prati
 | 12/11 | Etapa 3, PRs A a F: constantes, classe base de agente, sem `Logger`, benchmark único, funções curtas e janela da partida | #72 a #78 |
 | 12/11 | Issues: #41 fechada, `pygad/` guardada numa tag, 45 branches mescladas apagadas | #79, #80 |
 | 12/11 | Etapa 3, PR G1: saídas sem acento e em português, regra automática e leitura de runs antigos | #81 |
+| 12/11 | Saída redirecionada no Windows (`python main.py > arquivo`) não quebra mais com os emojis | #82 |
 
 Em toda a Etapa 3, o teste de referência, os números do `logico_seguro` e a comparação byte a byte dos gráficos provaram
 que os resultados não mudaram. A única regeneração da referência (#73) foi de formato, com as 165 execuções conferidas antes.
@@ -163,6 +164,9 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 - **Entrada do CHANGELOG na seção errada:** depois da v1.8.0, uma entrada caiu na seção da versão lançada; foi movida para
   `[Não lançado]`.
 - **Emojis na janela:** a fonte padrão do pygame mostrava os emojis como quadrados; as percepções passaram a ser escritas.
+- **Saída redirecionada no Windows:** ao gravar o run de base da PR G1 com a saída redirecionada, o programa quebrou com
+  `UnicodeEncodeError`, porque o Windows usa cp1252 nesse caso. O erro existia desde que as mensagens ganharam emojis;
+  corrigido na #82, com testes que reproduzem o problema em qualquer sistema.
 
 **Decisões desta parte:**
 
