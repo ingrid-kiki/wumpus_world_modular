@@ -31,7 +31,6 @@ def executar_benchmark(agente_nome, world_size, num_execucoes=NUM_EXECUCOES, par
         agente = AGENTES_DISPONIVEIS[agente_nome](
             mundo, **(parametros_agentes or {}).get(agente_nome, {})
         )  # Instancia o agente escolhido
-        agente.logger = None  # desativa logging para não poluir a saída
 
         # Exibe informações da execução atual
         print(f"🚀 Execução {i + 1}/{num_execucoes} [{agente_nome} - {world_size}x{world_size}]")

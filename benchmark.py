@@ -23,8 +23,6 @@ def executar_benchmark(agente_nome, world_size=4, num_execucoes=10, parametros_a
         mundo = World(size=world_size, seed=seed)
         agente_cls = AGENTES_DISPONIVEIS[agente_nome]
         agente = agente_cls(mundo, **(parametros_agentes or {}).get(agente_nome, {}))
-        if hasattr(agente, "logger"):
-            agente.logger = None
 
         print(f"🚀 Execução {i + 1}/{num_execucoes} [{agente_nome}]")
 

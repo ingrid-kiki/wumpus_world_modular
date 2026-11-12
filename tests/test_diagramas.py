@@ -81,7 +81,7 @@ def test_le_arquivo_com_quebra_de_linha_do_windows():
 
 def test_encontra_classes_do_programa_e_ignora_pastas_de_fora():
     classes = classes_do_codigo()
-    assert {"World", "GeneticAlgorithm", "AGVariante", "Logger"} <= classes
+    assert {"World", "GeneticAlgorithm", "AGVariante", "Agente"} <= classes
     assert "GA" not in classes  # classe principal de pygad/
 
 

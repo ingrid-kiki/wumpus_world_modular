@@ -37,7 +37,6 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │
 ├── utils/                # Utilitários do projeto
 │   ├── graficos.py       # Geração de gráficos básicos e avançados
-│   ├── logger.py         # Logger para logs organizados por execução
 │   ├── reprodutibilidade.py  # metadata.json de cada execução
 │   └── versao.py         # Versão do projeto (fonte única)
 │
@@ -336,8 +335,6 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
     ├── resultados_benchmark.csv           # Só colunas escalares
     ├── dados_extra_genetico_4x4.npz       # Arrays do AG (fitness, diversidade, memória, CPU...)
     ├── terminal_output.txt                # Saída completa do terminal
-    ├── logico_YYYYMMDD_HHMMSS.log        # ← Logs detalhados por agente
-    ├── genetico_YYYYMMDD_HHMMSS.log      # ← Logs detalhados por agente
     ├── grafico_vitórias.png
     ├── grafico_mortes.png
     ├── grafico_sobreviveu.png

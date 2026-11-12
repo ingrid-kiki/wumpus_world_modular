@@ -6,7 +6,7 @@
 # baseado em lógica simbólica. O agente utiliza uma base de conhecimento lógica
 # para decidir cada ação com regras simples a partir das percepções do ambiente, atualizando seu
 # conhecimento a cada passo. O histórico dos passos é registrado para análise,
-# e o agente pode integrar-se ao sistema de logs e benchmarks do projeto.
+# e o agente pode ser usado nos benchmarks do projeto.
 """
 
 from agents.agente import Agente
@@ -22,7 +22,6 @@ class LogicAgent(Agente):
         self.knowledge = LogicKnowledgeBase(size=world.size)
         # Limite de passos: garante que run() sempre termina (#18)
         self.max_steps = max_steps if max_steps is not None else PASSOS_POR_CASA * world.size * world.size
-        self.logger = None  # Será injetado pelo main
 
     def run(self):
         """
@@ -50,12 +49,6 @@ class LogicAgent(Agente):
 
             # Atualiza a posição na base de conhecimento com a posição real do mundo
             self.knowledge.update_position(action, self.world.agent_pos)
-
-            # Registra tudo no logger, se ele existir
-            if self.logger:
-                self.logger.write(f"[Passo {passo}] Percepção: {perception}")
-                self.logger.write(f"[Passo {passo}] Ação decidida: {action}")
-                self.logger.write(f"[Passo {passo}] Status: {status}\n")
 
             # Exibe status do agente após a ação no terminal
             print(f"[Passo {passo}] Status do agente: {status}\n")

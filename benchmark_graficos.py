@@ -38,7 +38,6 @@ def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agente
         agente = AGENTES_DISPONIVEIS[agente_nome](
             mundo, **(parametros_agentes or {}).get(agente_nome, {})
         )  # Instancia o agente escolhido
-        agente.logger = None  # desativa logging
 
         # Executa o agente; um erro não derruba o benchmark nem vira resultado (#30)
         execucao = executar_uma(

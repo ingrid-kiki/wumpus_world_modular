@@ -205,7 +205,6 @@ logs/run_AAAAMMDD_HHMMSS/
 ├── metadata.json                 versão, commit, opções, parâmetros do genético, bibliotecas
 ├── resultados_benchmark.csv      uma linha por agente e tamanho
 ├── terminal_output.txt           tudo o que apareceu no terminal, inclusive erros
-├── logico_*.log, genetico_*.log  início e fim de cada benchmark
 ├── grafico_vitórias.png          comparações entre agentes e tamanhos
 ├── grafico_mortes.png
 ├── grafico_sobreviveu.png

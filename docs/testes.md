@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **185 casos de teste**, vindos de
-**127 funções** em **24 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **184 casos de teste**, vindos de
+**126 funções** em **23 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -46,7 +46,6 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | `test_proximidade.py` | 9 | Bônus de proximidade ao ouro no fitness |
 | `test_main_etapas.py` | 7 | Arquivos de cada run e resistência a quedas |
 | `test_graficos.py` | 9 | Gráficos nunca interrompem o benchmark |
-| `test_logger.py` | 1 | Arquivo de log |
 | `test_experimento_31.py` | 7 | Script de comparação de métodos da #31 |
 | `test_diagramas.py` | 7 | Diagrama de classes alinhado com o código |
 | `test_lista_de_testes.py` | 2 | Esta lista alinhada com os testes |
@@ -230,9 +229,9 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 
 | Teste | Casos | O que garante |
 |---|---|---|
-| `test_layout_completo_de_um_run` | 1 | Um run grava todos os arquivos e pastas esperados |
+| `test_layout_completo_de_um_run` | 1 | Um run grava todos os arquivos e pastas esperados, e nenhum arquivo `.log` |
 | `test_queda_na_segunda_etapa_preserva_a_primeira` | 1 | Se uma combinação falha, os resultados das anteriores ficam gravados |
-| `test_ctrl_c_tambem_preserva_resultados_e_log` | 1 | Interromper com Ctrl+C preserva os resultados e fecha o log |
+| `test_ctrl_c_tambem_preserva_resultados_e_log` | 1 | Interromper com Ctrl+C preserva os resultados e o registro no `terminal_output.txt` |
 | `test_log_e_gravado_durante_a_execucao` | 1 | O `terminal_output.txt` é gravado durante a execução, e não só no fim |
 | `test_graficos_avancados_valem_para_qualquer_agente_com_dados_extras` | 1 | Os gráficos avançados saem para qualquer agente que devolva dados para eles |
 | `test_mensagem_conta_os_graficos_realmente_gerados` | 1 | A mensagem final informa quantos gráficos foram realmente gerados |
@@ -247,12 +246,6 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_falha_de_um_grafico_nao_impede_os_outros` | 1 | Se um gráfico falha, os demais são gerados |
 | `test_falha_nos_graficos_basicos_nao_interrompe` | 1 | Uma falha nos gráficos básicos não interrompe o programa |
 | `test_benchmark_termina_e_grava_os_resultados` | 3 | Nesses mesmos três casos, o benchmark termina e grava o CSV (#37) |
-
-### `test_logger.py`
-
-| Teste | Casos | O que garante |
-|---|---|---|
-| `test_logger_creation` | 1 | O `Logger` cria o arquivo de log e grava a mensagem |
 
 ## Experimentos e documentação
 

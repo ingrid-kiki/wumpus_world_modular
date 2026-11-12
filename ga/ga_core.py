@@ -66,7 +66,7 @@ class GeneticAlgorithm:
             self._cache_fitness[chave] = individual.fitness
             self.avaliacoes += 1
 
-    def run(self, world, logger=None):
+    def run(self, world):
         # Cada execução começa com o cache vazio (o cache vale para um mundo só)
         self._cache_fitness = {}
         self.avaliacoes = 0
@@ -77,7 +77,7 @@ class GeneticAlgorithm:
 
         # Cria a população inicial de indivíduos aleatórios
         population = [Individual(self.chrom_length, self.rng) for _ in range(self.pop_size)]
-        for g in range(self.gens):
+        for _ in range(self.gens):
             # Uso de memória em MB
             memory_mb = process.memory_info().rss / BYTES_POR_MB
             self.memory_history.append(memory_mb)
@@ -105,12 +105,6 @@ class GeneticAlgorithm:
                 {"min": min(fitness_vals), "mean": sum(fitness_vals) / len(fitness_vals), "max": max(fitness_vals)}
             )
             self.fitness_pop.append(fitness_vals.copy())
-
-            # Logging da geração
-            if logger:
-                logger.write(
-                    f"[GA] Geração {g + 1}: min={min(fitness_vals)}, mean={sum(fitness_vals) / len(fitness_vals):.2f}, max={max(fitness_vals)}"
-                )
 
             # Elitismo: mantém os dois melhores indivíduos da geração atual
             next_gen = population[:ELITE]
@@ -143,12 +137,7 @@ class GeneticAlgorithm:
 
         # Salva o melhor indivíduo encontrado
         best_individual = max(population, key=lambda x: x.fitness)
-        best_individual_fitness = best_individual.fitness
         final_population_chromosomes = [ind.chromosome for ind in population]
-
-        # Logging final
-        if logger:
-            logger.write(f"[GA] Fim das gerações. Melhor fitness: {best_individual_fitness}")
 
         return {
             "best": best_individual,
