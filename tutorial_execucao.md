@@ -64,7 +64,8 @@ Escolha o modo de execução:
 | 3 ou 4 | Ver um agente jogar uma partida | Não |
 
 As opções 2, 3 e 4 perguntam o tamanho do mundo e a semente. **A mesma semente gera sempre o mesmo mundo**; deixando
-a semente em branco (Enter), o mundo é sorteado.
+a semente em branco (Enter), o mundo é sorteado. No fim da partida, elas perguntam "Ver a partida numa janela? (s/N)":
+respondendo `s`, uma janela reproduz a partida passo a passo.
 
 ### As regras em resumo
 
@@ -283,8 +284,7 @@ mesmos resultados, e o que tinham de próprio virou as opções `--paralelo` e `
 
 | Item | Situação |
 |---|---|
-| `python main.py logico --size 4 --vis` | Essa sintaxe não existe ainda: o `main.py` sempre abre o menu. Prevista para a v2.0.0 |
-| Janela gráfica (`visual/visualizer.py`) | O código existe, mas não está ligado ao programa |
+| `python main.py logico --size 4 --vis` | Essa sintaxe não existe: as execuções únicas são escolhidas pelo menu, que oferece a janela no fim |
 | Pasta `pygad/` | Não roda: depende do módulo `WumpsimAG`, que não está no projeto ([#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15)) |
 | Gráficos com todas as execuções | Hoje usam só a primeira ([#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29)) |
 

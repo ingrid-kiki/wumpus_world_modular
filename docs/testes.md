@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **177 casos de teste**, vindos de
-**132 funções** em **25 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **183 casos de teste**, vindos de
+**136 funções** em **26 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -45,6 +45,7 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | `test_busca_aleatoria.py` | 6 | Busca aleatória, a referência do genético |
 | `test_proximidade.py` | 9 | Bônus de proximidade ao ouro no fitness |
 | `test_benchmark.py` | 4 | Benchmark único: modos sequencial e paralelo, silencioso e tempos |
+| `test_visualizer.py` | 6 | Janela que reproduz a partida e pergunta no menu |
 | `test_main_etapas.py` | 7 | Arquivos de cada run e resistência a quedas |
 | `test_graficos.py` | 9 | Gráficos nunca interrompem o benchmark |
 | `test_experimento_31.py` | 7 | Script de comparação de métodos da #31 |
@@ -130,7 +131,7 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 | `test_menu_repete_ate_receber_tamanho_valido` | 1 | O menu pergunta de novo até receber um tamanho válido |
 | `test_semente_em_branco_e_opcional` | 1 | Deixar a semente em branco é aceito |
 | `test_semente_invalida_pergunta_de_novo` | 1 | Uma semente inválida faz o menu perguntar de novo |
-| `test_execucao_unica_termina_com_entradas_corrigidas` | 1 | A execução única termina depois de respostas erradas seguidas de certas |
+| `test_execucao_unica_termina_com_entradas_corrigidas` | 1 | A execução única termina depois de respostas erradas seguidas de certas, recusando a janela no fim |
 | `test_cromossomo_de_um_gene_nao_gera_erro` | 1 | Um cromossomo com um gene só não quebra o benchmark |
 
 ### `test_constantes.py`
@@ -236,6 +237,15 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_tempo_total_e_de_relogio_e_tempo_medio_e_a_media_das_execucoes` | 1 | `tempo_total` é o tempo de relógio e `tempo_médio`, a média das execuções |
 | `test_opcoes_do_main_chegam_ao_benchmark` | 1 | `--paralelo` e `--silencioso` chegam ao benchmark, e sem elas nada é repassado |
 
+### `test_visualizer.py`
+
+| Teste | Casos | O que garante |
+|---|---|---|
+| `test_reproducao_chega_ao_mesmo_estado_final_da_partida` | 1 | Refazer o histórico na janela leva ao mesmo estado final da partida jogada |
+| `test_janela_pinta_o_agente_na_casa_dele` | 1 | O agente aparece na casa certa, com a cor do agente |
+| `test_menu_so_abre_a_janela_quando_pedido` | 3 | A janela abre com `s` ou `sim` e não abre com a resposta em branco |
+| `test_sem_pygame_a_janela_so_avisa` | 1 | Sem o pygame, o programa avisa e segue, sem quebrar |
+
 ### `test_main_etapas.py`
 
 | Teste | Casos | O que garante |
@@ -288,8 +298,8 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 
 | Teste | Casos | O que garante |
 |---|---|---|
-| `test_nenhuma_funcao_passa_de_40_linhas` | 1 | Nenhuma função do programa passa de 40 linhas, fora as exceções registradas no teste |
-| `test_excecoes_de_complexidade_so_onde_registrado` | 1 | A marca `# noqa: C901` só aparece nos arquivos das exceções registradas |
+| `test_nenhuma_funcao_passa_de_40_linhas` | 1 | Nenhuma função do programa passa de 40 linhas; hoje não há exceção registrada |
+| `test_excecoes_de_complexidade_so_onde_registrado` | 1 | A marca `# noqa: C901` só aparece nos arquivos das exceções registradas; hoje, em nenhum |
 
 ### `test_lista_de_testes.py`
 

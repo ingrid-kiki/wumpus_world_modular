@@ -2,120 +2,132 @@
 # visual/visualizer.py
 # ==============================
 """
-# Este arquivo implementa a classe Visualizer, responsável pela visualização gráfica
-# do ambiente Wumpus World utilizando Pygame. Permite acompanhar em tempo real o estado
-# do mundo, as percepções, posições do agente, Wumpus, poços e ouro, além de exibir
-# mensagens de vitória, morte e eventos especiais. Ideal para análise didática e demonstrações.
+# Janela gráfica (pygame) que reproduz, passo a passo, uma partida já jogada.
+#
+# O main.py a oferece no fim das execuções únicas (opções 2, 3 e 4 do menu). Ela recebe uma
+# cópia do mundo no estado inicial e o histórico do agente, e refaz as ações nessa cópia: a
+# janela mostra exatamente o que aconteceu, sem rodar o agente de novo. Cada casa mostra as
+# percepções de quem estivesse nela; o Wumpus, os poços, o ouro e o agente aparecem com cores
+# próprias, e os avisos de grito, morte e vitória ficam no canto de cima.
 """
-
-import sys
 
 import pygame
 
 from world.constantes import BRILHO, BRISA, FEDOR
 
+TAMANHO_DA_CASA = 100  # pixels
+PASSOS_POR_SEGUNDO = 2
+CORES = {
+    "fundo": (255, 255, 255),
+    "casa": (200, 200, 200),
+    "borda": (0, 0, 0),
+    "wumpus": (255, 0, 0),
+    "poco": (100, 100, 100),
+    "ouro": (255, 215, 0),
+    "agente": (0, 255, 0),
+    "alerta": (255, 0, 0),
+    "vitoria": (0, 128, 0),
+}
+# A fonte padrão do pygame não tem emojis: as percepções aparecem por extenso
+NOMES_DAS_PERCEPCOES = ((BRISA, "brisa"), (FEDOR, "fedor"), (BRILHO, "brilho"))
+
 
 class Visualizer:
-    def __init__(self, world):
-        # Inicializa o Pygame
+    def __init__(self, world, cell_size=TAMANHO_DA_CASA):
+        """Abre a janela do tamanho do mundo. `world` é o mundo que será desenhado e alterado na reprodução."""
         pygame.init()
-        # Referência ao mundo do Wumpus
         self.world = world
-        # Tamanho de cada célula do grid (em pixels)
-        self.cell_size = 100
-        # Cria a janela do Pygame com tamanho proporcional ao mundo
-        self.screen = pygame.display.set_mode((world.size * self.cell_size, world.size * self.cell_size))
-        # Define o título da janela
-        pygame.display.set_caption("Wumpus World Viewer")
-        # Fonte para desenhar textos nas células
+        self.cell_size = cell_size
+        self.screen = pygame.display.set_mode((world.size * cell_size, world.size * cell_size))
+        pygame.display.set_caption("Wumpus World")
         self.font = pygame.font.SysFont(None, 24)
-        # Relógio para controlar o FPS da visualização
+        self.fonte_pequena = pygame.font.SysFont(None, 20)
         self.clock = pygame.time.Clock()
 
     def draw_cell(self, x, y, color, text=None):
-        # Desenha uma célula na posição (x, y) com a cor especificada
+        """Pinta a casa (x, y), com borda e um texto opcional no canto."""
         rect = pygame.Rect(y * self.cell_size, x * self.cell_size, self.cell_size, self.cell_size)
         pygame.draw.rect(self.screen, color, rect)
-        # Desenha a borda da célula
-        pygame.draw.rect(self.screen, (0, 0, 0), rect, 2)
-        # Se houver texto, desenha o texto na célula
+        pygame.draw.rect(self.screen, CORES["borda"], rect, 2)
         if text:
-            label = self.font.render(text, True, (0, 0, 0))
-            self.screen.blit(label, (rect.x + 10, rect.y + 10))
+            self.screen.blit(self.font.render(text, True, CORES["borda"]), (rect.x + 10, rect.y + 10))
 
-    def draw_world(self):  # noqa: C901 (refatorar na Etapa 3)
-        # Preenche o fundo da tela de branco
-        self.screen.fill((255, 255, 255))
-
-        # 🧱 Desenha todas as células básicas com percepção visual (BREEZE, STENCH, GLITTER)
-        for x in range(self.world.size):
-            for y in range(self.world.size):
-                texts = []
-                agent_temp_pos = self.world.agent_pos
-                self.world.agent_pos = (x, y)
-                perception = self.world.perceive()
-                self.world.agent_pos = agent_temp_pos
-
-                if BRISA in perception:
-                    texts.append("💨")
-                if FEDOR in perception:
-                    texts.append("💀")
-                if BRILHO in perception:
-                    texts.append("✨")
-
-                label = " ".join(texts)
-                self.draw_cell(x, y, (200, 200, 200), label)
-
-        # 🟥 Desenha o Wumpus (se estiver vivo)
-        if hasattr(self.world, "wumpus_alive") and self.world.wumpus_alive and hasattr(self.world, "wumpus_pos"):
-            x, y = self.world.wumpus_pos
-            self.draw_cell(x, y, (255, 0, 0), "W")
-
-        # 🕳️ Desenha os poços
-        if hasattr(self.world, "pits"):
-            for x, y in self.world.pits:
-                self.draw_cell(x, y, (100, 100, 100), "P")
-
-        # 🟡 Desenha o ouro
-        if hasattr(self.world, "gold_pos"):
-            x, y = self.world.gold_pos
-            self.draw_cell(x, y, (255, 215, 0), "G")
-
-        # 🟢 Desenha o agente
-        if hasattr(self.world, "agent_pos"):
-            x, y = self.world.agent_pos
-            self.draw_cell(x, y, (0, 255, 0), "A")
-
-        # 📣 Exibe o grito do Wumpus se ele morreu
-        if hasattr(self.world, "last_scream") and self.world.last_scream:
-            scream_label = self.font.render("GRITO!", True, (255, 0, 0))
-            self.screen.blit(scream_label, (10, 10))
-
-        # ☠️ Exibe mensagem de morte do agente
-        if hasattr(self.world, "is_alive") and not self.world.is_alive:
-            death_label = self.font.render("AGENTE MORTO!", True, (255, 0, 0))
-            self.screen.blit(death_label, (10, 40))
-
-        # 🏆 Exibe mensagem de vitória
-        if hasattr(self.world, "won") and self.world.won:
-            win_label = self.font.render("VITÓRIA!", True, (0, 128, 0))
-            self.screen.blit(win_label, (10, 70))
-
-        # Atualiza a tela com todos os desenhos
+    def draw_world(self, passo=None):
+        """Desenha o estado atual do mundo; `passo` é o item do histórico que levou até ele, se houver."""
+        self.screen.fill(CORES["fundo"])
+        self._desenhar_percepcoes()
+        self._desenhar_elementos()
+        self._desenhar_avisos(passo)
         pygame.display.flip()
 
-    def run(self):
-        # Loop principal da visualização
-        running = True
-        while running:
-            # Desenha o mundo a cada frame
-            self.draw_world()
-            # Processa eventos do Pygame (como fechar a janela)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-            # Controla a taxa de atualização (FPS)
-            self.clock.tick(5)
-        # Encerra o Pygame e o programa
+    def _percepcao_na_casa(self, pos):
+        """O que o agente perceberia na casa `pos`, sem mudar o mundo."""
+        posicao_real = self.world.agent_pos
+        self.world.agent_pos = pos
+        percepcao = self.world.perceive()
+        self.world.agent_pos = posicao_real
+        return percepcao
+
+    def _desenhar_percepcoes(self):
+        """Cada casa com as percepções (brisa, fedor, brilho) que o agente teria nela."""
+        for x in range(self.world.size):
+            for y in range(self.world.size):
+                self.draw_cell(x, y, CORES["casa"])
+                percepcao = self._percepcao_na_casa((x, y))
+                palavras = [nome for percebido, nome in NOMES_DAS_PERCEPCOES if percebido in percepcao]
+                for linha, palavra in enumerate(palavras):
+                    posicao = (y * self.cell_size + 10, x * self.cell_size + 40 + 18 * linha)
+                    self.screen.blit(self.fonte_pequena.render(palavra, True, CORES["borda"]), posicao)
+
+    def _desenhar_elementos(self):
+        """Wumpus (enquanto vivo), poços, ouro e, por cima de tudo, o agente."""
+        if self.world.wumpus_alive:
+            self.draw_cell(*self.world.wumpus_pos, CORES["wumpus"], "W")
+        for poco in self.world.pits:
+            self.draw_cell(*poco, CORES["poco"], "P")
+        self.draw_cell(*self.world.gold_pos, CORES["ouro"], "G")
+        self.draw_cell(*self.world.agent_pos, CORES["agente"], "A")
+
+    def _desenhar_avisos(self, passo):
+        """O passo atual e os avisos de grito, morte e vitória, no canto de cima."""
+        avisos = []
+        if passo:
+            avisos.append((f"Passo {passo['passo']}: {passo['acao']}", CORES["borda"]))
+        if self.world.last_scream:
+            avisos.append(("GRITO!", CORES["alerta"]))
+        if not self.world.is_alive:
+            avisos.append(("AGENTE MORTO!", CORES["alerta"]))
+        if self.world.won:
+            avisos.append(("VITÓRIA!", CORES["vitoria"]))
+        for linha, (texto, cor) in enumerate(avisos):
+            # Fundo branco atrás do texto, para ele não se misturar com as percepções da casa
+            self.screen.blit(self.font.render(texto, True, cor, CORES["fundo"]), (10, 10 + 30 * linha))
+
+    def reproduzir(self, historico, passos_por_segundo=PASSOS_POR_SEGUNDO, esperar_fechar=True):
+        """
+        Mostra o estado inicial e refaz, no mundo da janela, cada ação do histórico.
+        Ao fim, espera a pessoa fechar a janela (a menos que `esperar_fechar` seja False).
+        :return: quantos passos foram mostrados
+        """
+        self.draw_world()
+        mostrados, fechada = 0, False
+        for passo in historico:
+            if self._fechou():
+                fechada = True
+                break
+            self.clock.tick(passos_por_segundo)
+            self.world.step(passo["acao"])
+            self.draw_world(passo)
+            mostrados += 1
+        if esperar_fechar and not fechada:
+            self._esperar_fechar()
         pygame.quit()
-        sys.exit()
+        return mostrados
+
+    def _fechou(self):
+        """True se a pessoa fechou a janela."""
+        return any(evento.type == pygame.QUIT for evento in pygame.event.get())
+
+    def _esperar_fechar(self):
+        while not self._fechou():
+            self.clock.tick(10)

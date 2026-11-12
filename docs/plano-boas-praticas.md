@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a E concluídas, próxima: PR F, `--vis`), com a comparação final da tese depois dela.
+**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a F concluídas, próxima: PR G, nomes e acentos), com a comparação final da tese depois dela.
 
 ## Objetivo
 
@@ -122,7 +122,8 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 | 2 | `Logger` | `LogicAgent.logger` fica sempre `None`, o parâmetro `logger` do AG nunca é informado e os `.log` só repetem início e fim, que já estão no `terminal_output.txt` | Retirar o atributo, o parâmetro e os arquivos `.log`, deixando o `terminal_output.txt` como registro único | cerca de 1 h |
 | 3 | `Visualizer` | Nenhum arquivo do programa o importa, e ele só desenha o estado atual do mundo | Ligar ao `--vis` nas execuções únicas, reproduzindo na janela os passos do agente depois que ele termina | 2 a 3 h |
 
-Situação: a classe base foi concluída na #73 e a retirada do `Logger` na #74; o `--vis` fica para a PR F.
+Situação: os três estão concluídos: a classe base na #73, a retirada do `Logger` na #74 e a janela na #78, oferecida por
+uma pergunta no menu, como decidido em 12/11/2026.
 A classe base veio primeiro porque o `--vis` depende do histórico com as posições. Esses 5 a 7 h já estão contados na estimativa
 da etapa. O teste de referência precisa continuar passando em cada ajuste, cada classe nova entra no diagrama de classes, e a saída dos
 `.log` muda o conteúdo da pasta do run, então entra na v2.0.0.
@@ -137,8 +138,8 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
   conferida automaticamente na PR G, e o `reproduzir.py` continua lendo runs antigos.
 - **Um benchmark só**, com `--paralelo` e uma opção para menos mensagens. Os outros quatro arquivos saem, e `--benchmark`
   continua aceitando arquivos externos. A justificativa está em [`analise-benchmarks-2026-11.md`](analise-benchmarks-2026-11.md).
-- **Em aberto:** o destino de `pygad/`, ligado à [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15); como
-  ativar o `--vis` (PR F); e o uso do `.npz` (PR I).
+- **Em aberto:** o destino de `pygad/`, ligado à [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15), e o
+  uso do `.npz` (PR I). A janela é oferecida por uma pergunta no menu (decidido em 12/11/2026).
 
 **Divisão em tarefas (cada PR é mesclada antes de abrir a próxima; aprovada em 11/11/2026):**
 
@@ -149,7 +150,7 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
 | C | 3.3 Retirar o `Logger`, o parâmetro `logger` e os arquivos `.log` | 1 h | Concluída (#74) |
 | D | 3.4 Um benchmark único, com `--paralelo`; `tempo_total` passa a ser o tempo de relógio também no paralelo | 2 a 3 h | Concluída (#76) |
 | E | 3.5 Dividir as 12 funções com mais de 40 linhas e retirar as exceções de complexidade | 2,5 a 3,5 h | Concluída (#77); `draw_world` fica para a F |
-| F | 3.6 Ligar o `Visualizer` ao `--vis` e dividir `draw_world`, a última função longa | 2 a 3 h | A fazer |
+| F | 3.6 Ligar o `Visualizer` ao `--vis` e dividir `draw_world`, a última função longa | 2 a 3 h | Concluída (#78), com pergunta no menu |
 | G | 3.7 Nomes em português, saídas sem acento e a regra que confere isso | 2 a 3 h | A fazer |
 | H | 3.8 Tipos nas funções públicas | 1,5 a 2 h | A fazer |
 | I | 3.9 Organizar em pacote, com `pyproject.toml` completo, e decidir o uso do `.npz` | 1,5 a 2 h | A fazer |
@@ -159,7 +160,7 @@ A ordem segue as dependências: a classe base usa as constantes, o benchmark ún
 longas vêm depois do benchmark único. Os nomes ficam para o fim, para não criar conflitos com as outras PRs. Em cada PR, o teste de
 referência e os números do `logico_seguro` garantem resultados idênticos, e os diagramas e a lista de testes acompanham o código.
 
-Restam 5 PRs (F a J), com cerca de 8 a 11 h previstas.
+Restam 4 PRs (G a J), com cerca de 6 a 8 h previstas.
 
 **Meta:** nenhuma função acima de 40 linhas, nenhuma com complexidade acima de 10, nenhuma lista repetida. Lançamento: v2.0.0.
 
@@ -229,7 +230,8 @@ parênteses é a da tabela de tarefas da etapa. "Plano", "Versão" e "Geral" sã
 | [#74](https://github.com/ingrid-kiki/wumpus_world_modular/pull/74) | 2026-11-12 | 3 (C) | Retira o `Logger` e os arquivos `.log` |
 | [#75](https://github.com/ingrid-kiki/wumpus_world_modular/pull/75) | 2026-11-12 | Plano | Andamento da Etapa 3 e esta tabela |
 | [#76](https://github.com/ingrid-kiki/wumpus_world_modular/pull/76) | 2026-11-12 | 3 (D) | Benchmark único, com `--paralelo` e `--silencioso` |
-| [#77](https://github.com/ingrid-kiki/wumpus_world_modular/pull/77) | em revisão | 3 (E) | Divide as funções longas e trava os limites num teste |
+| [#77](https://github.com/ingrid-kiki/wumpus_world_modular/pull/77) | 2026-11-12 | 3 (E) | Divide as funções longas e trava os limites num teste |
+| [#78](https://github.com/ingrid-kiki/wumpus_world_modular/pull/78) | em revisão | 3 (F) | Janela que reproduz a partida, oferecida no menu |
 
 Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 
@@ -240,10 +242,10 @@ Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
 | 2. Documentação e diagramas | Concluída | Baixo | Etapa 0 |
-| 3. Código limpo | Restam cerca de 8 a 11 h | **Médio** | Etapa 1 |
+| 3. Código limpo | Restam cerca de 6 a 8 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Restante** | **cerca de 17 a 26 h** | | |
+| **Restante** | **cerca de 15 a 23 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 

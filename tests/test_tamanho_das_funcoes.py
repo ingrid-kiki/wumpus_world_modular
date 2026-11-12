@@ -13,8 +13,8 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 PASTAS_IGNORADAS = {"__pycache__", "logs", "pygad", "tests", "venv"}
 LIMITE_DE_LINHAS = 40
-# draw_world será dividida junto com a ligação do Visualizer ao --vis (PR F da Etapa 3)
-EXCECOES = {"visual/visualizer.py:draw_world"}
+# Exceções registradas aqui, no formato 'arquivo:função'; hoje não há nenhuma
+EXCECOES = set()
 
 
 def arquivos_do_programa():

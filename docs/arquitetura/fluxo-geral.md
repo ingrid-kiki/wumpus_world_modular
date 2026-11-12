@@ -9,7 +9,10 @@ flowchart TD
 
     menu -- "2, 3 ou 4" --> unica["execucao_unica:<br/>pede tamanho e semente"]
     unica --> executa["agente.run() no terminal"]
-    executa --> fimUnico(["Fim: nenhum arquivo é gravado"])
+    executa --> janela{"Ver a partida<br/>numa janela?"}
+    janela -- "s" --> reproduz["Visualizer.reproduzir:<br/>refaz a partida na janela"]
+    janela -- "não" --> fimUnico(["Fim: nenhum arquivo é gravado"])
+    reproduz --> fimUnico
 
     menu -- "outra" --> invalida(["Fim: opção inválida"])
 

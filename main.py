@@ -52,16 +52,34 @@ def perguntar_inteiro(pergunta, minimo=None, opcional=False):
         return valor
 
 
+def perguntar_sim_ou_nao(pergunta):
+    """True só se a resposta for "s" ou "sim"; em branco ou qualquer outra coisa, False."""
+    return input(pergunta).strip().lower() in ("s", "sim")
+
+
+def mostrar_partida(mundo_inicial, historico):
+    """Abre a janela que reproduz a partida; sem pygame ou sem tela, avisa e segue."""
+    try:
+        from visual.visualizer import Visualizer  # o pygame só é carregado se a janela for pedida
+
+        Visualizer(mundo_inicial).reproduzir(historico)
+    except Exception as e:  # a janela é opcional: a partida já terminou e foi mostrada no terminal
+        print(f"⚠️ Não foi possível abrir a janela: {type(e).__name__}: {e}")
+
+
 def execucao_unica(agente_nome):
+    """Uma partida de um agente, com tamanho e semente pedidos no menu, e a janela opcional no fim."""
     size = perguntar_inteiro("Tamanho do mundo (ex: 4): ", minimo=TAMANHO_MINIMO)
     seed = perguntar_inteiro("Semente aleatória (opcional, pressione Enter para aleatório): ", opcional=True)
 
     mundo = World(size=size, seed=seed)
-    agente_cls = AGENTES_DISPONIVEIS[agente_nome]
-    agente = agente_cls(mundo)
+    mundo_inicial = mundo.clone()  # a janela refaz a partida a partir deste estado
+    agente = AGENTES_DISPONIVEIS[agente_nome](mundo)
 
     print(f"\nExecutando agente '{agente_nome}' no mundo {size}x{size}...\n")
-    agente.run()
+    resultado = agente.run()
+    if perguntar_sim_ou_nao("\nVer a partida numa janela? (s/N): "):
+        mostrar_partida(mundo_inicial, resultado["historico"])
 
 
 def carregar_benchmark(path):

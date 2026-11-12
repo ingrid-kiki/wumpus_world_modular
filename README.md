@@ -152,35 +152,17 @@ O script avisa se o commit, a versão ou as bibliotecas forem diferentes e compa
 sobrevivências, que precisam ser idênticas. Tempos, memória e CPU variam de máquina para máquina e não entram na
 comparação. Runs anteriores à v1.5.0 não têm `metadata.json`.
 
-### 🔧 Sintaxe
+### 🔧 Uma partida com janela
 
-> ⚠️ **Ainda não implementado.** A sintaxe abaixo é a planejada para a v2.0.0
-> (ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17)).
-> Hoje o `main.py` só abre o menu interativo e ignora esses argumentos, e o `--vis` não está ligado ao `Visualizer`.
-
-```bash
-python main.py [agente] [--size TAMANHO] [--seed SEMENTE] [--vis]
-```
-
-### 📌 Exemplos
-
-**Executar agente lógico em mundo 4x4 com visualização:**
+As opções 2, 3 e 4 do menu jogam uma partida e, no fim, perguntam "Ver a partida numa janela? (s/N)". Respondendo `s`,
+uma janela reproduz a partida passo a passo. Para fechar, use o botão da janela.
 
 ```bash
-python main.py logico --size 4 --vis
+python main.py
 ```
 
-**Executar agente genético em mundo 6x6 com semente aleatória:**
-
-```bash
-python main.py genetico --size 6 --seed 42
-```
-
-**Executar agente manual (via terminal):**
-
-```bash
-python main.py manual
-```
+A sintaxe `python main.py logico --size 4 --vis`, prometida em versões anteriores deste README, nunca existiu: as
+execuções únicas são escolhidas pelo menu.
 
 ---
 
@@ -244,10 +226,7 @@ Sem semente explícita, o AG usa a semente do mundo: o mesmo mundo produz sempre
 
 ## 🖼️ Interface Visual
 
-> ⚠️ **Ainda não disponível.** O código está em `visual/visualizer.py`, mas não está ligado ao programa; a opção
-> `--vis` está prevista para a v2.0.0.
-
-A janela gráfica mostra:
+Oferecida no fim das opções 2, 3 e 4 do menu, a janela (`visual/visualizer.py`) refaz a partida passo a passo e mostra:
 
 - 🟥 Wumpus  
 - 🕳️ Poços  
@@ -256,6 +235,7 @@ A janela gráfica mostra:
 - 📣 Grito (se o Wumpus morrer)  
 - ☠️ Morte do agente  
 - 🏆 Vitória (pegou o ouro)
+- As percepções de cada casa (brisa, fedor, brilho) e a ação de cada passo
 
 ---
 

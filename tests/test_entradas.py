@@ -110,7 +110,7 @@ def test_semente_invalida_pergunta_de_novo(monkeypatch):
 
 def test_execucao_unica_termina_com_entradas_corrigidas(monkeypatch, capsys):
     """Tamanho 1 no menu travava o programa."""
-    respostas(monkeypatch, "1", "abc", "4", "3")
+    respostas(monkeypatch, "1", "abc", "4", "3", "")  # o "" recusa a janela no fim
     main.execucao_unica("logico")
     assert "mundo 4x4" in capsys.readouterr().out
 

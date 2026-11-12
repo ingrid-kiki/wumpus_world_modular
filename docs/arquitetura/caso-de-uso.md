@@ -11,6 +11,7 @@ flowchart LR
     subgraph sistema["Wumpus World"]
         jogar(["Jogar manualmente"])
         assistir(["Ver um agente resolver um mundo"])
+        janela(["Ver a partida numa janela"])
         comparar(["Comparar agentes em benchmark"])
         configurar(["Configurar o benchmark<br/>pela linha de comando"])
         gravar(["Gravar resultados,<br/>gráficos e metadados"])
@@ -26,6 +27,8 @@ flowchart LR
     pesquisa --- experimentar
 
     configurar -. "estende" .-> comparar
+    janela -. "estende" .-> jogar
+    janela -. "estende" .-> assistir
     comparar -. "inclui" .-> gravar
     reproduzir -. "inclui" .-> comparar
 ```
@@ -38,6 +41,7 @@ o caso de origem é uma variação opcional do caso de destino.
 | Caso de uso | Como acionar | Código principal |
 |---|---|---|
 | Jogar manualmente | `python main.py`, opção 2 | `execucao_unica`, `ManualAgent` |
+| Ver a partida numa janela | Responder `s` à pergunta no fim das opções 2, 3 e 4 | `mostrar_partida`, `Visualizer` |
 | Ver um agente resolver um mundo | `python main.py`, opção 3 (lógico) ou 4 (genético) | `execucao_unica`, `LogicAgent`, `GeneticAgent` |
 | Comparar agentes em benchmark | `python main.py`, opção 1 | `rodar_benchmark` |
 | Configurar o benchmark pela linha de comando | Opção 5 do menu, ou `python main.py <argumentos>` seguido da opção 1 | `criar_parser`, `separar_argumentos` |

@@ -135,10 +135,17 @@ classDiagram
         +cell_size
         +screen
         +font
+        +fonte_pequena
         +clock
         +draw_cell(x, y, color, text)
-        +draw_world()
-        +run()
+        +draw_world(passo)
+        +reproduzir(historico, passos_por_segundo, esperar_fechar)
+        -_percepcao_na_casa(pos)
+        -_desenhar_percepcoes()
+        -_desenhar_elementos()
+        -_desenhar_avisos(passo)
+        -_fechou()
+        -_esperar_fechar()
     }
 
     Agente --> World : world
@@ -161,7 +168,6 @@ classDiagram
     Individual ..> World : simula em uma cópia
 
 
-    note for Visualizer "Sem uso: nenhum arquivo do programa importa esta classe"
 ```
 
 ## Como ler
@@ -200,4 +206,5 @@ classDiagram
   e a decisão passa a evitar poços ([investigação de 11/11/2026](../investigacao-agente-logico-2026-11.md)).
 - **`GeneticAlgorithm` e `RandomSearchAgent` avaliam com o mesmo fitness**, o método `Individual.evaluate`.
 - **`AGVariante` só é usada nos experimentos**, para trocar a seleção por torneio. Ela não entra no menu do `main.py`.
-- `visual/` está entre os pontos da Etapa 3 do [plano de boas práticas](../plano-boas-praticas.md).
+- **`Visualizer` reproduz uma partida já jogada.** O `main.py` a oferece no fim das execuções únicas, com uma cópia do mundo
+  no estado inicial e o histórico do agente.
