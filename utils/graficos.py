@@ -24,7 +24,8 @@ import numpy as np
 import seaborn as sns
 from sklearn.decomposition import PCA
 
-METRICAS_BASICAS = ["vitórias", "mortes", "sobreviveu"]
+# Coluna do CSV (sem acento) e o nome que aparece no título do gráfico (com acento)
+METRICAS_BASICAS = {"vitorias": "Vitórias", "mortes": "Mortes", "sobreviveu": "Sobreviveu"}
 
 
 def _desenhar(nome, funcao, relatorio):
@@ -78,8 +79,8 @@ def gerar_graficos(df, output_dir):
     :return: dict com os nomes em "gerados", "pulados" e "falhas"
     """
     relatorio = _relatorio_vazio()
-    for metric in METRICAS_BASICAS:
-        titulo = f"Comparação de {metric.capitalize()} por agente e tamanho do mundo"
+    for metric, rotulo in METRICAS_BASICAS.items():
+        titulo = f"Comparação de {rotulo} por agente e tamanho do mundo"
         _desenhar(
             f"grafico_{metric}",
             lambda m=metric, t=titulo: _barras_por_tamanho(df, m, t, "Quantidade", f"grafico_{m}", output_dir),
@@ -89,7 +90,7 @@ def gerar_graficos(df, output_dir):
         "grafico_tempo_medio",
         lambda: _barras_por_tamanho(
             df,
-            "tempo_médio",
+            "tempo_medio",
             "Tempo médio de execução por agente e tamanho do mundo",
             "Tempo médio (s)",
             "grafico_tempo_medio",
@@ -166,7 +167,7 @@ def _convergencia_populacao(d, output_dir):
     _salvar(output_dir, "convergencia_populacao")
 
 
-def _curva_convergencia_std(d, output_dir):
+def _curva_convergencia_desvio_padrao(d, output_dir):
     """Média do fitness por geração, com uma faixa de um desvio padrão."""
     mean = np.mean(d["fitness_pop"], axis=1)
     std = np.std(d["fitness_pop"], axis=1)
@@ -177,17 +178,17 @@ def _curva_convergencia_std(d, output_dir):
     plt.xlabel("Geração")
     plt.ylabel("Fitness")
     plt.legend()
-    _salvar(output_dir, "curva_convergencia_std")
+    _salvar(output_dir, "curva_convergencia_desvio_padrao")
 
 
-def _violin_fitness(d, output_dir):
+def _violino_fitness(d, output_dir):
     """Distribuição do fitness da população em cada geração."""
     plt.figure(figsize=(8, 5))
     sns.violinplot(data=d["fitness_pop"].T)
     plt.title("Distribuição do Fitness por Geração (Violin Plot)")
     plt.xlabel("Geração")
     plt.ylabel("Fitness")
-    _salvar(output_dir, "violin_fitness")
+    _salvar(output_dir, "violino_fitness")
 
 
 def _ecdf_fitness_final(d, output_dir):
@@ -199,14 +200,14 @@ def _ecdf_fitness_final(d, output_dir):
     _salvar(output_dir, "ecdf_fitness_final")
 
 
-def _heatmap_diversidade(d, output_dir):
+def _mapa_de_calor_diversidade(d, output_dir):
     """Quantos genes diferentes há em cada posição do cromossomo, geração a geração."""
     plt.figure(figsize=(10, 6))
     sns.heatmap(d["diversidade"], cmap="viridis")
     plt.title("Mapa de Calor da Diversidade por Variável")
     plt.xlabel("Variável")
     plt.ylabel("Geração")
-    _salvar(output_dir, "heatmap_diversidade")
+    _salvar(output_dir, "mapa_de_calor_diversidade")
 
 
 def _area_empilhada_diversidade(d, output_dir):
@@ -237,10 +238,10 @@ GRAFICOS_AVANCADOS = [
     ("memoria_cpu", _memoria_cpu, lambda d: d["memoria"] is not None and d["cpu"] is not None),
     ("evolucao_fitness", _evolucao_fitness, lambda d: d["fitness"] is not None),
     ("convergencia_populacao", _convergencia_populacao, lambda d: d["fitness_pop"] is not None),
-    ("curva_convergencia_std", _curva_convergencia_std, lambda d: d["fitness_pop"] is not None),
-    ("violin_fitness", _violin_fitness, lambda d: d["fitness_pop"] is not None),
+    ("curva_convergencia_desvio_padrao", _curva_convergencia_desvio_padrao, lambda d: d["fitness_pop"] is not None),
+    ("violino_fitness", _violino_fitness, lambda d: d["fitness_pop"] is not None),
     ("ecdf_fitness_final", _ecdf_fitness_final, lambda d: d["fitness_final"] is not None),
-    ("heatmap_diversidade", _heatmap_diversidade, lambda d: d["diversidade"] is not None),
+    ("mapa_de_calor_diversidade", _mapa_de_calor_diversidade, lambda d: d["diversidade"] is not None),
     ("area_empilhada_diversidade", _area_empilhada_diversidade, lambda d: d["diversidade"] is not None),
     # O PCA de 2 componentes precisa de pelo menos 2 indivíduos e 2 genes
     (

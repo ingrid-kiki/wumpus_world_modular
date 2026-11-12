@@ -19,26 +19,26 @@ GRAFICOS_AVANCADOS = {
     "memoria_cpu",
     "evolucao_fitness",
     "convergencia_populacao",
-    "curva_convergencia_std",
-    "violin_fitness",
+    "curva_convergencia_desvio_padrao",
+    "violino_fitness",
     "ecdf_fitness_final",
-    "heatmap_diversidade",
+    "mapa_de_calor_diversidade",
     "area_empilhada_diversidade",
     "pca_populacao_final",
 }
-GRAFICOS_BASICOS = {"grafico_vitórias", "grafico_mortes", "grafico_sobreviveu", "grafico_tempo_medio"}
+GRAFICOS_BASICOS = {"grafico_vitorias", "grafico_mortes", "grafico_sobreviveu", "grafico_tempo_medio"}
 
 
 def resultado_falso(agente, tamanho, dados_extra=None):
     return {
         "agente": agente,
         "tamanho_mundo": tamanho,
-        "vitórias": 1,
+        "vitorias": 1,
         "mortes": 0,
         "sobreviveu": 0,
         "erros": 0,
         "tempo_total": 0.1,
-        "tempo_médio": 0.1,
+        "tempo_medio": 0.1,
         "dados_extra": dados_extra or {},
     }
 
@@ -50,14 +50,14 @@ def benchmark_falso(monkeypatch, funcao):
 def test_layout_completo_de_um_run(tmp_path):
     pasta = tmp_path / "run"
     main.rodar_benchmark(
-        ["--agentes", "logico", "genetico", "--sizes", "4", "--execucoes", "2", *ARGS_AG, "--saida", str(pasta)]
+        ["--agentes", "logico", "genetico", "--tamanhos", "4", "--execucoes", "2", *ARGS_AG, "--saida", str(pasta)]
     )
-    assert {p.stem for p in (pasta / "advanced_charts_genetico_4x4").glob("*.png")} == GRAFICOS_AVANCADOS
-    assert not (pasta / "advanced_charts_logico_4x4").exists()  # o agente lógico não tem dados extras
+    assert {p.stem for p in (pasta / "graficos_avancados_genetico_4x4").glob("*.png")} == GRAFICOS_AVANCADOS
+    assert not (pasta / "graficos_avancados_logico_4x4").exists()  # o agente lógico não tem dados extras
     assert {p.stem for p in pasta.glob("*.png")} >= GRAFICOS_BASICOS
-    for arquivo in ("resultados_benchmark.csv", "terminal_output.txt", "metadata.json", "dados_extra_genetico_4x4.npz"):
+    for arquivo in ("resultados_benchmark.csv", "saida_terminal.txt", "metadados.json", "dados_extra_genetico_4x4.npz"):
         assert (pasta / arquivo).exists(), arquivo
-    assert not list(pasta.glob("*.log"))  # o registro único é o terminal_output.txt
+    assert not list(pasta.glob("*.log"))  # o registro único é o saida_terminal.txt
     assert not list(pasta.rglob("*.tmp"))
     assert len(pd.read_csv(pasta / "resultados_benchmark.csv")) == 2
 
@@ -75,11 +75,11 @@ def test_queda_na_segunda_etapa_preserva_a_primeira(tmp_path, monkeypatch):
     benchmark_falso(monkeypatch, falha_na_segunda)
     pasta = tmp_path / "run"
     with pytest.raises(RuntimeError, match="queda de propósito"):
-        main.rodar_benchmark(["--agentes", "logico", "--sizes", "4", "6", "--saida", str(pasta)])
+        main.rodar_benchmark(["--agentes", "logico", "--tamanhos", "4", "6", "--saida", str(pasta)])
 
     df = pd.read_csv(pasta / "resultados_benchmark.csv")
     assert list(df["tamanho_mundo"]) == [4]
-    log = (pasta / "terminal_output.txt").read_text(encoding="utf-8")
+    log = (pasta / "saida_terminal.txt").read_text(encoding="utf-8")
     assert "etapa 1 concluída" in log
     assert "RuntimeError: queda de propósito" in log
 
@@ -96,9 +96,9 @@ def test_ctrl_c_tambem_preserva_resultados_e_log(tmp_path, monkeypatch):
     benchmark_falso(monkeypatch, interrompe)
     pasta = tmp_path / "run"
     with pytest.raises(KeyboardInterrupt):
-        main.rodar_benchmark(["--agentes", "logico", "--sizes", "4", "6", "--saida", str(pasta)])
+        main.rodar_benchmark(["--agentes", "logico", "--tamanhos", "4", "6", "--saida", str(pasta)])
     assert len(pd.read_csv(pasta / "resultados_benchmark.csv")) == 1
-    assert "KeyboardInterrupt" in (pasta / "terminal_output.txt").read_text(encoding="utf-8")
+    assert "KeyboardInterrupt" in (pasta / "saida_terminal.txt").read_text(encoding="utf-8")
 
 
 def test_log_e_gravado_durante_a_execucao(tmp_path):
@@ -114,8 +114,8 @@ def test_graficos_avancados_valem_para_qualquer_agente_com_dados_extras(tmp_path
         monkeypatch, lambda agente, tamanho, execucoes, parametros_agentes=None: resultado_falso(agente, tamanho, dados)
     )
     pasta = tmp_path / "run"
-    main.rodar_benchmark(["--agentes", "logico", "--sizes", "4", "--execucoes", "1", "--saida", str(pasta)])
-    assert {p.stem for p in (pasta / "advanced_charts_logico_4x4").glob("*.png")} == GRAFICOS_AVANCADOS
+    main.rodar_benchmark(["--agentes", "logico", "--tamanhos", "4", "--execucoes", "1", "--saida", str(pasta)])
+    assert {p.stem for p in (pasta / "graficos_avancados_logico_4x4").glob("*.png")} == GRAFICOS_AVANCADOS
     assert (pasta / "dados_extra_logico_4x4.npz").exists()
 
 
@@ -125,7 +125,7 @@ def test_mensagem_conta_os_graficos_realmente_gerados(tmp_path, capsys):
         [
             "--agentes",
             "genetico",
-            "--sizes",
+            "--tamanhos",
             "4",
             "--execucoes",
             "1",
@@ -147,5 +147,5 @@ def test_mensagem_conta_os_graficos_realmente_gerados(tmp_path, capsys):
 def test_benchmark_externo_que_devolve_none_nao_derruba(tmp_path, monkeypatch, capsys):
     benchmark_falso(monkeypatch, lambda agente, tamanho, execucoes, parametros_agentes=None: None)
     pasta = tmp_path / "run"
-    main.rodar_benchmark(["--agentes", "logico", "--sizes", "4", "--execucoes", "1", "--saida", str(pasta)])
+    main.rodar_benchmark(["--agentes", "logico", "--tamanhos", "4", "--execucoes", "1", "--saida", str(pasta)])
     assert "Resultado nulo" in capsys.readouterr().out

@@ -148,6 +148,8 @@ Depois da v1.7.0, o trabalho seguiu o [plano de boas práticas](plano-boas-prati
 | 11/11 | Investigação do agente lógico e o agente `logico_seguro`; lista dos testes em `docs/testes.md` | #66, #68 |
 | 11 e 12/11 | Análise dos 5 benchmarks, v1.8.0 e divisão da Etapa 3 em 10 PRs | #69 a #71 |
 | 12/11 | Etapa 3, PRs A a F: constantes, classe base de agente, sem `Logger`, benchmark único, funções curtas e janela da partida | #72 a #78 |
+| 12/11 | Issues: #41 fechada, `pygad/` guardada numa tag, 45 branches mescladas apagadas | #79, #80 |
+| 12/11 | Etapa 3, PR G1: saídas sem acento e em português, regra automática e leitura de runs antigos | #81 |
 
 Em toda a Etapa 3, o teste de referência, os números do `logico_seguro` e a comparação byte a byte dos gráficos provaram
 que os resultados não mudaram. A única regeneração da referência (#73) foi de formato, com as 165 execuções conferidas antes.
@@ -178,6 +180,7 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 | Guardar `pygad/` na tag `archive/pygad-original` e retirá-la da `main` | Ingrid | #15, #80 |
 | Apagar do GitHub as 45 branches já mescladas (todas contidas na `main`) | Ingrid | #42 |
 | Resolver a #29 na PR I da Etapa 3, antes da v2.0.0 | Ingrid | #29 |
+| Dividir a PR G: saídas (G1), nomes do código (G2) e nomes dos arquivos `.py` na PR I | Ingrid, ao aprovar a #81 | #81 |
 
 ---
 
@@ -185,7 +188,7 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 
 | Item | Onde |
 |---|---|
-| Etapa 3: PRs G a J (nomes e acentos, tipos, pacote e `.npz`) e lançamento da v2.0.0 | [plano de boas práticas](plano-boas-praticas.md), #42 |
+| Etapa 3: PRs G2 a J (nomes no código, tipos, pacote e `.npz`) e lançamento da v2.0.0 | [plano de boas práticas](plano-boas-praticas.md), #42 |
 | Comparação final para a tese: busca aleatória, AG original, AG com proximidade e `logico_seguro`, em orçamentos menores | #31 |
 | Testar proximidade com mutação 0,1 e medir a variação do próprio AG (várias execuções por mundo) | #31 |
 | Rodar de novo os experimentos da tese com o código da v2.0.0 | Fase 4.6 |

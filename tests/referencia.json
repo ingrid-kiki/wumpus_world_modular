@@ -405,7 +405,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 1,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 2,
    "fitness": 108.5,
    "historico": "5e8b55d0b5c10756"
@@ -423,7 +423,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 3,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 7,
    "fitness": 106.0,
    "historico": "f7198bcfe41146e1"
@@ -531,7 +531,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 15,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 3,
    "fitness": 132.5,
    "historico": "cb283c746d0a93ca"
@@ -558,7 +558,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 18,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 2,
    "fitness": 108.5,
    "historico": "287b2fa54fdf564c"
@@ -603,7 +603,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 23,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 3,
    "fitness": 108.0,
    "historico": "2d87f7d23978c8ce"
@@ -630,7 +630,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 26,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 8,
    "fitness": 130.0,
    "historico": "a7c9a34bd59be22b"
@@ -666,7 +666,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 30,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 3,
    "fitness": 108.0,
    "historico": "5d25b5b734d5d95a"
@@ -684,7 +684,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 32,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 9,
    "fitness": 129.5,
    "historico": "d0c4ec80c743aa18"
@@ -693,7 +693,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 33,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 7,
    "fitness": 106.0,
    "historico": "a778f3eb0d2ede88"
@@ -702,7 +702,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 34,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 4,
    "fitness": 132.0,
    "historico": "a7ffb88907e8e626"
@@ -720,7 +720,7 @@
    "agente": "logico",
    "tamanho": 4,
    "semente": 36,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 3,
    "fitness": 108.0,
    "historico": "099eab45e9f4b6d7"
@@ -756,7 +756,7 @@
    "agente": "genetico",
    "tamanho": 4,
    "semente": 0,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 10,
    "fitness": 129.0,
    "historico": "80f2b922a1f11e4a"
@@ -765,7 +765,7 @@
    "agente": "genetico",
    "tamanho": 4,
    "semente": 1,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 13,
    "fitness": 127.5,
    "historico": "89c9b31bd4671bdb"
@@ -774,7 +774,7 @@
    "agente": "genetico",
    "tamanho": 4,
    "semente": 2,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 13,
    "fitness": 125.5,
    "historico": "dcc01abdf0fb4204"
@@ -783,7 +783,7 @@
    "agente": "genetico",
    "tamanho": 4,
    "semente": 3,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 19,
    "fitness": 123.0,
    "historico": "e4fccc8f1a961014"
@@ -792,7 +792,7 @@
    "agente": "genetico",
    "tamanho": 4,
    "semente": 4,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 10,
    "fitness": 104.0,
    "historico": "b6187889eb6a328b"
@@ -801,7 +801,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 4,
    "semente": 0,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 10,
    "fitness": 148.5,
    "historico": "8291e46d2cdde592"
@@ -810,7 +810,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 4,
    "semente": 1,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 13,
    "fitness": 147.5,
    "historico": "89c9b31bd4671bdb"
@@ -819,7 +819,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 4,
    "semente": 2,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 13,
    "fitness": 145.5,
    "historico": "dcc01abdf0fb4204"
@@ -828,7 +828,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 4,
    "semente": 3,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 19,
    "fitness": 143.0,
    "historico": "e4fccc8f1a961014"
@@ -837,7 +837,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 4,
    "semente": 4,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 7,
    "fitness": 126.0,
    "historico": "fb77122adadd8242"
@@ -846,7 +846,7 @@
    "agente": "aleatorio",
    "tamanho": 4,
    "semente": 0,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 19,
    "fitness": 98.5,
    "historico": "e275997d564925d8"
@@ -855,7 +855,7 @@
    "agente": "aleatorio",
    "tamanho": 4,
    "semente": 1,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 4,
    "fitness": 132.0,
    "historico": "7c8d6ff38fdc3e1b"
@@ -873,7 +873,7 @@
    "agente": "aleatorio",
    "tamanho": 4,
    "semente": 3,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 3,
    "fitness": 108.0,
    "historico": "12ae3814359c020c"
@@ -882,7 +882,7 @@
    "agente": "aleatorio",
    "tamanho": 4,
    "semente": 4,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 11,
    "fitness": 127.5,
    "historico": "e171b0389c37f59a"
@@ -909,7 +909,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 2,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 13,
    "fitness": 103.0,
    "historico": "3af8bcb8e2fc2b19"
@@ -936,7 +936,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 5,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 18,
    "fitness": 125.0,
    "historico": "890ecafbd4258f53"
@@ -945,7 +945,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 6,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 5,
    "fitness": 107.0,
    "historico": "0118e0e2b3a08fe1"
@@ -981,7 +981,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 10,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 5,
    "fitness": 107.0,
    "historico": "0118e0e2b3a08fe1"
@@ -1026,7 +1026,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 15,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 2,
    "fitness": 108.5,
    "historico": "ef3db86b3fe67c28"
@@ -1053,7 +1053,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 18,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 2,
    "fitness": 108.5,
    "historico": "ef3db86b3fe67c28"
@@ -1062,7 +1062,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 19,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 7,
    "fitness": 130.5,
    "historico": "7de06389f31825a1"
@@ -1098,7 +1098,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 23,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 3,
    "fitness": 108.0,
    "historico": "2d87f7d23978c8ce"
@@ -1116,7 +1116,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 25,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 4,
    "fitness": 107.5,
    "historico": "d14cc7ed9c9e47d0"
@@ -1152,7 +1152,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 29,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 5,
    "fitness": 107.0,
    "historico": "0118e0e2b3a08fe1"
@@ -1188,7 +1188,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 33,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 9,
    "fitness": 129.5,
    "historico": "a0dbc6ed57f2de46"
@@ -1215,7 +1215,7 @@
    "agente": "logico",
    "tamanho": 6,
    "semente": 36,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 3,
    "fitness": 108.0,
    "historico": "099eab45e9f4b6d7"
@@ -1269,7 +1269,7 @@
    "agente": "genetico",
    "tamanho": 6,
    "semente": 2,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 14,
    "fitness": 102.5,
    "historico": "84a444f51658505b"
@@ -1278,7 +1278,7 @@
    "agente": "genetico",
    "tamanho": 6,
    "semente": 3,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 20,
    "fitness": 98.5,
    "historico": "00d35fec5e20b632"
@@ -1287,7 +1287,7 @@
    "agente": "genetico",
    "tamanho": 6,
    "semente": 4,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 5,
    "fitness": 106.5,
    "historico": "a28f1adac04051a1"
@@ -1305,7 +1305,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 6,
    "semente": 1,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 19,
    "fitness": 142.0,
    "historico": "6ead2b0903d6defe"
@@ -1314,7 +1314,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 6,
    "semente": 2,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 14,
    "fitness": 122.5,
    "historico": "7b2826ebb897c76a"
@@ -1323,7 +1323,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 6,
    "semente": 3,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 20,
    "fitness": 118.0,
    "historico": "a8f13258834103ac"
@@ -1332,7 +1332,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 6,
    "semente": 4,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 5,
    "fitness": 126.5,
    "historico": "a28f1adac04051a1"
@@ -1350,7 +1350,7 @@
    "agente": "aleatorio",
    "tamanho": 6,
    "semente": 1,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 14,
    "fitness": 124.5,
    "historico": "12ba0eb0ac7e5d00"
@@ -1359,7 +1359,7 @@
    "agente": "aleatorio",
    "tamanho": 6,
    "semente": 2,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 3,
    "fitness": 108.0,
    "historico": "b6e2628178e2b2c5"
@@ -1368,7 +1368,7 @@
    "agente": "aleatorio",
    "tamanho": 6,
    "semente": 3,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 20,
    "fitness": 98.0,
    "historico": "a8f13258834103ac"
@@ -1377,7 +1377,7 @@
    "agente": "aleatorio",
    "tamanho": 6,
    "semente": 4,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 7,
    "fitness": 105.5,
    "historico": "75f41ef228679166"
@@ -1404,7 +1404,7 @@
    "agente": "logico",
    "tamanho": 8,
    "semente": 2,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 16,
    "fitness": 101.5,
    "historico": "cc10ce088c2389e2"
@@ -1521,7 +1521,7 @@
    "agente": "logico",
    "tamanho": 8,
    "semente": 15,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 4,
    "fitness": 107.5,
    "historico": "d14cc7ed9c9e47d0"
@@ -1548,7 +1548,7 @@
    "agente": "logico",
    "tamanho": 8,
    "semente": 18,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 14,
    "fitness": 102.5,
    "historico": "3eda96eb071a926c"
@@ -1557,7 +1557,7 @@
    "agente": "logico",
    "tamanho": 8,
    "semente": 19,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 16,
    "fitness": 101.5,
    "historico": "b22edd369919fd76"
@@ -1638,7 +1638,7 @@
    "agente": "logico",
    "tamanho": 8,
    "semente": 28,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 18,
    "fitness": 100.5,
    "historico": "e5f8c6da70088a93"
@@ -1656,7 +1656,7 @@
    "agente": "logico",
    "tamanho": 8,
    "semente": 30,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 5,
    "fitness": 107.0,
    "historico": "0118e0e2b3a08fe1"
@@ -1692,7 +1692,7 @@
    "agente": "logico",
    "tamanho": 8,
    "semente": 34,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 7,
    "fitness": 130.5,
    "historico": "712b0fb2444cf76d"
@@ -1719,7 +1719,7 @@
    "agente": "logico",
    "tamanho": 8,
    "semente": 37,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 2,
    "fitness": 108.5,
    "historico": "287b2fa54fdf564c"
@@ -1755,7 +1755,7 @@
    "agente": "genetico",
    "tamanho": 8,
    "semente": 1,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 12,
    "fitness": 102.0,
    "historico": "b18619e623ddbdcb"
@@ -1764,7 +1764,7 @@
    "agente": "genetico",
    "tamanho": 8,
    "semente": 2,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 2,
    "fitness": 108.5,
    "historico": "cae1c0567b71e688"
@@ -1773,7 +1773,7 @@
    "agente": "genetico",
    "tamanho": 8,
    "semente": 3,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 9,
    "fitness": 104.0,
    "historico": "3f5c1d3b021710c7"
@@ -1800,7 +1800,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 8,
    "semente": 1,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 14,
    "fitness": 122.0,
    "historico": "088a6537ad45aef7"
@@ -1809,7 +1809,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 8,
    "semente": 2,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 2,
    "fitness": 128.5,
    "historico": "cae1c0567b71e688"
@@ -1818,7 +1818,7 @@
    "agente": "genetico_proximidade",
    "tamanho": 8,
    "semente": 3,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 9,
    "fitness": 124.0,
    "historico": "3f5c1d3b021710c7"
@@ -1845,7 +1845,7 @@
    "agente": "aleatorio",
    "tamanho": 8,
    "semente": 1,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 5,
    "fitness": 107.0,
    "historico": "2526df7d05dd02c0"
@@ -1854,7 +1854,7 @@
    "agente": "aleatorio",
    "tamanho": 8,
    "semente": 2,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 2,
    "fitness": 108.5,
    "historico": "cae1c0567b71e688"
@@ -1863,7 +1863,7 @@
    "agente": "aleatorio",
    "tamanho": 8,
    "semente": 3,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 8,
    "fitness": 104.5,
    "historico": "4be8a0d4f7bf910c"
@@ -1872,7 +1872,7 @@
    "agente": "aleatorio",
    "tamanho": 8,
    "semente": 4,
-   "status": "vitória",
+   "status": "vitoria",
    "passos": 15,
    "fitness": 98.5,
    "historico": "06dbfc40360a06f8"

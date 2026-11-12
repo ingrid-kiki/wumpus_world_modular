@@ -11,7 +11,7 @@ import benchmark
 import main
 
 AG_RAPIDO = {"genetico": {"population_size": 10, "gens": 4, "chrom_length": 12}}
-CONTAGENS = ("vitórias", "mortes", "sobreviveu", "erros")
+CONTAGENS = ("vitorias", "mortes", "sobreviveu", "erros")
 
 
 def test_modos_sequencial_e_paralelo_dao_os_mesmos_resultados():
@@ -33,14 +33,14 @@ def test_silencioso_esconde_as_mensagens(capsys):
 
 def test_tempo_total_e_de_relogio_e_tempo_medio_e_a_media_das_execucoes():
     execucoes = [
-        {"status": "vitória", "tempo": 2.0, "dados_extra": {}},
+        {"status": "vitoria", "tempo": 2.0, "dados_extra": {}},
         {"status": "morte", "tempo": 4.0, "dados_extra": {"fitness": [1.0]}},
     ]
     resumo = benchmark.resumir("x", 4, execucoes, tempo_de_relogio=3.5)
     assert resumo["tempo_total"] == 3.5  # num run paralelo, menor que a soma dos tempos (6 s)
-    assert resumo["tempo_médio"] == 3.0
+    assert resumo["tempo_medio"] == 3.0
     assert resumo["dados_extra"] == {"fitness": [1.0]}
-    assert (resumo["vitórias"], resumo["mortes"]) == (1, 1)
+    assert (resumo["vitorias"], resumo["mortes"]) == (1, 1)
 
 
 def test_opcoes_do_main_chegam_ao_benchmark(tmp_path, monkeypatch):
@@ -51,7 +51,7 @@ def test_opcoes_do_main_chegam_ao_benchmark(tmp_path, monkeypatch):
         return benchmark.resumir(agente, tamanho, [{"status": "sobreviveu", "tempo": 0.0, "dados_extra": {}}], 0.0)
 
     monkeypatch.setattr(main, "carregar_benchmark", lambda caminho: benchmark_falso)
-    comum = ["--agentes", "logico", "--sizes", "4", "--execucoes", "1"]
+    comum = ["--agentes", "logico", "--tamanhos", "4", "--execucoes", "1"]
     main.rodar_benchmark([*comum, "--paralelo", "--silencioso", "--saida", str(tmp_path / "com")])
     main.rodar_benchmark([*comum, "--saida", str(tmp_path / "sem")])
     # Sem as opções, nada é repassado: um benchmark externo sem esses parâmetros continua funcionando

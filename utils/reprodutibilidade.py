@@ -6,8 +6,8 @@
 # versão e commit do código, argumentos usados, parâmetros efetivos do agente genético,
 # regra das sementes e versões do Python e das bibliotecas.
 #
-# O arquivo metadata.json fica na pasta do run (logs/run_AAAAMMDD_HHMMSS/) e é lido
-# por reproduzir.py.
+# O arquivo metadados.json fica na pasta do run (logs/run_AAAAMMDD_HHMMSS/) e é lido
+# por reproduzir.py. Runs gravados até a v1.8.0 têm o mesmo conteúdo em metadata.json.
 """
 
 import inspect
@@ -20,6 +20,10 @@ from datetime import datetime
 from importlib import metadata
 
 from utils.versao import __version__
+
+ARQUIVO_METADADOS = "metadados.json"
+# Nome usado até a v1.8.0; carregar_metadados ainda o lê, para reproduzir runs antigos
+ARQUIVO_METADADOS_ANTIGO = "metadata.json"
 
 # Bibliotecas cujas versões influenciam os resultados ou os gráficos
 BIBLIOTECAS = ["numpy", "pandas", "matplotlib", "seaborn", "scikit-learn", "joblib", "psutil", "pygame", "pygad"]
@@ -79,8 +83,8 @@ def parametros_efetivos(classe, sobrescritos=None):
 
 def coletar_metadados(argumentos_cli, argumentos, parametros_ag, cwd=None):
     """
-    Monta o dicionário salvo em metadata.json.
-    :param argumentos_cli: lista de argumentos como digitados (ex.: ["--sizes", "4", "6"])
+    Monta o dicionário salvo em metadados.json.
+    :param argumentos_cli: lista de argumentos como digitados (ex.: ["--tamanhos", "4", "6"])
     :param argumentos: dict com os argumentos já interpretados (vars(args))
     :param parametros_ag: parâmetros efetivos do GeneticAgent (ou None se ele não rodou)
     """
@@ -99,12 +103,16 @@ def coletar_metadados(argumentos_cli, argumentos, parametros_ag, cwd=None):
 
 
 def salvar_metadados(pasta, metadados):
-    caminho = os.path.join(pasta, "metadata.json")
+    caminho = os.path.join(pasta, ARQUIVO_METADADOS)
     with open(caminho, "w", encoding="utf-8") as f:
         json.dump(metadados, f, ensure_ascii=False, indent=2, default=str)
     return caminho
 
 
 def carregar_metadados(pasta):
-    with open(os.path.join(pasta, "metadata.json"), encoding="utf-8") as f:
+    """Lê o metadados.json do run, ou o metadata.json de runs gravados até a v1.8.0."""
+    caminho = os.path.join(pasta, ARQUIVO_METADADOS)
+    if not os.path.exists(caminho):
+        caminho = os.path.join(pasta, ARQUIVO_METADADOS_ANTIGO)
+    with open(caminho, encoding="utf-8") as f:
         return json.load(f)

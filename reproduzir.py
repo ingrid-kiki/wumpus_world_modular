@@ -2,8 +2,9 @@
 # reproduzir.py
 # ==============================
 """
-# Refaz uma execução de benchmark a partir do metadata.json gravado na pasta do run
-# e compara os resultados com os originais.
+# Refaz uma execução de benchmark a partir do metadados.json gravado na pasta do run
+# e compara os resultados com os originais. Também lê runs gravados até a v1.8.0, que
+# usam metadata.json, a opção --sizes e as colunas com acento (vitórias, tempo_médio).
 #
 # Uso:
 #     python reproduzir.py logs/run_AAAAMMDD_HHMMSS
@@ -23,7 +24,13 @@ import pandas as pd
 from utils.reprodutibilidade import carregar_metadados, estado_do_git, versoes_das_bibliotecas
 from utils.versao import __version__
 
-COLUNAS_COMPARADAS = ["agente", "tamanho_mundo", "vitórias", "mortes", "sobreviveu"]
+COLUNAS_COMPARADAS = ["agente", "tamanho_mundo", "vitorias", "mortes", "sobreviveu"]
+# Nomes usados até a v1.8.0, traduzidos para os atuais ao ler um run antigo
+COLUNAS_ANTIGAS = {"vitórias": "vitorias", "tempo_médio": "tempo_medio"}
+OPCOES_ANTIGAS = {"--sizes": "--tamanhos"}
+# Benchmarks retirados na v2.0.0 (#76). Davam os mesmos resultados do benchmark.py (docs/analise-benchmarks-2026-11.md),
+# que os substitui ao refazer um run antigo
+BENCHMARKS_RETIRADOS = {"benchmark_custom.py", "benchmark_fast.py", "benchmark_graficos.py", "benchmark_sideB.py"}
 
 
 def sem_opcao(argumentos, opcao):
@@ -40,6 +47,33 @@ def sem_opcao(argumentos, opcao):
             continue
         saida.append(arg)
     return saida
+
+
+def _benchmark_atual(arquivo):
+    """benchmark.py no lugar de um benchmark retirado; qualquer outro arquivo continua o mesmo."""
+    return "benchmark.py" if os.path.basename(arquivo) in BENCHMARKS_RETIRADOS else arquivo
+
+
+def atualizar_opcoes(argumentos):
+    """
+    Troca as opções antigas pelas atuais (ex.: --sizes por --tamanhos) e os benchmarks
+    retirados pelo benchmark.py, para refazer runs gravados até a v1.8.0.
+    """
+    saida = []
+    for arg in argumentos:
+        if saida and saida[-1] == "--benchmark":  # o valor de "--benchmark ARQUIVO"
+            saida.append(_benchmark_atual(arg))
+            continue
+        opcao, igual, valor = arg.partition("=")
+        if igual and opcao == "--benchmark":  # "--benchmark=ARQUIVO"
+            valor = _benchmark_atual(valor)
+        saida.append(OPCOES_ANTIGAS.get(opcao, opcao) + igual + valor)
+    return saida
+
+
+def ler_resultados(caminho):
+    """Lê um resultados_benchmark.csv, com as colunas antigas já traduzidas."""
+    return pd.read_csv(caminho).rename(columns=COLUNAS_ANTIGAS)
 
 
 def avisos_de_ambiente(meta):
@@ -66,7 +100,7 @@ def avisos_de_ambiente(meta):
 
 def comparar(csv_original, csv_novo):
     """Devolve (iguais, tabela) comparando só as colunas determinísticas."""
-    a, b = pd.read_csv(csv_original), pd.read_csv(csv_novo)
+    a, b = ler_resultados(csv_original), ler_resultados(csv_novo)
     # "erros" existe a partir da v1.6.0 (#30); só entra na comparação se os dois CSVs tiverem
     colunas = COLUNAS_COMPARADAS + (["erros"] if "erros" in a.columns and "erros" in b.columns else [])
     a, b = a[colunas], b[colunas]
@@ -78,15 +112,17 @@ def comparar(csv_original, csv_novo):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Refaz um benchmark a partir do metadata.json e compara os resultados")
-    parser.add_argument("pasta", help="Pasta do run original (contém metadata.json e resultados_benchmark.csv)")
+    parser = argparse.ArgumentParser(
+        description="Refaz um benchmark a partir do metadados.json e compara os resultados"
+    )
+    parser.add_argument("pasta", help="Pasta do run original (contém metadados.json e resultados_benchmark.csv)")
     parser.add_argument("--saida", default=None, help="Pasta para a reprodução (padrão: <pasta>_reproducao)")
     args = parser.parse_args(argv)
 
     try:
         meta = carregar_metadados(args.pasta)
     except FileNotFoundError:
-        print(f"❌ {args.pasta} não tem metadata.json (runs anteriores à v1.5.0 não têm).")
+        print(f"❌ {args.pasta} não tem metadados.json nem metadata.json (runs anteriores à v1.5.0 não têm).")
         return 2
     csv_original = os.path.join(args.pasta, "resultados_benchmark.csv")
     if not os.path.exists(csv_original):
@@ -98,7 +134,10 @@ def main(argv=None):
         print(f"⚠️ {aviso}")
 
     saida = args.saida or args.pasta.rstrip("/\\") + "_reproducao"
-    argumentos = sem_opcao(meta["argumentos_cli"], "--saida") + ["--saida", saida]
+    atualizados = atualizar_opcoes(meta["argumentos_cli"])
+    if atualizados != meta["argumentos_cli"]:
+        print("ℹ️ Run gravado numa versão anterior: opções e benchmarks antigos foram trocados pelos atuais.")
+    argumentos = sem_opcao(atualizados, "--saida") + ["--saida", saida]
     print(f"🔁 Reproduzindo: main.py {' '.join(argumentos)}\n")
 
     import main as programa  # importado aqui para os avisos aparecerem antes das mensagens do benchmark

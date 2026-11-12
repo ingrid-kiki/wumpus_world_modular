@@ -56,7 +56,7 @@ def test_totais_da_lista_batem(coletados, lista):
     funcoes = {caso.split("[")[0] for caso in coletados}
     totais = {
         "casos": int(re.search(r"\*\*(\d+) casos de teste\*\*", lista).group(1)),
-        "funções": int(re.search(r"\*\*(\d+) funções\*\*", lista).group(1)),
+        "funcoes": int(re.search(r"\*\*(\d+) funções\*\*", lista).group(1)),
         "arquivos": int(re.search(r"\*\*(\d+) arquivos\*\*", lista).group(1)),
     }
-    assert totais == {"casos": len(coletados), "funções": len(funcoes), "arquivos": len(por_arquivo)}, AVISO
+    assert totais == {"casos": len(coletados), "funcoes": len(funcoes), "arquivos": len(por_arquivo)}, AVISO

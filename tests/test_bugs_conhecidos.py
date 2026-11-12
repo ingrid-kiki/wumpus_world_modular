@@ -213,12 +213,12 @@ def test_ag_reprodutivel_com_a_semente_do_mundo():
 CHAVES_RESULTADO = {
     "agente",
     "tamanho_mundo",
-    "vitórias",
+    "vitorias",
     "mortes",
     "sobreviveu",
     "erros",
     "tempo_total",
-    "tempo_médio",
+    "tempo_medio",
     "dados_extra",
 }
 
@@ -251,7 +251,7 @@ def test_benchmarks_cumprem_o_contrato_do_main(modo, monkeypatch):
     """#24 (corrigido): os 5 benchmarks aceitam (agente, tamanho, execuções) e devolvem o mesmo dict."""
     resultado = _rodar(modo, monkeypatch, AgenteFalso, 2)
     assert isinstance(resultado, dict) and set(resultado) >= CHAVES_RESULTADO
-    assert resultado["vitórias"] + resultado["mortes"] + resultado["sobreviveu"] == 2
+    assert resultado["vitorias"] + resultado["mortes"] + resultado["sobreviveu"] == 2
     assert resultado["erros"] == 0
     assert resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
 
@@ -261,7 +261,7 @@ def test_erro_nao_vira_resultado_nem_derruba_o_benchmark(modo, monkeypatch, caps
     """#30: a execução que falha entra em 'erros'; as outras continuam e o traceback vai para o stderr."""
     resultado = _rodar(modo, monkeypatch, AgenteQueFalha, 3)
     assert resultado["erros"] == 1
-    assert resultado["vitórias"] + resultado["mortes"] + resultado["sobreviveu"] == 2
+    assert resultado["vitorias"] + resultado["mortes"] + resultado["sobreviveu"] == 2
     assert resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
     assert "RuntimeError: falha de propósito" in capsys.readouterr().err
 
@@ -280,8 +280,8 @@ def test_dados_extra_vem_da_primeira_execucao_sem_erro(modo, monkeypatch):
     assert resultado["erros"] == 1 and resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
 
 
-def test_terminal_output_inclui_o_stderr():
-    """#30: tracebacks e avisos (stderr) também vão para o terminal_output.txt."""
+def test_saida_do_terminal_inclui_o_stderr():
+    """#30: tracebacks e avisos (stderr) também vão para o saida_terminal.txt."""
     import sys
 
     stdout_antes, stderr_antes = sys.stdout, sys.stderr
@@ -328,21 +328,21 @@ def test_csv_do_main_so_tem_colunas_escalares(tmp_path):
         {
             "agente": "genetico",
             "tamanho_mundo": 4,
-            "vitórias": 1,
+            "vitorias": 1,
             "mortes": 0,
             "sobreviveu": 0,
             "tempo_total": 1.0,
-            "tempo_médio": 1.0,
+            "tempo_medio": 1.0,
             "dados_extra": {"fitness": [1.0, 2.0], "cpu": [3.0]},
         },
         {
             "agente": "logico",
             "tamanho_mundo": 4,
-            "vitórias": 0,
+            "vitorias": 0,
             "mortes": 1,
             "sobreviveu": 0,
             "tempo_total": 0.1,
-            "tempo_médio": 0.1,
+            "tempo_medio": 0.1,
             "dados_extra": {},
         },
         None,  # benchmark que falhou não derruba a gravação
@@ -356,10 +356,10 @@ def test_csv_do_main_so_tem_colunas_escalares(tmp_path):
     assert not (tmp_path / "dados_extra_logico_4x4.npz").exists()
 
 
-def test_traceback_do_modo_paralelo_chega_ao_terminal_output(tmp_path, monkeypatch):
-    """#40: com processos paralelos de verdade, o erro aparece uma vez no terminal_output.txt."""
+def test_traceback_do_modo_paralelo_chega_a_saida_do_terminal(tmp_path, monkeypatch):
+    """#40: com processos paralelos de verdade, o erro aparece uma vez no saida_terminal.txt."""
     monkeypatch.setitem(benchmark.AGENTES_DISPONIVEIS, "falso", AgenteQueFalha)
-    caminho = tmp_path / "terminal_output.txt"
+    caminho = tmp_path / "saida_terminal.txt"
     with main.capturar_saida_terminal(str(caminho)):
         resultado = benchmark.executar_benchmark("falso", 4, 3, paralelo=True)
     assert resultado["erros"] == 1
@@ -371,12 +371,16 @@ def test_traceback_do_modo_paralelo_chega_ao_terminal_output(tmp_path, monkeypat
 @pytest.mark.parametrize(
     "linha, windows, esperado",
     [
-        (r"--saida logs\teste --sizes 4", True, ["--saida", r"logs\teste", "--sizes", "4"]),
+        (r"--saida logs\teste --tamanhos 4", True, ["--saida", r"logs\teste", "--tamanhos", "4"]),
         (r"--saida C:\Users\ana\run", True, ["--saida", r"C:\Users\ana\run"]),
         (r'--saida "C:\Minha Pasta\run"', True, ["--saida", r"C:\Minha Pasta\run"]),
         ("--saida logs/teste", True, ["--saida", "logs/teste"]),
         ('--saida "minha pasta/run"', False, ["--saida", "minha pasta/run"]),
-        ("--agentes logico genetico --sizes 4 6", False, ["--agentes", "logico", "genetico", "--sizes", "4", "6"]),
+        (
+            "--agentes logico genetico --tamanhos 4 6",
+            False,
+            ["--agentes", "logico", "genetico", "--tamanhos", "4", "6"],
+        ),
     ],
     ids=["relativo", "absoluto", "com_espaco_e_aspas", "barra_normal", "linux_aspas", "sem_caminho"],
 )

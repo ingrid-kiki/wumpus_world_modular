@@ -19,7 +19,7 @@ class LogicKnowledgeBase:
         # Tamanho do grid: sem ele, a KB "anda" para fora do mapa e entra em loop (#18)
         self.size = size
         self.perceptions = []
-        self.known = {}  # (x, y) -> {'seguro': bool, 'visitado': bool, 'percepções': [...]}
+        self.known = {}  # (x, y) -> {'seguro': bool, 'visitado': bool, 'percepcoes': [...]}
         self.visits = {}  # (x, y) -> número de vezes que o agente esteve na célula
         self.current_pos = (0, 0)
 
@@ -43,7 +43,7 @@ class LogicKnowledgeBase:
         self.known[(x, y)] = {
             "seguro": BRISA not in perception and FEDOR not in perception,
             "visitado": True,
-            "percepções": perception,
+            "percepcoes": perception,
         }
         self.visits[(x, y)] = self.visits.get((x, y), 0) + 1
         self.perceptions.append((x, y, perception))

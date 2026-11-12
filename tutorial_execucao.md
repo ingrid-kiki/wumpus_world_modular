@@ -137,13 +137,13 @@ metadados. Há duas formas de passar as opções:
 
 ```text
 Digite o número da opção desejada: 5
-main.py --agentes logico genetico --sizes 4 6 --execucoes 10
+main.py --agentes logico genetico --tamanhos 4 6 --execucoes 10
 ```
 
 **Opção 1 do menu:** as opções vão na própria chamada do programa, e depois você digita `1` no menu.
 
 ```bash
-python main.py --agentes logico --sizes 4 --execucoes 3
+python main.py --agentes logico --tamanhos 4 --execucoes 3
 ```
 
 ### Opções
@@ -151,7 +151,7 @@ python main.py --agentes logico --sizes 4 --execucoes 3
 | Opção | Padrão | O que faz |
 |---|---|---|
 | `--execucoes N` | 32 | Execuções por agente e tamanho |
-| `--sizes A B ...` | 4 6 8 | Tamanhos do mundo (mínimo 2) |
+| `--tamanhos A B ...` | 4 6 8 | Tamanhos do mundo (mínimo 2) |
 | `--agentes A B ...` | logico genetico | `logico`, `logico_seguro` (lógico que evita poços), `genetico`, `aleatorio` (busca aleatória, a referência do genético) |
 | `--paralelo` | desligado | Roda as execuções em processos paralelos; compensa em runs longos |
 | `--silencioso` | desligado | Esconde as mensagens de cada execução e de cada passo dos agentes |
@@ -168,7 +168,7 @@ python main.py --agentes logico --sizes 4 --execucoes 3
 Exemplo completo, com os parâmetros do genético:
 
 ```text
-main.py --agentes logico genetico --sizes 4 --execucoes 5 --populacao 50 --geracoes 100 --cromossomo 50 --mutacao 0.05 --cruzamento 0.7 --saida logs/teste
+main.py --agentes logico genetico --tamanhos 4 --execucoes 5 --populacao 50 --geracoes 100 --cromossomo 50 --mutacao 0.05 --cruzamento 0.7 --saida logs/teste
 ```
 
 No final, o programa mostra o resumo de cada agente e tamanho:
@@ -182,7 +182,7 @@ No final, o programa mostra o resumo de cada agente e tamanho:
 ```
 
 Se alguma execução falhar, ela aparece em uma linha `❌ Erros`, e o benchmark continua com as demais. O detalhe do erro
-fica em `terminal_output.txt`.
+fica em `saida_terminal.txt`.
 
 ### Quanto tempo leva
 
@@ -205,23 +205,23 @@ Cada benchmark cria uma pasta própria:
 
 ```text
 logs/run_AAAAMMDD_HHMMSS/
-├── metadata.json                 versão, commit, opções, parâmetros do genético, bibliotecas
-├── resultados_benchmark.csv      uma linha por agente e tamanho
-├── terminal_output.txt           tudo o que apareceu no terminal, inclusive erros
-├── grafico_vitórias.png          comparações entre agentes e tamanhos
+├── metadados.json                    versão, commit, opções, parâmetros do genético, bibliotecas
+├── resultados_benchmark.csv          uma linha por agente e tamanho
+├── saida_terminal.txt                tudo o que apareceu no terminal, inclusive erros
+├── grafico_vitorias.png              comparações entre agentes e tamanhos
 ├── grafico_mortes.png
 ├── grafico_sobreviveu.png
 ├── grafico_tempo_medio.png
-├── dados_extra_genetico_4x4.npz  arrays do genético (fitness, diversidade, memória, CPU)
-└── advanced_charts_genetico_4x4/ gráficos do genético, um conjunto por tamanho
+├── dados_extra_genetico_4x4.npz      arrays do genético (fitness, diversidade, memória, CPU)
+└── graficos_avancados_genetico_4x4/  gráficos do genético, um conjunto por tamanho
 ```
 
-**`resultados_benchmark.csv`** tem as colunas `agente`, `tamanho_mundo`, `vitórias`, `mortes`, `sobreviveu`, `erros`,
-`tempo_total` e `tempo_médio`.
+**`resultados_benchmark.csv`** tem as colunas `agente`, `tamanho_mundo`, `vitorias`, `mortes`, `sobreviveu`, `erros`,
+`tempo_total` e `tempo_medio`.
 
 **Gráficos avançados** (só para o genético, feitos com os dados da **primeira** execução de cada tamanho):
-`evolucao_fitness`, `convergencia_populacao`, `curva_convergencia_std`, `violin_fitness`, `ecdf_fitness_final`,
-`heatmap_diversidade`, `area_empilhada_diversidade`, `pca_populacao_final` e `memoria_cpu`.
+`evolucao_fitness`, `convergencia_populacao`, `curva_convergencia_desvio_padrao`, `violino_fitness`, `ecdf_fitness_final`,
+`mapa_de_calor_diversidade`, `area_empilhada_diversidade`, `pca_populacao_final` e `memoria_cpu`.
 
 Para abrir os arrays em Python:
 
@@ -234,7 +234,7 @@ print(dados["fitness"])
 ```
 
 **Se a execução for interrompida** (Ctrl+C, queda de energia, erro inesperado), o CSV e os `.npz` ficam com tudo o que
-já terminou, e o `terminal_output.txt` guarda o que aconteceu até ali: perde-se no máximo o agente e tamanho em
+já terminou, e o `saida_terminal.txt` guarda o que aconteceu até ali: perde-se no máximo o agente e tamanho em
 andamento. Os 4 gráficos de comparação só são gerados no final.
 
 A pasta `logs/` não vai para o git. Para compartilhar resultados, veja o [CONTRIBUTING](CONTRIBUTING.md).
@@ -243,7 +243,7 @@ A pasta `logs/` não vai para o git. Para compartilhar resultados, veja o [CONTR
 
 ## 7. Reproduzir uma execução
 
-Todo benchmark grava o `metadata.json`, e isso permite refazê-lo e conferir se os números se repetem:
+Todo benchmark grava o `metadados.json`, e isso permite refazê-lo e conferir se os números se repetem:
 
 ```bash
 python reproduzir.py logs/run_AAAAMMDD_HHMMSS
@@ -260,15 +260,18 @@ bibliotecas forem diferentes e compara vitórias, mortes, sobrevivências e erro
 |---|---|
 | 0 | Resultados iguais |
 | 1 | Resultados diferentes |
-| 2 | Não dá para comparar (pasta sem `metadata.json` ou sem CSV) |
+| 2 | Não dá para comparar (pasta sem `metadados.json` nem `metadata.json`, ou sem CSV) |
 
-Tempos, memória e CPU variam a cada rodada e não são comparados. Execuções anteriores à v1.5.0 não têm `metadata.json`.
+Tempos, memória e CPU variam a cada rodada e não são comparados. Execuções gravadas até a v1.8.0 usam `metadata.json`,
+a opção `--sizes` e as colunas `vitórias` e `tempo_médio`; o script lê esse formato também, e refaz com o `benchmark.py`
+os runs feitos com um dos quatro benchmarks retirados, que davam os mesmos resultados. Execuções anteriores à v1.5.0
+não têm metadados.
 
 ---
 
 ## 8. Benchmark avulso
 
-O `benchmark.py` também roda sozinho, **mas o `main.py` é o caminho recomendado**: só ele grava o `metadata.json`, os gráficos
+O `benchmark.py` também roda sozinho, **mas o `main.py` é o caminho recomendado**: só ele grava o `metadados.json`, os gráficos
 e aceita os parâmetros do genético.
 
 | Comando | Opções | O que gera |

@@ -18,10 +18,10 @@ GRAFICOS = {
     "memoria_cpu",
     "evolucao_fitness",
     "convergencia_populacao",
-    "curva_convergencia_std",
-    "violin_fitness",
+    "curva_convergencia_desvio_padrao",
+    "violino_fitness",
     "ecdf_fitness_final",
-    "heatmap_diversidade",
+    "mapa_de_calor_diversidade",
     "area_empilhada_diversidade",
     "pca_populacao_final",
 }
@@ -51,10 +51,10 @@ def test_caso_normal_gera_os_nove_graficos(tmp_path):
                 "memoria_cpu",
                 "evolucao_fitness",
                 "convergencia_populacao",
-                "curva_convergencia_std",
-                "violin_fitness",
+                "curva_convergencia_desvio_padrao",
+                "violino_fitness",
                 "ecdf_fitness_final",
-                "heatmap_diversidade",
+                "mapa_de_calor_diversidade",
                 "area_empilhada_diversidade",
             },
         ),
@@ -83,7 +83,7 @@ def test_falha_de_um_grafico_nao_impede_os_outros(tmp_path, monkeypatch, capsys)
 
 def test_falha_nos_graficos_basicos_nao_interrompe(tmp_path, monkeypatch, capsys):
     df = pd.DataFrame(
-        [{"agente": "logico", "tamanho_mundo": 4, "vitórias": 1, "mortes": 0, "sobreviveu": 0, "tempo_médio": 0.1}]
+        [{"agente": "logico", "tamanho_mundo": 4, "vitorias": 1, "mortes": 0, "sobreviveu": 0, "tempo_medio": 0.1}]
     )
     original = graficos.plt.savefig
 
@@ -112,8 +112,8 @@ def test_benchmark_termina_e_grava_os_resultados(extras, tmp_path):
     """Os três casos da issue #37: antes, o programa parava sem gravar o CSV."""
     pasta = tmp_path / "run"
     _, df = main.rodar_benchmark(
-        ["--agentes", "genetico", "--sizes", "4", "--execucoes", "2", *extras, "--saida", str(pasta)]
+        ["--agentes", "genetico", "--tamanhos", "4", "--execucoes", "2", *extras, "--saida", str(pasta)]
     )
     assert (pasta / "resultados_benchmark.csv").exists()
-    assert (pasta / "terminal_output.txt").exists()
+    assert (pasta / "saida_terminal.txt").exists()
     assert len(df) == 1 and df.iloc[0]["erros"] == 0

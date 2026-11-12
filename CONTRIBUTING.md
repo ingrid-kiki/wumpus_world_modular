@@ -74,7 +74,9 @@ As regras marcadas com **(CI)** são verificadas pelo `ruff`. As demais valem na
 - Variáveis e funções em `snake_case`, classes em `PascalCase`, constantes em `MAIUSCULAS`.
 - Código novo usa nomes em português e sem abreviações obscuras: `taxa_mutacao`, não `tm`.
 - Sem acentos em identificadores, chaves de dicionário, colunas do CSV e nomes de arquivos. Mensagens para as pessoas e
-  documentação mantêm os acentos.
+  documentação mantêm os acentos. O `ruff` (regras `PLC2401` e `PLC2403`) barra acentos nos nomes do código, e
+  `tests/test_nomes_sem_acento.py` barra acentos nos textos usados como nome (chaves, colunas, status, arquivos) e em
+  tudo o que um run grava.
 - Há nomes antigos em inglês, como `agent_pos` e `draw_world`. Não os renomeie junto com outra mudança: a padronização
   fica para a refatoração.
 - Dê nome aos números com significado: `TAMANHO_MINIMO`, em vez de um `2` solto no código.
@@ -144,7 +146,7 @@ python -m tests.referencia
 
 ## Experimentos
 
-Todo run grava `metadata.json`. Antes de usar um resultado num texto ou na tese:
+Todo run grava `metadados.json`. Antes de usar um resultado num texto ou na tese:
 
-- rode a partir de um commit sem alterações pendentes (o `metadata.json` registra se havia);
+- rode a partir de um commit sem alterações pendentes (o `metadados.json` registra se havia);
 - confira com `python reproduzir.py logs/run_...` que ele se repete.

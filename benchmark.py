@@ -14,7 +14,7 @@
 #   continuam aparecendo.
 #
 # Os resultados são os mesmos nos dois modos. tempo_total é o tempo de relógio da combinação, e
-# tempo_médio é a média do tempo de cada execução.
+# tempo_medio é a média do tempo de cada execução.
 """
 
 import contextlib
@@ -31,7 +31,7 @@ from world.world import World
 def simular_execucao(agente_cls, world_size, seed, parametros=None, silencioso=False, relatar=True, rotulo=""):
     """
     Uma execução: cria o mundo com a semente, roda o agente e classifica o resultado.
-    :param relatar: False em outro processo, onde o stderr não chega ao terminal_output.txt;
+    :param relatar: False em outro processo, onde o stderr não chega ao saida_terminal.txt;
                     o relato do erro volta em "detalhe_erro" para ser escrito no processo principal (#40)
     """
     mundo = World(size=world_size, seed=seed)
@@ -56,7 +56,7 @@ def resumir(agente_nome, world_size, execucoes, tempo_de_relogio):
         "tamanho_mundo": world_size,
         **contar([e["status"] for e in execucoes]),
         "tempo_total": tempo_de_relogio,
-        "tempo_médio": sum(e["tempo"] for e in execucoes) / len(execucoes) if execucoes else 0.0,
+        "tempo_medio": sum(e["tempo"] for e in execucoes) / len(execucoes) if execucoes else 0.0,
         # Dados extras da primeira execução sem erro que os tenha (gráficos avançados e .npz)
         "dados_extra": next((e["dados_extra"] for e in execucoes if e["dados_extra"]), {}),
     }
@@ -92,9 +92,9 @@ if __name__ == "__main__":
     for nome in AGENTES_AUTOMATICOS:
         resultado = executar_benchmark(nome, world_size=4, num_execucoes=3, silencioso=True)
         print(f"\nResumo para {nome}:")
-        print(f"Vitórias: {resultado['vitórias']}")
+        print(f"Vitórias: {resultado['vitorias']}")
         print(f"Mortes: {resultado['mortes']}")
         print(f"Sobreviveu sem vencer: {resultado['sobreviveu']}")
         print(f"Erros: {resultado['erros']}")
         print(f"Tempo total: {resultado['tempo_total']:.2f}s")
-        print(f"Tempo médio por execução: {resultado['tempo_médio']:.3f}s")
+        print(f"Tempo médio por execução: {resultado['tempo_medio']:.3f}s")

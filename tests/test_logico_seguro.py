@@ -22,7 +22,7 @@ def base_com(size, visitadas, atual):
     """Base de conhecimento com as casas visitadas ({posição: percepção}) e a posição atual."""
     kb = BaseConhecimentoSegura(size=size)
     for pos, percepcao in visitadas.items():
-        kb.known[pos] = {"seguro": not percepcao, "visitado": True, "percepções": percepcao}
+        kb.known[pos] = {"seguro": not percepcao, "visitado": True, "percepcoes": percepcao}
         kb.visits[pos] = 1
     kb.current_pos = atual
     return kb
@@ -89,8 +89,8 @@ def test_sem_casa_segura_arrisca_e_nunca_escolhe_poco_certo():
 
 def test_sem_nada_a_fazer_fica_em_casas_conhecidas():
     kb = base_com(2, {(0, 0): ["BRISA"], (0, 1): ["BRISA"]}, (0, 1))
-    kb.known[(1, 0)] = {"seguro": False, "visitado": True, "percepções": ["BRISA"]}
-    kb.known[(1, 1)] = {"seguro": False, "visitado": True, "percepções": ["BRISA"]}
+    kb.known[(1, 0)] = {"seguro": False, "visitado": True, "percepcoes": ["BRISA"]}
+    kb.known[(1, 1)] = {"seguro": False, "visitado": True, "percepcoes": ["BRISA"]}
     assert kb.infer_action(["BRISA"]) in ("ESQUERDA", "BAIXO")
 
 
@@ -133,8 +133,8 @@ def test_registrado_no_programa_e_nos_benchmarks(modulo):
 def test_roda_num_benchmark_pela_linha_de_comando(tmp_path):
     with contextlib.redirect_stdout(io.StringIO()):
         main.rodar_benchmark(
-            ["--agentes", "logico", "logico_seguro", "--sizes", "4", "--execucoes", "5", "--saida", str(tmp_path)]
+            ["--agentes", "logico", "logico_seguro", "--tamanhos", "4", "--execucoes", "5", "--saida", str(tmp_path)]
         )
     df = pd.read_csv(tmp_path / "resultados_benchmark.csv")
     assert list(df["agente"]) == ["logico", "logico_seguro"]
-    assert (df[["vitórias", "mortes", "sobreviveu", "erros"]].sum(axis=1) == 5).all()
+    assert (df[["vitorias", "mortes", "sobreviveu", "erros"]].sum(axis=1) == 5).all()

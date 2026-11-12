@@ -240,7 +240,7 @@ def _opcoes_basicas(parser):
         "--execucoes", type=inteiro_minimo(1), default=32, help="Número de execuções por agente/tamanho"
     )
     parser.add_argument(
-        "--sizes",
+        "--tamanhos",
         nargs="+",
         type=inteiro_minimo(TAMANHO_MINIMO),
         default=[4, 6, 8],
@@ -321,7 +321,7 @@ def main():
         cli_args = sys.argv[1:]
     elif escolha == "5":
         print(
-            "\nDigite a linha de comando desejada (exemplo: --agentes logico genetico --sizes 4 6 --execucoes 10 "
+            "\nDigite a linha de comando desejada (exemplo: --agentes logico genetico --tamanhos 4 6 --execucoes 10 "
             "--populacao 50 --geracoes 100 --benchmark outro_benchmark.py):"
         )
         linha = input("main.py ").strip()
@@ -372,7 +372,7 @@ def _criar_pasta_do_run(args):
 
 
 def _gravar_metadados(cli_args, args, sobrescritos_ag, parametros_busca, output_dir):
-    """Grava o metadata.json antes de rodar: se algo falhar, o registro do que foi pedido continua lá."""
+    """Grava o metadados.json antes de rodar: se algo falhar, o registro do que foi pedido continua lá."""
     parametros_ag = None
     if "genetico" in args.agentes:
         parametros_ag = parametros_efetivos(GeneticAgent, sobrescritos_ag)
@@ -385,7 +385,7 @@ def _gravar_metadados(cli_args, args, sobrescritos_ag, parametros_busca, output_
 
 def _graficos_avancados_da_combinacao(dados_extra, nome_agente, size, output_dir):
     """Gera os gráficos avançados de uma combinação numa subpasta própria e informa o que saiu."""
-    advanced_output_dir = os.path.join(output_dir, f"advanced_charts_{nome_agente}_{size}x{size}")
+    advanced_output_dir = os.path.join(output_dir, f"graficos_avancados_{nome_agente}_{size}x{size}")
     os.makedirs(advanced_output_dir, exist_ok=True)
     relatorio = gerar_graficos_avancados(dados_extra, advanced_output_dir)
     print(
@@ -419,22 +419,22 @@ def _mostrar_resumo(df_resultados):
         agente = row["agente"]
         tamanho = row["tamanho_mundo"]
         erros = row.get("erros", 0)  # benchmarks de terceiros podem não ter a coluna
-        total = row["vitórias"] + row["mortes"] + row["sobreviveu"] + erros
+        total = row["vitorias"] + row["mortes"] + row["sobreviveu"] + erros
         print(f"\n📊 RESULTADOS - {agente.upper()} | Tamanho: {tamanho}x{tamanho}")
-        print(f"🏆 Vitórias: {row['vitórias']} ({(row['vitórias'] / total) * 100:.1f}%)")
+        print(f"🏆 Vitórias: {row['vitorias']} ({(row['vitorias'] / total) * 100:.1f}%)")
         print(f"☠️ Mortes: {row['mortes']} ({(row['mortes'] / total) * 100:.1f}%)")
         print(f"🤔 Sobreviveu sem vencer: {row['sobreviveu']} ({(row['sobreviveu'] / total) * 100:.1f}%)")
         if erros:
-            print(f"❌ Erros: {erros} ({(erros / total) * 100:.1f}%), detalhes em terminal_output.txt")
+            print(f"❌ Erros: {erros} ({(erros / total) * 100:.1f}%), detalhes em saida_terminal.txt")
         print(
-            f"⏱️ Tempo total: {formatar_tempo(row['tempo_total'])} | Tempo médio: {formatar_tempo(row['tempo_médio'])}"
+            f"⏱️ Tempo total: {formatar_tempo(row['tempo_total'])} | Tempo médio: {formatar_tempo(row['tempo_medio'])}"
         )
 
 
 def rodar_benchmark(cli_args):
     """
     Executa os benchmarks descritos por cli_args e grava tudo na pasta do run, incluindo
-    metadata.json (Fase 4 do plano, #17). Usado pelo main() e pelo reproduzir.py.
+    metadados.json (Fase 4 do plano, #17). Usado pelo main() e pelo reproduzir.py.
     :return: (pasta de saída, DataFrame do resumo)
     """
     args = criar_parser().parse_args(cli_args)
@@ -445,11 +445,11 @@ def rodar_benchmark(cli_args):
     _gravar_metadados(cli_args, args, sobrescritos_ag, parametros_busca, output_dir)
 
     resultados = []
-    terminal_output_path = os.path.join(output_dir, "terminal_output.txt")
-    with capturar_saida_terminal(terminal_output_path):
+    caminho_saida_terminal = os.path.join(output_dir, "saida_terminal.txt")
+    with capturar_saida_terminal(caminho_saida_terminal):
         print(f"🚀 Iniciando benchmark em: {output_dir}")
-        print(f"📊 Configuração: {args.execucoes} execuções, tamanhos {args.sizes}, agentes {args.agentes}\n")
-        for size in args.sizes:
+        print(f"📊 Configuração: {args.execucoes} execuções, tamanhos {args.tamanhos}, agentes {args.agentes}\n")
+        for size in args.tamanhos:
             for nome_agente in args.agentes:
                 _rodar_combinacao(executar_benchmark, nome_agente, size, args.execucoes, resultados, output_dir)
 
@@ -459,8 +459,8 @@ def rodar_benchmark(cli_args):
         print(f"📈 Gráficos básicos salvos em: {output_dir}")
         _mostrar_resumo(df_resultados)
 
-    print(f"\n💾 Saída do terminal salva em: {terminal_output_path}")
-    print(f"🧾 Metadados da execução em: {os.path.join(output_dir, 'metadata.json')}")
+    print(f"\n💾 Saída do terminal salva em: {caminho_saida_terminal}")
+    print(f"🧾 Metadados da execução em: {os.path.join(output_dir, 'metadados.json')}")
     return output_dir, df_resultados
 
 
