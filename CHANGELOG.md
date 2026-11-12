@@ -10,16 +10,20 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md).
 
-### Alterado
-- A `main` agora é protegida no GitHub: exige PR e o CI aprovado nos quatro ambientes, e bloqueia force-push e exclusão.
-  A revisão de outra pessoa é recomendada, mas não obrigatória.
+---
+
+## [1.8.0] - 2026-11-11
+
+Última versão antes da refatoração da Etapa 3 do plano de boas práticas, que levará à v2.0.0. Os resultados dos agentes
+`logico`, `genetico` e `aleatorio` são **idênticos** aos da v1.7.0 para os mesmos parâmetros e sementes; o teste de referência
+garante isso. A novidade nos resultados é o agente `logico_seguro`.
 
 ### Adicionado
-- Lista dos testes automáticos em [`docs/testes.md`](docs/testes.md), com o que cada um garante. O teste
-  `tests/test_lista_de_testes.py` falha quando a lista fica desatualizada.
 - Agente `logico_seguro`: deduz quais casas não têm poço antes de andar e só arrisca quando não há casa segura nova.
   Venceu 83,4%, 86,4% e 91,9% dos mundos 4x4, 6x6 e 8x8, contra 33,3%, 24,2% e 19,4% do `logico`, que não muda.
   Detalhes em [`docs/investigacao-agente-logico-2026-11.md`](docs/investigacao-agente-logico-2026-11.md).
+- Lista dos testes automáticos em [`docs/testes.md`](docs/testes.md), com o que cada um garante. O teste
+  `tests/test_lista_de_testes.py` falha quando a lista fica desatualizada.
 - Teste de referência (`tests/test_referencia.py`): mundos, sequências de ações e regras do fitness não podem mudar
   sem decisão explícita.
 - Cobertura de testes no CI com `pytest-cov`: 79% hoje, mínimo de 78%.
@@ -31,6 +35,19 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
 - Pasta `docs/arquitetura/`, com índice e convenções, e teste que compara o diagrama de classes com o código.
 - Diagramas em `docs/arquitetura/`: caso de uso, classes, fluxograma geral, fluxograma do algoritmo genético e sequências do AG, do
   benchmark e do agente lógico, e fluxo de dados. O teste do diagrama de classes confere todas as classes do programa.
+
+### Alterado
+- A `main` agora é protegida no GitHub: exige PR e o CI aprovado nos quatro ambientes, e bloqueia force-push e exclusão.
+  A revisão de outra pessoa é recomendada, mas não obrigatória.
+- Os comentários do agente `logico` deixam de prometer "ações seguras": ele decide com regras simples e não consulta se a casa
+  é segura. O comportamento não muda.
+
+### Documentação
+- [`docs/investigacao-agente-logico-2026-11.md`](docs/investigacao-agente-logico-2026-11.md): por que o agente lógico morre em
+  poços, a medição de quatro formas de decidir e a decisão de criar o `logico_seguro`.
+- [`docs/analise-benchmarks-2026-11.md`](docs/analise-benchmarks-2026-11.md): os cinco arquivos de benchmark dão os mesmos
+  resultados; o benchmark padrão levou 258 s em sequência e 102 s em paralelo.
+- `CLAUDE.md` com as regras do projeto para o Claude Code, e plano de boas práticas com as Etapas 1 e 2 concluídas.
 
 ---
 
@@ -297,7 +314,8 @@ Mudanças que entraram na `main` depois da 1.3.0 e não foram registradas na ép
 > (os nomes reais são `move_agent()` e `interact()`) e um arquivo `RELEASE_NOTES.md`, que nunca existiu.
 > O `Visualizer` existe, mas não é chamado pelo `main.py`.
 
-[Não lançado]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.7.0...main
+[Não lançado]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.8.0...main
+[1.8.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/ingrid-kiki/wumpus_world_modular/compare/v1.4.0...v1.5.0
