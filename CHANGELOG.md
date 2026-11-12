@@ -36,6 +36,13 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
 - `benchmark_custom.py`, `benchmark_fast.py`, `benchmark_graficos.py` e `benchmark_sideB.py`. Davam os mesmos resultados do
   `benchmark.py`, que passa a ser o único; o que tinham de próprio virou `--paralelo` e `--silencioso`
   ([análise](docs/analise-benchmarks-2026-11.md)).
+- A pasta `pygad/`, que não rodava sem o módulo `WumpsimAG`, ausente do projeto. Ela está guardada na tag
+  `archive/pygad-original` para ser retomada na [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15). A biblioteca `pygad` continua nas dependências.
+
+### Documentação
+- README e LICENSE sem as inconsistências da [#41](https://github.com/ingrid-kiki/wumpus_world_modular/issues/41): a LICENSE passa a citar as duas autoras, o README
+  explica como ativar o `.venv` e descreve a janela como ela é, e os títulos "(Novo)" saíram.
+- `CLAUDE.md`, `CONTRIBUTING.md` e o plano de boas práticas exigem que toda PR atualize o histórico e os planos.
 
 ---
 

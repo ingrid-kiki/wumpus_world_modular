@@ -114,7 +114,8 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 - Dividir as funções grandes: `gerar_graficos_avancados`, `GeneticAlgorithm.run`, `rodar_benchmark` (concluído, #77 e #78).
 - Anotações de tipos nas funções públicas.
 - Nomes em português e sem acentos em identificadores, chaves, colunas e arquivos (decidido; ver abaixo).
-- Decidir o destino de `pygad/`, que não é usado. `visual/` passou a ser usado na #78, e o `logger` saiu na #74.
+- Destino de `pygad/`: guardada na tag `archive/pygad-original` e retirada da `main` (decidido em 12/11/2026, #80).
+  `visual/` passou a ser usado na #78, e o `logger` saiu na #74.
 - Decidir o uso do `dados_extra_AGENTE_NxN.npz`: hoje ele é gravado em todo run, mas nenhuma parte do programa o lê.
   Uma opção é gerar os gráficos avançados a partir dele, o que também ajudaria na [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29).
 - Organizar em pacote, com `pyproject.toml` completo.
@@ -143,8 +144,8 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
   conferida automaticamente na PR G, e o `reproduzir.py` continua lendo runs antigos.
 - **Um benchmark só**, com `--paralelo` e uma opção para menos mensagens. Os outros quatro arquivos saem, e `--benchmark`
   continua aceitando arquivos externos. A justificativa está em [`analise-benchmarks-2026-11.md`](analise-benchmarks-2026-11.md).
-- **Em aberto:** o destino de `pygad/`, ligado à [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15), e o
-  uso do `.npz` (PR I). A janela é oferecida por uma pergunta no menu (decidido em 12/11/2026).
+- **Em aberto:** o uso do `.npz` (PR I). A janela é oferecida por uma pergunta no menu (decidido em 12/11/2026), e a pasta
+  `pygad/` foi guardada numa tag (#80). A janela é oferecida por uma pergunta no menu (decidido em 12/11/2026).
 
 **Divisão em tarefas (cada PR é mesclada antes de abrir a próxima; aprovada em 11/11/2026):**
 
@@ -158,14 +159,14 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
 | F | 3.6 Ligar o `Visualizer` ao `--vis` e dividir `draw_world`, a última função longa | 2 a 3 h | Concluída (#78), com pergunta no menu |
 | G | 3.7 Nomes em português, saídas sem acento e a regra que confere isso | 2 a 3 h | A fazer |
 | H | 3.8 Tipos nas funções públicas | 1,5 a 2 h | A fazer |
-| I | 3.9 Organizar em pacote, com `pyproject.toml` completo, e decidir o uso do `.npz` | 1,5 a 2 h | A fazer |
+| I | 3.9 Organizar em pacote, com `pyproject.toml` completo, decidir o uso do `.npz` e resolver a [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29) (gráficos com todas as execuções) | 4,5 a 5 h | A fazer |
 | J | 3.10 Lançar a v2.0.0 | 30 min | A fazer |
 
 A ordem segue as dependências: a classe base usa as constantes, o benchmark único e o `--vis` dependem da classe base, e as funções
 longas vêm depois do benchmark único. Os nomes ficam para o fim, para não criar conflitos com as outras PRs. Em cada PR, o teste de
 referência e os números do `logico_seguro` garantem resultados idênticos, e os diagramas e a lista de testes acompanham o código.
 
-Restam 4 PRs (G a J), com cerca de 6 a 8 h previstas.
+Restam 4 PRs (G a J), com cerca de 9 a 11 h previstas; a #29 entrou na PR I em 12/11/2026.
 
 **Meta:** nenhuma função acima de 40 linhas, nenhuma com complexidade acima de 10, nenhuma lista repetida. Lançamento: v2.0.0.
 
@@ -204,7 +205,8 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 ## PRs do plano
 
 Todas as PRs feitas desde a Etapa 0, na ordem. A data é a do merge no GitHub, em UTC; na coluna Etapa, a letra entre
-parênteses é a da tabela de tarefas da etapa. "Plano", "Versão" e "Geral" são PRs de registro, lançamento ou regras do projeto.
+parênteses é a da tabela de tarefas da etapa. "Plano", "Versão" e "Geral" são PRs de registro, lançamento ou regras do projeto; "Issues" resolve pendências de
+issues antes da v2.0.0.
 
 | PR | Merge | Etapa | Assunto |
 |---|---|---|---|
@@ -237,7 +239,8 @@ parênteses é a da tabela de tarefas da etapa. "Plano", "Versão" e "Geral" sã
 | [#76](https://github.com/ingrid-kiki/wumpus_world_modular/pull/76) | 2026-11-12 | 3 (D) | Benchmark único, com `--paralelo` e `--silencioso` |
 | [#77](https://github.com/ingrid-kiki/wumpus_world_modular/pull/77) | 2026-11-12 | 3 (E) | Divide as funções longas e trava os limites num teste |
 | [#78](https://github.com/ingrid-kiki/wumpus_world_modular/pull/78) | 2026-11-12 | 3 (F) | Janela que reproduz a partida, oferecida no menu |
-| [#79](https://github.com/ingrid-kiki/wumpus_world_modular/pull/79) | em revisão | Geral | Regra de manter o histórico e os planos em dia |
+| [#79](https://github.com/ingrid-kiki/wumpus_world_modular/pull/79) | 2026-11-12 | Geral | Regra de manter o histórico e os planos em dia |
+| [#80](https://github.com/ingrid-kiki/wumpus_world_modular/pull/80) | em revisão | Issues | README e LICENSE (#41) e `pygad/` guardada numa tag (#15) |
 
 Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 
@@ -248,10 +251,10 @@ Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
 | 2. Documentação e diagramas | Concluída | Baixo | Etapa 0 |
-| 3. Código limpo | Restam cerca de 6 a 8 h | **Médio** | Etapa 1 |
+| 3. Código limpo | Restam cerca de 9 a 11 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Restante** | **cerca de 15 a 23 h** | | |
+| **Restante** | **cerca de 18 a 26 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 

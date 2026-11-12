@@ -174,6 +174,10 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 | Retirar o `Logger` e os `.log` | Ingrid | #74 |
 | Oferecer a janela por uma pergunta no menu, e não por `--vis` | Ingrid | #78 |
 | Toda PR atualiza o histórico, o plano de boas práticas e o plano de ação | Ingrid | #79 |
+| A LICENSE cita Ingrid Mendes e Alfa Marine | Ingrid | #41, #80 |
+| Guardar `pygad/` na tag `archive/pygad-original` e retirá-la da `main` | Ingrid | #15, #80 |
+| Apagar do GitHub as 45 branches já mescladas (todas contidas na `main`) | Ingrid | #42 |
+| Resolver a #29 na PR I da Etapa 3, antes da v2.0.0 | Ingrid | #29 |
 
 ---
 
@@ -185,10 +189,9 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 | Comparação final para a tese: busca aleatória, AG original, AG com proximidade e `logico_seguro`, em orçamentos menores | #31 |
 | Testar proximidade com mutação 0,1 e medir a variação do próprio AG (várias execuções por mundo) | #31 |
 | Rodar de novo os experimentos da tese com o código da v2.0.0 | Fase 4.6 |
-| Gráficos com os dados de todas as execuções, talvez a partir do `.npz` | #29, PR I |
-| Agente PyGAD sobre o nosso `World`, depois DEAP; resposta da Alfa sobre o `WumpsimAG` | #15 |
+| Gráficos com os dados de todas as execuções, talvez a partir do `.npz` (entra na PR I) | #29 |
+| Agente PyGAD sobre o nosso `World`, depois DEAP; o código antigo está na tag `archive/pygad-original` | #15 |
 | Outras metaheurísticas (recozimento, busca tabu, colônia de formigas) | #16 |
-| Inconsistências no README, no CONTRIBUTING e na LICENSE | #41 |
 | Etapas 4 (código comentado) e 5 (otimização) do plano de boas práticas | [plano de boas práticas](plano-boas-praticas.md) |
-| Fase 6: reescrever o histórico (dados antigos, `Co-Authored-By` e e-mail pessoal) | #17, #42 |
+| Fase 6: reescrever o histórico (dados antigos, `Co-Authored-By` e e-mail pessoal) | #17 |
 | Instalar o gancho do `pre-commit` em cada clone (`pre-commit install`) | [CONTRIBUTING](../CONTRIBUTING.md) |
