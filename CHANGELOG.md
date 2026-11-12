@@ -17,7 +17,7 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   levou 102 s, contra 258 s em sequência); `--silencioso` esconde as mensagens de cada execução e de cada passo. Os resultados
   são os mesmos nos dois modos.
 - Janela que reproduz a partida passo a passo, oferecida no fim das opções 2, 3 e 4 do menu ("Ver a partida numa janela?").
-  O `Visualizer` existia, mas não estava ligado ao programa; agora refaz a partida a partir do estado inicial do mundo.
+  O `Visualizer` (hoje `Visualizador`) existia, mas não estava ligado ao programa; agora refaz a partida a partir do estado inicial do mundo.
 
 ### Alterado
 - **Os nomes do código estão em português**: classes, métodos, atributos, parâmetros e variáveis. Quem importa o código

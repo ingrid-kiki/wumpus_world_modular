@@ -152,6 +152,7 @@ Depois da v1.7.0, o trabalho seguiu o [plano de boas práticas](plano-boas-prati
 | 12/11 | Etapa 3, PR G1: saídas sem acento e em português, regra automática e leitura de runs antigos | #81 |
 | 12/11 | Saída redirecionada no Windows (`python main.py > arquivo`) não quebra mais com os emojis | #82 |
 | 12/11 | Etapa 3, PR G2: nomes do código em português (classes, métodos, atributos, parâmetros e variáveis) | #83 |
+| 12/11 | Revisão completa depois da troca de nomes: nenhum erro no programa | #84 |
 
 Em toda a Etapa 3, o teste de referência, os números do `logico_seguro` e a comparação byte a byte dos gráficos provaram
 que os resultados não mudaram. A única regeneração da referência (#73) foi de formato, com as 165 execuções conferidas antes.
@@ -165,6 +166,14 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 - **Entrada do CHANGELOG na seção errada:** depois da v1.8.0, uma entrada caiu na seção da versão lançada; foi movida para
   `[Não lançado]`.
 - **Emojis na janela:** a fonte padrão do pygame mostrava os emojis como quadrados; as percepções passaram a ser escritas.
+- **Revisão depois da troca de nomes (#84), a pedido da Ingrid:**
+  - **Testes:** os 192 passam, com o `ruff` e cobertura de 91%. As linhas sem teste foram lidas uma a uma.
+  - **Atributos:** uma checagem automática conferiu que todo atributo ou método acessado no projeto está definido.
+  - **Diagrama de classes:** bate com o código, membro a membro, nas 13 classes.
+  - **Modos do programa:** todos rodaram de verdade, com a saída redirecionada: opções 1 a 5 do menu, opção inválida,
+    benchmark sequencial e paralelo (com os mesmos números), `benchmark.py` sozinho, experimentos e janela.
+  - **Reprodução:** o `reproduzir.py` refez com resultados idênticos dois runs novos e quatro runs antigos, da v1.5.0 e da v1.6.0.
+  - **Correção:** só uma linha do CHANGELOG, que agora cita o nome atual do `Visualizador`.
 - **Saída redirecionada no Windows:** ao gravar o run de base da PR G1 com a saída redirecionada, o programa quebrou com
   `UnicodeEncodeError`, porque o Windows usa cp1252 nesse caso. O erro existia desde que as mensagens ganharam emojis;
   corrigido na #82, com testes que reproduzem o problema em qualquer sistema.
