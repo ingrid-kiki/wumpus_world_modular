@@ -14,6 +14,8 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
 - Opções `--paralelo` e `--silencioso` no `main.py`. `--paralelo` roda as execuções em processos paralelos (o benchmark padrão
   levou 102 s, contra 258 s em sequência); `--silencioso` esconde as mensagens de cada execução e de cada passo. Os resultados
   são os mesmos nos dois modos.
+- Janela que reproduz a partida passo a passo, oferecida no fim das opções 2, 3 e 4 do menu ("Ver a partida numa janela?").
+  O `Visualizer` existia, mas não estava ligado ao programa; agora refaz a partida a partir do estado inicial do mundo.
 
 ### Alterado
 - Ações, percepções e status do jogo ficam num lugar só, `world/constantes.py`, e os números das regras do fitness e do AG
@@ -24,8 +26,8 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   existir só em `agents/registro.py`. As jogadas são as mesmas: a referência foi regenerada só por causa do formato.
 - `tempo_total` passa a ser o tempo de relógio de cada combinação de agente e tamanho, também no modo paralelo; antes, no
   paralelo, era a soma do tempo das execuções. `tempo_médio` continua sendo a média do tempo de cada execução.
-- As funções longas foram divididas: nenhuma função do programa passa de 40 linhas, exceto `draw_world`, do `Visualizer`, que
-  será dividida com o `--vis`. Os gráficos gerados são idênticos byte a byte, e os resultados não mudam.
+- As funções longas foram divididas: nenhuma função do programa passa de 40 linhas nem tem
+  complexidade acima de 10, sem exceções (a última, `draw_world`, foi dividida junto com a janela). Os gráficos gerados são idênticos byte a byte, e os resultados não mudam.
 
 ### Removido
 - O `Logger` (`utils/logger.py`), o atributo `logger` do agente lógico, o parâmetro `logger` de `GeneticAlgorithm.run` e os

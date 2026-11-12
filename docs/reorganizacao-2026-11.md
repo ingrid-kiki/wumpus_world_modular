@@ -135,19 +135,59 @@ foi a única mudança que superou a busca aleatória com significância.
 
 ---
 
-## 7. Pendências (atualizado em 09/11/2026)
+## 7. Continuação (09 a 12/11/2026)
+
+Depois da v1.7.0, o trabalho seguiu o [plano de boas práticas](plano-boas-praticas.md), que tem a lista completa das PRs.
+
+| Data | O que foi feito | PRs |
+|---|---|---|
+| 09/11 | v1.7.0: busca aleatória, `--proximidade` e a investigação da #31; `CLAUDE.md` com as regras do projeto | #46 a #50, #52 |
+| 09 e 10/11 | Etapa 1: teste de referência, cobertura no CI, `ruff format`, regras de lint, `pre-commit` e guia de estilo | #53 a #57 |
+| 09/11 | `main` protegida: exige PR e os 4 ambientes do CI, e bloqueia force-push e exclusão (registrado em 10/11) | #59 |
+| 10 e 11/11 | Etapa 2: 8 diagramas em `docs/arquitetura/`, conferidos com execução real e no GitHub | #58, #60 a #65, #67 |
+| 11/11 | Investigação do agente lógico e o agente `logico_seguro`; lista dos testes em `docs/testes.md` | #66, #68 |
+| 11 e 12/11 | Análise dos 5 benchmarks, v1.8.0 e divisão da Etapa 3 em 10 PRs | #69 a #71 |
+| 12/11 | Etapa 3, PRs A a F: constantes, classe base de agente, sem `Logger`, benchmark único, funções curtas e janela da partida | #72 a #78 |
+
+Em toda a Etapa 3, o teste de referência, os números do `logico_seguro` e a comparação byte a byte dos gráficos provaram
+que os resultados não mudaram. A única regeneração da referência (#73) foi de formato, com as 165 execuções conferidas antes.
+
+**Problemas encontrados nesta parte:**
+
+- **CI falhou por formatação de Markdown:** o `ruff format` também formata os blocos Python dentro dos `.md`. Desde então,
+  o `ruff format --check` roda até em commits só de documentação.
+- **Commit incompleto na #76:** um `git add` que recebeu arquivos já removidos falhou em silêncio, e o commit levou só as
+  remoções. Corrigido com um segundo commit antes do merge; desde então o `git status` é conferido antes do push.
+- **Entrada do CHANGELOG na seção errada:** depois da v1.8.0, uma entrada caiu na seção da versão lançada; foi movida para
+  `[Não lançado]`.
+- **Emojis na janela:** a fonte padrão do pygame mostrava os emojis como quadrados; as percepções passaram a ser escritas.
+
+**Decisões desta parte:**
+
+| Decisão | Quem | Onde |
+|---|---|---|
+| Proteger a `main` | Ingrid e Alfa (por telefone) | #59 |
+| Manter o agente `logico` e criar o `logico_seguro`, com desempate pela posição | Ingrid | #66, #68 |
+| Antecipar a Etapa 3, antes da comparação final da tese | Ingrid | #71 |
+| Nomes em português, sem acentos em identificadores, chaves, colunas e arquivos | Ingrid | #71 |
+| Um benchmark só, com `--paralelo` | Ingrid | #69, #76 |
+| Retirar o `Logger` e os `.log` | Ingrid | #74 |
+| Oferecer a janela por uma pergunta no menu, e não por `--vis` | Ingrid | #78 |
+
+---
+
+## 8. Pendências (atualizado em 12/11/2026)
 
 | Item | Onde |
 |---|---|
-| Mesclar as PRs #46 e #47, nessa ordem | #31 |
-| Lançar a v1.7.0 (a seção `[Não lançado]` do CHANGELOG já está pronta) | — |
-| Comparação final para a tese: busca aleatória, AG original e AG com proximidade, em orçamentos menores | #31 |
+| Etapa 3: PRs G a J (nomes e acentos, tipos, pacote e `.npz`) e lançamento da v2.0.0 | [plano de boas práticas](plano-boas-praticas.md), #42 |
+| Comparação final para a tese: busca aleatória, AG original, AG com proximidade e `logico_seguro`, em orçamentos menores | #31 |
 | Testar proximidade com mutação 0,1 e medir a variação do próprio AG (várias execuções por mundo) | #31 |
-| Rodar de novo os experimentos da tese com o código atual (depois da comparação acima) | Fase 4.6 |
-| Gráficos com os dados de todas as execuções | #29 |
+| Rodar de novo os experimentos da tese com o código da v2.0.0 | Fase 4.6 |
+| Gráficos com os dados de todas as execuções, talvez a partir do `.npz` | #29, PR I |
 | Agente PyGAD sobre o nosso `World`, depois DEAP; resposta da Alfa sobre o `WumpsimAG` | #15 |
 | Outras metaheurísticas (recozimento, busca tabu, colônia de formigas) | #16 |
 | Inconsistências no README, no CONTRIBUTING e na LICENSE | #41 |
-| Reorganizar o repositório e a estrutura do código; Fase 5 (v2.0.0) | #42 |
+| Etapas 4 (código comentado) e 5 (otimização) do plano de boas práticas | [plano de boas práticas](plano-boas-praticas.md) |
 | Fase 6: reescrever o histórico (dados antigos, `Co-Authored-By` e e-mail pessoal) | #17, #42 |
-| Proteger a `main` | #17 |
+| Instalar o gancho do `pre-commit` em cada clone (`pre-commit install`) | [CONTRIBUTING](../CONTRIBUTING.md) |

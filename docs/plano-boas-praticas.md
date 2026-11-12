@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a E concluídas, próxima: PR F, `--vis`), com a comparação final da tese depois dela.
+**Status em 12/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a F concluídas, próxima: PR G, nomes e acentos), com a comparação final da tese depois dela.
 
 ## Objetivo
 
@@ -15,20 +15,22 @@ caso de uso, fluxogramas, código comentado para aprendizado e etapas do process
 - **PRs pequenas, uma por assunto.** Mesclar antes de abrir a próxima, para não empilhar.
 - **Tudo medido.** Cada etapa tem uma meta verificável.
 
-## Estado atual (medido em 09/11/2026)
+## Estado medido
 
-| Indicador | Hoje |
-|---|---|
-| Funções (sem testes e `pygad/`) | 115 |
-| Funções sem docstring | 60 (52%) |
-| Funções com anotação de tipos | 0 |
-| Funções com mais de 30 linhas | 16; as maiores têm 148, 95 e 91 linhas |
-| Funções muito complexas (C901 > 10) | 2: `gerar_graficos_avancados` e `draw_world` |
-| Linhas de comentário | 17% |
-| Lista de ações repetida | em 4 arquivos; agentes disponíveis em 6; 5 benchmarks quase iguais |
-| Diagramas | só um diagrama de classes, na análise inicial, já desatualizado |
-| Cobertura de testes | não medida (131 testes) |
-| Tempo do CI | cerca de 2 min por PR |
+Medido com o mesmo script nas duas datas, sem contar os testes e `pygad/`. A coluna de 12/11/2026 é a da PR F da Etapa 3.
+
+| Indicador | 09/11/2026 (início) | 12/11/2026 |
+|---|---|---|
+| Funções (sem testes e `pygad/`) | 115 | 149 |
+| Funções sem docstring | 60 (52%) | 35 (23%) |
+| Funções com anotação de tipos | 0 | 0 (fica para a PR H) |
+| Funções com mais de 30 linhas | 16; as maiores têm 148, 95 e 91 linhas | 6; a maior tem 40 linhas |
+| Funções muito complexas (C901 > 10) | 2: `gerar_graficos_avancados` e `draw_world` | 0 |
+| Linhas de comentário | 17% | 14% (as docstrings novas não contam; comentários são a Etapa 4) |
+| Lista de ações repetida | em 4 arquivos; agentes disponíveis em 6; 5 benchmarks quase iguais | nenhuma: `world/constantes.py`, `agents/registro.py` e um benchmark só |
+| Diagramas | só um diagrama de classes, na análise inicial, já desatualizado | 8 arquivos em `docs/arquitetura/` |
+| Cobertura de testes | não medida (131 testes) | 92% (183 testes) |
+| Tempo do CI | cerca de 2 min por PR | cerca de 5 min por PR |
 
 ## Etapas
 
@@ -78,7 +80,8 @@ Em `docs/arquitetura/`, com **Mermaid**, que o GitHub desenha direto e o git ver
 
 O Mermaid não tem um tipo próprio para caso de uso; ele é feito com um fluxograma no mesmo formato visual.
 Um teste compara o diagrama de classes com o código, nos dois sentidos, para ele não ficar desatualizado sem aviso.
-Os diagramas descrevem o código atual e serão revistos depois da refatoração.
+Os diagramas acompanham o código: cada PR da Etapa 3 atualiza os que mudam, e a lista de classes reflete o código atual
+(o `Logger` saiu na #74).
 
 **Meta:** os 6 tipos de diagrama publicados, em 8 arquivos, e ligados no README.
 
@@ -105,11 +108,11 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 
 - Constantes únicas para ações, percepções e status (concluído, #72).
 - Classe base de agente, com um contrato único para `run()` (concluído, #73).
-- Um benchmark único no lugar dos 5, com as opções atuais (decidido; ver abaixo).
-- Dividir as funções grandes: `gerar_graficos_avancados`, `GeneticAlgorithm.run`, `rodar_benchmark`.
+- Um benchmark único no lugar dos 5, com as opções atuais (concluído, #76).
+- Dividir as funções grandes: `gerar_graficos_avancados`, `GeneticAlgorithm.run`, `rodar_benchmark` (concluído, #77 e #78).
 - Anotações de tipos nas funções públicas.
 - Nomes em português e sem acentos em identificadores, chaves, colunas e arquivos (decidido; ver abaixo).
-- Decidir o destino de `pygad/`, que não é usado. `visual/` está decidido abaixo, e o `logger` saiu na #74.
+- Decidir o destino de `pygad/`, que não é usado. `visual/` passou a ser usado na #78, e o `logger` saiu na #74.
 - Decidir o uso do `dados_extra_AGENTE_NxN.npz`: hoje ele é gravado em todo run, mas nenhuma parte do programa o lê.
   Uma opção é gerar os gráficos avançados a partir dele, o que também ajudaria na [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29).
 - Organizar em pacote, com `pyproject.toml` completo.
@@ -122,7 +125,8 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 | 2 | `Logger` | `LogicAgent.logger` fica sempre `None`, o parâmetro `logger` do AG nunca é informado e os `.log` só repetem início e fim, que já estão no `terminal_output.txt` | Retirar o atributo, o parâmetro e os arquivos `.log`, deixando o `terminal_output.txt` como registro único | cerca de 1 h |
 | 3 | `Visualizer` | Nenhum arquivo do programa o importa, e ele só desenha o estado atual do mundo | Ligar ao `--vis` nas execuções únicas, reproduzindo na janela os passos do agente depois que ele termina | 2 a 3 h |
 
-Situação: a classe base foi concluída na #73 e a retirada do `Logger` na #74; o `--vis` fica para a PR F.
+Situação: os três estão concluídos: a classe base na #73, a retirada do `Logger` na #74 e a janela na #78, oferecida por
+uma pergunta no menu, como decidido em 12/11/2026.
 A classe base veio primeiro porque o `--vis` depende do histórico com as posições. Esses 5 a 7 h já estão contados na estimativa
 da etapa. O teste de referência precisa continuar passando em cada ajuste, cada classe nova entra no diagrama de classes, e a saída dos
 `.log` muda o conteúdo da pasta do run, então entra na v2.0.0.
@@ -137,8 +141,8 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
   conferida automaticamente na PR G, e o `reproduzir.py` continua lendo runs antigos.
 - **Um benchmark só**, com `--paralelo` e uma opção para menos mensagens. Os outros quatro arquivos saem, e `--benchmark`
   continua aceitando arquivos externos. A justificativa está em [`analise-benchmarks-2026-11.md`](analise-benchmarks-2026-11.md).
-- **Em aberto:** o destino de `pygad/`, ligado à [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15); como
-  ativar o `--vis` (PR F); e o uso do `.npz` (PR I).
+- **Em aberto:** o destino de `pygad/`, ligado à [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15), e o
+  uso do `.npz` (PR I). A janela é oferecida por uma pergunta no menu (decidido em 12/11/2026).
 
 **Divisão em tarefas (cada PR é mesclada antes de abrir a próxima; aprovada em 11/11/2026):**
 
@@ -149,7 +153,7 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
 | C | 3.3 Retirar o `Logger`, o parâmetro `logger` e os arquivos `.log` | 1 h | Concluída (#74) |
 | D | 3.4 Um benchmark único, com `--paralelo`; `tempo_total` passa a ser o tempo de relógio também no paralelo | 2 a 3 h | Concluída (#76) |
 | E | 3.5 Dividir as 12 funções com mais de 40 linhas e retirar as exceções de complexidade | 2,5 a 3,5 h | Concluída (#77); `draw_world` fica para a F |
-| F | 3.6 Ligar o `Visualizer` ao `--vis` e dividir `draw_world`, a última função longa | 2 a 3 h | A fazer |
+| F | 3.6 Ligar o `Visualizer` ao `--vis` e dividir `draw_world`, a última função longa | 2 a 3 h | Concluída (#78), com pergunta no menu |
 | G | 3.7 Nomes em português, saídas sem acento e a regra que confere isso | 2 a 3 h | A fazer |
 | H | 3.8 Tipos nas funções públicas | 1,5 a 2 h | A fazer |
 | I | 3.9 Organizar em pacote, com `pyproject.toml` completo, e decidir o uso do `.npz` | 1,5 a 2 h | A fazer |
@@ -159,7 +163,7 @@ A ordem segue as dependências: a classe base usa as constantes, o benchmark ún
 longas vêm depois do benchmark único. Os nomes ficam para o fim, para não criar conflitos com as outras PRs. Em cada PR, o teste de
 referência e os números do `logico_seguro` garantem resultados idênticos, e os diagramas e a lista de testes acompanham o código.
 
-Restam 5 PRs (F a J), com cerca de 8 a 11 h previstas.
+Restam 4 PRs (G a J), com cerca de 6 a 8 h previstas.
 
 **Meta:** nenhuma função acima de 40 linhas, nenhuma com complexidade acima de 10, nenhuma lista repetida. Lançamento: v2.0.0.
 
@@ -181,7 +185,7 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 | Gráfico de violino | 35 de 39 s dos gráficos avançados | Amostrar as gerações, ou deixar opcional |
 | Benchmark padrão | Até 12 min, em um processo só | Rodar em paralelo no fluxo principal (feito na #76: opção `--paralelo`) |
 | Experimentos longos | Nenhum sinal de progresso | Barra de progresso com tempo restante |
-| Saída no terminal | Cada passo de cada execução é impresso | Modo resumido como padrão nos benchmarks |
+| Saída no terminal | Cada passo de cada execução é impresso | Modo resumido como padrão nos benchmarks (opção `--silencioso` criada na #76; falta decidir se vira o padrão) |
 | Gráficos | Sempre gerados | Opção `--sem-graficos` para experimentos |
 | Experimento interrompido | Recomeça do zero | Opção `--continuar` |
 
@@ -229,7 +233,8 @@ parênteses é a da tabela de tarefas da etapa. "Plano", "Versão" e "Geral" sã
 | [#74](https://github.com/ingrid-kiki/wumpus_world_modular/pull/74) | 2026-11-12 | 3 (C) | Retira o `Logger` e os arquivos `.log` |
 | [#75](https://github.com/ingrid-kiki/wumpus_world_modular/pull/75) | 2026-11-12 | Plano | Andamento da Etapa 3 e esta tabela |
 | [#76](https://github.com/ingrid-kiki/wumpus_world_modular/pull/76) | 2026-11-12 | 3 (D) | Benchmark único, com `--paralelo` e `--silencioso` |
-| [#77](https://github.com/ingrid-kiki/wumpus_world_modular/pull/77) | em revisão | 3 (E) | Divide as funções longas e trava os limites num teste |
+| [#77](https://github.com/ingrid-kiki/wumpus_world_modular/pull/77) | 2026-11-12 | 3 (E) | Divide as funções longas e trava os limites num teste |
+| [#78](https://github.com/ingrid-kiki/wumpus_world_modular/pull/78) | em revisão | 3 (F) | Janela que reproduz a partida, oferecida no menu |
 
 Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 
@@ -240,10 +245,10 @@ Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
 | 2. Documentação e diagramas | Concluída | Baixo | Etapa 0 |
-| 3. Código limpo | Restam cerca de 8 a 11 h | **Médio** | Etapa 1 |
+| 3. Código limpo | Restam cerca de 6 a 8 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Restante** | **cerca de 17 a 26 h** | | |
+| **Restante** | **cerca de 15 a 23 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 
