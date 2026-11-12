@@ -43,6 +43,7 @@ python -m experimentos.comparar_metodos --fase confirmacao
 - Ao criar, renomear ou remover um teste, atualizar `docs/testes.md` na mesma PR.
 - Documentar só o que foi executado de fato.
 - Registrar mudanças visíveis na seção `[Não lançado]` do `CHANGELOG.md`, na mesma PR. A versão fica em `utils/versao.py`.
+- Em toda PR, atualizar na mesma PR o histórico (`docs/resumo-2026-11.md` e `docs/reorganizacao-2026-11.md`), o `docs/plano-boas-praticas.md` (situação das tarefas e tabela "PRs do plano") e o `docs/plano-de-acao.md` (status das fases), inclusive a data de merge da PR anterior. A documentação não pode ficar defasada.
 
 **Resultados e método**
 - Não mudar os resultados dos experimentos sem decisão explícita. Mudanças de limpeza ou desempenho precisam dar resultados idênticos.

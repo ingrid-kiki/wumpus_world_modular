@@ -117,6 +117,13 @@ O projeto segue [Versionamento Semântico](https://semver.org/lang/pt-BR/) (`MAJ
 
 Toda mudança visível entra na seção `[Não lançado]` do [CHANGELOG.md](CHANGELOG.md) na mesma PR.
 
+A documentação do andamento também é atualizada em toda PR, para não ficar defasada:
+
+- o histórico: [`docs/resumo-2026-11.md`](docs/resumo-2026-11.md) e [`docs/reorganizacao-2026-11.md`](docs/reorganizacao-2026-11.md);
+- o [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md): situação das tarefas e a tabela "PRs do plano", com a
+  PR nova e a data de merge da anterior;
+- o [`docs/plano-de-acao.md`](docs/plano-de-acao.md): status das fases.
+
 A versão fica num lugar só: `utils/versao.py`. Entre lançamentos ela tem o sufixo `.dev0` (ex.: `1.5.0.dev0`).
 Para lançar:
 
