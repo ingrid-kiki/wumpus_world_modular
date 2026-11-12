@@ -6,7 +6,7 @@ no [CHANGELOG](../CHANGELOG.md), e a discussão de cada assunto fica nas
 
 | Documento | Conteúdo |
 |---|---|
-| [reorganizacao-2026-11.md](reorganizacao-2026-11.md) | Relato da reorganização de novembro de 2026: ponto de partida, o que foi feito (v1.4.0 e v1.5.0), decisões, issues analisadas, problemas encontrados e pendências. **Comece por aqui.** |
+| [reorganizacao-2026-11.md](reorganizacao-2026-11.md) | Relato da reorganização de novembro de 2026: ponto de partida, o que foi feito (v1.4.0 a v1.8.0 e a Etapa 3), decisões, issues analisadas, problemas encontrados e pendências. **Comece por aqui.** |
 | [resumo-2026-11.md](resumo-2026-11.md) | Resumo do trabalho de novembro de 2026: o que foi feito, as decisões, a situação e o que falta. Bom para uma visão rápida |
 | [arquitetura/README.md](arquitetura/README.md) | Diagramas do programa: caso de uso, classes, fluxogramas, sequências e fluxo de dados |
 | [testes.md](testes.md) | Lista dos testes automáticos, com o que cada um garante |

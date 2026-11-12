@@ -26,8 +26,8 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   existir só em `agents/registro.py`. As jogadas são as mesmas: a referência foi regenerada só por causa do formato.
 - `tempo_total` passa a ser o tempo de relógio de cada combinação de agente e tamanho, também no modo paralelo; antes, no
   paralelo, era a soma do tempo das execuções. `tempo_médio` continua sendo a média do tempo de cada execução.
-- As funções longas foram divididas: nenhuma função do programa passa de 40 linhas, exceto `draw_world`, do `Visualizer`, que
-  será dividida com o `--vis`. Os gráficos gerados são idênticos byte a byte, e os resultados não mudam.
+- As funções longas foram divididas: nenhuma função do programa passa de 40 linhas nem tem
+  complexidade acima de 10, sem exceções (a última, `draw_world`, foi dividida junto com a janela). Os gráficos gerados são idênticos byte a byte, e os resultados não mudam.
 
 ### Removido
 - O `Logger` (`utils/logger.py`), o atributo `logger` do agente lógico, o parâmetro `logger` de `GeneticAlgorithm.run` e os

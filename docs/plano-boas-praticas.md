@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a F concluídas, próxima: PR G, nomes e acentos), com a comparação final da tese depois dela.
+**Status em 12/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a F concluídas, próxima: PR G, nomes e acentos), com a comparação final da tese depois dela.
 
 ## Objetivo
 
@@ -15,20 +15,22 @@ caso de uso, fluxogramas, código comentado para aprendizado e etapas do process
 - **PRs pequenas, uma por assunto.** Mesclar antes de abrir a próxima, para não empilhar.
 - **Tudo medido.** Cada etapa tem uma meta verificável.
 
-## Estado atual (medido em 09/11/2026)
+## Estado medido
 
-| Indicador | Hoje |
-|---|---|
-| Funções (sem testes e `pygad/`) | 115 |
-| Funções sem docstring | 60 (52%) |
-| Funções com anotação de tipos | 0 |
-| Funções com mais de 30 linhas | 16; as maiores têm 148, 95 e 91 linhas |
-| Funções muito complexas (C901 > 10) | 2: `gerar_graficos_avancados` e `draw_world` |
-| Linhas de comentário | 17% |
-| Lista de ações repetida | em 4 arquivos; agentes disponíveis em 6; 5 benchmarks quase iguais |
-| Diagramas | só um diagrama de classes, na análise inicial, já desatualizado |
-| Cobertura de testes | não medida (131 testes) |
-| Tempo do CI | cerca de 2 min por PR |
+Medido com o mesmo script nas duas datas, sem contar os testes e `pygad/`. A coluna de 12/11/2026 é a da PR F da Etapa 3.
+
+| Indicador | 09/11/2026 (início) | 12/11/2026 |
+|---|---|---|
+| Funções (sem testes e `pygad/`) | 115 | 149 |
+| Funções sem docstring | 60 (52%) | 35 (23%) |
+| Funções com anotação de tipos | 0 | 0 (fica para a PR H) |
+| Funções com mais de 30 linhas | 16; as maiores têm 148, 95 e 91 linhas | 6; a maior tem 40 linhas |
+| Funções muito complexas (C901 > 10) | 2: `gerar_graficos_avancados` e `draw_world` | 0 |
+| Linhas de comentário | 17% | 14% (as docstrings novas não contam; comentários são a Etapa 4) |
+| Lista de ações repetida | em 4 arquivos; agentes disponíveis em 6; 5 benchmarks quase iguais | nenhuma: `world/constantes.py`, `agents/registro.py` e um benchmark só |
+| Diagramas | só um diagrama de classes, na análise inicial, já desatualizado | 8 arquivos em `docs/arquitetura/` |
+| Cobertura de testes | não medida (131 testes) | 92% (183 testes) |
+| Tempo do CI | cerca de 2 min por PR | cerca de 5 min por PR |
 
 ## Etapas
 
@@ -78,7 +80,8 @@ Em `docs/arquitetura/`, com **Mermaid**, que o GitHub desenha direto e o git ver
 
 O Mermaid não tem um tipo próprio para caso de uso; ele é feito com um fluxograma no mesmo formato visual.
 Um teste compara o diagrama de classes com o código, nos dois sentidos, para ele não ficar desatualizado sem aviso.
-Os diagramas descrevem o código atual e serão revistos depois da refatoração.
+Os diagramas acompanham o código: cada PR da Etapa 3 atualiza os que mudam, e a lista de classes reflete o código atual
+(o `Logger` saiu na #74).
 
 **Meta:** os 6 tipos de diagrama publicados, em 8 arquivos, e ligados no README.
 
@@ -105,11 +108,11 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 
 - Constantes únicas para ações, percepções e status (concluído, #72).
 - Classe base de agente, com um contrato único para `run()` (concluído, #73).
-- Um benchmark único no lugar dos 5, com as opções atuais (decidido; ver abaixo).
-- Dividir as funções grandes: `gerar_graficos_avancados`, `GeneticAlgorithm.run`, `rodar_benchmark`.
+- Um benchmark único no lugar dos 5, com as opções atuais (concluído, #76).
+- Dividir as funções grandes: `gerar_graficos_avancados`, `GeneticAlgorithm.run`, `rodar_benchmark` (concluído, #77 e #78).
 - Anotações de tipos nas funções públicas.
 - Nomes em português e sem acentos em identificadores, chaves, colunas e arquivos (decidido; ver abaixo).
-- Decidir o destino de `pygad/`, que não é usado. `visual/` está decidido abaixo, e o `logger` saiu na #74.
+- Decidir o destino de `pygad/`, que não é usado. `visual/` passou a ser usado na #78, e o `logger` saiu na #74.
 - Decidir o uso do `dados_extra_AGENTE_NxN.npz`: hoje ele é gravado em todo run, mas nenhuma parte do programa o lê.
   Uma opção é gerar os gráficos avançados a partir dele, o que também ajudaria na [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29).
 - Organizar em pacote, com `pyproject.toml` completo.
@@ -182,7 +185,7 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 | Gráfico de violino | 35 de 39 s dos gráficos avançados | Amostrar as gerações, ou deixar opcional |
 | Benchmark padrão | Até 12 min, em um processo só | Rodar em paralelo no fluxo principal (feito na #76: opção `--paralelo`) |
 | Experimentos longos | Nenhum sinal de progresso | Barra de progresso com tempo restante |
-| Saída no terminal | Cada passo de cada execução é impresso | Modo resumido como padrão nos benchmarks |
+| Saída no terminal | Cada passo de cada execução é impresso | Modo resumido como padrão nos benchmarks (opção `--silencioso` criada na #76; falta decidir se vira o padrão) |
 | Gráficos | Sempre gerados | Opção `--sem-graficos` para experimentos |
 | Experimento interrompido | Recomeça do zero | Opção `--continuar` |
 
