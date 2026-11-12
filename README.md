@@ -1,6 +1,6 @@
 # 🧠 Wumpus World com Agentes Inteligentes
 
-Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipos de agentes inteligentes** (manual, lógico e genético), e inclui uma interface visual interativa com **Pygame**.
+Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipos de agentes inteligentes** (manual, lógico e genético), e inclui uma janela com **Pygame** que reproduz as partidas passo a passo.
 
 > 💡 Ideal para fins didáticos, estudo de IA simbólica, algoritmos genéticos e jogos baseados em agentes.
 
@@ -10,7 +10,7 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 
 - Explorar diferentes estratégias de tomada de decisão em ambientes incertos.
 - Comparar abordagens **manuais**, **baseadas em lógica simbólica** e **algoritmos genéticos**.
-- Visualizar o ambiente e as ações dos agentes em tempo real.
+- Rever numa janela, passo a passo, o ambiente e as ações de um agente numa partida.
 - Realizar benchmarks automatizados, com coleta de métricas, logs e geração de gráficos avançados.
 
 ---
@@ -46,8 +46,6 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │   ├── README.md
 │   └── galeria/
 │
-├── pygad/                # Implementação alternativa com PyGAD (requer WumpsimAG, não incluso)
-│
 ├── logs/                 # Criada ao rodar; NÃO versionada (ver .gitignore)
 │   └── run_YYYYMMDD_HHMMSS/   # Subpastas por execução, com CSVs, PNGs e logs
 │      └── advanced_charts_agent_size/   # Resultados dos gráficos avançados
@@ -72,14 +70,30 @@ Os diagramas de caso de uso, classes, fluxogramas, sequências e fluxo de dados 
 ## 🧪 Requisitos
 
 - Python 3.12 ou superior (testado em 3.12 e 3.13; o numpy 2.5 exige 3.12, ver [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17))
-- Dependências com versões fixadas em [`requirements.txt`](requirements.txt): pygame, matplotlib, pandas, joblib, seaborn, scikit-learn, numpy, psutil e pygad
+- Dependências com versões fixadas em [`requirements.txt`](requirements.txt): pygame, matplotlib, pandas, joblib, seaborn, scikit-learn, numpy, psutil e pygad (reservada para o agente PyGAD da
+  [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15))
 
 ### Instalação de dependências
 
 ```bash
 python -m venv .venv
+```
+
+Ative o ambiente antes de instalar e sempre que abrir um terminal novo:
+
+```bash
+.venv\Scripts\activate        # Windows (PowerShell ou cmd)
+source .venv/bin/activate     # Linux e macOS
+```
+
+Com o ambiente ativo, instale as dependências:
+
+```bash
 pip install -r requirements.txt
 ```
+
+Sem ativar, use o Python do ambiente diretamente: `.venv\Scripts\python.exe main.py` no Windows ou
+`.venv/bin/python main.py` no Linux e macOS.
 
 ### Testes
 
@@ -108,7 +122,8 @@ Os bugs corrigidos na reorganização (issues #18 a #24) têm testes de regress�
 > 📘 **O [tutorial de uso](tutorial_execucao.md) cobre, passo a passo, tudo o que funciona hoje**, com exemplos reais,
 > onde ficam os resultados, quanto tempo leva e o que ainda não funciona.
 
-🎮 Menu Interativo (Novo)
+### 🎮 Menu interativo
+
 Execute o programa principal para acessar o menu interativo:
 
 1 - Benchmark (vários agentes e tamanhos)
@@ -313,7 +328,7 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
 ```
 
 ---
-## 💾 Captura de Terminal (Novo)
+## 💾 Captura do terminal
 
 Toda a saída do terminal é automaticamente capturada e salva em terminal_output.txt, permitindo:
 

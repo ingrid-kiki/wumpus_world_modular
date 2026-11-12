@@ -41,7 +41,7 @@ O relato do que foi feito está em [reorganizacao-2026-11.md](reorganizacao-2026
 | 5.4 Um runner só, com `--parallel`, `--silent` e `--out` | Feito na #76: `benchmark.py` único, com `--paralelo` e `--silencioso`; a pasta de saída já existia como `--saida` |
 | 5.5 `main.py logico --size 4 --seed 42 --vis` | Substituído: as execuções únicas continuam no menu, que no fim pergunta se a partida deve ser mostrada numa janela (decisão de 12/11/2026) |
 | 5.6 Ligar o `Visualizer` | Feito na #78: a janela reproduz a partida passo a passo |
-| 5.7 Destino de `pygad/` | Em aberto ([#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15)) |
+| 5.7 Destino de `pygad/` | Feito na #80: guardada na tag `archive/pygad-original` e retirada da `main`; o agente PyGAD fica na [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15) |
 | 5.8 Idioma e acentos | A fazer (PR G): tudo em português, sem acento em identificadores, chaves, colunas e arquivos |
 | 5.9 README, tutorial e "migrando da v1" | README e tutorial atualizados em cada PR; a seção "migrando da v1" fica para o lançamento (PR J) |
 | Fora do plano original | Retirada do `Logger` e dos `.log` (#74); funções de no máximo 40 linhas e complexidade 10 (#77 e #78); tipos nas funções públicas (PR H) |
