@@ -17,23 +17,11 @@ import numpy as np
 import pandas as pd
 
 from agents.genetic_agent import GeneticAgent
-from agents.logic_agent import LogicAgent
-from agents.logico_seguro import AgenteLogicoSeguro
-from agents.manual_agent import ManualAgent
-from agents.random_search_agent import RandomSearchAgent
+from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
 from utils.logger import Logger
 from utils.reprodutibilidade import coletar_metadados, parametros_efetivos, salvar_metadados
 from world.world import TAMANHO_MINIMO, World
-
-# Dicionário de agentes disponíveis
-AGENTES_DISPONIVEIS = {
-    "manual": ManualAgent,
-    "logico": LogicAgent,
-    "logico_seguro": AgenteLogicoSeguro,
-    "genetico": GeneticAgent,
-    "aleatorio": RandomSearchAgent,
-}
 
 
 def menu_interativo():
@@ -247,7 +235,7 @@ def criar_parser():
     parser.add_argument(
         "--agentes",
         nargs="+",
-        choices=[nome for nome in AGENTES_DISPONIVEIS if nome != "manual"],
+        choices=AGENTES_AUTOMATICOS,
         default=["logico", "genetico"],
         help="Agentes a incluir no benchmark",
     )

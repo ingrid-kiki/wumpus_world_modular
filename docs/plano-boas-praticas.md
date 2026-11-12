@@ -144,7 +144,7 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
 | PR | Tarefa | Tempo previsto | Situação |
 |---|---|---|---|
 | A | 3.1 Constantes únicas para ações, percepções e status, e nomes para os números soltos | 1,5 a 2 h | Concluída (#72) |
-| B | 3.2 Classe base de agente, formato único de retorno, com as posições no histórico, e lista única de agentes | 2 a 3 h | A fazer |
+| B | 3.2 Classe base de agente, formato único de retorno, com as posições no histórico, e lista única de agentes | 2 a 3 h | Concluída (#73) |
 | C | 3.3 Retirar o `Logger`, o parâmetro `logger` e os arquivos `.log` | 1 h | A fazer |
 | D | 3.4 Um benchmark único, com `--paralelo`; `tempo_total` passa a ser o tempo de relógio também no paralelo | 2 a 3 h | A fazer |
 | E | 3.5 Dividir as 12 funções com mais de 40 linhas e retirar as exceções de complexidade | 2,5 a 3,5 h | A fazer |

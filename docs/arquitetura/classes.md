@@ -1,6 +1,6 @@
 # Diagrama de classes
 
-Mostra as 13 classes do programa, com seus atributos, métodos e relações. Ficam de fora as funções soltas de módulos como
+Mostra as 14 classes do programa, com seus atributos, métodos e relações. Ficam de fora as funções soltas de módulos como
 `main.py` e `utils/`, a classe interna `DualWriter` de `main.py`, a pasta `pygad/` e os testes.
 
 ```mermaid
@@ -27,16 +27,23 @@ classDiagram
         +is_adjacent(pos1, pos2)
     }
 
-    class ManualAgent {
+    class Agente {
+        <<abstrata>>
         +world
+        +historico
+        +run()
+        +registrar_passo(acao, percepcao, status)
+        +executar_sequencia(acoes, mostrar)
+        +resultado(dados_extra)
+    }
+
+    class ManualAgent {
         +run()
     }
 
     class LogicAgent {
-        +world
         +knowledge
         +max_steps
-        +perception_history
         +logger
         +run()
         +decide(perception)
@@ -72,18 +79,14 @@ classDiagram
     }
 
     class GeneticAgent {
-        +world
         +ga
-        +history
         +run()
     }
 
     class RandomSearchAgent {
-        +world
         +avaliacoes
         +chrom_length
         +rng
-        +history
         +run()
     }
 
@@ -142,10 +145,11 @@ classDiagram
         +run()
     }
 
-    ManualAgent --> World : world
-    LogicAgent --> World : world
-    GeneticAgent --> World : world
-    RandomSearchAgent --> World : world
+    Agente --> World : world
+    ManualAgent --|> Agente
+    LogicAgent --|> Agente
+    GeneticAgent --|> Agente
+    RandomSearchAgent --|> Agente
     Visualizer --> World : world
 
     LogicAgent *-- LogicKnowledgeBase : knowledge
@@ -183,6 +187,7 @@ classDiagram
 | `ManualAgent` | `agents/manual_agent.py` |
 | `LogicAgent` | `agents/logic_agent.py` |
 | `LogicKnowledgeBase` | `agents/logic_knowledge_base.py` |
+| `Agente` | `agents/agente.py` |
 | `AgenteLogicoSeguro` | `agents/logico_seguro.py` |
 | `BaseConhecimentoSegura` | `agents/logico_seguro.py` |
 | `GeneticAgent` | `agents/genetic_agent.py` |
@@ -195,8 +200,9 @@ classDiagram
 
 ## Observações sobre o código atual
 
-- **Não há classe base de agente.** Os cinco agentes recebem o `World` no construtor e têm um método `run()`, mas isso é
-  só uma convenção. O dicionário `AGENTES_DISPONIVEIS` os escolhe pelo nome.
+- **Todos os agentes herdam de `Agente`**, a classe base abstrata. Ela guarda o `World` e o `historico`, e `run()` devolve o
+  resultado no formato único: `historico`, `passos` e `dados_extra`. A lista única `AGENTES_DISPONIVEIS`, em
+  `agents/registro.py`, escolhe os agentes pelo nome em todo o programa.
 - **`AgenteLogicoSeguro` herda de `LogicAgent`** e só troca a base de conhecimento: o laço de percepção e ação é o mesmo,
   e a decisão passa a evitar poços ([investigação de 11/11/2026](../investigacao-agente-logico-2026-11.md)).
 - **Os agentes não usam o `Logger`.** `main.py` e os benchmarks deixam `LogicAgent.logger` como `None`, e
@@ -204,4 +210,4 @@ classDiagram
   de `main.py`.
 - **`GeneticAlgorithm` e `RandomSearchAgent` avaliam com o mesmo fitness**, o método `Individual.evaluate`.
 - **`AGVariante` só é usada nos experimentos**, para trocar a seleção por torneio. Ela não entra no menu do `main.py`.
-- Classe base, `logger` e `visual/` estão entre os pontos da Etapa 3 do [plano de boas práticas](../plano-boas-praticas.md).
+- `logger` e `visual/` estão entre os pontos da Etapa 3 do [plano de boas práticas](../plano-boas-praticas.md).

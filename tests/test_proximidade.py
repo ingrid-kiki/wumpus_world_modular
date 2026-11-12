@@ -67,10 +67,10 @@ def test_ag_sem_proximidade_nao_muda():
 def test_agente_com_proximidade_e_reprodutivel():
     execucoes = [
         [
-            p["ação"]
+            p["acao"]
             for p in GeneticAgent(
                 World(size=6, seed=4), population_size=20, gens=10, chrom_length=30, proximidade=20.0
-            ).run()["history"]
+            ).run()["historico"]
         ]
         for _ in range(2)
     ]

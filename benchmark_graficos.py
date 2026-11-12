@@ -15,25 +15,14 @@ from datetime import datetime
 
 import matplotlib
 
+from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
 from utils.execucao import contar, executar_uma
 
 matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender do Tk)
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd
 
-from agents.genetic_agent import GeneticAgent
-from agents.logic_agent import LogicAgent
-from agents.logico_seguro import AgenteLogicoSeguro
-from agents.random_search_agent import RandomSearchAgent
 from world.world import World
-
-# Dicionário que associa nomes de agentes às suas classes
-AGENTES_DISPONIVEIS = {
-    "logico": LogicAgent,
-    "logico_seguro": AgenteLogicoSeguro,
-    "genetico": GeneticAgent,
-    "aleatorio": RandomSearchAgent,
-}
 
 
 def executar_benchmark(agente_nome, world_size, num_execucoes, parametros_agentes=None):
@@ -126,9 +115,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--execucoes", type=int, default=10)
     parser.add_argument("--sizes", nargs="+", type=int, default=[4, 6, 8])
-    parser.add_argument(
-        "--agentes", nargs="+", choices=AGENTES_DISPONIVEIS.keys(), default=list(AGENTES_DISPONIVEIS.keys())
-    )
+    parser.add_argument("--agentes", nargs="+", choices=AGENTES_AUTOMATICOS, default=list(AGENTES_AUTOMATICOS))
     parser.add_argument("--saida", type=str, default=None, help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
     args = parser.parse_args()
 

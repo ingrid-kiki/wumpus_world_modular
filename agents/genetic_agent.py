@@ -11,11 +11,12 @@
 
 import numpy as np
 
+from agents.agente import Agente
 from ga.ga_core import GeneticAlgorithm  # Importa o núcleo do algoritmo genético
-from world.constantes import ACOES, FIM_DE_JOGO
+from world.constantes import ACOES
 
 
-class GeneticAgent:
+class GeneticAgent(Agente):
     def __init__(
         self,
         world,
@@ -27,8 +28,7 @@ class GeneticAgent:
         seed=None,
         proximidade=0.0,
     ):
-        # Referência ao ambiente (mundo do Wumpus)
-        self.world = world
+        super().__init__(world)
         # Sem semente explícita, usa a do mundo: mesma semente -> mesmo resultado (#23)
         if seed is None:
             seed = getattr(world, "seed", None)
@@ -42,8 +42,6 @@ class GeneticAgent:
             seed=seed,
             proximidade=proximidade,
         )
-        # Histórico das ações e percepções do agente
-        self.history = []
 
     def run(self):
         """
@@ -56,20 +54,7 @@ class GeneticAgent:
         print(best.chromosome, "\n")
         print("🏆 Pontuação:", best.fitness)
         # Executa a melhor sequência de ações no mundo real
-        passo = 1  # Contador de passos
-        for action in best.chromosome:
-            # Executa a ação no ambiente e obtém percepção e status
-            perception, status = self.world.step(action)
-            # Salva informações no histórico
-            self.history.append({"passo": passo, "ação": action, "perception": perception, "status": status})
-            # Exibe informações do passo atual
-            print(f"[Passo {passo}] Ação: {action}")
-            print(f"[Passo {passo}] Percepção recebida: {perception}")
-            print(f"[Passo {passo}] Status do agente: {status}\n")
-            # Se o agente morreu ou venceu, encerra a execução
-            if status in FIM_DE_JOGO:
-                break
-            passo += 1
+        self.executar_sequencia(best.chromosome, mostrar=True)
 
         # Salva dados de fitness médio e final
         mean_fitness_per_gen = [gen_stats["mean"] for gen_stats in ga_results["fitness_history"]]
@@ -93,7 +78,4 @@ class GeneticAgent:
         }
 
         # Retorna o histórico de ações e os dados extras
-        return {
-            "history": self.history,
-            "dados_extra": dados_extra_formatado,
-        }
+        return self.resultado(dados_extra_formatado)

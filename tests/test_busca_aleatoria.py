@@ -17,7 +17,7 @@ from world.world import World
 
 
 def acoes(resultado):
-    return [p["ação"] for p in resultado["history"]]
+    return [p["acao"] for p in resultado["historico"]]
 
 
 def test_mesma_semente_mesmo_resultado_sem_depender_do_random_global():
@@ -40,7 +40,7 @@ def test_executa_a_melhor_sequencia_e_respeita_o_orcamento(monkeypatch):
     w = World(size=4, seed=1)
     resultado = RandomSearchAgent(w, avaliacoes=300, chrom_length=20).run()
     assert len(avaliacoes) == 300
-    assert w.won or not w.is_alive or len(resultado["history"]) == 20
+    assert w.won or not w.is_alive or len(resultado["historico"]) == 20
 
 
 def test_fitness_informado_corresponde_a_sequencia_executada():

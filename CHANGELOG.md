@@ -13,6 +13,10 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
 ### Alterado
 - Ações, percepções e status do jogo ficam num lugar só, `world/constantes.py`, e os números das regras do fitness e do AG
   ganham nomes. Um teste impede que essas listas voltem a ser escritas à mão. Os resultados não mudam.
+- **Todos os agentes herdam da classe base `Agente`** (`agents/agente.py`), e `run()` devolve um formato único:
+  `historico`, `passos` e `dados_extra`. Cada passo do histórico traz `passo`, `acao`, `percepcao`, `status` e `posicao`;
+  antes as chaves eram `history`, `ação` e `perception`, e o agente lógico não registrava as ações. A lista de agentes passa a
+  existir só em `agents/registro.py`. As jogadas são as mesmas: a referência foi regenerada só por causa do formato.
 
 ---
 

@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **172 casos de teste**, vindos de
-**121 funções** em **23 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **185 casos de teste**, vindos de
+**127 funções** em **24 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -31,6 +31,7 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | `test_bugs_conhecidos.py` | 46 | Bugs corrigidos que não podem voltar |
 | `test_entradas.py` | 24 | Entradas inválidas com mensagem clara |
 | `test_constantes.py` | 3 | Ações, percepções e status num lugar só |
+| `test_agente_base.py` | 13 | Classe base e lista única de agentes |
 | `test_world.py` | 1 | Criação do mundo |
 | `test_logic_agent.py` | 1 | Criação do agente lógico |
 | `test_logico_seguro.py` | 20 | Agente lógico que evita poços |
@@ -150,6 +151,17 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 Os arquivos `test_world.py`, `test_logic_agent.py`, `test_manual_agent.py`, `test_genetic_agent.py`, `test_action_distribution.py`,
 `test_execution_time.py`, `test_final_status.py`, `test_fitness_history.py` e `test_trajectory_length.py` são os testes mais antigos
 do projeto. Eles verificam o mínimo, como a existência de atributos, e o comportamento fica coberto pelos testes acima e abaixo.
+
+### `test_agente_base.py`
+
+| Teste | Casos | O que garante |
+|---|---|---|
+| `test_agente_e_abstrato` | 1 | A classe base `Agente` não pode ser usada sozinha |
+| `test_todos_os_agentes_herdam_de_agente` | 5 | Os cinco agentes da lista única herdam de `Agente` |
+| `test_resultado_tem_o_formato_unico` | 4 | Os quatro agentes automáticos devolvem `historico`, `passos` e `dados_extra`, com passos numerados e a posição final certa |
+| `test_agente_manual_devolve_o_formato_unico` | 1 | O agente manual também devolve o formato único |
+| `test_executar_sequencia_para_no_fim_do_jogo` | 1 | Uma sequência de ações para quando o jogo termina, e cada passo guarda a posição |
+| `test_main_e_benchmarks_usam_a_mesma_lista` | 1 | O `main.py` e os 5 benchmarks usam o mesmo dicionário de agentes |
 
 ### `test_logic_agent.py` e `test_manual_agent.py`
 

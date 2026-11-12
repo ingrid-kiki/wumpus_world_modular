@@ -50,9 +50,9 @@ def _resumo_do_historico(historico):
 
 def _fitness_das_acoes(historico, tamanho, semente, proximidade=0.0):
     """Fitness da sequência executada: acusa mudanças nos pontos, mesmo sem mudar o melhor indivíduo."""
-    acoes = [passo["ação"] for passo in historico if "ação" in passo]
+    acoes = [passo["acao"] for passo in historico]
     if not acoes:
-        return None  # o agente lógico não registra as ações
+        return None
     individuo = Individual(0)
     individuo.chromosome = acoes
     individuo.evaluate(World(size=tamanho, seed=semente), proximidade)
@@ -122,7 +122,7 @@ def calcular():
                 mundo = World(size=tamanho, seed=semente)
                 with contextlib.redirect_stdout(io.StringIO()):
                     resultado = classe(mundo, **parametros).run()
-                historico = resultado["history"]
+                historico = resultado["historico"]
                 execucoes.append(
                     {
                         "agente": nome,

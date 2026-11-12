@@ -31,7 +31,7 @@ def test_genetic_agent_initialization():
     # Testa se os atributos principais existem
     assert hasattr(agent, "world")
     assert hasattr(agent, "ga")
-    assert hasattr(agent, "history")
+    assert hasattr(agent, "historico")
 
     # Verifica se a instância de algoritmo genético foi criada corretamente
     assert agent.ga.pop_size == GA_RAPIDO["population_size"]
@@ -39,11 +39,11 @@ def test_genetic_agent_initialization():
     assert agent.ga.chrom_length == GA_RAPIDO["chrom_length"]
 
     # Verifica se o histórico está vazio inicialmente
-    assert agent.history == []
+    assert agent.historico == []
 
     # Executa o método run e verifica o retorno
     result = agent.run()
     assert isinstance(result, dict)
-    assert "history" in result
+    assert "historico" in result
     assert "dados_extra" in result
     assert "fitness" in result["dados_extra"]

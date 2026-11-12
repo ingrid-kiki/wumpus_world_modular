@@ -30,7 +30,7 @@ def test_final_agent_status():
     # Executa o agente e obtém o resultado
     result = agent.run()
     # Extrai o status final do histórico de execução
-    last_status = result["history"][-1]["status"]
+    last_status = result["historico"][-1]["status"]
 
     # Imprime o status final para análise didática
     print(f"🎯 Status final: {last_status}")

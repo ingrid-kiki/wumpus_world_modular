@@ -11,20 +11,9 @@ Permite customizar agentes, tamanhos e número de execuções via argumentos de 
 
 import argparse
 
-from agents.genetic_agent import GeneticAgent
-from agents.logic_agent import LogicAgent
-from agents.logico_seguro import AgenteLogicoSeguro
-from agents.random_search_agent import RandomSearchAgent
+from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
 from utils.execucao import contar, executar_uma
 from world.world import World
-
-# Dicionário que associa nomes de agentes às suas classes
-AGENTES_DISPONIVEIS = {
-    "logico": LogicAgent,
-    "logico_seguro": AgenteLogicoSeguro,
-    "genetico": GeneticAgent,
-    "aleatorio": RandomSearchAgent,
-}
 
 
 def executar_benchmark(agente_nome, world_size, num_execucoes, silent=False, parametros_agentes=None):
@@ -99,8 +88,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--agentes",
         nargs="+",
-        choices=AGENTES_DISPONIVEIS.keys(),
-        default=list(AGENTES_DISPONIVEIS.keys()),
+        choices=AGENTES_AUTOMATICOS,
+        default=list(AGENTES_AUTOMATICOS),
         help="Agentes a testar",
     )
     parser.add_argument("--silent", action="store_true", help="Modo silencioso (menos prints)")
