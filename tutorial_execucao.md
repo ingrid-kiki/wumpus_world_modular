@@ -205,15 +205,15 @@ Cada benchmark cria uma pasta própria:
 
 ```text
 logs/run_AAAAMMDD_HHMMSS/
-├── metadados.json                 versão, commit, opções, parâmetros do genético, bibliotecas
-├── resultados_benchmark.csv      uma linha por agente e tamanho
-├── saida_terminal.txt           tudo o que apareceu no terminal, inclusive erros
-├── grafico_vitorias.png          comparações entre agentes e tamanhos
+├── metadados.json                    versão, commit, opções, parâmetros do genético, bibliotecas
+├── resultados_benchmark.csv          uma linha por agente e tamanho
+├── saida_terminal.txt                tudo o que apareceu no terminal, inclusive erros
+├── grafico_vitorias.png              comparações entre agentes e tamanhos
 ├── grafico_mortes.png
 ├── grafico_sobreviveu.png
 ├── grafico_tempo_medio.png
-├── dados_extra_genetico_4x4.npz  arrays do genético (fitness, diversidade, memória, CPU)
-└── graficos_avancados_genetico_4x4/ gráficos do genético, um conjunto por tamanho
+├── dados_extra_genetico_4x4.npz      arrays do genético (fitness, diversidade, memória, CPU)
+└── graficos_avancados_genetico_4x4/  gráficos do genético, um conjunto por tamanho
 ```
 
 **`resultados_benchmark.csv`** tem as colunas `agente`, `tamanho_mundo`, `vitorias`, `mortes`, `sobreviveu`, `erros`,
@@ -263,7 +263,8 @@ bibliotecas forem diferentes e compara vitórias, mortes, sobrevivências e erro
 | 2 | Não dá para comparar (pasta sem `metadados.json` nem `metadata.json`, ou sem CSV) |
 
 Tempos, memória e CPU variam a cada rodada e não são comparados. Execuções gravadas até a v1.8.0 usam `metadata.json`,
-a opção `--sizes` e as colunas `vitórias` e `tempo_médio`; o script lê esse formato também. Execuções anteriores à v1.5.0
+a opção `--sizes` e as colunas `vitórias` e `tempo_médio`; o script lê esse formato também, e refaz com o `benchmark.py`
+os runs feitos com um dos quatro benchmarks retirados, que davam os mesmos resultados. Execuções anteriores à v1.5.0
 não têm metadados.
 
 ---

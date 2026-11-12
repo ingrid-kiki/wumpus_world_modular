@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 12/11/2026: **189 casos de teste**, vindos de
-**142 funções** em **27 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 12/11/2026: **190 casos de teste**, vindos de
+**143 funções** em **27 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -27,7 +27,7 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | Arquivo | Casos | Foco |
 |---|---|---|
 | `test_referencia.py` | 9 | Resultados não mudam sem decisão explícita |
-| `test_reprodutibilidade.py` | 15 | Metadados, reprodução de um run e otimizações do AG |
+| `test_reprodutibilidade.py` | 16 | Metadados, reprodução de um run e otimizações do AG |
 | `test_bugs_conhecidos.py` | 37 | Bugs corrigidos que não podem voltar |
 | `test_entradas.py` | 24 | Entradas inválidas com mensagem clara |
 | `test_constantes.py` | 3 | Ações, percepções e status num lugar só |
@@ -83,6 +83,7 @@ referência numa mudança intencional, veja o CONTRIBUTING.
 | `test_reproduzir_detecta_resultado_diferente` | 1 | `reproduzir.py` acusa um CSV adulterado |
 | `test_reproduzir_le_um_run_antigo` | 1 | `reproduzir.py` refaz um run no formato da v1.8.0: `metadata.json`, `--sizes` e colunas com acento |
 | `test_atualizar_opcoes_troca_as_opcoes_antigas` | 1 | Opções antigas, como `--sizes`, viram as atuais, como `--tamanhos` |
+| `test_atualizar_opcoes_troca_benchmarks_retirados` | 1 | Um run feito com um dos 4 benchmarks retirados é refeito com o `benchmark.py`; outros arquivos não mudam |
 | `test_reproduzir_sem_metadata` | 1 | `reproduzir.py` avisa quando a pasta não tem `metadados.json` nem `metadata.json` |
 | `test_sem_opcao_remove_opcao_e_valor` | 1 | Ao reproduzir, a opção `--saida` original é trocada pela nova pasta |
 | `test_clone_do_mundo_e_independente` | 1 | Mexer na cópia do mundo não altera o original |

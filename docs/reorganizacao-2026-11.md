@@ -180,7 +180,7 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 | Guardar `pygad/` na tag `archive/pygad-original` e retirá-la da `main` | Ingrid | #15, #80 |
 | Apagar do GitHub as 45 branches já mescladas (todas contidas na `main`) | Ingrid | #42 |
 | Resolver a #29 na PR I da Etapa 3, antes da v2.0.0 | Ingrid | #29 |
-| Dividir a PR G: saídas (G1), nomes do código (G2) e nomes dos arquivos `.py` na PR I | Ingrid | #81 |
+| Dividir a PR G: saídas (G1), nomes do código (G2) e nomes dos arquivos `.py` na PR I | Ingrid, ao aprovar a #81 | #81 |
 
 ---
 

@@ -34,7 +34,9 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   | opção `--sizes` | `--tamanhos` |
 
   O `reproduzir.py` continua refazendo runs gravados até a v1.8.0: ele lê o `metadata.json`, troca `--sizes` por
-  `--tamanhos` e traduz as colunas antigas. Um run real da v1.6.0 foi refeito com resultados idênticos.
+  `--tamanhos`, traduz as colunas antigas e usa o `benchmark.py` no lugar dos quatro benchmarks retirados, que davam os
+  mesmos resultados. Dois runs reais da v1.6.0, um deles feito com o `benchmark_fast.py`, foram refeitos com resultados
+  idênticos.
 - Ações, percepções e status do jogo ficam num lugar só, `world/constantes.py`, e os números das regras do fitness e do AG
   ganham nomes. Um teste impede que essas listas voltem a ser escritas à mão. Os resultados não mudam.
 - **Todos os agentes herdam da classe base `Agente`** (`agents/agente.py`), e `run()` devolve um formato único:

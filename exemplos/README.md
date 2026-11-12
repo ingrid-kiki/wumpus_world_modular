@@ -21,6 +21,9 @@ Todos usaram a opção 5 do menu do `main.py`, com 50 execuções por tamanho de
 main.py 5 --agentes genetico --sizes <tamanhos> --execucoes 50
 ```
 
+Esse é o comando da v1.3.0. Desde a v2.0.0, a opção se chama `--tamanhos`, e os arquivos do run têm outros nomes
+(por exemplo, `saida_terminal.txt` no lugar de `terminal_output.txt`); a lista está no [CHANGELOG](../CHANGELOG.md).
+
 Os parâmetros do AG (população, gerações, cromossomo, taxas) eram alterados **direto no código**
 (`agents/genetic_agent.py`) entre um exemplo e outro.
 

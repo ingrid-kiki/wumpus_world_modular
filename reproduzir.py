@@ -28,6 +28,9 @@ COLUNAS_COMPARADAS = ["agente", "tamanho_mundo", "vitorias", "mortes", "sobreviv
 # Nomes usados até a v1.8.0, traduzidos para os atuais ao ler um run antigo
 COLUNAS_ANTIGAS = {"vitórias": "vitorias", "tempo_médio": "tempo_medio"}
 OPCOES_ANTIGAS = {"--sizes": "--tamanhos"}
+# Benchmarks retirados na v2.0.0 (#76). Davam os mesmos resultados do benchmark.py (docs/analise-benchmarks-2026-11.md),
+# que os substitui ao refazer um run antigo
+BENCHMARKS_RETIRADOS = {"benchmark_custom.py", "benchmark_fast.py", "benchmark_graficos.py", "benchmark_sideB.py"}
 
 
 def sem_opcao(argumentos, opcao):
@@ -46,11 +49,24 @@ def sem_opcao(argumentos, opcao):
     return saida
 
 
+def _benchmark_atual(arquivo):
+    """benchmark.py no lugar de um benchmark retirado; qualquer outro arquivo continua o mesmo."""
+    return "benchmark.py" if os.path.basename(arquivo) in BENCHMARKS_RETIRADOS else arquivo
+
+
 def atualizar_opcoes(argumentos):
-    """Troca as opções de linha de comando antigas pelas atuais (ex.: --sizes por --tamanhos)."""
+    """
+    Troca as opções antigas pelas atuais (ex.: --sizes por --tamanhos) e os benchmarks
+    retirados pelo benchmark.py, para refazer runs gravados até a v1.8.0.
+    """
     saida = []
     for arg in argumentos:
+        if saida and saida[-1] == "--benchmark":  # o valor de "--benchmark ARQUIVO"
+            saida.append(_benchmark_atual(arg))
+            continue
         opcao, igual, valor = arg.partition("=")
+        if igual and opcao == "--benchmark":  # "--benchmark=ARQUIVO"
+            valor = _benchmark_atual(valor)
         saida.append(OPCOES_ANTIGAS.get(opcao, opcao) + igual + valor)
     return saida
 
@@ -118,7 +134,10 @@ def main(argv=None):
         print(f"⚠️ {aviso}")
 
     saida = args.saida or args.pasta.rstrip("/\\") + "_reproducao"
-    argumentos = sem_opcao(atualizar_opcoes(meta["argumentos_cli"]), "--saida") + ["--saida", saida]
+    atualizados = atualizar_opcoes(meta["argumentos_cli"])
+    if atualizados != meta["argumentos_cli"]:
+        print("ℹ️ Run gravado numa versão anterior: opções e benchmarks antigos foram trocados pelos atuais.")
+    argumentos = sem_opcao(atualizados, "--saida") + ["--saida", saida]
     print(f"🔁 Reproduzindo: main.py {' '.join(argumentos)}\n")
 
     import main as programa  # importado aqui para os avisos aparecerem antes das mensagens do benchmark

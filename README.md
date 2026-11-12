@@ -166,7 +166,8 @@ python reproduzir.py logs/run_AAAAMMDD_HHMMSS
 O script avisa se o commit, a versão ou as bibliotecas forem diferentes e compara vitórias, mortes e
 sobrevivências, que precisam ser idênticas. Tempos, memória e CPU variam de máquina para máquina e não entram na
 comparação. Runs gravados até a v1.8.0, com `metadata.json`, a opção `--sizes` e as colunas `vitórias` e
-`tempo_médio`, também são lidos. Runs anteriores à v1.5.0 não têm metadados e não podem ser refeitos.
+`tempo_médio`, também são lidos; os que usaram um dos benchmarks retirados na v2.0.0 são refeitos com o `benchmark.py`,
+que dava os mesmos resultados. Runs anteriores à v1.5.0 não têm metadados e não podem ser refeitos.
 
 ### 🔧 Uma partida com janela
 
@@ -314,15 +315,15 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
 ```
 /logs/
 └── run_YYYYMMDD_HHMMSS/
-    ├── metadados.json                      # Versão, commit, argumentos e bibliotecas (para reproduzir)
+    ├── metadados.json                     # Versão, commit, argumentos e bibliotecas (para reproduzir)
     ├── resultados_benchmark.csv           # Só colunas escalares
     ├── dados_extra_genetico_4x4.npz       # Arrays do AG (fitness, diversidade, memória, CPU...)
-    ├── saida_terminal.txt                # Saída completa do terminal
+    ├── saida_terminal.txt                 # Saída completa do terminal
     ├── grafico_vitorias.png
     ├── grafico_mortes.png
     ├── grafico_sobreviveu.png
     ├── grafico_tempo_medio.png
-    └── graficos_avancados_genetico_4x4/     # ← Gráficos avançados por agente/tamanho
+    └── graficos_avancados_genetico_4x4/   # ← Gráficos avançados por agente/tamanho
         ├── convergencia_populacao.png
         ├── evolucao_fitness.png
         └── mapa_de_calor_diversidade.png
@@ -331,7 +332,7 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
 ---
 ## 💾 Captura do terminal
 
-Toda a saída do terminal é automaticamente capturada e salva em saida_terminal.txt, permitindo:
+Toda a saída do terminal é automaticamente capturada e salva em `saida_terminal.txt`, permitindo:
 
 - Análise posterior dos resultados completos
 - Rastreabilidade de todas as execuções

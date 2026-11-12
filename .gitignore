@@ -183,7 +183,7 @@ cython_debug/
 # ==============================
 # Wumpus World — saídas de execução (não versionar)
 # ==============================
-# Cada execução gera logs/run_YYYYMMDD_HHMMSS/ com CSV, PNG e terminal_output.txt.
+# Cada execução gera logs/run_YYYYMMDD_HHMMSS/ com CSV, PNG e saida_terminal.txt.
 # Resultados de referência ficam nos GitHub Releases, não no git.
 logs/
 results/

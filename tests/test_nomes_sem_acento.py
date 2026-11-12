@@ -2,7 +2,7 @@
 # tests/test_nomes_sem_acento.py
 # ==============================
 """
-# Regra da Etapa 3 (PR G): nada que o programa grava ou usa como chave pode ter acento.
+# Regra da Etapa 3 (PR G1, #81): nada que o programa grava ou usa como chave pode ter acento.
 # Mensagens para as pessoas e a documentação continuam com acentos.
 #
 # - O ruff (regra PLC2401) barra acentos nos nomes do código: variáveis, funções, classes.

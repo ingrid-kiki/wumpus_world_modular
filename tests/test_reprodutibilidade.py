@@ -135,6 +135,13 @@ def test_atualizar_opcoes_troca_as_opcoes_antigas():
     assert reproduzir.atualizar_opcoes(["--sizes=4"]) == ["--tamanhos=4"]
 
 
+def test_atualizar_opcoes_troca_benchmarks_retirados():
+    """Os 4 benchmarks retirados na #76 davam os mesmos resultados: o benchmark.py os substitui."""
+    assert reproduzir.atualizar_opcoes(["--benchmark", "benchmark_fast.py"]) == ["--benchmark", "benchmark.py"]
+    assert reproduzir.atualizar_opcoes(["--benchmark=pasta/benchmark_sideB.py"]) == ["--benchmark=benchmark.py"]
+    assert reproduzir.atualizar_opcoes(["--benchmark", "meu.py"]) == ["--benchmark", "meu.py"]
+
+
 def test_reproduzir_sem_metadata(tmp_path):
     assert reproduzir.main([str(tmp_path)]) == 2
 
