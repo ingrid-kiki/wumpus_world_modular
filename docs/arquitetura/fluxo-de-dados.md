@@ -8,7 +8,6 @@ flowchart LR
     subgraph entrada["Durante o benchmark"]
         argumentos["Argumentos e<br/>parâmetros efetivos"]
         terminal["Tudo que aparece<br/>no terminal"]
-        marcos["Início e fim de<br/>cada combinação"]
         resumo["Contagens e tempos<br/>de cada combinação"]
         extras["dados_extra da primeira<br/>execução sem erro"]
     end
@@ -16,7 +15,6 @@ flowchart LR
     subgraph pasta["Pasta do run"]
         metadata["metadata.json"]
         saida["terminal_output.txt"]
-        logs["AGENTE_AAAAMMDD_HHMMSS.log"]
         csv["resultados_benchmark.csv"]
         basicos["grafico_vitórias.png, grafico_mortes.png,<br/>grafico_sobreviveu.png e grafico_tempo_medio.png"]
         npz["dados_extra_AGENTE_NxN.npz"]
@@ -25,7 +23,6 @@ flowchart LR
 
     argumentos -- "salvar_metadados" --> metadata
     terminal -- "capturar_saida_terminal" --> saida
-    marcos -- "Logger" --> logs
     resumo -- "salvar_resultados" --> csv
     resumo -- "gerar_graficos" --> basicos
     extras -- "salvar_resultados" --> npz
@@ -41,7 +38,6 @@ flowchart LR
 |---|---|
 | `metadata.json` | Versão, data e hora, estado do git, argumentos, parâmetros do AG, regra das sementes, Python, plataforma e bibliotecas |
 | `terminal_output.txt` | Saída completa do terminal, incluindo os erros |
-| `AGENTE_AAAAMMDD_HHMMSS.log` | Início e fim do benchmark daquele agente |
 | `resultados_benchmark.csv` | Uma linha por agente e tamanho: `agente`, `tamanho_mundo`, `vitórias`, `mortes`, `sobreviveu`, `erros`, `tempo_total` e `tempo_médio` |
 | `grafico_*.png` | Barras de vitórias, mortes e sobrevivência, e tempo médio |
 | `dados_extra_AGENTE_NxN.npz` | Os mesmos dados usados nos gráficos avançados |

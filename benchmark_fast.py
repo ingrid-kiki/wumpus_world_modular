@@ -30,8 +30,6 @@ from world.world import World
 def simular_execucao(agente_cls, world_size, seed, parametros=None):
     mundo = World(size=world_size, seed=seed)
     agente = agente_cls(mundo, **(parametros or {}))
-    if hasattr(agente, "logger"):
-        agente.logger = None
 
     # Um erro vira status "erro" (antes a execução era descartada sem aviso: #30)
     # Este código roda em outro processo: o relato do erro volta no resultado e é escrito no principal (#40)

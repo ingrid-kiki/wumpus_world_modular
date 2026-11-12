@@ -19,7 +19,6 @@ import pandas as pd
 from agents.genetic_agent import GeneticAgent
 from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
-from utils.logger import Logger
 from utils.reprodutibilidade import coletar_metadados, parametros_efetivos, salvar_metadados
 from world.world import TAMANHO_MINIMO, World
 
@@ -60,8 +59,6 @@ def execucao_unica(agente_nome):
     mundo = World(size=size, seed=seed)
     agente_cls = AGENTES_DISPONIVEIS[agente_nome]
     agente = agente_cls(mundo)
-    if hasattr(agente, "logger"):
-        agente.logger = None  # Desativa logger para execução única
 
     print(f"\nExecutando agente '{agente_nome}' no mundo {size}x{size}...\n")
     agente.run()
@@ -348,33 +345,29 @@ def rodar_benchmark(cli_args):
 
         for size in args.sizes:
             for nome_agente in args.agentes:
-                logger = Logger(nome_agente, output_dir)
-                try:
-                    logger.write(f"\n🚀 Iniciando benchmark: Agente = '{nome_agente}' | Mundo = {size}x{size}")
+                print(f"\n🚀 Iniciando benchmark: Agente = '{nome_agente}' | Mundo = {size}x{size}")
 
-                    # Pastas, arquivos e gravação parcial desta etapa são garantidos por
-                    # tests/test_main_etapas.py. Ao mudar este trecho, mantenha aqueles testes passando.
-                    resultado = executar_benchmark(nome_agente, size, args.execucoes)
-                    resultados.append(resultado)
-                    # Grava a cada etapa: uma queda perde no máximo a etapa em andamento
-                    salvar_resultados(resultados, output_dir)
+                # Pastas, arquivos e gravação parcial desta etapa são garantidos por
+                # tests/test_main_etapas.py. Ao mudar este trecho, mantenha aqueles testes passando.
+                resultado = executar_benchmark(nome_agente, size, args.execucoes)
+                resultados.append(resultado)
+                # Grava a cada etapa: uma queda perde no máximo a etapa em andamento
+                salvar_resultados(resultados, output_dir)
 
-                    if not isinstance(resultado, dict):  # benchmark externo (--benchmark) sem o contrato
-                        print(f"⚠️ Resultado nulo para agente '{nome_agente}' no mundo {size}x{size}")
-                    elif resultado.get("dados_extra"):  # vale para qualquer agente que devolva dados extras
-                        advanced_output_dir = os.path.join(output_dir, f"advanced_charts_{nome_agente}_{size}x{size}")
-                        os.makedirs(advanced_output_dir, exist_ok=True)
-                        relatorio = gerar_graficos_avancados(resultado["dados_extra"], advanced_output_dir)
-                        print(
-                            f"📊 Gráficos avançados para '{nome_agente}' ({size}x{size}): "
-                            f"{len(relatorio['gerados'])} salvos em {advanced_output_dir}"
-                        )
-                        if relatorio["falhas"]:
-                            print(f"⚠️ Gráficos que falharam: {', '.join(relatorio['falhas'])}")
+                if not isinstance(resultado, dict):  # benchmark externo (--benchmark) sem o contrato
+                    print(f"⚠️ Resultado nulo para agente '{nome_agente}' no mundo {size}x{size}")
+                elif resultado.get("dados_extra"):  # vale para qualquer agente que devolva dados extras
+                    advanced_output_dir = os.path.join(output_dir, f"advanced_charts_{nome_agente}_{size}x{size}")
+                    os.makedirs(advanced_output_dir, exist_ok=True)
+                    relatorio = gerar_graficos_avancados(resultado["dados_extra"], advanced_output_dir)
+                    print(
+                        f"📊 Gráficos avançados para '{nome_agente}' ({size}x{size}): "
+                        f"{len(relatorio['gerados'])} salvos em {advanced_output_dir}"
+                    )
+                    if relatorio["falhas"]:
+                        print(f"⚠️ Gráficos que falharam: {', '.join(relatorio['falhas'])}")
 
-                    logger.write(f"✅ Benchmark finalizado: '{nome_agente}' no mundo {size}x{size}")
-                finally:
-                    logger.close()
+                print(f"✅ Benchmark finalizado: '{nome_agente}' no mundo {size}x{size}")
 
         df_resultados, csv_path = salvar_resultados(resultados, output_dir)
         gerar_graficos(df_resultados, output_dir)

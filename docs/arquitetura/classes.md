@@ -1,6 +1,6 @@
 # Diagrama de classes
 
-Mostra as 14 classes do programa, com seus atributos, métodos e relações. Ficam de fora as funções soltas de módulos como
+Mostra as 13 classes do programa, com seus atributos, métodos e relações. Ficam de fora as funções soltas de módulos como
 `main.py` e `utils/`, a classe interna `DualWriter` de `main.py`, a pasta `pygad/` e os testes.
 
 ```mermaid
@@ -44,7 +44,6 @@ classDiagram
     class LogicAgent {
         +knowledge
         +max_steps
-        +logger
         +run()
         +decide(perception)
     }
@@ -107,7 +106,7 @@ classDiagram
         +acertos_cache
         -_cache_fitness
         +avaliar(individual, world)
-        +run(world, logger)
+        +run(world)
         +select(population)
         +crossover(p1, p2)
         +mutate(individual)
@@ -125,13 +124,6 @@ classDiagram
         +fitness
         +copia()
         +evaluate(world, proximidade)
-    }
-
-    class Logger {
-        +filepath
-        +file
-        +write(msg)
-        +close()
     }
 
     class Visualizer {
@@ -164,8 +156,6 @@ classDiagram
     GeneticAlgorithm ..> World : recebe em run
     Individual ..> World : simula em uma cópia
 
-    LogicAgent ..> Logger : atributo logger, sempre None
-    GeneticAlgorithm ..> Logger : parâmetro logger, nunca informado
 
     note for Visualizer "Sem uso: nenhum arquivo do programa importa esta classe"
 ```
@@ -195,7 +185,6 @@ classDiagram
 | `GeneticAlgorithm` | `ga/ga_core.py` |
 | `Individual` | `ga/individual.py` |
 | `AGVariante` | `experimentos/comparar_metodos.py` |
-| `Logger` | `utils/logger.py` |
 | `Visualizer` | `visual/visualizer.py` |
 
 ## Observações sobre o código atual
@@ -205,9 +194,6 @@ classDiagram
   `agents/registro.py`, escolhe os agentes pelo nome em todo o programa.
 - **`AgenteLogicoSeguro` herda de `LogicAgent`** e só troca a base de conhecimento: o laço de percepção e ação é o mesmo,
   e a decisão passa a evitar poços ([investigação de 11/11/2026](../investigacao-agente-logico-2026-11.md)).
-- **Os agentes não usam o `Logger`.** `main.py` e os benchmarks deixam `LogicAgent.logger` como `None`, e
-  `GeneticAgent` chama `GeneticAlgorithm.run` sem informar um logger. Quem cria e usa o `Logger` é `rodar_benchmark`, função
-  de `main.py`.
 - **`GeneticAlgorithm` e `RandomSearchAgent` avaliam com o mesmo fitness**, o método `Individual.evaluate`.
 - **`AGVariante` só é usada nos experimentos**, para trocar a seleção por torneio. Ela não entra no menu do `main.py`.
-- `logger` e `visual/` estão entre os pontos da Etapa 3 do [plano de boas práticas](../plano-boas-praticas.md).
+- `visual/` está entre os pontos da Etapa 3 do [plano de boas práticas](../plano-boas-praticas.md).

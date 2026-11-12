@@ -64,7 +64,7 @@ def test_benchmark_repassa_os_parametros_so_para_o_agente_certo(monkeypatch):
 
     class Gravador:
         def __init__(self, world, **kwargs):
-            self.world, self.logger = world, None
+            self.world = world
             recebidos.setdefault("kwargs", []).append(kwargs)
 
         def run(self):

@@ -18,6 +18,11 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   antes as chaves eram `history`, `ação` e `perception`, e o agente lógico não registrava as ações. A lista de agentes passa a
   existir só em `agents/registro.py`. As jogadas são as mesmas: a referência foi regenerada só por causa do formato.
 
+### Removido
+- O `Logger` (`utils/logger.py`), o atributo `logger` do agente lógico, o parâmetro `logger` de `GeneticAlgorithm.run` e os
+  arquivos `AGENTE_AAAAMMDD_HHMMSS.log` da pasta do run. Eles só repetiam o início e o fim de cada combinação, que continuam
+  no `terminal_output.txt`, o registro único de cada run. Os resultados não mudam.
+
 ---
 
 ## [1.8.0] - 2026-11-11

@@ -48,7 +48,6 @@ class AgenteFalso:
 
     def __init__(self, world):
         self.world = world
-        self.logger = None
 
     def run(self):
         return {"dados_extra": {"fitness": [1.0, 2.0]}}

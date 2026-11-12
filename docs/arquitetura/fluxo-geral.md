@@ -26,8 +26,7 @@ flowchart TD
         metadados --> captura["capturar_saida_terminal:<br/>terminal_output.txt"]
         captura --> falta{"Falta combinar<br/>tamanho e agente?"}
 
-        falta -- "sim" --> logger["Abre o Logger<br/>da combinação"]
-        logger --> benchmark["executar_benchmark:<br/>N execuções, semente i em cada uma"]
+        falta -- "sim" --> benchmark["executar_benchmark:<br/>N execuções, semente i em cada uma"]
         benchmark --> parcial["salvar_resultados:<br/>gravação parcial"]
         parcial --> extras{"O resultado tem<br/>dados_extra?"}
         extras -- "sim" --> avancados["gerar_graficos_avancados"]

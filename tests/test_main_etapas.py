@@ -57,7 +57,7 @@ def test_layout_completo_de_um_run(tmp_path):
     assert {p.stem for p in pasta.glob("*.png")} >= GRAFICOS_BASICOS
     for arquivo in ("resultados_benchmark.csv", "terminal_output.txt", "metadata.json", "dados_extra_genetico_4x4.npz"):
         assert (pasta / arquivo).exists(), arquivo
-    assert len(list(pasta.glob("logico_*.log"))) == 1 and len(list(pasta.glob("genetico_*.log"))) == 1
+    assert not list(pasta.glob("*.log"))  # o registro único é o terminal_output.txt
     assert not list(pasta.rglob("*.tmp"))
     assert len(pd.read_csv(pasta / "resultados_benchmark.csv")) == 2
 
@@ -82,8 +82,6 @@ def test_queda_na_segunda_etapa_preserva_a_primeira(tmp_path, monkeypatch):
     log = (pasta / "terminal_output.txt").read_text(encoding="utf-8")
     assert "etapa 1 concluída" in log
     assert "RuntimeError: queda de propósito" in log
-    for arquivo in pasta.glob("*.log"):
-        arquivo.unlink()  # no Windows, falha se o logger da etapa interrompida não tiver sido fechado
 
 
 def test_ctrl_c_tambem_preserva_resultados_e_log(tmp_path, monkeypatch):

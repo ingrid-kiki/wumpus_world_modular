@@ -1,8 +1,7 @@
 # Fluxograma do algoritmo genético
 
 Mostra o que `GeneticAlgorithm.run` faz, da população inicial até o melhor indivíduo. A troca de mensagens entre as classes
-está na [sequência de uma execução](sequencia-ag.md). O registro de progresso em `logger` foi omitido, porque ele nunca é
-informado.
+está na [sequência de uma execução](sequencia-ag.md).
 
 ```mermaid
 flowchart TD

@@ -7,7 +7,6 @@ Mostra quem chama quem durante um benchmark com `benchmark.py`, que é o arquivo
 ```mermaid
 sequenceDiagram
     participant R as rodar_benchmark
-    participant L as Logger
     participant B as executar_benchmark
     participant E as executar_uma
     participant M as World
@@ -18,7 +17,7 @@ sequenceDiagram
     R->>R: valida argumentos, cria a pasta e grava metadata.json
 
     loop cada tamanho e cada agente
-        R->>L: cria o arquivo de log e registra o início
+        R->>R: mostra o início da combinação no terminal
         R->>B: executar_benchmark(agente, tamanho, execucoes, parametros)
         loop execução i, de 0 a N-1
             B->>M: World(size, seed=i)
@@ -40,7 +39,6 @@ sequenceDiagram
         opt o resultado tem dados_extra
             R->>G: gerar_graficos_avancados
         end
-        R->>L: registra o fim e fecha o arquivo
     end
 
     R->>S: gravação final
