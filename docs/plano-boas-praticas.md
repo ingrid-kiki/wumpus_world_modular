@@ -14,6 +14,8 @@ caso de uso, fluxogramas, código comentado para aprendizado e etapas do process
 - **Resultados iguais.** Limpeza e documentação não podem mudar vitórias, mortes nem gráficos. A Etapa 1 cria um teste de referência para garantir isso.
 - **PRs pequenas, uma por assunto.** Mesclar antes de abrir a próxima, para não empilhar.
 - **Tudo medido.** Cada etapa tem uma meta verificável.
+- **Documentação em dia.** Toda PR atualiza, na mesma PR, este plano, o [plano de ação](plano-de-acao.md) e o histórico
+  ([resumo](resumo-2026-11.md) e [relato](reorganizacao-2026-11.md)). Regra de 12/11/2026, também no `CONTRIBUTING.md`.
 
 ## Estado medido
 
@@ -234,7 +236,8 @@ parênteses é a da tabela de tarefas da etapa. "Plano", "Versão" e "Geral" sã
 | [#75](https://github.com/ingrid-kiki/wumpus_world_modular/pull/75) | 2026-11-12 | Plano | Andamento da Etapa 3 e esta tabela |
 | [#76](https://github.com/ingrid-kiki/wumpus_world_modular/pull/76) | 2026-11-12 | 3 (D) | Benchmark único, com `--paralelo` e `--silencioso` |
 | [#77](https://github.com/ingrid-kiki/wumpus_world_modular/pull/77) | 2026-11-12 | 3 (E) | Divide as funções longas e trava os limites num teste |
-| [#78](https://github.com/ingrid-kiki/wumpus_world_modular/pull/78) | em revisão | 3 (F) | Janela que reproduz a partida, oferecida no menu |
+| [#78](https://github.com/ingrid-kiki/wumpus_world_modular/pull/78) | 2026-11-12 | 3 (F) | Janela que reproduz a partida, oferecida no menu |
+| [#79](https://github.com/ingrid-kiki/wumpus_world_modular/pull/79) | em revisão | Geral | Regra de manter o histórico e os planos em dia |
 
 Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 

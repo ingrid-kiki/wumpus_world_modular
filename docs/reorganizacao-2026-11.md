@@ -173,6 +173,7 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 | Um benchmark só, com `--paralelo` | Ingrid | #69, #76 |
 | Retirar o `Logger` e os `.log` | Ingrid | #74 |
 | Oferecer a janela por uma pergunta no menu, e não por `--vis` | Ingrid | #78 |
+| Toda PR atualiza o histórico, o plano de boas práticas e o plano de ação | Ingrid | #79 |
 
 ---
 
