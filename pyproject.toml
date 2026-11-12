@@ -20,7 +20,7 @@ extend-exclude = ["pygad"]
 select = ["E9", "F", "I", "W", "UP", "B", "SIM", "C90"]
 
 [tool.ruff.lint.mccabe]
-# Funções acima do limite só com "# noqa: C901" e justificativa, até a refatoração da Etapa 3.
+# Funções acima do limite só com "# noqa: C901" e justificativa; tests/test_tamanho_das_funcoes.py confere onde.
 max-complexity = 10
 
 [tool.coverage.run]

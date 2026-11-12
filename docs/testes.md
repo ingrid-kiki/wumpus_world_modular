@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **175 casos de teste**, vindos de
-**130 funções** em **24 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **177 casos de teste**, vindos de
+**132 funções** em **25 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -50,6 +50,7 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | `test_experimento_31.py` | 7 | Script de comparação de métodos da #31 |
 | `test_diagramas.py` | 7 | Diagrama de classes alinhado com o código |
 | `test_lista_de_testes.py` | 2 | Esta lista alinhada com os testes |
+| `test_tamanho_das_funcoes.py` | 2 | Funções com até 40 linhas e exceções de complexidade só onde registrado |
 
 ## Resultados não mudam sem decisão
 
@@ -282,6 +283,13 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_encontra_classes_do_programa_e_ignora_pastas_de_fora` | 1 | A leitura do código encontra as classes do programa e ignora `pygad/` e `tests/` |
 | `test_nao_conta_classe_aninhada` | 1 | Classes dentro de funções ou de outras classes não contam |
 | `test_diagrama_de_classes_bate_com_o_codigo` | 1 | Toda classe do diagrama existe no código, e toda classe do código está no diagrama |
+
+### `test_tamanho_das_funcoes.py`
+
+| Teste | Casos | O que garante |
+|---|---|---|
+| `test_nenhuma_funcao_passa_de_40_linhas` | 1 | Nenhuma função do programa passa de 40 linhas, fora as exceções registradas no teste |
+| `test_excecoes_de_complexidade_so_onde_registrado` | 1 | A marca `# noqa: C901` só aparece nos arquivos das exceções registradas |
 
 ### `test_lista_de_testes.py`
 

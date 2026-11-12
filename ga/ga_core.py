@@ -67,83 +67,71 @@ class GeneticAlgorithm:
             self.avaliacoes += 1
 
     def run(self, world):
+        """Evolui a população por `gens` gerações no mundo dado e devolve o melhor indivíduo e os históricos."""
         # Cada execução começa com o cache vazio (o cache vale para um mundo só)
         self._cache_fitness = {}
         self.avaliacoes = 0
         self.acertos_cache = 0
         # Registra o uso de memória e CPU antes de iniciar as gerações
-        process = psutil.Process(os.getpid())
-        process.cpu_percent()
+        processo = psutil.Process(os.getpid())
+        processo.cpu_percent()
 
         # Cria a população inicial de indivíduos aleatórios
         population = [Individual(self.chrom_length, self.rng) for _ in range(self.pop_size)]
         for _ in range(self.gens):
-            # Uso de memória em MB
-            memory_mb = process.memory_info().rss / BYTES_POR_MB
-            self.memory_history.append(memory_mb)
-            # Uso de CPU em porcentagem
-            self.cpu_history.append(process.cpu_percent())
-
-            # Avalia o fitness de cada indivíduo na população
+            self._registrar_recursos(processo)
+            # Avalia o fitness de cada indivíduo e ordena do melhor para o pior
             for ind in population:
                 self.avaliar(ind, world)
-
-            # Ordena a população do melhor para o pior fitness
             population.sort(key=lambda x: x.fitness, reverse=True)
-
-            diversidade_geracao = []
-            # Para cada posição no cromossomo (cada variável)
-            for i in range(self.chrom_length):
-                # Encontra o número de genes únicos nessa posição em toda a população
-                genes_na_posicao = set(ind.chromosome[i] for ind in population)
-                diversidade_geracao.append(len(genes_na_posicao))
-            self.diversidade_history.append(diversidade_geracao)
-
-            # Coleta estatísticas de fitness para gráficos
-            fitness_vals = [ind.fitness for ind in population]
-            self.fitness_history.append(
-                {"min": min(fitness_vals), "mean": sum(fitness_vals) / len(fitness_vals), "max": max(fitness_vals)}
-            )
-            self.fitness_pop.append(fitness_vals.copy())
-
-            # Elitismo: mantém os dois melhores indivíduos da geração atual
-            next_gen = population[:ELITE]
-
-            # Preenche o restante da próxima geração com cruzamento e mutação
-            while len(next_gen) < self.pop_size:
-                # Seleciona dois pais para cruzamento
-                p1, p2 = self.select(population), self.select(population)
-                # Verifica se a taxa de cruzamento é atingida
-                if self.rng.random() < self.crossover_rate:
-                    # Realiza o cruzamento (crossover) para gerar dois filhos
-                    c1, c2 = self.crossover(p1, p2)
-                else:
-                    # Se não cruzar, copia os pais diretamente
-                    c1, c2 = p1.copia(), p2.copia()
-
-                # Aplica mutação nos filhos
-                self.mutate(c1)
-                self.mutate(c2)
-                # Adiciona os filhos à próxima geração
-                next_gen.extend([c1, c2])
-
-            # Atualiza a população para a próxima geração
-            population = next_gen[: self.pop_size]  # Garante tamanho correto
+            self._registrar_geracao(population)
+            population = self._proxima_geracao(population)
 
         # Avalia todos da última geração (caso tenha novos filhos não avaliados)
         for ind in population:
             if ind.fitness is None:
                 self.avaliar(ind, world)
-
-        # Salva o melhor indivíduo encontrado
         best_individual = max(population, key=lambda x: x.fitness)
-        final_population_chromosomes = [ind.chromosome for ind in population]
+        return self._resultado(best_individual, population)
 
+    def _registrar_recursos(self, processo):
+        """Guarda o uso de memória (MB) e de CPU (%) no início de uma geração."""
+        self.memory_history.append(processo.memory_info().rss / BYTES_POR_MB)
+        self.cpu_history.append(processo.cpu_percent())
+
+    def _registrar_geracao(self, population):
+        """Guarda a diversidade de genes por posição e o fitness da população já ordenada."""
+        # Quantos genes diferentes há em cada posição do cromossomo, em toda a população
+        diversidade_geracao = [len({ind.chromosome[i] for ind in population}) for i in range(self.chrom_length)]
+        self.diversidade_history.append(diversidade_geracao)
+
+        fitness_vals = [ind.fitness for ind in population]
+        self.fitness_history.append(
+            {"min": min(fitness_vals), "mean": sum(fitness_vals) / len(fitness_vals), "max": max(fitness_vals)}
+        )
+        self.fitness_pop.append(fitness_vals.copy())
+
+    def _proxima_geracao(self, population):
+        """Elitismo, seleção, cruzamento e mutação: monta a próxima geração a partir da atual, já ordenada."""
+        next_gen = population[:ELITE]  # os melhores passam intactos
+        while len(next_gen) < self.pop_size:
+            p1, p2 = self.select(population), self.select(population)
+            if self.rng.random() < self.crossover_rate:
+                c1, c2 = self.crossover(p1, p2)
+            else:
+                c1, c2 = p1.copia(), p2.copia()  # sem cruzamento, os filhos são cópias dos pais
+            self.mutate(c1)
+            self.mutate(c2)
+            next_gen.extend([c1, c2])
+        return next_gen[: self.pop_size]  # o último par pode passar do tamanho
+
+    def _resultado(self, best_individual, population):
+        """Resultado de run(): o melhor indivíduo, a população final e os históricos para os gráficos."""
         return {
             "best": best_individual,
             "fitness_history": self.fitness_history,
             "fitness_pop": self.fitness_pop,
-            "final_pop": final_population_chromosomes,
+            "final_pop": [ind.chromosome for ind in population],
             "memoria": self.memory_history,
             "cpu": self.cpu_history,
             "diversidade_vars": np.array(self.diversidade_history),
