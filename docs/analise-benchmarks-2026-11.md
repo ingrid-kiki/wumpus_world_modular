@@ -122,9 +122,13 @@ for agente, tam, n in (("logico", 6, 30), ("logico_seguro", 6, 30), ("genetico",
     for modulo in (benchmark, benchmark_custom, benchmark_fast, benchmark_graficos, benchmark_sideB):
         inicio = time.perf_counter()
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-            r = modulo.executar_benchmark(agente, tam, n, parametros_agentes={**AG, "aleatorio": {"avaliacoes": 300, "chrom_length": 20}})
+            r = modulo.executar_benchmark(
+                agente, tam, n, parametros_agentes={**AG, "aleatorio": {"avaliacoes": 300, "chrom_length": 20}}
+            )
         contagem = (r["vitórias"], r["mortes"], r["sobreviveu"], r["erros"])
-        print(f"  {modulo.__name__:20s} vitórias/mortes/sobreviveu/erros = {contagem} | {time.perf_counter() - inicio:5.1f}s")
+        print(
+            f"  {modulo.__name__:20s} vitórias/mortes/sobreviveu/erros = {contagem} | {time.perf_counter() - inicio:5.1f}s"
+        )
 ```
 
 </details>
@@ -156,7 +160,9 @@ for nome, arquivo in (("sequencial", "benchmark.py"), ("paralelo", "benchmark_fa
     medidas[nome] = round(time.perf_counter() - inicio, 1)
     (saida / "medidas.json").write_text(json.dumps(medidas, indent=2), encoding="utf-8")
 
-iguais, tabela = reproduzir.comparar(saida / "sequencial" / "resultados_benchmark.csv", saida / "paralelo" / "resultados_benchmark.csv")
+iguais, tabela = reproduzir.comparar(
+    saida / "sequencial" / "resultados_benchmark.csv", saida / "paralelo" / "resultados_benchmark.csv"
+)
 medidas["resultados_iguais"] = bool(iguais)
 medidas["tabela"] = tabela.to_string(index=False)
 (saida / "medidas.json").write_text(json.dumps(medidas, indent=2, ensure_ascii=False), encoding="utf-8")
