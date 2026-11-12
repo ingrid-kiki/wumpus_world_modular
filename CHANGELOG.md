@@ -10,6 +10,11 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md).
 
+### Adicionado
+- Opções `--paralelo` e `--silencioso` no `main.py`. `--paralelo` roda as execuções em processos paralelos (o benchmark padrão
+  levou 102 s, contra 258 s em sequência); `--silencioso` esconde as mensagens de cada execução e de cada passo. Os resultados
+  são os mesmos nos dois modos.
+
 ### Alterado
 - Ações, percepções e status do jogo ficam num lugar só, `world/constantes.py`, e os números das regras do fitness e do AG
   ganham nomes. Um teste impede que essas listas voltem a ser escritas à mão. Os resultados não mudam.
@@ -17,11 +22,16 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   `historico`, `passos` e `dados_extra`. Cada passo do histórico traz `passo`, `acao`, `percepcao`, `status` e `posicao`;
   antes as chaves eram `history`, `ação` e `perception`, e o agente lógico não registrava as ações. A lista de agentes passa a
   existir só em `agents/registro.py`. As jogadas são as mesmas: a referência foi regenerada só por causa do formato.
+- `tempo_total` passa a ser o tempo de relógio de cada combinação de agente e tamanho, também no modo paralelo; antes, no
+  paralelo, era a soma do tempo das execuções. `tempo_médio` continua sendo a média do tempo de cada execução.
 
 ### Removido
 - O `Logger` (`utils/logger.py`), o atributo `logger` do agente lógico, o parâmetro `logger` de `GeneticAlgorithm.run` e os
   arquivos `AGENTE_AAAAMMDD_HHMMSS.log` da pasta do run. Eles só repetiam o início e o fim de cada combinação, que continuam
   no `terminal_output.txt`, o registro único de cada run. Os resultados não mudam.
+- `benchmark_custom.py`, `benchmark_fast.py`, `benchmark_graficos.py` e `benchmark_sideB.py`. Davam os mesmos resultados do
+  `benchmark.py`, que passa a ser o único; o que tinham de próprio virou `--paralelo` e `--silencioso`
+  ([análise](docs/analise-benchmarks-2026-11.md)).
 
 ---
 

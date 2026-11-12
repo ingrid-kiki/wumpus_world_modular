@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **184 casos de teste**, vindos de
-**126 funções** em **23 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **175 casos de teste**, vindos de
+**130 funções** em **24 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -28,13 +28,13 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 |---|---|---|
 | `test_referencia.py` | 9 | Resultados não mudam sem decisão explícita |
 | `test_reprodutibilidade.py` | 13 | Metadados, reprodução de um run e otimizações do AG |
-| `test_bugs_conhecidos.py` | 46 | Bugs corrigidos que não podem voltar |
+| `test_bugs_conhecidos.py` | 37 | Bugs corrigidos que não podem voltar |
 | `test_entradas.py` | 24 | Entradas inválidas com mensagem clara |
 | `test_constantes.py` | 3 | Ações, percepções e status num lugar só |
 | `test_agente_base.py` | 13 | Classe base e lista única de agentes |
 | `test_world.py` | 1 | Criação do mundo |
 | `test_logic_agent.py` | 1 | Criação do agente lógico |
-| `test_logico_seguro.py` | 20 | Agente lógico que evita poços |
+| `test_logico_seguro.py` | 16 | Agente lógico que evita poços |
 | `test_manual_agent.py` | 1 | Criação do agente manual |
 | `test_genetic_agent.py` | 1 | Criação e retorno do agente genético |
 | `test_action_distribution.py` | 1 | O agente genético executa ações |
@@ -44,6 +44,7 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | `test_trajectory_length.py` | 1 | O agente genético gera uma trajetória |
 | `test_busca_aleatoria.py` | 6 | Busca aleatória, a referência do genético |
 | `test_proximidade.py` | 9 | Bônus de proximidade ao ouro no fitness |
+| `test_benchmark.py` | 4 | Benchmark único: modos sequencial e paralelo, silencioso e tempos |
 | `test_main_etapas.py` | 7 | Arquivos de cada run e resistência a quedas |
 | `test_graficos.py` | 9 | Gráficos nunca interrompem o benchmark |
 | `test_experimento_31.py` | 7 | Script de comparação de métodos da #31 |
@@ -106,14 +107,14 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 | `test_world_nao_altera_o_random_global` | 1 | Criar um mundo não mexe no gerador aleatório global do Python (#23) |
 | `test_mesma_semente_gera_o_mesmo_mundo` | 1 | A mesma semente sempre gera o mesmo mundo (#23) |
 | `test_ag_reprodutivel_com_a_semente_do_mundo` | 1 | O AG dá o mesmo resultado qualquer que seja o estado do gerador global (#23) |
-| `test_benchmarks_cumprem_o_contrato_do_main` | 5 | Os 5 arquivos de benchmark recebem e devolvem os dados no formato que o `main.py` espera (#24) |
-| `test_erro_nao_vira_resultado_nem_derruba_o_benchmark` | 5 | Nos 5 benchmarks, uma execução com erro entra em `erros` e as outras continuam (#30) |
-| `test_dados_extra_vem_da_primeira_execucao_sem_erro` | 5 | Nos 5 benchmarks, se a primeira execução falha, os dados dos gráficos vêm da seguinte (#30) |
+| `test_benchmarks_cumprem_o_contrato_do_main` | 2 | Nos modos sequencial e paralelo, o benchmark recebe e devolve os dados no formato que o `main.py` espera (#24) |
+| `test_erro_nao_vira_resultado_nem_derruba_o_benchmark` | 2 | Nos dois modos, uma execução com erro entra em `erros` e as outras continuam (#30) |
+| `test_dados_extra_vem_da_primeira_execucao_sem_erro` | 2 | Nos dois modos, se a primeira execução falha, os dados dos gráficos vêm da seguinte (#30) |
 | `test_terminal_output_inclui_o_stderr` | 1 | Erros e avisos também vão para o `terminal_output.txt` (#30) |
 | `test_benchmark_py_sozinho_nao_roda_o_agente_manual` | 1 | `python benchmark.py` não tenta rodar o agente manual, que precisa de teclado (#30) |
-| `test_benchmark_fast_preserva_dados_extra` | 1 | O benchmark paralelo não perde os dados dos gráficos (#24) |
+| `test_simular_execucao_preserva_dados_extra` | 1 | Uma execução isolada, como as do modo paralelo, não perde os dados dos gráficos (#24) |
 | `test_csv_do_main_so_tem_colunas_escalares` | 1 | O CSV só tem números e nomes; os dados dos gráficos vão para o `.npz` (#24) |
-| `test_traceback_do_benchmark_fast_chega_ao_terminal_output` | 1 | Com processos paralelos, o erro aparece uma vez no `terminal_output.txt` (#40) |
+| `test_traceback_do_modo_paralelo_chega_ao_terminal_output` | 1 | Com processos paralelos, o erro aparece uma vez no `terminal_output.txt` (#40) |
 | `test_opcao_5_preserva_caminhos` | 6 | A opção 5 do menu mantém caminhos do Windows e do Linux, com e sem espaços e aspas (#39) |
 
 ### `test_entradas.py`
@@ -160,7 +161,7 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_resultado_tem_o_formato_unico` | 4 | Os quatro agentes automáticos devolvem `historico`, `passos` e `dados_extra`, com passos numerados e a posição final certa |
 | `test_agente_manual_devolve_o_formato_unico` | 1 | O agente manual também devolve o formato único |
 | `test_executar_sequencia_para_no_fim_do_jogo` | 1 | Uma sequência de ações para quando o jogo termina, e cada passo guarda a posição |
-| `test_main_e_benchmarks_usam_a_mesma_lista` | 1 | O `main.py` e os 5 benchmarks usam o mesmo dicionário de agentes |
+| `test_main_e_benchmarks_usam_a_mesma_lista` | 1 | O `main.py` e o benchmark usam o mesmo dicionário de agentes |
 
 ### `test_logic_agent.py` e `test_manual_agent.py`
 
@@ -184,7 +185,7 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_sem_nada_a_fazer_fica_em_casas_conhecidas` | 1 | Sem nada a explorar nem a arriscar, o agente fica em casas conhecidas |
 | `test_reproduz_os_numeros_registrados` | 3 | Em 1000 mundos de cada tamanho (4, 6 e 8), vitórias e mortes são exatamente as registradas na investigação |
 | `test_nunca_morre_pelo_wumpus` | 1 | Em 300 mundos 6x6, o agente nunca morre pelo Wumpus |
-| `test_registrado_no_programa_e_nos_benchmarks` | 6 | O agente está disponível no `main.py` e nos 5 benchmarks |
+| `test_registrado_no_programa_e_nos_benchmarks` | 2 | O agente está disponível no `main.py` e no benchmark |
 | `test_roda_num_benchmark_pela_linha_de_comando` | 1 | `--agentes logico_seguro` roda um benchmark completo |
 
 ### `test_genetic_agent.py` e testes simples do agente genético
@@ -224,6 +225,15 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_peso_negativo_e_recusado` | 1 | Peso negativo é recusado com mensagem clara |
 
 ## Programa principal, saídas e gráficos
+
+### `test_benchmark.py`
+
+| Teste | Casos | O que garante |
+|---|---|---|
+| `test_modos_sequencial_e_paralelo_dao_os_mesmos_resultados` | 1 | Com `logico_seguro` e `genetico`, os modos sequencial e paralelo dão as mesmas contagens |
+| `test_silencioso_esconde_as_mensagens` | 1 | O modo silencioso não mostra as mensagens de cada execução nem de cada passo |
+| `test_tempo_total_e_de_relogio_e_tempo_medio_e_a_media_das_execucoes` | 1 | `tempo_total` é o tempo de relógio e `tempo_médio`, a média das execuções |
+| `test_opcoes_do_main_chegam_ao_benchmark` | 1 | `--paralelo` e `--silencioso` chegam ao benchmark, e sem elas nada é repassado |
 
 ### `test_main_etapas.py`
 

@@ -52,5 +52,6 @@ sequenceDiagram
 - `dados_extra` vem da primeira execução que terminou sem erro. Por isso os gráficos avançados mostram só essa execução
   ([#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29)).
 - Uma execução com erro entra na coluna `erros` e não conta como vitória, morte ou sobrevivência.
-- `benchmark_fast.py` faz o mesmo trabalho em processos paralelos, com `joblib`. Os demais arquivos de benchmark seguem esta
-  mesma sequência.
+- Com `--paralelo`, as execuções rodam em processos paralelos, com `joblib`, na mesma lógica. Os erros voltam ao processo
+  principal e são escritos no `terminal_output.txt` depois das execuções.
+- `tempo_total` é o tempo de relógio da combinação, e `tempo_médio` é a média do tempo de cada execução.
