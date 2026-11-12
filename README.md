@@ -37,7 +37,7 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │
 ├── utils/                # Utilitários do projeto
 │   ├── graficos.py       # Geração de gráficos básicos e avançados
-│   ├── reprodutibilidade.py  # metadata.json de cada execução
+│   ├── reprodutibilidade.py  # metadados.json de cada execução
 │   └── versao.py         # Versão do projeto (fonte única)
 │
 ├── docs/                 # Análises, plano de ação e relato das decisões (comece por docs/README.md)
@@ -48,11 +48,11 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │
 ├── logs/                 # Criada ao rodar; NÃO versionada (ver .gitignore)
 │   └── run_YYYYMMDD_HHMMSS/   # Subpastas por execução, com CSVs, PNGs e logs
-│      └── advanced_charts_agent_size/   # Resultados dos gráficos avançados
+│      └── graficos_avancados_AGENTE_NxN/   # Resultados dos gráficos avançados
 │
 ├── benchmark.py               # Benchmark único, usado pelo main.py (sequencial ou --paralelo)
 ├── main.py                    # Script principal para execução
-├── reproduzir.py              # Refaz um run a partir do metadata.json e compara
+├── reproduzir.py              # Refaz um run a partir do metadados.json e compara
 ├── CHANGELOG.md               # Histórico de versões
 ├── CONTRIBUTING.md            # Como contribuir (branches, commits, versões)
 └── README.md                  # Este arquivo
@@ -137,12 +137,12 @@ python main.py
 ```
 
 Na opção 5, digite os argumentos do benchmark, por exemplo:
-`--agentes genetico --sizes 4 6 8 --execucoes 50 --populacao 100 --geracoes 500 --cromossomo 100`.
+`--agentes genetico --tamanhos 4 6 8 --execucoes 50 --populacao 100 --geracoes 500 --cromossomo 100`.
 
 | Opção | Padrão | Descrição |
 |---|---|---|
 | `--execucoes` | 32 | Execuções por agente e tamanho (a execução *i* usa a semente *i*) |
-| `--sizes` | 4 6 8 | Tamanhos do mundo |
+| `--tamanhos` | 4 6 8 | Tamanhos do mundo |
 | `--agentes` | logico genetico | Agentes do benchmark |
 | `--benchmark` | benchmark.py | Arquivo de benchmark (os 5 do projeto são compatíveis) |
 | `--populacao`, `--geracoes`, `--cromossomo` | 100, 500, 100 | Parâmetros do agente genético |
@@ -155,7 +155,7 @@ Antes, os parâmetros do genético só podiam ser mudados editando `agents/genet
 
 ### 🔁 Reproduzir uma execução
 
-Todo benchmark grava um `metadata.json` na pasta do run com tudo o que é preciso para refazê-lo: versão e commit
+Todo benchmark grava um `metadados.json` na pasta do run com tudo o que é preciso para refazê-lo: versão e commit
 do código (e se havia alterações não commitadas), argumentos, parâmetros efetivos do genético, regra das sementes
 e versões do Python e das bibliotecas. Para refazer e comparar:
 
@@ -165,7 +165,8 @@ python reproduzir.py logs/run_AAAAMMDD_HHMMSS
 
 O script avisa se o commit, a versão ou as bibliotecas forem diferentes e compara vitórias, mortes e
 sobrevivências, que precisam ser idênticas. Tempos, memória e CPU variam de máquina para máquina e não entram na
-comparação. Runs anteriores à v1.5.0 não têm `metadata.json`.
+comparação. Runs gravados até a v1.8.0, com `metadata.json`, a opção `--sizes` e as colunas `vitórias` e
+`tempo_médio`, também são lidos. Runs anteriores à v1.5.0 não têm metadados e não podem ser refeitos.
 
 ### 🔧 Uma partida com janela
 
@@ -261,7 +262,7 @@ Compare o desempenho dos agentes de forma automatizada, com resultados organizad
 ### Pelo `main.py` (recomendado)
 Escolha a opção 1 do menu, passando as opções na linha de comando, ou use a opção 5 e digite as opções:
 ```bash
-python main.py --execucoes 30 --sizes 4 6 8 --agentes logico logico_seguro genetico --paralelo
+python main.py --execucoes 30 --tamanhos 4 6 8 --agentes logico logico_seguro genetico --paralelo
 ```
 
 - `--paralelo` roda as execuções em processos paralelos. Compensa em runs longos: o benchmark padrão levou 102 s em
@@ -313,24 +314,24 @@ Os arquivos de log são salvos automaticamente em subpastas de `/logs/`, organiz
 ```
 /logs/
 └── run_YYYYMMDD_HHMMSS/
-    ├── metadata.json                      # Versão, commit, argumentos e bibliotecas (para reproduzir)
+    ├── metadados.json                      # Versão, commit, argumentos e bibliotecas (para reproduzir)
     ├── resultados_benchmark.csv           # Só colunas escalares
     ├── dados_extra_genetico_4x4.npz       # Arrays do AG (fitness, diversidade, memória, CPU...)
-    ├── terminal_output.txt                # Saída completa do terminal
-    ├── grafico_vitórias.png
+    ├── saida_terminal.txt                # Saída completa do terminal
+    ├── grafico_vitorias.png
     ├── grafico_mortes.png
     ├── grafico_sobreviveu.png
     ├── grafico_tempo_medio.png
-    └── advanced_charts_genetico_4x4/     # ← Gráficos avançados por agente/tamanho
+    └── graficos_avancados_genetico_4x4/     # ← Gráficos avançados por agente/tamanho
         ├── convergencia_populacao.png
         ├── evolucao_fitness.png
-        └── heatmap_diversidade.png
+        └── mapa_de_calor_diversidade.png
 ```
 
 ---
 ## 💾 Captura do terminal
 
-Toda a saída do terminal é automaticamente capturada e salva em terminal_output.txt, permitindo:
+Toda a saída do terminal é automaticamente capturada e salva em saida_terminal.txt, permitindo:
 
 - Análise posterior dos resultados completos
 - Rastreabilidade de todas as execuções

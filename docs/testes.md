@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **183 casos de teste**, vindos de
-**136 funções** em **26 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 12/11/2026: **189 casos de teste**, vindos de
+**142 funções** em **27 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -27,10 +27,11 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | Arquivo | Casos | Foco |
 |---|---|---|
 | `test_referencia.py` | 9 | Resultados não mudam sem decisão explícita |
-| `test_reprodutibilidade.py` | 13 | Metadados, reprodução de um run e otimizações do AG |
+| `test_reprodutibilidade.py` | 15 | Metadados, reprodução de um run e otimizações do AG |
 | `test_bugs_conhecidos.py` | 37 | Bugs corrigidos que não podem voltar |
 | `test_entradas.py` | 24 | Entradas inválidas com mensagem clara |
 | `test_constantes.py` | 3 | Ações, percepções e status num lugar só |
+| `test_nomes_sem_acento.py` | 4 | Nada que o programa grava ou usa como chave tem acento |
 | `test_agente_base.py` | 13 | Classe base e lista única de agentes |
 | `test_world.py` | 1 | Criação do mundo |
 | `test_logic_agent.py` | 1 | Criação do agente lógico |
@@ -76,11 +77,13 @@ referência numa mudança intencional, veja o CONTRIBUTING.
 | `test_parametros_do_ag_vem_da_linha_de_comando` | 1 | Opções como `--populacao` e `--cruzamento` viram os parâmetros do agente genético |
 | `test_sem_opcoes_do_ag_valem_os_padroes` | 1 | Sem essas opções, o agente genético usa os próprios padrões |
 | `test_benchmark_repassa_os_parametros_so_para_o_agente_certo` | 1 | Os parâmetros de um agente não chegam aos outros |
-| `test_run_grava_metadata_completo` | 1 | O `metadata.json` traz versão, estado do git, argumentos, parâmetros do AG, sementes e bibliotecas |
-| `test_sem_agente_genetico_nao_ha_parametros_do_ag` | 1 | Sem o agente genético no run, o `metadata.json` não inventa parâmetros do AG |
+| `test_run_grava_metadata_completo` | 1 | O `metadados.json` traz versão, estado do git, argumentos, parâmetros do AG, sementes e bibliotecas |
+| `test_sem_agente_genetico_nao_ha_parametros_do_ag` | 1 | Sem o agente genético no run, o `metadados.json` não inventa parâmetros do AG |
 | `test_reproduzir_da_o_mesmo_resultado` | 1 | `reproduzir.py` refaz um run e encontra os mesmos resultados |
 | `test_reproduzir_detecta_resultado_diferente` | 1 | `reproduzir.py` acusa um CSV adulterado |
-| `test_reproduzir_sem_metadata` | 1 | `reproduzir.py` avisa quando a pasta não tem `metadata.json` |
+| `test_reproduzir_le_um_run_antigo` | 1 | `reproduzir.py` refaz um run no formato da v1.8.0: `metadata.json`, `--sizes` e colunas com acento |
+| `test_atualizar_opcoes_troca_as_opcoes_antigas` | 1 | Opções antigas, como `--sizes`, viram as atuais, como `--tamanhos` |
+| `test_reproduzir_sem_metadata` | 1 | `reproduzir.py` avisa quando a pasta não tem `metadados.json` nem `metadata.json` |
 | `test_sem_opcao_remove_opcao_e_valor` | 1 | Ao reproduzir, a opção `--saida` original é trocada pela nova pasta |
 | `test_clone_do_mundo_e_independente` | 1 | Mexer na cópia do mundo não altera o original |
 | `test_copia_do_individuo_e_independente` | 1 | Mexer na cópia de um indivíduo não altera o original |
@@ -112,11 +115,11 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 | `test_benchmarks_cumprem_o_contrato_do_main` | 2 | Nos modos sequencial e paralelo, o benchmark recebe e devolve os dados no formato que o `main.py` espera (#24) |
 | `test_erro_nao_vira_resultado_nem_derruba_o_benchmark` | 2 | Nos dois modos, uma execução com erro entra em `erros` e as outras continuam (#30) |
 | `test_dados_extra_vem_da_primeira_execucao_sem_erro` | 2 | Nos dois modos, se a primeira execução falha, os dados dos gráficos vêm da seguinte (#30) |
-| `test_terminal_output_inclui_o_stderr` | 1 | Erros e avisos também vão para o `terminal_output.txt` (#30) |
+| `test_saida_do_terminal_inclui_o_stderr` | 1 | Erros e avisos também vão para o `saida_terminal.txt` (#30) |
 | `test_benchmark_py_sozinho_nao_roda_o_agente_manual` | 1 | `python benchmark.py` não tenta rodar o agente manual, que precisa de teclado (#30) |
 | `test_simular_execucao_preserva_dados_extra` | 1 | Uma execução isolada, como as do modo paralelo, não perde os dados dos gráficos (#24) |
 | `test_csv_do_main_so_tem_colunas_escalares` | 1 | O CSV só tem números e nomes; os dados dos gráficos vão para o `.npz` (#24) |
-| `test_traceback_do_modo_paralelo_chega_ao_terminal_output` | 1 | Com processos paralelos, o erro aparece uma vez no `terminal_output.txt` (#40) |
+| `test_traceback_do_modo_paralelo_chega_a_saida_do_terminal` | 1 | Com processos paralelos, o erro aparece uma vez no `saida_terminal.txt` (#40) |
 | `test_opcao_5_preserva_caminhos` | 6 | A opção 5 do menu mantém caminhos do Windows e do Linux, com e sem espaços e aspas (#39) |
 
 ### `test_entradas.py`
@@ -141,6 +144,17 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 | `test_ordem_das_acoes_nao_muda` | 1 | A ordem das ações continua a mesma, porque os sorteios dos experimentos dependem dela |
 | `test_deslocamentos_cobrem_os_movimentos_na_mesma_ordem` | 1 | Cada movimento tem um deslocamento, na mesma ordem da lista de movimentos |
 | `test_nenhum_arquivo_escreve_acoes_percepcoes_ou_status_a_mao` | 1 | Fora de `world/constantes.py`, ações, percepções e status só aparecem pelas constantes |
+
+### `test_nomes_sem_acento.py`
+
+| Teste | Casos | O que garante |
+|---|---|---|
+| `test_textos_que_viram_nome_sem_acento` | 1 | Nenhum texto do código usado como nome (chave, coluna, status, arquivo, opção) tem acento |
+| `test_excecoes_ainda_existem` | 1 | As exceções da regra, os nomes antigos que o `reproduzir.py` traduz, ainda existem no código |
+| `test_status_sem_acento` | 1 | Os status das execuções (`vitoria`, `morte`, `sobreviveu`, `erro`) não têm acento |
+| `test_saidas_de_um_run_sem_acento` | 1 | Num run de verdade, nomes de arquivos e pastas, colunas do CSV, chaves do `.npz` e do `metadados.json` não têm acento |
+
+Os nomes do código (variáveis, funções e classes) são conferidos pelo `ruff`, com as regras `PLC2401` e `PLC2403`.
 
 ### `test_world.py`
 
@@ -222,8 +236,8 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_bonus_conta_ate_a_morte` | 1 | O bônus considera o caminho feito até a morte |
 | `test_ag_sem_proximidade_nao_muda` | 1 | Sem a opção, o AG dá o mesmo resultado de antes |
 | `test_agente_com_proximidade_e_reprodutivel` | 1 | Com a opção, o agente genético é reproduzível |
-| `test_opcao_chega_ao_agente_e_ao_metadata` | 1 | `--proximidade 20` aparece nos parâmetros efetivos do AG gravados no `metadata.json` |
-| `test_sem_a_opcao_o_padrao_e_o_fitness_original` | 1 | Sem `--proximidade`, o `metadata.json` registra peso 0, isto é, o fitness original |
+| `test_opcao_chega_ao_agente_e_ao_metadata` | 1 | `--proximidade 20` aparece nos parâmetros efetivos do AG gravados no `metadados.json` |
+| `test_sem_a_opcao_o_padrao_e_o_fitness_original` | 1 | Sem `--proximidade`, o `metadados.json` registra peso 0, isto é, o fitness original |
 | `test_peso_negativo_e_recusado` | 1 | Peso negativo é recusado com mensagem clara |
 
 ## Programa principal, saídas e gráficos
@@ -234,7 +248,7 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 |---|---|---|
 | `test_modos_sequencial_e_paralelo_dao_os_mesmos_resultados` | 1 | Com `logico_seguro` e `genetico`, os modos sequencial e paralelo dão as mesmas contagens |
 | `test_silencioso_esconde_as_mensagens` | 1 | O modo silencioso não mostra as mensagens de cada execução nem de cada passo |
-| `test_tempo_total_e_de_relogio_e_tempo_medio_e_a_media_das_execucoes` | 1 | `tempo_total` é o tempo de relógio e `tempo_médio`, a média das execuções |
+| `test_tempo_total_e_de_relogio_e_tempo_medio_e_a_media_das_execucoes` | 1 | `tempo_total` é o tempo de relógio e `tempo_medio`, a média das execuções |
 | `test_opcoes_do_main_chegam_ao_benchmark` | 1 | `--paralelo` e `--silencioso` chegam ao benchmark, e sem elas nada é repassado |
 
 ### `test_visualizer.py`
@@ -252,8 +266,8 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 |---|---|---|
 | `test_layout_completo_de_um_run` | 1 | Um run grava todos os arquivos e pastas esperados, e nenhum arquivo `.log` |
 | `test_queda_na_segunda_etapa_preserva_a_primeira` | 1 | Se uma combinação falha, os resultados das anteriores ficam gravados |
-| `test_ctrl_c_tambem_preserva_resultados_e_log` | 1 | Interromper com Ctrl+C preserva os resultados e o registro no `terminal_output.txt` |
-| `test_log_e_gravado_durante_a_execucao` | 1 | O `terminal_output.txt` é gravado durante a execução, e não só no fim |
+| `test_ctrl_c_tambem_preserva_resultados_e_log` | 1 | Interromper com Ctrl+C preserva os resultados e o registro no `saida_terminal.txt` |
+| `test_log_e_gravado_durante_a_execucao` | 1 | O `saida_terminal.txt` é gravado durante a execução, e não só no fim |
 | `test_graficos_avancados_valem_para_qualquer_agente_com_dados_extras` | 1 | Os gráficos avançados saem para qualquer agente que devolva dados para eles |
 | `test_mensagem_conta_os_graficos_realmente_gerados` | 1 | A mensagem final informa quantos gráficos foram realmente gerados |
 | `test_benchmark_externo_que_devolve_none_nao_derruba` | 1 | Um benchmark de terceiros que não devolve resultado não derruba o programa |

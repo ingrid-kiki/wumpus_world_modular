@@ -25,8 +25,8 @@ flowchart TD
         validos{"criar_parser:<br/>argumentos válidos?"}
         validos -- "sim" --> carregar["carregar_benchmark:<br/>importa o arquivo escolhido"]
         carregar --> pasta["Cria a pasta do run"]
-        pasta --> metadados["salvar_metadados:<br/>metadata.json"]
-        metadados --> captura["capturar_saida_terminal:<br/>terminal_output.txt"]
+        pasta --> metadados["salvar_metadados:<br/>metadados.json"]
+        metadados --> captura["capturar_saida_terminal:<br/>saida_terminal.txt"]
         captura --> falta{"Falta combinar<br/>tamanho e agente?"}
 
         falta -- "sim" --> benchmark["executar_benchmark:<br/>N execuções, semente i em cada uma"]
@@ -48,14 +48,14 @@ flowchart TD
 ## Observações
 
 - A pasta do run é `logs/run_AAAAMMDD_HHMMSS/`, ou a indicada em `--saida`.
-- `metadata.json` é gravado antes das execuções. Se algo falhar, o registro do que foi pedido continua lá.
+- `metadados.json` é gravado antes das execuções. Se algo falhar, o registro do que foi pedido continua lá.
 - A gravação parcial acontece depois de cada combinação de tamanho e agente, então uma queda perde no máximo a combinação
   em andamento.
 - Se `agente.run()` lançar um erro durante o benchmark, `executar_uma` o registra na coluna `erros` e o benchmark continua
   na execução seguinte.
 - `carregar_benchmark` usa `benchmark.py` por padrão. A opção `--benchmark` aceita outro arquivo com a mesma função
   `executar_benchmark`. As opções `--paralelo` e `--silencioso` só são repassadas quando usadas.
-- `reproduzir.py` chama o mesmo `rodar_benchmark` com os argumentos guardados no `metadata.json`, e depois compara os
+- `reproduzir.py` chama o mesmo `rodar_benchmark` com os argumentos guardados no `metadados.json`, e depois compara os
   resultados com os originais.
 - `experimentos/comparar_metodos.py` não passa por este fluxo: tem linha de comando própria e grava em
   `logs/exp31_<fase>_AAAAMMDD_HHMMSS/`.

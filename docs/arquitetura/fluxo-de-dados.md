@@ -13,12 +13,12 @@ flowchart LR
     end
 
     subgraph pasta["Pasta do run"]
-        metadata["metadata.json"]
-        saida["terminal_output.txt"]
+        metadata["metadados.json"]
+        saida["saida_terminal.txt"]
         csv["resultados_benchmark.csv"]
-        basicos["grafico_vitórias.png, grafico_mortes.png,<br/>grafico_sobreviveu.png e grafico_tempo_medio.png"]
+        basicos["grafico_vitorias.png, grafico_mortes.png,<br/>grafico_sobreviveu.png e grafico_tempo_medio.png"]
         npz["dados_extra_AGENTE_NxN.npz"]
-        avancados["advanced_charts_AGENTE_NxN/<br/>9 gráficos em PNG"]
+        avancados["graficos_avancados_AGENTE_NxN/<br/>9 gráficos em PNG"]
     end
 
     argumentos -- "salvar_metadados" --> metadata
@@ -36,12 +36,12 @@ flowchart LR
 
 | Arquivo | Conteúdo |
 |---|---|
-| `metadata.json` | Versão, data e hora, estado do git, argumentos, parâmetros do AG, regra das sementes, Python, plataforma e bibliotecas |
-| `terminal_output.txt` | Saída completa do terminal, incluindo os erros |
-| `resultados_benchmark.csv` | Uma linha por agente e tamanho: `agente`, `tamanho_mundo`, `vitórias`, `mortes`, `sobreviveu`, `erros`, `tempo_total` e `tempo_médio` |
+| `metadados.json` | Versão, data e hora, estado do git, argumentos, parâmetros do AG, regra das sementes, Python, plataforma e bibliotecas |
+| `saida_terminal.txt` | Saída completa do terminal, incluindo os erros |
+| `resultados_benchmark.csv` | Uma linha por agente e tamanho: `agente`, `tamanho_mundo`, `vitorias`, `mortes`, `sobreviveu`, `erros`, `tempo_total` e `tempo_medio` |
 | `grafico_*.png` | Barras de vitórias, mortes e sobrevivência, e tempo médio |
 | `dados_extra_AGENTE_NxN.npz` | Os mesmos dados usados nos gráficos avançados |
-| `advanced_charts_AGENTE_NxN/` | Os 9 gráficos avançados |
+| `graficos_avancados_AGENTE_NxN/` | Os 9 gráficos avançados |
 
 ## De onde vem cada gráfico avançado
 
@@ -50,10 +50,10 @@ flowchart LR
 | `memoria_cpu.png` | `memoria` e `cpu` |
 | `evolucao_fitness.png` | `fitness`, a média por geração |
 | `convergencia_populacao.png` | `fitness_pop` |
-| `curva_convergencia_std.png` | `fitness_pop` |
-| `violin_fitness.png` | `fitness_pop` |
+| `curva_convergencia_desvio_padrao.png` | `fitness_pop` |
+| `violino_fitness.png` | `fitness_pop` |
 | `ecdf_fitness_final.png` | `fitness_final` |
-| `heatmap_diversidade.png` | `diversidade_vars` |
+| `mapa_de_calor_diversidade.png` | `diversidade_vars` |
 | `area_empilhada_diversidade.png` | `diversidade_vars` |
 | `pca_populacao_final.png` | `pop_final` |
 
@@ -66,6 +66,6 @@ flowchart LR
 - `reproduzir.py` compara agente, tamanho, vitórias, mortes, sobrevivência e erros. Tempos não entram na comparação, porque variam de
   máquina para máquina.
 - `experimentos/comparar_metodos.py` tem saída própria, em `logs/exp31_<fase>_AAAAMMDD_HHMMSS/`: `tentativas.csv`, `resumo.csv`,
-  `comparacoes.csv` e `metadata.json`.
+  `comparacoes.csv` e `metadados.json`.
 - A pasta `logs/` não vai para o git. Para compartilhar um run, veja a seção "Resultados de execução" do
   [CONTRIBUTING](../../CONTRIBUTING.md).
