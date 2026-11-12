@@ -14,6 +14,7 @@ no [CHANGELOG](../CHANGELOG.md), e a discussão de cada assunto fica nas
 | [plano-de-acao.md](plano-de-acao.md) | Plano em 6 fases, com o status atual de cada uma no topo |
 | [investigacao-31-ag-vs-busca-aleatoria.md](investigacao-31-ag-vs-busca-aleatoria.md) | Experimentos da #31: o agente genético contra a busca aleatória, hipóteses, limites e a decisão sobre o bônus de proximidade |
 | [investigacao-agente-logico-2026-11.md](investigacao-agente-logico-2026-11.md) | Investigação do agente lógico: a marca `seguro` não é consultada, medição de quatro formas de decidir, opções e decisão de criar um agente novo |
+| [analise-benchmarks-2026-11.md](analise-benchmarks-2026-11.md) | Análise dos cinco arquivos de benchmark: resultados iguais, tempo em sequência e em paralelo, custo de manutenção e opções para a Etapa 3 |
 | [analise-inicial-2026-11.md](analise-inicial-2026-11.md) | Análise do código e do versionamento antes das mudanças: mapa de classes e as 21 inconsistências encontradas (documento histórico) |
 
 Ao concluir uma etapa relevante, atualize o status em `plano-de-acao.md` e acrescente um novo relato datado
