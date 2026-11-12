@@ -8,6 +8,8 @@
 # educacionais, testes e comparação com agentes automáticos do projeto.
 """
 
+from world.constantes import ACOES
+
 
 class ManualAgent:
     def __init__(self, world):
@@ -23,10 +25,9 @@ class ManualAgent:
         # Continua enquanto o jogo não termina (vitória ou morte)
         while not self.world.is_done():
             # Solicita ao usuário uma ação via terminal
-            VALID_ACTIONS = ["CIMA", "BAIXO", "ESQUERDA", "DIREITA", "AGARRAR", "TIRO"]
             while True:
                 action = input("Ação (CIMA, BAIXO, ESQUERDA, DIREITA, AGARRAR, TIRO): ").strip().upper()
-                if action in VALID_ACTIONS:
+                if action in ACOES:
                     break
                 print(f"❌ Ação inválida: '{action}'. Tente novamente.")
 

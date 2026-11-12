@@ -11,6 +11,8 @@
 
 from agents.logic_knowledge_base import LogicKnowledgeBase
 
+PASSOS_POR_CASA = 4  # limite de passos: 4 vezes o número de casas do mundo (#18)
+
 
 class LogicAgent:
     def __init__(self, world, max_steps=None):
@@ -19,7 +21,7 @@ class LogicAgent:
         # Base de conhecimento lógica para inferências; conhece o tamanho do grid (#18)
         self.knowledge = LogicKnowledgeBase(size=world.size)
         # Limite de passos: garante que run() sempre termina (#18)
-        self.max_steps = max_steps if max_steps is not None else 4 * world.size * world.size
+        self.max_steps = max_steps if max_steps is not None else PASSOS_POR_CASA * world.size * world.size
         # Histórico das percepções do agente a cada passo
         self.perception_history = []
         self.logger = None  # Será injetado pelo main

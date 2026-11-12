@@ -10,10 +10,20 @@
 
 import random
 
+from world.constantes import ACOES, ACOES_DE_MOVIMENTO, AGARRAR, BRILHO, GANHOU, MORTO, TIRO
+
+# Pontos do fitness (ver docs/arquitetura/fluxo-ag.md)
+PENALIDADE_MORTE = 100
+BONUS_OURO = 100
+BONUS_WUMPUS = 25
+CUSTO_MOVIMENTO = 0.5
+CUSTO_OUTRA_ACAO = 1
+BONUS_SOBREVIVENCIA = 10
+
 
 def random_action(rng=random):
     # Retorna uma ação aleatória válida para o agente
-    return rng.choice(["CIMA", "BAIXO", "ESQUERDA", "DIREITA", "AGARRAR", "TIRO"])
+    return rng.choice(ACOES)
 
 
 class Individual:
@@ -52,29 +62,30 @@ class Individual:
                 menor_distancia, abs(temp_world.agent_pos[0] - ouro_x) + abs(temp_world.agent_pos[1] - ouro_y)
             )
 
-            if status == "MORTO":
+            if status == MORTO:
                 # Penalidade alta se o agente morrer
-                score -= 100
+                score -= PENALIDADE_MORTE
                 break
-            if action == "AGARRAR" and "BRILHO" in percept:
-                score += 100  # Bônus se encontrar o ouro
-            if action == "TIRO" and temp_world.last_scream:
+            if action == AGARRAR and BRILHO in percept:
+                score += BONUS_OURO  # Bônus se encontrar o ouro
+            if action == TIRO and temp_world.last_scream:
                 # Bônus por matar o Wumpus (o mundo registra o grito). Antes a condição era
                 # 'FEDOR' na percepção pós-tiro, que nunca acontece: o fedor some quando ele morre (#21)
-                score += 25
-            if action in ["CIMA", "BAIXO", "ESQUERDA", "DIREITA"]:
-                score -= 0.5  # Penalidade leve por andar
+                score += BONUS_WUMPUS
+            if action in ACOES_DE_MOVIMENTO:
+                score -= CUSTO_MOVIMENTO  # Penalidade leve por andar
             else:
-                score -= 1  # Penalidade padrão
-            if status == "GANHOU":
+                score -= CUSTO_OUTRA_ACAO  # Penalidade padrão
+            if status == GANHOU:
                 # O jogo acabou: as ações restantes do cromossomo não contam (#20)
                 break
 
         # Pequeno bônus por sobrevivência
         if temp_world.is_alive:
-            score += 10
+            score += BONUS_SOBREVIVENCIA
         # Sinal de progresso até o ouro: sem ele, a pontuação é quase plana até pegar o ouro (#31)
         if proximidade:
-            score += proximidade * (1 - menor_distancia / (2 * (world.size - 1)))
+            distancia_maxima = 2 * (world.size - 1)  # de um canto do mundo ao canto oposto
+            score += proximidade * (1 - menor_distancia / distancia_maxima)
         # Salva o fitness final do indivíduo
         self.fitness = score

@@ -12,6 +12,8 @@
 import copy
 import random
 
+from world.constantes import AGARRAR, BRILHO, BRISA, DESLOCAMENTOS, FEDOR, GANHOU, MORTO, OK, TIRO
+
 TAMANHO_MINIMO = 2
 
 
@@ -66,7 +68,7 @@ class World:
         self.last_scream = False  # Reset do grito
         # Depois de vencer ou morrer, nenhuma ação tem efeito (#20)
         if self.is_done():
-            return self.perceive(), ("GANHOU" if self.won else "MORTO")
+            return self.perceive(), (GANHOU if self.won else MORTO)
         self.move_agent(action)  # Movimento separado
         status = self.interact(action)  # Interações separadas
         return self.perceive(), status
@@ -75,15 +77,10 @@ class World:
         """
         Move o agente no grid se a ação for de movimento.
         """
-        x, y = self.agent_pos
-        if action == "CIMA" and x > 0:
-            self.agent_pos = (x - 1, y)
-        elif action == "BAIXO" and x < self.size - 1:
-            self.agent_pos = (x + 1, y)
-        elif action == "ESQUERDA" and y > 0:
-            self.agent_pos = (x, y - 1)
-        elif action == "DIREITA" and y < self.size - 1:
-            self.agent_pos = (x, y + 1)
+        dx, dy = DESLOCAMENTOS.get(action, (0, 0))  # ações que não são movimento não deslocam
+        x, y = self.agent_pos[0] + dx, self.agent_pos[1] + dy
+        if 0 <= x < self.size and 0 <= y < self.size:  # contra a parede, o agente fica onde está
+            self.agent_pos = (x, y)
 
     def interact(self, action):
         """
@@ -91,30 +88,30 @@ class World:
         :return: status final da jogada
         """
         # Ouro
-        if action == "AGARRAR" and self.agent_pos == self.gold_pos:
+        if action == AGARRAR and self.agent_pos == self.gold_pos:
             self.won = True
-            return "GANHOU"
+            return GANHOU
 
         # Tiro no Wumpus
-        if action == "TIRO" and self.is_adjacent(self.agent_pos, self.wumpus_pos) and self.wumpus_alive:
+        if action == TIRO and self.is_adjacent(self.agent_pos, self.wumpus_pos) and self.wumpus_alive:
             self.wumpus_alive = False
             self.last_scream = True
 
         # Morte por Wumpus
         if self.agent_pos == self.wumpus_pos and self.wumpus_alive:
             self.is_alive = False
-            return "MORTO"
+            return MORTO
 
         # Morte por poço
         if self.agent_pos in self.pits:
             self.is_alive = False
-            return "MORTO"
+            return MORTO
 
         # Vitória
         if self.won:
-            return "GANHOU"
+            return GANHOU
 
-        return "OK"
+        return OK
 
     def perceive(self):
         """
@@ -125,17 +122,17 @@ class World:
         x, y = self.agent_pos
 
         # Verifica células adjacentes para FEDOR (Wumpus) e BRISA (poço)
-        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        for dx, dy in DESLOCAMENTOS.values():
             nx, ny = x + dx, y + dy
             if 0 <= nx < self.size and 0 <= ny < self.size:
                 if (nx, ny) == self.wumpus_pos and self.wumpus_alive:
-                    percept.append("FEDOR")
+                    percept.append(FEDOR)
                 if (nx, ny) in self.pits:
-                    percept.append("BRISA")
+                    percept.append(BRISA)
 
         # Verifica se está sobre o ouro
         if self.agent_pos == self.gold_pos:
-            percept.append("BRILHO")
+            percept.append(BRILHO)
 
         return percept
 

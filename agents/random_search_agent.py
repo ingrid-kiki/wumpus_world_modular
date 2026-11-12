@@ -12,6 +12,7 @@
 import random
 
 from ga.individual import Individual
+from world.constantes import FIM_DE_JOGO
 
 
 class RandomSearchAgent:
@@ -37,6 +38,6 @@ class RandomSearchAgent:
         for passo, action in enumerate(melhor.chromosome, start=1):
             perception, status = self.world.step(action)
             self.history.append({"passo": passo, "ação": action, "perception": perception, "status": status})
-            if status in ("MORTO", "GANHOU"):
+            if status in FIM_DE_JOGO:
                 break
         return {"history": self.history, "fitness": melhor.fitness, "avaliacoes": self.avaliacoes}

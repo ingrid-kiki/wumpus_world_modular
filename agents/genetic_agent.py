@@ -12,6 +12,7 @@
 import numpy as np
 
 from ga.ga_core import GeneticAlgorithm  # Importa o núcleo do algoritmo genético
+from world.constantes import ACOES, FIM_DE_JOGO
 
 
 class GeneticAgent:
@@ -66,7 +67,7 @@ class GeneticAgent:
             print(f"[Passo {passo}] Percepção recebida: {perception}")
             print(f"[Passo {passo}] Status do agente: {status}\n")
             # Se o agente morreu ou venceu, encerra a execução
-            if status == "MORTO" or status == "GANHOU":
+            if status in FIM_DE_JOGO:
                 break
             passo += 1
 
@@ -75,7 +76,7 @@ class GeneticAgent:
         final_fitness_dist = ga_results["fitness_pop"][-1] if ga_results["fitness_pop"] else []
 
         # Mapeia ações para números para que o PCA possa processar os dados
-        ACTION_MAP = {action: i for i, action in enumerate(["CIMA", "BAIXO", "ESQUERDA", "DIREITA", "AGARRAR", "TIRO"])}
+        ACTION_MAP = {action: i for i, action in enumerate(ACOES)}
         final_pop_numeric = [
             [ACTION_MAP.get(gene, -1) for gene in chromosome]  # Usa .get para segurança
             for chromosome in ga_results["final_pop"]

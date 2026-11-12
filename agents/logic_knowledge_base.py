@@ -9,7 +9,9 @@
 # Serve como núcleo de raciocínio lógico para o LogicAgent, facilitando decisões baseadas em regras.
 """
 
-MOVIMENTOS = [(-1, 0, "CIMA"), (1, 0, "BAIXO"), (0, -1, "ESQUERDA"), (0, 1, "DIREITA")]
+from world.constantes import AGARRAR, BRILHO, BRISA, DESLOCAMENTOS, DIREITA, FEDOR, TIRO
+
+MOVIMENTOS = [(dx, dy, acao) for acao, (dx, dy) in DESLOCAMENTOS.items()]  # ordem: cima, baixo, esquerda, direita
 
 
 class LogicKnowledgeBase:
@@ -39,7 +41,7 @@ class LogicKnowledgeBase:
     def update_knowledge(self, perception):
         x, y = self.current_pos
         self.known[(x, y)] = {
-            "seguro": "BRISA" not in perception and "FEDOR" not in perception,
+            "seguro": BRISA not in perception and FEDOR not in perception,
             "visitado": True,
             "percepções": perception,
         }
@@ -53,10 +55,10 @@ class LogicKnowledgeBase:
         """
         self.update_knowledge(perception)
         # Exemplo básico: se sentir brilho, tenta pegar o ouro
-        if "BRILHO" in perception:
-            return "AGARRAR"
-        if "FEDOR" in perception:
-            return "TIRO"
+        if BRILHO in perception:
+            return AGARRAR
+        if FEDOR in perception:
+            return TIRO
 
         vizinhas = list(self.neighbors())
         # Exploração simples: andar para uma vizinha ainda não visitada
@@ -69,7 +71,7 @@ class LogicKnowledgeBase:
         if vizinhas:
             _, action = min(vizinhas, key=lambda item: self.visits.get(item[0], 0))
             return action
-        return "DIREITA"
+        return DIREITA
 
     def update_position(self, action, new_pos=None):
         """
@@ -80,7 +82,7 @@ class LogicKnowledgeBase:
             self.current_pos = tuple(new_pos)
             return
         x, y = self.current_pos
-        destinos = {"CIMA": (x - 1, y), "BAIXO": (x + 1, y), "ESQUERDA": (x, y - 1), "DIREITA": (x, y + 1)}
-        destino = destinos.get(action, self.current_pos)
+        dx, dy = DESLOCAMENTOS.get(action, (0, 0))
+        destino = (x + dx, y + dy)
         if self.in_grid(destino):
             self.current_pos = destino

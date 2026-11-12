@@ -14,7 +14,13 @@ import numpy as np
 import psutil
 
 # Importa a classe Individual (representa um possível agente/solução)
+from world.constantes import ACOES
+
 from .individual import Individual
+
+ELITE = 2  # os melhores indivíduos passam intactos para a próxima geração
+CANDIDATOS_A_PAI = 10  # a seleção sorteia os pais entre os melhores desta quantidade
+BYTES_POR_MB = 1024 * 1024
 
 
 class GeneticAlgorithm:
@@ -73,7 +79,7 @@ class GeneticAlgorithm:
         population = [Individual(self.chrom_length, self.rng) for _ in range(self.pop_size)]
         for g in range(self.gens):
             # Uso de memória em MB
-            memory_mb = process.memory_info().rss / (1024 * 1024)
+            memory_mb = process.memory_info().rss / BYTES_POR_MB
             self.memory_history.append(memory_mb)
             # Uso de CPU em porcentagem
             self.cpu_history.append(process.cpu_percent())
@@ -107,7 +113,7 @@ class GeneticAlgorithm:
                 )
 
             # Elitismo: mantém os dois melhores indivíduos da geração atual
-            next_gen = population[:2]
+            next_gen = population[:ELITE]
 
             # Preenche o restante da próxima geração com cruzamento e mutação
             while len(next_gen) < self.pop_size:
@@ -158,7 +164,7 @@ class GeneticAlgorithm:
 
     def select(self, population):
         # Seleciona aleatoriamente um indivíduo entre os 10 melhores (seleção por truncamento)
-        return self.rng.choice(population[:10]).copia()
+        return self.rng.choice(population[:CANDIDATOS_A_PAI]).copia()
 
     def crossover(self, p1, p2):
         # Realiza o cruzamento de dois pais para gerar dois filhos
@@ -185,4 +191,4 @@ class GeneticAlgorithm:
 
     def random_action(self):
         # Gera uma ação aleatória válida para o cromossomo
-        return self.rng.choice(["CIMA", "BAIXO", "ESQUERDA", "DIREITA", "AGARRAR", "TIRO"])
+        return self.rng.choice(ACOES)
