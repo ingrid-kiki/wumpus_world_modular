@@ -195,6 +195,42 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 
 **Meta:** benchmark padrão pelo menos 3 vezes mais rápido, medido antes e depois, com resultados iguais.
 
+## PRs do plano
+
+Todas as PRs feitas desde a Etapa 0, na ordem. A data é a do merge no GitHub, em UTC; na coluna Etapa, a letra entre
+parênteses é a da tabela de tarefas da etapa. "Plano", "Versão" e "Geral" são PRs de registro, lançamento ou regras do projeto.
+
+| PR | Merge | Etapa | Assunto |
+|---|---|---|---|
+| [#50](https://github.com/ingrid-kiki/wumpus_world_modular/pull/50) | 2026-11-09 | 0 | Lança a v1.7.0 |
+| [#51](https://github.com/ingrid-kiki/wumpus_world_modular/pull/51) | 2026-11-09 | Versão | Inicia o desenvolvimento da 1.8.0 |
+| [#52](https://github.com/ingrid-kiki/wumpus_world_modular/pull/52) | 2026-11-09 | Geral | `CLAUDE.md` com as regras do projeto |
+| [#53](https://github.com/ingrid-kiki/wumpus_world_modular/pull/53) | 2026-11-09 | 1 (A) | Teste de referência e cobertura no CI |
+| [#54](https://github.com/ingrid-kiki/wumpus_world_modular/pull/54) | 2026-11-10 | 1 (B) | Formatação com `ruff` e regras de lint |
+| [#55](https://github.com/ingrid-kiki/wumpus_world_modular/pull/55) | 2026-11-10 | 1 (C) | Regras de possíveis erros, simplificação e complexidade |
+| [#56](https://github.com/ingrid-kiki/wumpus_world_modular/pull/56) | 2026-11-10 | 1 (D) | `pre-commit` e guia de estilo |
+| [#57](https://github.com/ingrid-kiki/wumpus_world_modular/pull/57) | 2026-11-10 | Geral | Aviso de que o gancho do `pre-commit` precisa ser instalado |
+| [#58](https://github.com/ingrid-kiki/wumpus_world_modular/pull/58) | 2026-11-10 | 2 (A) | Base dos diagramas e teste do diagrama de classes |
+| [#59](https://github.com/ingrid-kiki/wumpus_world_modular/pull/59) | 2026-11-10 | Geral | Registro da proteção da `main` |
+| [#60](https://github.com/ingrid-kiki/wumpus_world_modular/pull/60) | 2026-11-10 | 2 (B) | Caso de uso e fluxograma geral |
+| [#61](https://github.com/ingrid-kiki/wumpus_world_modular/pull/61) | 2026-11-11 | Plano | Andamento das tarefas das Etapas 1 e 2 |
+| [#62](https://github.com/ingrid-kiki/wumpus_world_modular/pull/62) | 2026-11-11 | 2 (C) | Diagrama de classes |
+| [#63](https://github.com/ingrid-kiki/wumpus_world_modular/pull/63) | 2026-11-11 | Plano | Ajustes apontados pelo diagrama de classes |
+| [#64](https://github.com/ingrid-kiki/wumpus_world_modular/pull/64) | 2026-11-11 | 2 (D) | Fluxograma e sequência do algoritmo genético |
+| [#65](https://github.com/ingrid-kiki/wumpus_world_modular/pull/65) | 2026-11-11 | 2 (E) | Sequências do benchmark e do agente lógico |
+| [#66](https://github.com/ingrid-kiki/wumpus_world_modular/pull/66) | 2026-11-11 | Agente lógico | Investigação do agente lógico |
+| [#67](https://github.com/ingrid-kiki/wumpus_world_modular/pull/67) | 2026-11-11 | 2 (F) | Fluxo de dados; conclui a Etapa 2 |
+| [#68](https://github.com/ingrid-kiki/wumpus_world_modular/pull/68) | 2026-11-11 | Agente lógico | Agente `logico_seguro` e lista dos testes |
+| [#69](https://github.com/ingrid-kiki/wumpus_world_modular/pull/69) | 2026-11-12 | 3 (preparação) | Análise dos cinco arquivos de benchmark |
+| [#70](https://github.com/ingrid-kiki/wumpus_world_modular/pull/70) | 2026-11-12 | Versão | Lança a v1.8.0 |
+| [#71](https://github.com/ingrid-kiki/wumpus_world_modular/pull/71) | 2026-11-12 | Plano | Divisão e decisões da Etapa 3; inicia a 2.0.0 |
+| [#72](https://github.com/ingrid-kiki/wumpus_world_modular/pull/72) | 2026-11-12 | 3 (A) | Ações, percepções e status em `world/constantes.py` |
+| [#73](https://github.com/ingrid-kiki/wumpus_world_modular/pull/73) | 2026-11-12 | 3 (B) | Classe base `Agente` e lista única de agentes |
+| [#74](https://github.com/ingrid-kiki/wumpus_world_modular/pull/74) | 2026-11-12 | 3 (C) | Retira o `Logger` e os arquivos `.log` |
+| [#75](https://github.com/ingrid-kiki/wumpus_world_modular/pull/75) | em revisão | Plano | Andamento da Etapa 3 e esta tabela |
+
+Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
+
 ## Ordem e esforço
 
 | Etapa | Esforço | Risco | Depende de |
