@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada), com a comparação final da tese depois dela.
+**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a C concluídas, próxima: PR D, benchmark único), com a comparação final da tese depois dela.
 
 ## Objetivo
 
@@ -103,13 +103,13 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 ### Etapa 3. Código limpo (16 a 23 h, antecipada em 11/11/2026)
 É a Fase 5 do plano original e a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42). Só avança com o teste de referência passando.
 
-- Constantes únicas para ações, percepções e status.
-- Classe base de agente, com um contrato único para `run()` (detalhes abaixo).
+- Constantes únicas para ações, percepções e status (concluído, #72).
+- Classe base de agente, com um contrato único para `run()` (concluído, #73).
 - Um benchmark único no lugar dos 5, com as opções atuais (decidido; ver abaixo).
 - Dividir as funções grandes: `gerar_graficos_avancados`, `GeneticAlgorithm.run`, `rodar_benchmark`.
 - Anotações de tipos nas funções públicas.
 - Nomes em português e sem acentos em identificadores, chaves, colunas e arquivos (decidido; ver abaixo).
-- Decidir o destino de `pygad/`, que não é usado. `visual/` e o `logger` estão decididos abaixo.
+- Decidir o destino de `pygad/`, que não é usado. `visual/` está decidido abaixo, e o `logger` saiu na #74.
 - Decidir o uso do `dados_extra_AGENTE_NxN.npz`: hoje ele é gravado em todo run, mas nenhuma parte do programa o lê.
   Uma opção é gerar os gráficos avançados a partir dele, o que também ajudaria na [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29).
 - Organizar em pacote, com `pyproject.toml` completo.
@@ -122,7 +122,8 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 | 2 | `Logger` | `LogicAgent.logger` fica sempre `None`, o parâmetro `logger` do AG nunca é informado e os `.log` só repetem início e fim, que já estão no `terminal_output.txt` | Retirar o atributo, o parâmetro e os arquivos `.log`, deixando o `terminal_output.txt` como registro único | cerca de 1 h |
 | 3 | `Visualizer` | Nenhum arquivo do programa o importa, e ele só desenha o estado atual do mundo | Ligar ao `--vis` nas execuções únicas, reproduzindo na janela os passos do agente depois que ele termina | 2 a 3 h |
 
-A classe base vem primeiro porque o `--vis` depende do histórico com as posições. Esses 5 a 7 h já estão contados na estimativa
+Situação: a classe base foi concluída na #73 e a retirada do `Logger` na #74; o `--vis` fica para a PR F.
+A classe base veio primeiro porque o `--vis` depende do histórico com as posições. Esses 5 a 7 h já estão contados na estimativa
 da etapa. O teste de referência precisa continuar passando em cada ajuste, cada classe nova entra no diagrama de classes, e a saída dos
 `.log` muda o conteúdo da pasta do run, então entra na v2.0.0.
 
@@ -157,6 +158,8 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
 A ordem segue as dependências: a classe base usa as constantes, o benchmark único e o `--vis` dependem da classe base, e as funções
 longas vêm depois do benchmark único. Os nomes ficam para o fim, para não criar conflitos com as outras PRs. Em cada PR, o teste de
 referência e os números do `logico_seguro` garantem resultados idênticos, e os diagramas e a lista de testes acompanham o código.
+
+Restam 7 PRs (D a J), com cerca de 12 a 17 h previstas.
 
 **Meta:** nenhuma função acima de 40 linhas, nenhuma com complexidade acima de 10, nenhuma lista repetida. Lançamento: v2.0.0.
 
@@ -199,10 +202,10 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
 | 2. Documentação e diagramas | Concluída | Baixo | Etapa 0 |
-| 3. Código limpo | 16–23 h | **Médio** | Etapa 1 |
+| 3. Código limpo | Restam cerca de 12 a 17 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Restante** | **cerca de 25 a 38 h** | | |
+| **Restante** | **cerca de 21 a 32 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 
