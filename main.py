@@ -216,8 +216,8 @@ PARAMETROS_AG_CLI = {
 }
 
 
-def criar_parser():
-    parser = argparse.ArgumentParser(description="Executa benchmarks no Wumpus World")
+def _opcoes_basicas(parser):
+    """Quantas execuções, em que tamanhos, com quais agentes e com qual arquivo de benchmark."""
     parser.add_argument(
         "--execucoes", type=inteiro_minimo(1), default=32, help="Número de execuções por agente/tamanho"
     )
@@ -239,6 +239,10 @@ def criar_parser():
     parser.add_argument(
         "--benchmark", type=arquivo_existente, default="benchmark.py", help="Arquivo de benchmark a ser usado"
     )
+
+
+def _opcoes_dos_agentes(parser):
+    """Parâmetros do agente genético e orçamento da busca aleatória."""
     grupo_ag = parser.add_argument_group("agente genético", "Sem estas opções, valem os padrões do GeneticAgent.")
     for opcao, (_, tipo, ajuda) in PARAMETROS_AG_CLI.items():
         grupo_ag.add_argument(f"--{opcao}", type=tipo, default=None, help=ajuda)
@@ -248,6 +252,10 @@ def criar_parser():
         default=None,
         help="Orçamento da busca aleatória (padrão: população x gerações do AG)",
     )
+
+
+def _opcoes_de_execucao(parser):
+    """Como o benchmark roda e onde grava os resultados."""
     parser.add_argument(
         "--paralelo",
         action="store_true",
@@ -259,6 +267,14 @@ def criar_parser():
         help="Esconde as mensagens de cada execução e de cada passo dos agentes",
     )
     parser.add_argument("--saida", type=str, default=None, help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
+
+
+def criar_parser():
+    """Linha de comando do benchmark, usada pelas opções 1 e 5 do menu e pelo reproduzir.py."""
+    parser = argparse.ArgumentParser(description="Executa benchmarks no Wumpus World")
+    _opcoes_basicas(parser)
+    _opcoes_dos_agentes(parser)
+    _opcoes_de_execucao(parser)
     return parser
 
 
@@ -309,36 +325,36 @@ def main():
     rodar_benchmark(cli_args)
 
 
-def rodar_benchmark(cli_args):
-    """
-    Executa os benchmarks descritos por cli_args e grava tudo na pasta do run, incluindo
-    metadata.json (Fase 4 do plano, #17). Usado pelo main() e pelo reproduzir.py.
-    :return: (pasta de saída, DataFrame do resumo)
-    """
-    args = criar_parser().parse_args(cli_args)
-    sobrescritos_ag = parametros_do_ag(args)
-    # A busca aleatória usa o mesmo cromossomo e o mesmo orçamento do AG, para a comparação ser justa (#31)
+def _parametros_da_busca(args, sobrescritos_ag):
+    """A busca aleatória usa o mesmo cromossomo e o mesmo orçamento do AG, para a comparação ser justa (#31)."""
     efetivos_ag = parametros_efetivos(GeneticAgent, sobrescritos_ag)
-    parametros_busca = {
+    return {
         "chrom_length": efetivos_ag["chrom_length"],
         "avaliacoes": args.avaliacoes or efetivos_ag["population_size"] * efetivos_ag["gens"],
     }
 
-    # Carrega o benchmark escolhido pelo usuário; os parâmetros por agente vão junto em toda chamada
+
+def _funcao_de_benchmark(args, sobrescritos_ag, parametros_busca):
+    """Função do benchmark escolhido, já com os parâmetros por agente e os modos pedidos."""
     # --paralelo e --silencioso só são repassados quando usados: um benchmark externo sem essas opções continua funcionando
     modos = {opcao: True for opcao in ("paralelo", "silencioso") if getattr(args, opcao)}
-    executar_benchmark = functools.partial(
+    return functools.partial(
         carregar_benchmark(args.benchmark),
         parametros_agentes={"genetico": sobrescritos_ag, "aleatorio": parametros_busca},
         **modos,
     )
 
-    # === Criação do diretório de saída ===
+
+def _criar_pasta_do_run(args):
+    """Cria a pasta do run: a indicada em --saida ou logs/run_AAAAMMDD_HHMMSS."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = args.saida or os.path.join("logs", f"run_{timestamp}")
     os.makedirs(output_dir, exist_ok=True)
+    return output_dir
 
-    # === Metadados da execução, gravados antes de rodar (se algo falhar, fica o registro) ===
+
+def _gravar_metadados(cli_args, args, sobrescritos_ag, parametros_busca, output_dir):
+    """Grava o metadata.json antes de rodar: se algo falhar, o registro do que foi pedido continua lá."""
     parametros_ag = None
     if "genetico" in args.agentes:
         parametros_ag = parametros_efetivos(GeneticAgent, sobrescritos_ag)
@@ -348,60 +364,82 @@ def rodar_benchmark(cli_args):
         metadados["parametros_busca_aleatoria"] = parametros_busca
     salvar_metadados(output_dir, metadados)
 
-    resultados = []
 
-    # === Execução dos benchmarks ===
+def _graficos_avancados_da_combinacao(dados_extra, nome_agente, size, output_dir):
+    """Gera os gráficos avançados de uma combinação numa subpasta própria e informa o que saiu."""
+    advanced_output_dir = os.path.join(output_dir, f"advanced_charts_{nome_agente}_{size}x{size}")
+    os.makedirs(advanced_output_dir, exist_ok=True)
+    relatorio = gerar_graficos_avancados(dados_extra, advanced_output_dir)
+    print(
+        f"📊 Gráficos avançados para '{nome_agente}' ({size}x{size}): "
+        f"{len(relatorio['gerados'])} salvos em {advanced_output_dir}"
+    )
+    if relatorio["falhas"]:
+        print(f"⚠️ Gráficos que falharam: {', '.join(relatorio['falhas'])}")
+
+
+def _rodar_combinacao(executar_benchmark, nome_agente, size, execucoes, resultados, output_dir):
+    """
+    Roda um agente num tamanho de mundo e grava o resultado na hora.
+    Pastas, arquivos e gravação parcial desta etapa são garantidos por tests/test_main_etapas.py.
+    """
+    print(f"\n🚀 Iniciando benchmark: Agente = '{nome_agente}' | Mundo = {size}x{size}")
+    resultado = executar_benchmark(nome_agente, size, execucoes)
+    resultados.append(resultado)
+    # Grava a cada etapa: uma queda perde no máximo a etapa em andamento
+    salvar_resultados(resultados, output_dir)
+    if not isinstance(resultado, dict):  # benchmark externo (--benchmark) sem o contrato
+        print(f"⚠️ Resultado nulo para agente '{nome_agente}' no mundo {size}x{size}")
+    elif resultado.get("dados_extra"):  # vale para qualquer agente que devolva dados extras
+        _graficos_avancados_da_combinacao(resultado["dados_extra"], nome_agente, size, output_dir)
+    print(f"✅ Benchmark finalizado: '{nome_agente}' no mundo {size}x{size}")
+
+
+def _mostrar_resumo(df_resultados):
+    """Mostra no terminal as contagens, as porcentagens e os tempos de cada agente e tamanho."""
+    for _, row in df_resultados.iterrows():
+        agente = row["agente"]
+        tamanho = row["tamanho_mundo"]
+        erros = row.get("erros", 0)  # benchmarks de terceiros podem não ter a coluna
+        total = row["vitórias"] + row["mortes"] + row["sobreviveu"] + erros
+        print(f"\n📊 RESULTADOS - {agente.upper()} | Tamanho: {tamanho}x{tamanho}")
+        print(f"🏆 Vitórias: {row['vitórias']} ({(row['vitórias'] / total) * 100:.1f}%)")
+        print(f"☠️ Mortes: {row['mortes']} ({(row['mortes'] / total) * 100:.1f}%)")
+        print(f"🤔 Sobreviveu sem vencer: {row['sobreviveu']} ({(row['sobreviveu'] / total) * 100:.1f}%)")
+        if erros:
+            print(f"❌ Erros: {erros} ({(erros / total) * 100:.1f}%), detalhes em terminal_output.txt")
+        print(
+            f"⏱️ Tempo total: {formatar_tempo(row['tempo_total'])} | Tempo médio: {formatar_tempo(row['tempo_médio'])}"
+        )
+
+
+def rodar_benchmark(cli_args):
+    """
+    Executa os benchmarks descritos por cli_args e grava tudo na pasta do run, incluindo
+    metadata.json (Fase 4 do plano, #17). Usado pelo main() e pelo reproduzir.py.
+    :return: (pasta de saída, DataFrame do resumo)
+    """
+    args = criar_parser().parse_args(cli_args)
+    sobrescritos_ag = parametros_do_ag(args)
+    parametros_busca = _parametros_da_busca(args, sobrescritos_ag)
+    executar_benchmark = _funcao_de_benchmark(args, sobrescritos_ag, parametros_busca)
+    output_dir = _criar_pasta_do_run(args)
+    _gravar_metadados(cli_args, args, sobrescritos_ag, parametros_busca, output_dir)
+
+    resultados = []
     terminal_output_path = os.path.join(output_dir, "terminal_output.txt")
     with capturar_saida_terminal(terminal_output_path):
         print(f"🚀 Iniciando benchmark em: {output_dir}")
         print(f"📊 Configuração: {args.execucoes} execuções, tamanhos {args.sizes}, agentes {args.agentes}\n")
-
         for size in args.sizes:
             for nome_agente in args.agentes:
-                print(f"\n🚀 Iniciando benchmark: Agente = '{nome_agente}' | Mundo = {size}x{size}")
-
-                # Pastas, arquivos e gravação parcial desta etapa são garantidos por
-                # tests/test_main_etapas.py. Ao mudar este trecho, mantenha aqueles testes passando.
-                resultado = executar_benchmark(nome_agente, size, args.execucoes)
-                resultados.append(resultado)
-                # Grava a cada etapa: uma queda perde no máximo a etapa em andamento
-                salvar_resultados(resultados, output_dir)
-
-                if not isinstance(resultado, dict):  # benchmark externo (--benchmark) sem o contrato
-                    print(f"⚠️ Resultado nulo para agente '{nome_agente}' no mundo {size}x{size}")
-                elif resultado.get("dados_extra"):  # vale para qualquer agente que devolva dados extras
-                    advanced_output_dir = os.path.join(output_dir, f"advanced_charts_{nome_agente}_{size}x{size}")
-                    os.makedirs(advanced_output_dir, exist_ok=True)
-                    relatorio = gerar_graficos_avancados(resultado["dados_extra"], advanced_output_dir)
-                    print(
-                        f"📊 Gráficos avançados para '{nome_agente}' ({size}x{size}): "
-                        f"{len(relatorio['gerados'])} salvos em {advanced_output_dir}"
-                    )
-                    if relatorio["falhas"]:
-                        print(f"⚠️ Gráficos que falharam: {', '.join(relatorio['falhas'])}")
-
-                print(f"✅ Benchmark finalizado: '{nome_agente}' no mundo {size}x{size}")
+                _rodar_combinacao(executar_benchmark, nome_agente, size, args.execucoes, resultados, output_dir)
 
         df_resultados, csv_path = salvar_resultados(resultados, output_dir)
         gerar_graficos(df_resultados, output_dir)
-
         print(f"\n📊 Resultados salvos em: {csv_path}")
         print(f"📈 Gráficos básicos salvos em: {output_dir}")
-
-        for _, row in df_resultados.iterrows():
-            agente = row["agente"]
-            tamanho = row["tamanho_mundo"]
-            erros = row.get("erros", 0)  # benchmarks de terceiros podem não ter a coluna
-            total = row["vitórias"] + row["mortes"] + row["sobreviveu"] + erros
-            print(f"\n📊 RESULTADOS - {agente.upper()} | Tamanho: {tamanho}x{tamanho}")
-            print(f"🏆 Vitórias: {row['vitórias']} ({(row['vitórias'] / total) * 100:.1f}%)")
-            print(f"☠️ Mortes: {row['mortes']} ({(row['mortes'] / total) * 100:.1f}%)")
-            print(f"🤔 Sobreviveu sem vencer: {row['sobreviveu']} ({(row['sobreviveu'] / total) * 100:.1f}%)")
-            if erros:
-                print(f"❌ Erros: {erros} ({(erros / total) * 100:.1f}%), detalhes em terminal_output.txt")
-            print(
-                f"⏱️ Tempo total: {formatar_tempo(row['tempo_total'])} | Tempo médio: {formatar_tempo(row['tempo_médio'])}"
-            )
+        _mostrar_resumo(df_resultados)
 
     print(f"\n💾 Saída do terminal salva em: {terminal_output_path}")
     print(f"🧾 Metadados da execução em: {os.path.join(output_dir, 'metadata.json')}")

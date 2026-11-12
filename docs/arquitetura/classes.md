@@ -111,6 +111,10 @@ classDiagram
         +crossover(p1, p2)
         +mutate(individual)
         +random_action()
+        -_registrar_recursos(processo)
+        -_registrar_geracao(population)
+        -_proxima_geracao(population)
+        -_resultado(best_individual, population)
     }
 
     class AGVariante {

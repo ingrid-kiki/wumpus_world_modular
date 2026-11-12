@@ -26,6 +26,26 @@ def random_action(rng=random):
     return rng.choice(ACOES)
 
 
+def _distancia(pos, alvo):
+    """Distância em passos (horizontais e verticais) entre duas casas."""
+    return abs(pos[0] - alvo[0]) + abs(pos[1] - alvo[1])
+
+
+def _pontuar_acao(score, action, percept, mundo):
+    """Soma à pontuação os pontos de uma ação que não matou o agente, na mesma ordem de sempre."""
+    if action == AGARRAR and BRILHO in percept:
+        score += BONUS_OURO  # Bônus se encontrar o ouro
+    if action == TIRO and mundo.last_scream:
+        # Bônus por matar o Wumpus (o mundo registra o grito). Antes a condição era
+        # 'FEDOR' na percepção pós-tiro, que nunca acontece: o fedor some quando ele morre (#21)
+        score += BONUS_WUMPUS
+    if action in ACOES_DE_MOVIMENTO:
+        score -= CUSTO_MOVIMENTO  # Penalidade leve por andar
+    else:
+        score -= CUSTO_OUTRA_ACAO  # Penalidade padrão
+    return score
+
+
 class Individual:
     def __init__(self, chrom_length, rng=None):
         # Gerador aleatório do AG (ou o módulo random, se não for informado)
@@ -53,29 +73,15 @@ class Individual:
         """
         temp_world = world.clone()  # Cria uma cópia do mundo para simulação
         score = 0  # Inicializa a pontuação
-        ouro_x, ouro_y = world.gold_pos
-        menor_distancia = abs(temp_world.agent_pos[0] - ouro_x) + abs(temp_world.agent_pos[1] - ouro_y)
+        menor_distancia = _distancia(temp_world.agent_pos, world.gold_pos)
         for action in self.chromosome:
             # Executa cada ação do cromossomo no mundo simulado
             percept, status = temp_world.step(action)
-            menor_distancia = min(
-                menor_distancia, abs(temp_world.agent_pos[0] - ouro_x) + abs(temp_world.agent_pos[1] - ouro_y)
-            )
-
+            menor_distancia = min(menor_distancia, _distancia(temp_world.agent_pos, world.gold_pos))
             if status == MORTO:
-                # Penalidade alta se o agente morrer
-                score -= PENALIDADE_MORTE
+                score -= PENALIDADE_MORTE  # Penalidade alta se o agente morrer
                 break
-            if action == AGARRAR and BRILHO in percept:
-                score += BONUS_OURO  # Bônus se encontrar o ouro
-            if action == TIRO and temp_world.last_scream:
-                # Bônus por matar o Wumpus (o mundo registra o grito). Antes a condição era
-                # 'FEDOR' na percepção pós-tiro, que nunca acontece: o fedor some quando ele morre (#21)
-                score += BONUS_WUMPUS
-            if action in ACOES_DE_MOVIMENTO:
-                score -= CUSTO_MOVIMENTO  # Penalidade leve por andar
-            else:
-                score -= CUSTO_OUTRA_ACAO  # Penalidade padrão
+            score = _pontuar_acao(score, action, percept, temp_world)
             if status == GANHOU:
                 # O jogo acabou: as ações restantes do cromossomo não contam (#20)
                 break

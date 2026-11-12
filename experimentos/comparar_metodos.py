@@ -205,16 +205,16 @@ def comparar(tentativas):
     return df
 
 
-def main():
+def _criar_parser():
     parser = argparse.ArgumentParser(description="Compara métodos de busca com o mesmo orçamento de avaliações (#31)")
     parser.add_argument("--fase", choices=FASES, required=True)
     parser.add_argument("--mundos", type=int, default=100, help="Mundos por cenário (sementes 0 a N-1)")
     parser.add_argument("--saida", default=None)
-    args = parser.parse_args()
+    return parser
 
-    fase = FASES[args.fase]
-    saida = args.saida or os.path.join("logs", f"exp31_{args.fase}_{datetime.now():%Y%m%d_%H%M%S}")
-    os.makedirs(saida, exist_ok=True)
+
+def _gravar_metadados(saida, args, fase):
+    """Grava o metadata.json da fase antes de rodar."""
     with open(os.path.join(saida, "metadata.json"), "w", encoding="utf-8") as f:
         json.dump(
             {
@@ -231,13 +231,9 @@ def main():
             indent=2,
         )
 
-    tarefas = [(m, n, g, b, s) for n, g, b in fase["cenarios"] for m in fase["metodos"] for s in range(args.mundos)]
-    print(f"{len(tarefas)} tentativas em {saida}")
-    inicio = time.perf_counter()
-    resultados = Parallel(n_jobs=-1, batch_size="auto")(delayed(tentar)(*t) for t in tarefas)
-    print(f"Concluído em {(time.perf_counter() - inicio) / 60:.1f} min")
 
-    tentativas = pd.DataFrame(resultados)
+def _gravar_resultados(tentativas, saida):
+    """Grava tentativas.csv, resumo.csv e comparacoes.csv, e devolve a tabela de comparações."""
     tentativas.to_csv(os.path.join(saida, "tentativas.csv"), index=False)
     resumo = (
         tentativas.groupby(["mundo", "genes", "orcamento", "metodo"])
@@ -253,6 +249,23 @@ def main():
     resumo.to_csv(os.path.join(saida, "resumo.csv"), index=False)
     comparacoes = comparar(tentativas)
     comparacoes.to_csv(os.path.join(saida, "comparacoes.csv"), index=False)
+    return comparacoes
+
+
+def main():
+    args = _criar_parser().parse_args()
+    fase = FASES[args.fase]
+    saida = args.saida or os.path.join("logs", f"exp31_{args.fase}_{datetime.now():%Y%m%d_%H%M%S}")
+    os.makedirs(saida, exist_ok=True)
+    _gravar_metadados(saida, args, fase)
+
+    tarefas = [(m, n, g, b, s) for n, g, b in fase["cenarios"] for m in fase["metodos"] for s in range(args.mundos)]
+    print(f"{len(tarefas)} tentativas em {saida}")
+    inicio = time.perf_counter()
+    resultados = Parallel(n_jobs=-1, batch_size="auto")(delayed(tentar)(*t) for t in tarefas)
+    print(f"Concluído em {(time.perf_counter() - inicio) / 60:.1f} min")
+
+    comparacoes = _gravar_resultados(pd.DataFrame(resultados), saida)
     pd.set_option("display.width", 200, "display.max_rows", None)
     print(comparacoes.to_string(index=False))
 
