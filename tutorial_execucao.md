@@ -285,7 +285,7 @@ mesmos resultados, e o que tinham de próprio virou as opções `--paralelo` e `
 | Item | Situação |
 |---|---|
 | `python main.py logico --size 4 --vis` | Essa sintaxe não existe: as execuções únicas são escolhidas pelo menu, que oferece a janela no fim |
-| Pasta `pygad/` | Não roda: depende do módulo `WumpsimAG`, que não está no projeto ([#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15)) |
+| Implementação com PyGAD | A pasta `pygad/` antiga, que não rodava sem o módulo `WumpsimAG`, foi guardada na tag `archive/pygad-original`; o agente novo está na [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15) |
 | Gráficos com todas as execuções | Hoje usam só a primeira ([#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29)) |
 
 ⚠️ **Sobre interpretar os resultados:** em experimentos com o mesmo número de avaliações, a busca aleatória (`aleatorio`)

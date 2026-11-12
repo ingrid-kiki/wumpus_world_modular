@@ -1,7 +1,7 @@
 # Diagrama de classes
 
 Mostra as 13 classes do programa, com seus atributos, métodos e relações. Ficam de fora as funções soltas de módulos como
-`main.py` e `utils/`, a classe interna `DualWriter` de `main.py`, a pasta `pygad/` e os testes.
+`main.py` e `utils/`, a classe interna `DualWriter` de `main.py` e os testes.
 
 ```mermaid
 classDiagram

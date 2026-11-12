@@ -11,5 +11,5 @@ pygame==2.6.1
 scikit-learn==1.9.1
 scipy==1.18.1
 seaborn==0.13.2
-# usado somente pelos scripts de pygad/
+# reservado para o agente PyGAD da #15 (a pasta pygad/ está na tag archive/pygad-original)
 pygad==3.9.2
