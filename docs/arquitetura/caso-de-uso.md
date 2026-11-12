@@ -40,9 +40,9 @@ o caso de origem é uma variação opcional do caso de destino.
 
 | Caso de uso | Como acionar | Código principal |
 |---|---|---|
-| Jogar manualmente | `python main.py`, opção 2 | `execucao_unica`, `ManualAgent` |
-| Ver a partida numa janela | Responder `s` à pergunta no fim das opções 2, 3 e 4 | `mostrar_partida`, `Visualizer` |
-| Ver um agente resolver um mundo | `python main.py`, opção 3 (lógico) ou 4 (genético) | `execucao_unica`, `LogicAgent`, `GeneticAgent` |
+| Jogar manualmente | `python main.py`, opção 2 | `execucao_unica`, `AgenteManual` |
+| Ver a partida numa janela | Responder `s` à pergunta no fim das opções 2, 3 e 4 | `mostrar_partida`, `Visualizador` |
+| Ver um agente resolver um mundo | `python main.py`, opção 3 (lógico) ou 4 (genético) | `execucao_unica`, `AgenteLogico`, `AgenteGenetico` |
 | Comparar agentes em benchmark | `python main.py`, opção 1 | `rodar_benchmark` |
 | Configurar o benchmark pela linha de comando | Opção 5 do menu, ou `python main.py <argumentos>` seguido da opção 1 | `criar_parser`, `separar_argumentos` |
 | Gravar resultados, gráficos e metadados | Automático em todo benchmark | `salvar_resultados`, `gerar_graficos`, `salvar_metadados` |

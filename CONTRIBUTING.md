@@ -77,8 +77,8 @@ As regras marcadas com **(CI)** são verificadas pelo `ruff`. As demais valem na
   documentação mantêm os acentos. O `ruff` (regras `PLC2401` e `PLC2403`) barra acentos nos nomes do código, e
   `tests/test_nomes_sem_acento.py` barra acentos nos textos usados como nome (chaves, colunas, status, arquivos) e em
   tudo o que um run grava.
-- Há nomes antigos em inglês, como `agent_pos` e `draw_world`. Não os renomeie junto com outra mudança: a padronização
-  fica para a refatoração.
+- Os nomes do código (classes, métodos, atributos, parâmetros e variáveis) estão em português desde a #83. Os nomes dos
+  arquivos `.py` e das pastas ainda estão em inglês e mudam na PR I da Etapa 3, junto com a organização em pacote.
 - Dê nome aos números com significado: `TAMANHO_MINIMO`, em vez de um `2` solto no código.
 
 ### Funções

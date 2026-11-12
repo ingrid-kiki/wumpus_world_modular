@@ -13,7 +13,7 @@ O relato do que foi feito está em [reorganizacao-2026-11.md](reorganizacao-2026
 | 2. Testes e CI | ✅ Concluída | v1.4.0 (PR #25) |
 | 3. Bugs críticos | ✅ Concluída: #18 a #24 | v1.4.0 (PR #25) |
 | 4. Reprodutibilidade | ✅ Concluída, exceto rodar de novo os experimentos da tese (4.6), que fica para depois da Fase 5 | v1.5.0 (PRs #26 e #27), #13 |
-| 5. Refatoração | 🔄 Em andamento desde 12/11/2026, como Etapa 3 do [plano de boas práticas](plano-boas-praticas.md): 7 de 11 PRs | v2.0.0, #42 |
+| 5. Refatoração | 🔄 Em andamento desde 12/11/2026, como Etapa 3 do [plano de boas práticas](plano-boas-praticas.md): 8 de 11 PRs | v2.0.0, #42 |
 | 6. Reescrever o histórico | ⏳ Aguarda acordo de todas; inclui retirar `Co-Authored-By` de 30 commits e exige suspender a proteção da `main` durante a operação | #17 |
 
 **O que mudou em relação ao plano original:**
@@ -42,7 +42,7 @@ O relato do que foi feito está em [reorganizacao-2026-11.md](reorganizacao-2026
 | 5.5 `main.py logico --size 4 --seed 42 --vis` | Substituído: as execuções únicas continuam no menu, que no fim pergunta se a partida deve ser mostrada numa janela (decisão de 12/11/2026) |
 | 5.6 Ligar o `Visualizer` | Feito na #78: a janela reproduz a partida passo a passo |
 | 5.7 Destino de `pygad/` | Feito na #80: guardada na tag `archive/pygad-original` e retirada da `main`; o agente PyGAD fica na [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15) |
-| 5.8 Idioma e acentos | Saídas feitas na #81 (colunas, status, arquivos e `--tamanhos`, com regra automática); nomes do código na PR G2 e dos arquivos `.py` na PR I |
+| 5.8 Idioma e acentos | Saídas feitas na #81 (colunas, status, arquivos e `--tamanhos`, com regra automática); nomes do código na #83; nomes dos arquivos `.py` e das pastas na PR I |
 | 5.9 README, tutorial e "migrando da v1" | README e tutorial atualizados em cada PR; a seção "migrando da v1" fica para o lançamento (PR J) |
 | Fora do plano original | Retirada do `Logger` e dos `.log` (#74); funções de no máximo 40 linhas e complexidade 10 (#77 e #78); tipos nas funções públicas (PR H) |
 
