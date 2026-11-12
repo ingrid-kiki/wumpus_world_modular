@@ -247,7 +247,8 @@ issues antes da v2.0.0, e "Correção" corrige um erro achado durante o trabalho
 | [#80](https://github.com/ingrid-kiki/wumpus_world_modular/pull/80) | 2026-11-12 | Issues | README e LICENSE (#41) e `pygad/` guardada numa tag (#15) |
 | [#81](https://github.com/ingrid-kiki/wumpus_world_modular/pull/81) | 2026-11-12 | 3 (G1) | Saídas sem acento e em português, com regra automática |
 | [#82](https://github.com/ingrid-kiki/wumpus_world_modular/pull/82) | 2026-11-12 | Correção | Saída redirecionada no Windows não quebra mais com emojis |
-| [#83](https://github.com/ingrid-kiki/wumpus_world_modular/pull/83) | em revisão | 3 (G2) | Nomes do código em português |
+| [#83](https://github.com/ingrid-kiki/wumpus_world_modular/pull/83) | 2026-11-12 | 3 (G2) | Nomes do código em português |
+| [#84](https://github.com/ingrid-kiki/wumpus_world_modular/pull/84) | em revisão | Plano | Registro da revisão completa depois da troca de nomes |
 
 Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 
