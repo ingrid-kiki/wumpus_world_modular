@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada), com a comparação final da tese depois dela.
+**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a C concluídas, próxima: PR D, benchmark único), com a comparação final da tese depois dela.
 
 ## Objetivo
 
@@ -103,13 +103,13 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 ### Etapa 3. Código limpo (16 a 23 h, antecipada em 11/11/2026)
 É a Fase 5 do plano original e a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42). Só avança com o teste de referência passando.
 
-- Constantes únicas para ações, percepções e status.
-- Classe base de agente, com um contrato único para `run()` (detalhes abaixo).
+- Constantes únicas para ações, percepções e status (concluído, #72).
+- Classe base de agente, com um contrato único para `run()` (concluído, #73).
 - Um benchmark único no lugar dos 5, com as opções atuais (decidido; ver abaixo).
 - Dividir as funções grandes: `gerar_graficos_avancados`, `GeneticAlgorithm.run`, `rodar_benchmark`.
 - Anotações de tipos nas funções públicas.
 - Nomes em português e sem acentos em identificadores, chaves, colunas e arquivos (decidido; ver abaixo).
-- Decidir o destino de `pygad/`, que não é usado. `visual/` e o `logger` estão decididos abaixo.
+- Decidir o destino de `pygad/`, que não é usado. `visual/` está decidido abaixo, e o `logger` saiu na #74.
 - Decidir o uso do `dados_extra_AGENTE_NxN.npz`: hoje ele é gravado em todo run, mas nenhuma parte do programa o lê.
   Uma opção é gerar os gráficos avançados a partir dele, o que também ajudaria na [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29).
 - Organizar em pacote, com `pyproject.toml` completo.
@@ -122,7 +122,8 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 | 2 | `Logger` | `LogicAgent.logger` fica sempre `None`, o parâmetro `logger` do AG nunca é informado e os `.log` só repetem início e fim, que já estão no `terminal_output.txt` | Retirar o atributo, o parâmetro e os arquivos `.log`, deixando o `terminal_output.txt` como registro único | cerca de 1 h |
 | 3 | `Visualizer` | Nenhum arquivo do programa o importa, e ele só desenha o estado atual do mundo | Ligar ao `--vis` nas execuções únicas, reproduzindo na janela os passos do agente depois que ele termina | 2 a 3 h |
 
-A classe base vem primeiro porque o `--vis` depende do histórico com as posições. Esses 5 a 7 h já estão contados na estimativa
+Situação: a classe base foi concluída na #73 e a retirada do `Logger` na #74; o `--vis` fica para a PR F.
+A classe base veio primeiro porque o `--vis` depende do histórico com as posições. Esses 5 a 7 h já estão contados na estimativa
 da etapa. O teste de referência precisa continuar passando em cada ajuste, cada classe nova entra no diagrama de classes, e a saída dos
 `.log` muda o conteúdo da pasta do run, então entra na v2.0.0.
 
@@ -158,6 +159,8 @@ A ordem segue as dependências: a classe base usa as constantes, o benchmark ún
 longas vêm depois do benchmark único. Os nomes ficam para o fim, para não criar conflitos com as outras PRs. Em cada PR, o teste de
 referência e os números do `logico_seguro` garantem resultados idênticos, e os diagramas e a lista de testes acompanham o código.
 
+Restam 7 PRs (D a J), com cerca de 12 a 17 h previstas.
+
 **Meta:** nenhuma função acima de 40 linhas, nenhuma com complexidade acima de 10, nenhuma lista repetida. Lançamento: v2.0.0.
 
 ### Etapa 4. Código comentado para aprendizado (5 a 8 h)
@@ -192,6 +195,42 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 
 **Meta:** benchmark padrão pelo menos 3 vezes mais rápido, medido antes e depois, com resultados iguais.
 
+## PRs do plano
+
+Todas as PRs feitas desde a Etapa 0, na ordem. A data é a do merge no GitHub, em UTC; na coluna Etapa, a letra entre
+parênteses é a da tabela de tarefas da etapa. "Plano", "Versão" e "Geral" são PRs de registro, lançamento ou regras do projeto.
+
+| PR | Merge | Etapa | Assunto |
+|---|---|---|---|
+| [#50](https://github.com/ingrid-kiki/wumpus_world_modular/pull/50) | 2026-11-09 | 0 | Lança a v1.7.0 |
+| [#51](https://github.com/ingrid-kiki/wumpus_world_modular/pull/51) | 2026-11-09 | Versão | Inicia o desenvolvimento da 1.8.0 |
+| [#52](https://github.com/ingrid-kiki/wumpus_world_modular/pull/52) | 2026-11-09 | Geral | `CLAUDE.md` com as regras do projeto |
+| [#53](https://github.com/ingrid-kiki/wumpus_world_modular/pull/53) | 2026-11-09 | 1 (A) | Teste de referência e cobertura no CI |
+| [#54](https://github.com/ingrid-kiki/wumpus_world_modular/pull/54) | 2026-11-10 | 1 (B) | Formatação com `ruff` e regras de lint |
+| [#55](https://github.com/ingrid-kiki/wumpus_world_modular/pull/55) | 2026-11-10 | 1 (C) | Regras de possíveis erros, simplificação e complexidade |
+| [#56](https://github.com/ingrid-kiki/wumpus_world_modular/pull/56) | 2026-11-10 | 1 (D) | `pre-commit` e guia de estilo |
+| [#57](https://github.com/ingrid-kiki/wumpus_world_modular/pull/57) | 2026-11-10 | Geral | Aviso de que o gancho do `pre-commit` precisa ser instalado |
+| [#58](https://github.com/ingrid-kiki/wumpus_world_modular/pull/58) | 2026-11-10 | 2 (A) | Base dos diagramas e teste do diagrama de classes |
+| [#59](https://github.com/ingrid-kiki/wumpus_world_modular/pull/59) | 2026-11-10 | Geral | Registro da proteção da `main` |
+| [#60](https://github.com/ingrid-kiki/wumpus_world_modular/pull/60) | 2026-11-10 | 2 (B) | Caso de uso e fluxograma geral |
+| [#61](https://github.com/ingrid-kiki/wumpus_world_modular/pull/61) | 2026-11-11 | Plano | Andamento das tarefas das Etapas 1 e 2 |
+| [#62](https://github.com/ingrid-kiki/wumpus_world_modular/pull/62) | 2026-11-11 | 2 (C) | Diagrama de classes |
+| [#63](https://github.com/ingrid-kiki/wumpus_world_modular/pull/63) | 2026-11-11 | Plano | Ajustes apontados pelo diagrama de classes |
+| [#64](https://github.com/ingrid-kiki/wumpus_world_modular/pull/64) | 2026-11-11 | 2 (D) | Fluxograma e sequência do algoritmo genético |
+| [#65](https://github.com/ingrid-kiki/wumpus_world_modular/pull/65) | 2026-11-11 | 2 (E) | Sequências do benchmark e do agente lógico |
+| [#66](https://github.com/ingrid-kiki/wumpus_world_modular/pull/66) | 2026-11-11 | Agente lógico | Investigação do agente lógico |
+| [#67](https://github.com/ingrid-kiki/wumpus_world_modular/pull/67) | 2026-11-11 | 2 (F) | Fluxo de dados; conclui a Etapa 2 |
+| [#68](https://github.com/ingrid-kiki/wumpus_world_modular/pull/68) | 2026-11-11 | Agente lógico | Agente `logico_seguro` e lista dos testes |
+| [#69](https://github.com/ingrid-kiki/wumpus_world_modular/pull/69) | 2026-11-12 | 3 (preparação) | Análise dos cinco arquivos de benchmark |
+| [#70](https://github.com/ingrid-kiki/wumpus_world_modular/pull/70) | 2026-11-12 | Versão | Lança a v1.8.0 |
+| [#71](https://github.com/ingrid-kiki/wumpus_world_modular/pull/71) | 2026-11-12 | Plano | Divisão e decisões da Etapa 3; inicia a 2.0.0 |
+| [#72](https://github.com/ingrid-kiki/wumpus_world_modular/pull/72) | 2026-11-12 | 3 (A) | Ações, percepções e status em `world/constantes.py` |
+| [#73](https://github.com/ingrid-kiki/wumpus_world_modular/pull/73) | 2026-11-12 | 3 (B) | Classe base `Agente` e lista única de agentes |
+| [#74](https://github.com/ingrid-kiki/wumpus_world_modular/pull/74) | 2026-11-12 | 3 (C) | Retira o `Logger` e os arquivos `.log` |
+| [#75](https://github.com/ingrid-kiki/wumpus_world_modular/pull/75) | em revisão | Plano | Andamento da Etapa 3 e esta tabela |
+
+Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
+
 ## Ordem e esforço
 
 | Etapa | Esforço | Risco | Depende de |
@@ -199,10 +238,10 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
 | 2. Documentação e diagramas | Concluída | Baixo | Etapa 0 |
-| 3. Código limpo | 16–23 h | **Médio** | Etapa 1 |
+| 3. Código limpo | Restam cerca de 12 a 17 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Restante** | **cerca de 25 a 38 h** | | |
+| **Restante** | **cerca de 21 a 32 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 
