@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; próximos passos: comparação final da tese e agente lógico novo; Etapas 3 a 5 depois da tese.
+**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada), com a comparação final da tese depois dela.
 
 ## Objetivo
 
@@ -100,21 +100,21 @@ Os diagramas descrevem o código atual e serão revistos depois da refatoração
 
 Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 
-### Etapa 3. Código limpo (10 a 18 h)
+### Etapa 3. Código limpo (16 a 23 h, antecipada em 11/11/2026)
 É a Fase 5 do plano original e a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42). Só avança com o teste de referência passando.
 
 - Constantes únicas para ações, percepções e status.
 - Classe base de agente, com um contrato único para `run()` (detalhes abaixo).
-- Um runner único no lugar dos 5 benchmarks, com as opções atuais.
+- Um benchmark único no lugar dos 5, com as opções atuais (decidido; ver abaixo).
 - Dividir as funções grandes: `gerar_graficos_avancados`, `GeneticAlgorithm.run`, `rodar_benchmark`.
 - Anotações de tipos nas funções públicas.
-- Nomes em um idioma só e sem acentos em chaves e arquivos.
+- Nomes em português e sem acentos em identificadores, chaves, colunas e arquivos (decidido; ver abaixo).
 - Decidir o destino de `pygad/`, que não é usado. `visual/` e o `logger` estão decididos abaixo.
 - Decidir o uso do `dados_extra_AGENTE_NxN.npz`: hoje ele é gravado em todo run, mas nenhuma parte do programa o lê.
   Uma opção é gerar os gráficos avançados a partir dele, o que também ajudaria na [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29).
 - Organizar em pacote, com `pyproject.toml` completo.
 
-**Ajustes apontados pelo diagrama de classes (decididos em 11/11/2026, para depois da tese):**
+**Ajustes apontados pelo diagrama de classes (decididos em 11/11/2026; entram nas PRs B, C e F abaixo):**
 
 | Ordem | Ajuste | Situação em 11/11/2026 | O que fazer | Tempo |
 |---|---|---|---|---|
@@ -125,6 +125,38 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 A classe base vem primeiro porque o `--vis` depende do histórico com as posições. Esses 5 a 7 h já estão contados na estimativa
 da etapa. O teste de referência precisa continuar passando em cada ajuste, cada classe nova entra no diagrama de classes, e a saída dos
 `.log` muda o conteúdo da pasta do run, então entra na v2.0.0.
+
+**Decisões de 11/11/2026:**
+
+- **Antecipar a etapa.** A comparação final da tese ([#31](https://github.com/ingrid-kiki/wumpus_world_modular/issues/31)),
+  já com o `logico_seguro`, vem depois, no código refatorado.
+- **Nomes em português**, inclusive os que hoje estão em inglês, como `World`, `agent_pos` e `draw_world`.
+- **Sem acentos** em identificadores, chaves de dicionário, colunas do CSV e nomes de arquivos gerados, como `vitorias`,
+  `tempo_medio` e `grafico_vitorias.png`. Mensagens para as pessoas e a documentação continuam com acentos. A regra passa a ser
+  conferida automaticamente na PR G, e o `reproduzir.py` continua lendo runs antigos.
+- **Um benchmark só**, com `--paralelo` e uma opção para menos mensagens. Os outros quatro arquivos saem, e `--benchmark`
+  continua aceitando arquivos externos. A justificativa está em [`analise-benchmarks-2026-11.md`](analise-benchmarks-2026-11.md).
+- **Em aberto:** o destino de `pygad/`, ligado à [#15](https://github.com/ingrid-kiki/wumpus_world_modular/issues/15); como
+  ativar o `--vis` (PR F); e o uso do `.npz` (PR I).
+
+**Divisão em tarefas (cada PR é mesclada antes de abrir a próxima; aprovada em 11/11/2026):**
+
+| PR | Tarefa | Tempo previsto | Situação |
+|---|---|---|---|
+| A | 3.1 Constantes únicas para ações, percepções e status, e nomes para os números soltos | 1,5 a 2 h | A fazer |
+| B | 3.2 Classe base de agente, formato único de retorno, com as posições no histórico, e lista única de agentes | 2 a 3 h | A fazer |
+| C | 3.3 Retirar o `Logger`, o parâmetro `logger` e os arquivos `.log` | 1 h | A fazer |
+| D | 3.4 Um benchmark único, com `--paralelo`; `tempo_total` passa a ser o tempo de relógio também no paralelo | 2 a 3 h | A fazer |
+| E | 3.5 Dividir as 12 funções com mais de 40 linhas e retirar as exceções de complexidade | 2,5 a 3,5 h | A fazer |
+| F | 3.6 Ligar o `Visualizer` ao `--vis` | 2 a 3 h | A fazer |
+| G | 3.7 Nomes em português, saídas sem acento e a regra que confere isso | 2 a 3 h | A fazer |
+| H | 3.8 Tipos nas funções públicas | 1,5 a 2 h | A fazer |
+| I | 3.9 Organizar em pacote, com `pyproject.toml` completo, e decidir o uso do `.npz` | 1,5 a 2 h | A fazer |
+| J | 3.10 Lançar a v2.0.0 | 30 min | A fazer |
+
+A ordem segue as dependências: a classe base usa as constantes, o benchmark único e o `--vis` dependem da classe base, e as funções
+longas vêm depois do benchmark único. Os nomes ficam para o fim, para não criar conflitos com as outras PRs. Em cada PR, o teste de
+referência e os números do `logico_seguro` garantem resultados idênticos, e os diagramas e a lista de testes acompanham o código.
 
 **Meta:** nenhuma função acima de 40 linhas, nenhuma com complexidade acima de 10, nenhuma lista repetida. Lançamento: v2.0.0.
 
@@ -167,22 +199,26 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
 | 2. Documentação e diagramas | Concluída | Baixo | Etapa 0 |
-| 3. Código limpo | 10–18 h | **Médio** | Etapa 1 |
+| 3. Código limpo | 16–23 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Restante** | **cerca de 19 a 33 h** | | |
+| **Restante** | **cerca de 25 a 38 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 
 ## Relação com a tese
 
-**Decidido em 09/11/2026: a refatoração fica para depois da tese.** A Etapa 3 mexe em quase todos os arquivos, então a ordem é:
+**Decidido em 11/11/2026: a Etapa 3 foi antecipada.** A v1.8.0 marca o código antes da refatoração, e a ordem passa a ser:
 
-1. Etapas 0, 1 e 2: seguras, e os diagramas já servem para a tese.
-2. Comparação final da #31 e novos experimentos da tese.
-3. Etapas 3, 4 e 5, depois que os números da tese estiverem fechados.
+1. Etapas 0, 1 e 2: concluídas.
+2. Etapa 3, com resultados idênticos garantidos pelos testes, terminando na v2.0.0.
+3. Comparação final da #31, já com o `logico_seguro`, e novos experimentos da tese, na v2.0.0.
+4. Etapas 4 e 5.
+
+A decisão anterior, de 09/11/2026, deixava a refatoração para depois da tese.
 
 ## Decisões necessárias
 
-1. Identificadores em português ou inglês? Hoje estão misturados. Minha sugestão é português, como o resto do projeto. Só afeta a Etapa 3.
+1. Identificadores em português ou inglês? **Decidido em 11/11/2026:** português, sem acentos em identificadores, chaves, colunas e
+   nomes de arquivos.
 2. Bloquear merge com CI falho? **Decidido:** sim, com a `main` protegida desde 09/11/2026.
