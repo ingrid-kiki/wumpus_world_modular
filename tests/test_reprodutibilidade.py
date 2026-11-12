@@ -165,5 +165,5 @@ def test_agente_genetico_com_parametros_da_cli_e_reprodutivel():
     acoes = []
     for _ in range(2):
         r = GeneticAgent(World(size=4, seed=5), population_size=20, gens=10, chrom_length=20).run()
-        acoes.append([p["ação"] for p in r["history"]])
+        acoes.append([p["acao"] for p in r["historico"]])
     assert acoes[0] == acoes[1]

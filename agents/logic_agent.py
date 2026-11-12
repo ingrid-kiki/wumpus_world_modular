@@ -5,25 +5,23 @@
 # Este arquivo implementa o LogicAgent, um agente inteligente para o Wumpus World
 # baseado em lógica simbólica. O agente utiliza uma base de conhecimento lógica
 # para decidir cada ação com regras simples a partir das percepções do ambiente, atualizando seu
-# conhecimento a cada passo. O histórico de percepções é registrado para análise,
+# conhecimento a cada passo. O histórico dos passos é registrado para análise,
 # e o agente pode integrar-se ao sistema de logs e benchmarks do projeto.
 """
 
+from agents.agente import Agente
 from agents.logic_knowledge_base import LogicKnowledgeBase
 
 PASSOS_POR_CASA = 4  # limite de passos: 4 vezes o número de casas do mundo (#18)
 
 
-class LogicAgent:
+class LogicAgent(Agente):
     def __init__(self, world, max_steps=None):
-        # Referência ao ambiente (mundo do Wumpus)
-        self.world = world
+        super().__init__(world)
         # Base de conhecimento lógica para inferências; conhece o tamanho do grid (#18)
         self.knowledge = LogicKnowledgeBase(size=world.size)
         # Limite de passos: garante que run() sempre termina (#18)
         self.max_steps = max_steps if max_steps is not None else PASSOS_POR_CASA * world.size * world.size
-        # Histórico das percepções do agente a cada passo
-        self.perception_history = []
         self.logger = None  # Será injetado pelo main
 
     def run(self):
@@ -37,9 +35,6 @@ class LogicAgent:
             # Obtém percepções do ambiente na posição atual
             perception = self.world.perceive()
 
-            # Salva percepção no histórico para análise posterior
-            self.perception_history.append({"passo": passo, "perception": perception})
-
             # Exibe percepção atual
             print(f"[Passo {passo}] Percepção: {perception}")
 
@@ -49,8 +44,9 @@ class LogicAgent:
             # Exibe ação escolhida
             print(f"[Passo {passo}] Ação decidida: {action}")
 
-            # Executa ação no mundo e recebe novo status
-            _, status = self.world.step(action)
+            # Executa ação no mundo e registra o passo
+            percepcao_depois, status = self.world.step(action)
+            self.registrar_passo(action, percepcao_depois, status)
 
             # Atualiza a posição na base de conhecimento com a posição real do mundo
             self.knowledge.update_position(action, self.world.agent_pos)
@@ -65,12 +61,12 @@ class LogicAgent:
             print(f"[Passo {passo}] Status do agente: {status}\n")
             passo += 1  # Incrementa o passo
 
-        # Exibe o histórico completo de percepções ao final
-        print("📝 Histórico de percepções:")
-        for item in self.perception_history:
-            print(f"Passo {item['passo']}: {item['perception']}")
+        # Exibe o histórico completo ao final
+        print("📝 Histórico:")
+        for item in self.historico:
+            print(f"Passo {item['passo']}: {item['acao']} -> {item['percepcao']}")
 
-        return {"history": self.perception_history, "passos": passo - 1}
+        return self.resultado()
 
     def decide(self, perception):
         """

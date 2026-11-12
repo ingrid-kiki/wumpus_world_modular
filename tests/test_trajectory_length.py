@@ -29,7 +29,7 @@ def test_action_sequence_length():
     # Executa o agente e obtém o resultado
     result = agent.run()
     # Extrai o histórico de ações executadas
-    trajectory = result["history"]
+    trajectory = result["historico"]
 
     # Imprime o número de ações executadas para análise didática
     print(f"🔁 Número de ações executadas: {len(trajectory)}")

@@ -51,7 +51,7 @@ sequenceDiagram
         GA->>M: step(action) no mundo real
         M-->>GA: percepção e status
     end
-    GA-->>Q: history e dados_extra
+    GA-->>Q: historico, passos e dados_extra
 ```
 
 ## Observações

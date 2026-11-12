@@ -11,19 +11,18 @@
 
 import random
 
+from agents.agente import Agente
 from ga.individual import Individual
-from world.constantes import FIM_DE_JOGO
 
 
-class RandomSearchAgent:
+class RandomSearchAgent(Agente):
     def __init__(self, world, avaliacoes=50000, chrom_length=100, seed=None):
-        self.world = world
+        super().__init__(world)
         # Pelo menos uma sequência precisa ser avaliada para haver o que executar
         self.avaliacoes = max(1, avaliacoes)
         self.chrom_length = chrom_length
         # Sem semente explícita, usa a do mundo, como o agente genético: mesma semente -> mesmo resultado
         self.rng = random.Random(getattr(world, "seed", None) if seed is None else seed)
-        self.history = []
 
     def run(self):
         """Avalia sequências aleatórias e executa a melhor no mundo real."""
@@ -35,9 +34,5 @@ class RandomSearchAgent:
                 melhor = candidato
 
         print(f"🎲 Busca aleatória: melhor pontuação {melhor.fitness} em {self.avaliacoes} avaliações")
-        for passo, action in enumerate(melhor.chromosome, start=1):
-            perception, status = self.world.step(action)
-            self.history.append({"passo": passo, "ação": action, "perception": perception, "status": status})
-            if status in FIM_DE_JOGO:
-                break
-        return {"history": self.history, "fitness": melhor.fitness, "avaliacoes": self.avaliacoes}
+        self.executar_sequencia(melhor.chromosome)
+        return self.resultado(fitness=melhor.fitness, avaliacoes=self.avaliacoes)

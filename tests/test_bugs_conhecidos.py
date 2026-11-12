@@ -209,7 +209,7 @@ def test_ag_reprodutivel_com_a_semente_do_mundo():
         random.seed(lixo)  # estado global diferente a cada rodada
         agente = GeneticAgent(World(size=4, seed=3), **GA_RAPIDO)
         r = agente.run()
-        resultados.append([passo["ação"] for passo in r["history"]])
+        resultados.append([passo["acao"] for passo in r["historico"]])
     assert resultados[0] == resultados[1]
 
 

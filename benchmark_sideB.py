@@ -8,20 +8,9 @@ Para cada combinação agente+tamanho, executa várias rodadas, mede o tempo de 
 e exibe um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
 """
 
-from agents.genetic_agent import GeneticAgent
-from agents.logic_agent import LogicAgent
-from agents.logico_seguro import AgenteLogicoSeguro
-from agents.random_search_agent import RandomSearchAgent
+from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
 from utils.execucao import contar, executar_uma
 from world.world import World
-
-# Dicionário que associa nomes de agentes às suas classes
-AGENTES_DISPONIVEIS = {
-    "logico": LogicAgent,
-    "logico_seguro": AgenteLogicoSeguro,
-    "genetico": GeneticAgent,
-    "aleatorio": RandomSearchAgent,
-}
 
 NUM_EXECUCOES = 10  # Número de execuções para cada combinação agente + tamanho
 WORLD_SIZES = [4, 6, 8]  # Tamanhos de mundo a serem testados
@@ -93,5 +82,5 @@ def executar_benchmark(agente_nome, world_size, num_execucoes=NUM_EXECUCOES, par
 if __name__ == "__main__":
     # Executa o benchmark para cada combinação de tamanho de mundo e agente selecionado
     for size in WORLD_SIZES:
-        for nome in AGENTES_DISPONIVEIS:
+        for nome in AGENTES_AUTOMATICOS:
             executar_benchmark(nome, size)

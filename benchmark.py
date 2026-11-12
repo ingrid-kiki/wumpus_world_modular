@@ -8,22 +8,9 @@ Para cada agente, executa várias rodadas, mede o tempo de execução,
 e retorna um resumo com as taxas de vitória, morte, sobrevivência e tempos médios.
 """
 
-from agents.genetic_agent import GeneticAgent
-from agents.logic_agent import LogicAgent
-from agents.logico_seguro import AgenteLogicoSeguro
-from agents.manual_agent import ManualAgent
-from agents.random_search_agent import RandomSearchAgent
+from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
 from utils.execucao import contar, executar_uma
 from world.world import World
-
-# Dicionário que associa nomes de agentes às suas classes
-AGENTES_DISPONIVEIS = {
-    "manual": ManualAgent,
-    "logico": LogicAgent,
-    "logico_seguro": AgenteLogicoSeguro,
-    "genetico": GeneticAgent,
-    "aleatorio": RandomSearchAgent,
-}
 
 
 def executar_benchmark(agente_nome, world_size=4, num_execucoes=10, parametros_agentes=None):
@@ -66,7 +53,7 @@ def executar_benchmark(agente_nome, world_size=4, num_execucoes=10, parametros_a
 
 if __name__ == "__main__":
     # Só agentes automáticos: o manual pede ações pelo teclado e não faz sentido num benchmark (#30)
-    for nome in [n for n in AGENTES_DISPONIVEIS if n != "manual"]:
+    for nome in AGENTES_AUTOMATICOS:
         resultado = executar_benchmark(nome, world_size=4, num_execucoes=3)
         print(f"\nResumo para {nome}:")
         print(f"Vitórias: {resultado['vitórias']}")

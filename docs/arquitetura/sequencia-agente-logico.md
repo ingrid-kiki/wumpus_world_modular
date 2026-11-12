@@ -13,7 +13,6 @@ sequenceDiagram
     M-->>A: jogo ainda em andamento
     A->>M: perceive()
     M-->>A: percepção da casa atual
-    A->>A: guarda em perception_history
     A->>A: decide(perception)
     A->>K: infer_action(perception)
     K->>K: update_knowledge(perception)
@@ -32,6 +31,7 @@ sequenceDiagram
     M->>M: move_agent(action) e interact(action)
     M->>M: perceive()
     M-->>A: percepção e status
+    A->>A: registrar_passo(action, percepção, status)
     A->>K: update_position(action, agent_pos)
 ```
 

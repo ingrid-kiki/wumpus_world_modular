@@ -32,7 +32,7 @@ def test_action_distribution():
     # Executa o agente e obtém o resultado
     result = agent.run()
     # Extrai as ações do histórico
-    actions = [h["ação"] for h in result["history"]]
+    actions = [h["acao"] for h in result["historico"]]
     # Conta a frequência de cada ação
     count = Counter(actions)
 

@@ -8,20 +8,16 @@
 # educacionais, testes e comparação com agentes automáticos do projeto.
 """
 
+from agents.agente import Agente
 from world.constantes import ACOES
 
 
-class ManualAgent:
-    def __init__(self, world):
-        # Recebe uma referência ao ambiente (mundo do Wumpus)
-        self.world = world
-
+class ManualAgent(Agente):
     def run(self):
         """
         Agente controlado manualmente pelo usuário via terminal.
         Recebe comandos de ação e interage com o ambiente passo a passo.
         """
-        step = 1  # Inicializa o contador de passos
         # Continua enquanto o jogo não termina (vitória ou morte)
         while not self.world.is_done():
             # Solicita ao usuário uma ação via terminal
@@ -31,8 +27,8 @@ class ManualAgent:
                     break
                 print(f"❌ Ação inválida: '{action}'. Tente novamente.")
 
-            # Executa a ação no ambiente e recebe percepção e status
+            # Executa a ação no ambiente e registra o passo
             perception, status = self.world.step(action)
-            # Exibe informações do passo atual
-            print(f"[Passo {step}] Ação: {action} | Percepção: {perception} | Status: {status}")
-            step += 1  # Incrementa o contador de passos
+            self.registrar_passo(action, perception, status)
+            print(f"[Passo {len(self.historico)}] Ação: {action} | Percepção: {perception} | Status: {status}")
+        return self.resultado()
