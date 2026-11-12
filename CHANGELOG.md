@@ -10,6 +10,10 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md).
 
+### Alterado
+- Ações, percepções e status do jogo ficam num lugar só, `world/constantes.py`, e os números das regras do fitness e do AG
+  ganham nomes. Um teste impede que essas listas voltem a ser escritas à mão. Os resultados não mudam.
+
 ---
 
 ## [1.8.0] - 2026-11-11

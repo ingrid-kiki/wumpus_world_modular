@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **169 casos de teste**, vindos de
-**118 funções** em **22 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 11/11/2026: **172 casos de teste**, vindos de
+**121 funções** em **23 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -30,6 +30,7 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | `test_reprodutibilidade.py` | 13 | Metadados, reprodução de um run e otimizações do AG |
 | `test_bugs_conhecidos.py` | 46 | Bugs corrigidos que não podem voltar |
 | `test_entradas.py` | 24 | Entradas inválidas com mensagem clara |
+| `test_constantes.py` | 3 | Ações, percepções e status num lugar só |
 | `test_world.py` | 1 | Criação do mundo |
 | `test_logic_agent.py` | 1 | Criação do agente lógico |
 | `test_logico_seguro.py` | 20 | Agente lógico que evita poços |
@@ -129,6 +130,14 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 | `test_semente_invalida_pergunta_de_novo` | 1 | Uma semente inválida faz o menu perguntar de novo |
 | `test_execucao_unica_termina_com_entradas_corrigidas` | 1 | A execução única termina depois de respostas erradas seguidas de certas |
 | `test_cromossomo_de_um_gene_nao_gera_erro` | 1 | Um cromossomo com um gene só não quebra o benchmark |
+
+### `test_constantes.py`
+
+| Teste | Casos | O que garante |
+|---|---|---|
+| `test_ordem_das_acoes_nao_muda` | 1 | A ordem das ações continua a mesma, porque os sorteios dos experimentos dependem dela |
+| `test_deslocamentos_cobrem_os_movimentos_na_mesma_ordem` | 1 | Cada movimento tem um deslocamento, na mesma ordem da lista de movimentos |
+| `test_nenhum_arquivo_escreve_acoes_percepcoes_ou_status_a_mao` | 1 | Fora de `world/constantes.py`, ações, percepções e status só aparecem pelas constantes |
 
 ### `test_world.py`
 

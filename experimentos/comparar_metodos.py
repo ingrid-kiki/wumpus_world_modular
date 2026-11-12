@@ -35,9 +35,9 @@ from ga.ga_core import GeneticAlgorithm
 from ga.individual import Individual
 from utils.reprodutibilidade import estado_do_git, versoes_das_bibliotecas
 from utils.versao import __version__
+from world.constantes import ACOES, FIM_DE_JOGO
 from world.world import World
 
-ACOES = ["CIMA", "BAIXO", "ESQUERDA", "DIREITA", "AGARRAR", "TIRO"]
 REFERENCIA = "busca_aleatoria"
 
 
@@ -61,7 +61,7 @@ def venceu(mundo, cromossomo):
     copia = mundo.clone()
     for acao in cromossomo:
         _, status = copia.step(acao)
-        if status in ("GANHOU", "MORTO"):
+        if status in FIM_DE_JOGO:
             break
     return copia.won
 

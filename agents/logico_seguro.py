@@ -14,6 +14,7 @@ from collections import deque
 
 from agents.logic_agent import LogicAgent
 from agents.logic_knowledge_base import MOVIMENTOS, LogicKnowledgeBase
+from world.constantes import AGARRAR, BRILHO, BRISA, FEDOR, TIRO
 
 
 class BaseConhecimentoSegura(LogicKnowledgeBase):
@@ -31,7 +32,7 @@ class BaseConhecimentoSegura(LogicKnowledgeBase):
         """Casas visitadas e vizinhas de casa visitada sem BRISA: em nenhuma delas pode haver poço."""
         seguras = set(self.known)
         for pos, info in self.known.items():
-            if "BRISA" not in info["percepções"]:
+            if BRISA not in info["percepções"]:
                 seguras.update(vizinha for vizinha, _ in self.vizinhas_de(pos))
         return seguras
 
@@ -42,16 +43,14 @@ class BaseConhecimentoSegura(LogicKnowledgeBase):
     def suspeita(self, casa):
         """Quantas casas visitadas ao lado de `casa` sentiram BRISA: quanto maior, mais provável o poço."""
         return sum(
-            "BRISA" in self.known[vizinha]["percepções"]
-            for vizinha, _ in self.vizinhas_de(casa)
-            if vizinha in self.known
+            BRISA in self.known[vizinha]["percepções"] for vizinha, _ in self.vizinhas_de(casa) if vizinha in self.known
         )
 
     def poco_certo(self, casa, seguras):
         """True se alguma casa com BRISA ao lado de `casa` não tem outra explicação para a brisa além dela."""
         for vizinha, _ in self.vizinhas_de(casa):
             info = self.known.get(vizinha)
-            if info and "BRISA" in info["percepções"]:
+            if info and BRISA in info["percepções"]:
                 possiveis = [q for q, _ in self.vizinhas_de(vizinha) if q not in seguras]
                 if possiveis == [casa]:
                     return True
@@ -87,15 +86,15 @@ class BaseConhecimentoSegura(LogicKnowledgeBase):
         visitadas = [(vizinha, acao) for vizinha, acao in self.vizinhas_de(self.current_pos) if vizinha in self.known]
         if visitadas:
             return min(visitadas, key=lambda item: self.visits.get(item[0], 0))[1]
-        return "AGARRAR"  # longe do ouro, não muda nada no mundo: o agente fica parado
+        return AGARRAR  # longe do ouro, não muda nada no mundo: o agente fica parado
 
     def infer_action(self, perception):
         """Escolhe a ação: ouro, Wumpus, casa segura nova, a casa menos arriscada ou ficar em casas conhecidas."""
         self.update_knowledge(perception)
-        if "BRILHO" in perception:
-            return "AGARRAR"
-        if "FEDOR" in perception:
-            return "TIRO"  # o Wumpus está ao lado, então o tiro sempre acerta
+        if BRILHO in perception:
+            return AGARRAR
+        if FEDOR in perception:
+            return TIRO  # o Wumpus está ao lado, então o tiro sempre acerta
         seguras = self.casas_seguras()
         fronteira = self.fronteira()
         return self.primeiro_passo_ate(fronteira & seguras) or self.arriscar(fronteira, seguras) or self.permanecer()

@@ -12,6 +12,8 @@ import sys
 
 import pygame
 
+from world.constantes import BRILHO, BRISA, FEDOR
+
 
 class Visualizer:
     def __init__(self, world):
@@ -54,11 +56,11 @@ class Visualizer:
                 perception = self.world.perceive()
                 self.world.agent_pos = agent_temp_pos
 
-                if "BRISA" in perception:
+                if BRISA in perception:
                     texts.append("💨")
-                if "FEDOR" in perception:
+                if FEDOR in perception:
                     texts.append("💀")
-                if "BRILHO" in perception:
+                if BRILHO in perception:
                     texts.append("✨")
 
                 label = " ".join(texts)
