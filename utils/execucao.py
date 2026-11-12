@@ -6,7 +6,7 @@
 # todos tratem erros do mesmo jeito (#30):
 #
 # - "vitoria", "morte" ou "sobreviveu", conforme o estado final do mundo;
-# - "erro" se agente.run() lançar uma exceção. Uma execução com erro NÃO conta como vitória,
+# - "erro" se agente.executar() lançar uma exceção. Uma execução com erro NÃO conta como vitória,
 #   morte ou sobrevivência: ela entra na coluna "erros" do resultado, e o traceback vai para
 #   o stderr (que o main.py grava no saida_terminal.txt).
 """
@@ -20,9 +20,9 @@ STATUS_POSSIVEIS = ("vitoria", "morte", "sobreviveu", "erro")
 
 def classificar(mundo):
     """Resultado de uma execução a partir do estado final do mundo."""
-    if mundo.won:
+    if mundo.ganhou:
         return "vitoria"
-    if not mundo.is_alive:
+    if not mundo.agente_vivo:
         return "morte"
     return "sobreviveu"
 
@@ -34,15 +34,15 @@ def relatar_erro(detalhe):
 
 def executar_uma(agente, mundo, rotulo="", relatar=True):
     """
-    Roda agente.run() uma vez, sem deixar uma exceção derrubar o benchmark.
+    Roda agente.executar() uma vez, sem deixar uma exceção derrubar o benchmark.
     :param relatar: False quando a execução roda em outro processo: o stderr de lá não chega ao
                     saida_terminal.txt, então quem chamou deve usar relatar_erro(execucao["detalhe_erro"]) (#40)
-    :return: dict com status, tempo (s), resultado devolvido por run(), mensagem de erro e relato completo (ou None)
+    :return: dict com status, tempo (s), resultado devolvido por executar(), mensagem de erro e relato completo (ou None)
     """
     inicio = time.perf_counter()
     detalhe = None
     try:
-        resultado = agente.run()
+        resultado = agente.executar()
         erro = None
     except Exception as e:  # o benchmark continua; o erro fica registrado
         resultado = None

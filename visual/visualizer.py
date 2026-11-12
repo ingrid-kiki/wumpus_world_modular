@@ -32,29 +32,29 @@ CORES = {
 NOMES_DAS_PERCEPCOES = ((BRISA, "brisa"), (FEDOR, "fedor"), (BRILHO, "brilho"))
 
 
-class Visualizer:
-    def __init__(self, world, cell_size=TAMANHO_DA_CASA):
-        """Abre a janela do tamanho do mundo. `world` é o mundo que será desenhado e alterado na reprodução."""
+class Visualizador:
+    def __init__(self, mundo, tamanho_casa=TAMANHO_DA_CASA):
+        """Abre a janela do tamanho do mundo. `mundo` é o mundo que será desenhado e alterado na reprodução."""
         pygame.init()
-        self.world = world
-        self.cell_size = cell_size
-        self.screen = pygame.display.set_mode((world.size * cell_size, world.size * cell_size))
+        self.mundo = mundo
+        self.tamanho_casa = tamanho_casa
+        self.tela = pygame.display.set_mode((mundo.tamanho * tamanho_casa, mundo.tamanho * tamanho_casa))
         pygame.display.set_caption("Wumpus World")
-        self.font = pygame.font.SysFont(None, 24)
+        self.fonte = pygame.font.SysFont(None, 24)
         self.fonte_pequena = pygame.font.SysFont(None, 20)
-        self.clock = pygame.time.Clock()
+        self.relogio = pygame.time.Clock()
 
-    def draw_cell(self, x, y, color, text=None):
+    def desenhar_casa(self, x, y, cor, texto=None):
         """Pinta a casa (x, y), com borda e um texto opcional no canto."""
-        rect = pygame.Rect(y * self.cell_size, x * self.cell_size, self.cell_size, self.cell_size)
-        pygame.draw.rect(self.screen, color, rect)
-        pygame.draw.rect(self.screen, CORES["borda"], rect, 2)
-        if text:
-            self.screen.blit(self.font.render(text, True, CORES["borda"]), (rect.x + 10, rect.y + 10))
+        retangulo = pygame.Rect(y * self.tamanho_casa, x * self.tamanho_casa, self.tamanho_casa, self.tamanho_casa)
+        pygame.draw.rect(self.tela, cor, retangulo)
+        pygame.draw.rect(self.tela, CORES["borda"], retangulo, 2)
+        if texto:
+            self.tela.blit(self.fonte.render(texto, True, CORES["borda"]), (retangulo.x + 10, retangulo.y + 10))
 
-    def draw_world(self, passo=None):
+    def desenhar_mundo(self, passo=None):
         """Desenha o estado atual do mundo; `passo` é o item do histórico que levou até ele, se houver."""
-        self.screen.fill(CORES["fundo"])
+        self.tela.fill(CORES["fundo"])
         self._desenhar_percepcoes()
         self._desenhar_elementos()
         self._desenhar_avisos(passo)
@@ -62,46 +62,46 @@ class Visualizer:
 
     def _percepcao_na_casa(self, pos):
         """O que o agente perceberia na casa `pos`, sem mudar o mundo."""
-        posicao_real = self.world.agent_pos
-        self.world.agent_pos = pos
-        percepcao = self.world.perceive()
-        self.world.agent_pos = posicao_real
+        posicao_real = self.mundo.posicao_agente
+        self.mundo.posicao_agente = pos
+        percepcao = self.mundo.perceber()
+        self.mundo.posicao_agente = posicao_real
         return percepcao
 
     def _desenhar_percepcoes(self):
         """Cada casa com as percepções (brisa, fedor, brilho) que o agente teria nela."""
-        for x in range(self.world.size):
-            for y in range(self.world.size):
-                self.draw_cell(x, y, CORES["casa"])
+        for x in range(self.mundo.tamanho):
+            for y in range(self.mundo.tamanho):
+                self.desenhar_casa(x, y, CORES["casa"])
                 percepcao = self._percepcao_na_casa((x, y))
                 palavras = [nome for percebido, nome in NOMES_DAS_PERCEPCOES if percebido in percepcao]
                 for linha, palavra in enumerate(palavras):
-                    posicao = (y * self.cell_size + 10, x * self.cell_size + 40 + 18 * linha)
-                    self.screen.blit(self.fonte_pequena.render(palavra, True, CORES["borda"]), posicao)
+                    posicao = (y * self.tamanho_casa + 10, x * self.tamanho_casa + 40 + 18 * linha)
+                    self.tela.blit(self.fonte_pequena.render(palavra, True, CORES["borda"]), posicao)
 
     def _desenhar_elementos(self):
         """Wumpus (enquanto vivo), poços, ouro e, por cima de tudo, o agente."""
-        if self.world.wumpus_alive:
-            self.draw_cell(*self.world.wumpus_pos, CORES["wumpus"], "W")
-        for poco in self.world.pits:
-            self.draw_cell(*poco, CORES["poco"], "P")
-        self.draw_cell(*self.world.gold_pos, CORES["ouro"], "G")
-        self.draw_cell(*self.world.agent_pos, CORES["agente"], "A")
+        if self.mundo.wumpus_vivo:
+            self.desenhar_casa(*self.mundo.posicao_wumpus, CORES["wumpus"], "W")
+        for poco in self.mundo.pocos:
+            self.desenhar_casa(*poco, CORES["poco"], "P")
+        self.desenhar_casa(*self.mundo.posicao_ouro, CORES["ouro"], "G")
+        self.desenhar_casa(*self.mundo.posicao_agente, CORES["agente"], "A")
 
     def _desenhar_avisos(self, passo):
         """O passo atual e os avisos de grito, morte e vitória, no canto de cima."""
         avisos = []
         if passo:
             avisos.append((f"Passo {passo['passo']}: {passo['acao']}", CORES["borda"]))
-        if self.world.last_scream:
+        if self.mundo.grito:
             avisos.append(("GRITO!", CORES["alerta"]))
-        if not self.world.is_alive:
+        if not self.mundo.agente_vivo:
             avisos.append(("AGENTE MORTO!", CORES["alerta"]))
-        if self.world.won:
+        if self.mundo.ganhou:
             avisos.append(("VITÓRIA!", CORES["vitoria"]))
         for linha, (texto, cor) in enumerate(avisos):
             # Fundo branco atrás do texto, para ele não se misturar com as percepções da casa
-            self.screen.blit(self.font.render(texto, True, cor, CORES["fundo"]), (10, 10 + 30 * linha))
+            self.tela.blit(self.fonte.render(texto, True, cor, CORES["fundo"]), (10, 10 + 30 * linha))
 
     def reproduzir(self, historico, passos_por_segundo=PASSOS_POR_SEGUNDO, esperar_fechar=True):
         """
@@ -109,15 +109,15 @@ class Visualizer:
         Ao fim, espera a pessoa fechar a janela (a menos que `esperar_fechar` seja False).
         :return: quantos passos foram mostrados
         """
-        self.draw_world()
+        self.desenhar_mundo()
         mostrados, fechada = 0, False
         for passo in historico:
             if self._fechou():
                 fechada = True
                 break
-            self.clock.tick(passos_por_segundo)
-            self.world.step(passo["acao"])
-            self.draw_world(passo)
+            self.relogio.tick(passos_por_segundo)
+            self.mundo.agir(passo["acao"])
+            self.desenhar_mundo(passo)
             mostrados += 1
         if esperar_fechar and not fechada:
             self._esperar_fechar()
@@ -130,4 +130,4 @@ class Visualizer:
 
     def _esperar_fechar(self):
         while not self._fechou():
-            self.clock.tick(10)
+            self.relogio.tick(10)

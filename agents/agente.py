@@ -4,8 +4,8 @@
 """
 # Classe base de todos os agentes. Define o contrato que o programa espera de um agente:
 #
-# - o construtor recebe o mundo (World) como primeiro argumento;
-# - run() joga uma partida e devolve o resultado no formato único:
+# - o construtor recebe o mundo (Mundo) como primeiro argumento;
+# - executar() joga uma partida e devolve o resultado no formato único:
 #     {"historico": [...], "passos": N, "dados_extra": {...}, ...campos próprios do agente}
 #
 # Cada item do histórico descreve um passo já executado:
@@ -20,14 +20,14 @@ from world.constantes import FIM_DE_JOGO
 
 
 class Agente(ABC):
-    """Contrato comum dos agentes: recebem o mundo e devolvem o resultado de run() no formato único."""
+    """Contrato comum dos agentes: recebem o mundo e devolvem o resultado de executar() no formato único."""
 
-    def __init__(self, world):
-        self.world = world
+    def __init__(self, mundo):
+        self.mundo = mundo
         self.historico = []
 
     @abstractmethod
-    def run(self):
+    def executar(self):
         """Joga uma partida no mundo e devolve self.resultado(...)."""
 
     def registrar_passo(self, acao, percepcao, status):
@@ -38,14 +38,14 @@ class Agente(ABC):
                 "acao": acao,
                 "percepcao": list(percepcao),
                 "status": status,
-                "posicao": list(self.world.agent_pos),
+                "posicao": list(self.mundo.posicao_agente),
             }
         )
 
     def executar_sequencia(self, acoes, mostrar=False):
         """Executa as ações no mundo real, na ordem, até o fim da sequência ou do jogo."""
         for acao in acoes:
-            percepcao, status = self.world.step(acao)
+            percepcao, status = self.mundo.agir(acao)
             self.registrar_passo(acao, percepcao, status)
             if mostrar:
                 passo = len(self.historico)

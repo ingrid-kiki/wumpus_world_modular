@@ -20,25 +20,25 @@ import io
 import json
 import pathlib
 
-from agents.genetic_agent import GeneticAgent
-from agents.logic_agent import LogicAgent
-from agents.logic_knowledge_base import LogicKnowledgeBase
-from agents.random_search_agent import RandomSearchAgent
-from ga.individual import Individual
+from agents.genetic_agent import AgenteGenetico
+from agents.logic_agent import AgenteLogico
+from agents.logic_knowledge_base import BaseConhecimento
+from agents.random_search_agent import AgenteAleatorio
+from ga.individual import Individuo
 from utils.execucao import classificar
-from world.world import World
+from world.world import Mundo
 
 ARQUIVO = pathlib.Path(__file__).with_name("referencia.json")
 TAMANHOS = (4, 6, 8)
 SEMENTES = range(5)
 SEMENTES_LOGICO = range(40)
-AG_RAPIDO = {"population_size": 20, "gens": 10, "chrom_length": 20}
+AG_RAPIDO = {"tamanho_populacao": 20, "geracoes": 10, "tamanho_cromossomo": 20}
 
 AGENTES = {
-    "logico": (LogicAgent, {}),
-    "genetico": (GeneticAgent, AG_RAPIDO),
-    "genetico_proximidade": (GeneticAgent, {**AG_RAPIDO, "proximidade": 20.0}),
-    "aleatorio": (RandomSearchAgent, {"avaliacoes": 200, "chrom_length": 20}),
+    "logico": (AgenteLogico, {}),
+    "genetico": (AgenteGenetico, AG_RAPIDO),
+    "genetico_proximidade": (AgenteGenetico, {**AG_RAPIDO, "proximidade": 20.0}),
+    "aleatorio": (AgenteAleatorio, {"avaliacoes": 200, "tamanho_cromossomo": 20}),
 }
 
 
@@ -53,16 +53,16 @@ def _fitness_das_acoes(historico, tamanho, semente, proximidade=0.0):
     acoes = [passo["acao"] for passo in historico]
     if not acoes:
         return None
-    individuo = Individual(0)
-    individuo.chromosome = acoes
-    individuo.evaluate(World(size=tamanho, seed=semente), proximidade)
+    individuo = Individuo(0)
+    individuo.cromossomo = acoes
+    individuo.avaliar(Mundo(tamanho=tamanho, semente=semente), proximidade)
     return individuo.fitness
 
 
 def _casos_de_fitness():
     """Sequências escritas à mão para exercitar cada regra do fitness, inclusive matar o Wumpus."""
-    mundo = World(size=5, seed=0)
-    mundo.gold_pos, mundo.pits, mundo.wumpus_pos = (0, 2), [(2, 0)], (1, 1)
+    mundo = Mundo(tamanho=5, semente=0)
+    mundo.posicao_ouro, mundo.pocos, mundo.posicao_wumpus = (0, 2), [(2, 0)], (1, 1)
     casos = {
         "andar": ["DIREITA"],
         "contra_a_parede": ["CIMA", "ESQUERDA"],
@@ -76,9 +76,9 @@ def _casos_de_fitness():
     resultado = {}
     for nome, cromossomo in casos.items():
         for proximidade in (0.0, 20.0):
-            individuo = Individual(0)
-            individuo.chromosome = cromossomo
-            individuo.evaluate(mundo, proximidade)
+            individuo = Individuo(0)
+            individuo.cromossomo = cromossomo
+            individuo.avaliar(mundo, proximidade)
             resultado[f"{nome}|proximidade={proximidade:g}"] = individuo.fitness
     return resultado
 
@@ -87,11 +87,11 @@ def _casos_do_agente_logico():
     """Decisões raras em jogo real: com as vizinhas já visitadas, volta pela menos visitada."""
 
     def decidir(posicao, visitas):
-        base = LogicKnowledgeBase(size=3)
-        base.current_pos = posicao
-        base.known = {casa: {"seguro": True, "visitado": True, "percepcoes": []} for casa in visitas}
-        base.visits = dict(visitas)
-        return base.infer_action([])
+        base = BaseConhecimento(tamanho=3)
+        base.posicao_atual = posicao
+        base.conhecidas = {casa: {"seguro": True, "visitado": True, "percepcoes": []} for casa in visitas}
+        base.visitas = dict(visitas)
+        return base.inferir_acao([])
 
     return {
         "desempate_pela_ordem_dos_movimentos": decidir((1, 1), {(0, 1): 1, (2, 1): 1, (1, 0): 1, (1, 2): 1}),
@@ -106,22 +106,22 @@ def calcular():
     mundos, execucoes = [], []
     for tamanho in TAMANHOS:
         for semente in SEMENTES:
-            m = World(size=tamanho, seed=semente)
+            m = Mundo(tamanho=tamanho, semente=semente)
             mundos.append(
                 {
                     "tamanho": tamanho,
                     "semente": semente,
-                    "ouro": list(m.gold_pos),
-                    "wumpus": list(m.wumpus_pos),
-                    "pocos": [list(p) for p in m.pits],
+                    "ouro": list(m.posicao_ouro),
+                    "wumpus": list(m.posicao_wumpus),
+                    "pocos": [list(p) for p in m.pocos],
                 }
             )
         for nome, (classe, parametros) in AGENTES.items():
             # O agente lógico é instantâneo: mais mundos para alcançar todos os caminhos da decisão
             for semente in SEMENTES_LOGICO if nome == "logico" else SEMENTES:
-                mundo = World(size=tamanho, seed=semente)
+                mundo = Mundo(tamanho=tamanho, semente=semente)
                 with contextlib.redirect_stdout(io.StringIO()):
-                    resultado = classe(mundo, **parametros).run()
+                    resultado = classe(mundo, **parametros).executar()
                 historico = resultado["historico"]
                 execucoes.append(
                     {

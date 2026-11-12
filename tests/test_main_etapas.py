@@ -11,8 +11,8 @@ import pandas as pd
 import pytest
 
 import main
-from agents.genetic_agent import GeneticAgent
-from world.world import World
+from agents.genetic_agent import AgenteGenetico
+from world.world import Mundo
 
 ARGS_AG = ["--populacao", "10", "--geracoes", "3", "--cromossomo", "10"]
 GRAFICOS_AVANCADOS = {
@@ -47,7 +47,7 @@ def benchmark_falso(monkeypatch, funcao):
     monkeypatch.setattr(main, "carregar_benchmark", lambda caminho: funcao)
 
 
-def test_layout_completo_de_um_run(tmp_path):
+def test_pastas_e_arquivos_completos_de_um_run(tmp_path):
     pasta = tmp_path / "run"
     main.rodar_benchmark(
         ["--agentes", "logico", "genetico", "--tamanhos", "4", "--execucoes", "2", *ARGS_AG, "--saida", str(pasta)]
@@ -109,7 +109,9 @@ def test_log_e_gravado_durante_a_execucao(tmp_path):
 
 
 def test_graficos_avancados_valem_para_qualquer_agente_com_dados_extras(tmp_path, monkeypatch):
-    dados = GeneticAgent(World(size=4, seed=1), population_size=10, gens=3, chrom_length=10).run()["dados_extra"]
+    dados = AgenteGenetico(
+        Mundo(tamanho=4, semente=1), tamanho_populacao=10, geracoes=3, tamanho_cromossomo=10
+    ).executar()["dados_extra"]
     benchmark_falso(
         monkeypatch, lambda agente, tamanho, execucoes, parametros_agentes=None: resultado_falso(agente, tamanho, dados)
     )

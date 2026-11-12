@@ -16,12 +16,12 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
-from agents.genetic_agent import GeneticAgent
+from agents.genetic_agent import AgenteGenetico
 from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
 from utils.graficos import gerar_graficos, gerar_graficos_avancados
 from utils.reprodutibilidade import coletar_metadados, parametros_efetivos, salvar_metadados
 from utils.terminal import usar_utf8_na_saida
-from world.world import TAMANHO_MINIMO, World
+from world.world import TAMANHO_MINIMO, Mundo
 
 
 def menu_interativo():
@@ -61,34 +61,34 @@ def perguntar_sim_ou_nao(pergunta):
 def mostrar_partida(mundo_inicial, historico):
     """Abre a janela que reproduz a partida; sem pygame ou sem tela, avisa e segue."""
     try:
-        from visual.visualizer import Visualizer  # o pygame só é carregado se a janela for pedida
+        from visual.visualizer import Visualizador  # o pygame só é carregado se a janela for pedida
 
-        Visualizer(mundo_inicial).reproduzir(historico)
+        Visualizador(mundo_inicial).reproduzir(historico)
     except Exception as e:  # a janela é opcional: a partida já terminou e foi mostrada no terminal
         print(f"⚠️ Não foi possível abrir a janela: {type(e).__name__}: {e}")
 
 
 def execucao_unica(agente_nome):
     """Uma partida de um agente, com tamanho e semente pedidos no menu, e a janela opcional no fim."""
-    size = perguntar_inteiro("Tamanho do mundo (ex: 4): ", minimo=TAMANHO_MINIMO)
-    seed = perguntar_inteiro("Semente aleatória (opcional, pressione Enter para aleatório): ", opcional=True)
+    tamanho = perguntar_inteiro("Tamanho do mundo (ex: 4): ", minimo=TAMANHO_MINIMO)
+    semente = perguntar_inteiro("Semente aleatória (opcional, pressione Enter para aleatório): ", opcional=True)
 
-    mundo = World(size=size, seed=seed)
-    mundo_inicial = mundo.clone()  # a janela refaz a partida a partir deste estado
+    mundo = Mundo(tamanho=tamanho, semente=semente)
+    mundo_inicial = mundo.clonar()  # a janela refaz a partida a partir deste estado
     agente = AGENTES_DISPONIVEIS[agente_nome](mundo)
 
-    print(f"\nExecutando agente '{agente_nome}' no mundo {size}x{size}...\n")
-    resultado = agente.run()
+    print(f"\nExecutando agente '{agente_nome}' no mundo {tamanho}x{tamanho}...\n")
+    resultado = agente.executar()
     if perguntar_sim_ou_nao("\nVer a partida numa janela? (s/N): "):
         mostrar_partida(mundo_inicial, resultado["historico"])
 
 
-def carregar_benchmark(path):
+def carregar_benchmark(caminho):
     """Importa dinamicamente um módulo de benchmark pelo caminho."""
-    spec = importlib.util.spec_from_file_location("benchmark_mod", path)
-    benchmark_mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(benchmark_mod)
-    return benchmark_mod.executar_benchmark
+    especificacao = importlib.util.spec_from_file_location("modulo_benchmark", caminho)
+    modulo_benchmark = importlib.util.module_from_spec(especificacao)
+    especificacao.loader.exec_module(modulo_benchmark)
+    return modulo_benchmark.executar_benchmark
 
 
 def formatar_tempo(segundos):
@@ -103,7 +103,7 @@ def formatar_tempo(segundos):
         return f"{segundos:.2f}s"
 
 
-def salvar_resultados(resultados, output_dir):
+def salvar_resultados(resultados, pasta_saida):
     """
     Salva o resumo dos benchmarks em resultados_benchmark.csv, só com colunas escalares.
     Os dados extras (arrays do AG) vão para dados_extra_<agente>_<N>x<N>.npz, um arquivo por
@@ -115,13 +115,13 @@ def salvar_resultados(resultados, output_dir):
         dados_extra = r.get("dados_extra")
         if dados_extra:
             nome = f"dados_extra_{r['agente']}_{r['tamanho_mundo']}x{r['tamanho_mundo']}.npz"
-            with _gravacao_atomica(os.path.join(output_dir, nome), "wb") as f:
+            with _gravacao_atomica(os.path.join(pasta_saida, nome), "wb") as f:
                 np.savez_compressed(f, **{chave: np.asarray(valor) for chave, valor in dados_extra.items()})
     df = pd.DataFrame([{k: v for k, v in r.items() if k != "dados_extra"} for r in validos])
-    csv_path = os.path.join(output_dir, "resultados_benchmark.csv")
-    with _gravacao_atomica(csv_path, "w", encoding="utf-8", newline="") as f:
+    caminho_csv = os.path.join(pasta_saida, "resultados_benchmark.csv")
+    with _gravacao_atomica(caminho_csv, "w", encoding="utf-8", newline="") as f:
         df.to_csv(f, index=False)
-    return df, csv_path
+    return df, caminho_csv
 
 
 @contextlib.contextmanager
@@ -147,24 +147,24 @@ def capturar_saida_terminal(caminho=None):
     stdout_original, stderr_original = sys.stdout, sys.stderr
     try:
 
-        class DualWriter:
+        class SaidaDupla:
             def __init__(self, terminal, buffer):
                 self.terminal = terminal
                 self.buffer = buffer
 
-            def write(self, text):
-                self.terminal.write(text)
-                self.buffer.write(text)
+            def write(self, texto):
+                self.terminal.write(texto)
+                self.buffer.write(texto)
                 if arquivo:
-                    arquivo.write(text)
+                    arquivo.write(texto)
                     arquivo.flush()
 
             def flush(self):
                 self.terminal.flush()
                 self.buffer.flush()
 
-        sys.stdout = DualWriter(stdout_original, buffer)
-        sys.stderr = DualWriter(stderr_original, buffer)
+        sys.stdout = SaidaDupla(stdout_original, buffer)
+        sys.stderr = SaidaDupla(stderr_original, buffer)
         yield buffer
     except BaseException:  # inclui Ctrl+C; o erro continua subindo normalmente depois de registrado
         if arquivo:
@@ -220,13 +220,13 @@ def arquivo_existente(caminho):
     return caminho
 
 
-# Parâmetros do GeneticAgent que podem ser passados pela linha de comando (#13)
+# Parâmetros do AgenteGenetico que podem ser passados pela linha de comando (#13)
 PARAMETROS_AG_CLI = {
-    "populacao": ("population_size", inteiro_minimo(1), "Tamanho da população do AG"),
-    "geracoes": ("gens", inteiro_minimo(0), "Número de gerações do AG"),
-    "cromossomo": ("chrom_length", inteiro_minimo(1), "Tamanho do cromossomo (ações por indivíduo)"),
-    "mutacao": ("mutation_rate", taxa, "Taxa de mutação do AG (0 a 1)"),
-    "cruzamento": ("crossover_rate", taxa, "Taxa de cruzamento do AG (0 a 1)"),
+    "populacao": ("tamanho_populacao", inteiro_minimo(1), "Tamanho da população do AG"),
+    "geracoes": ("geracoes", inteiro_minimo(0), "Número de gerações do AG"),
+    "cromossomo": ("tamanho_cromossomo", inteiro_minimo(1), "Tamanho do cromossomo (ações por indivíduo)"),
+    "mutacao": ("taxa_mutacao", taxa, "Taxa de mutação do AG (0 a 1)"),
+    "cruzamento": ("taxa_cruzamento", taxa, "Taxa de cruzamento do AG (0 a 1)"),
     "proximidade": (
         "proximidade",
         peso,
@@ -262,7 +262,7 @@ def _opcoes_basicas(parser):
 
 def _opcoes_dos_agentes(parser):
     """Parâmetros do agente genético e orçamento da busca aleatória."""
-    grupo_ag = parser.add_argument_group("agente genético", "Sem estas opções, valem os padrões do GeneticAgent.")
+    grupo_ag = parser.add_argument_group("agente genético", "Sem estas opções, valem os padrões do AgenteGenetico.")
     for opcao, (_, tipo, ajuda) in PARAMETROS_AG_CLI.items():
         grupo_ag.add_argument(f"--{opcao}", type=tipo, default=None, help=ajuda)
     parser.add_argument(
@@ -306,7 +306,7 @@ def separar_argumentos(linha, windows=os.name == "nt"):
 
 
 def parametros_do_ag(args):
-    """Parâmetros do GeneticAgent informados na linha de comando (só os que foram passados)."""
+    """Parâmetros do AgenteGenetico informados na linha de comando (só os que foram passados)."""
     return {
         nome: getattr(args, opcao)
         for opcao, (nome, _, _) in PARAMETROS_AG_CLI.items()
@@ -319,14 +319,14 @@ def main():
 
     if escolha == "1":
         # Benchmark padrão: usa sys.argv[1:] (argumentos do terminal)
-        cli_args = sys.argv[1:]
+        argumentos_cli = sys.argv[1:]
     elif escolha == "5":
         print(
             "\nDigite a linha de comando desejada (exemplo: --agentes logico genetico --tamanhos 4 6 --execucoes 10 "
             "--populacao 50 --geracoes 100 --benchmark outro_benchmark.py):"
         )
         linha = input("main.py ").strip()
-        cli_args = separar_argumentos(linha)
+        argumentos_cli = separar_argumentos(linha)
     elif escolha == "2":
         execucao_unica("manual")
         return
@@ -341,15 +341,15 @@ def main():
         return
 
     # Só chega aqui se for benchmark (1 ou 5)
-    rodar_benchmark(cli_args)
+    rodar_benchmark(argumentos_cli)
 
 
 def _parametros_da_busca(args, sobrescritos_ag):
     """A busca aleatória usa o mesmo cromossomo e o mesmo orçamento do AG, para a comparação ser justa (#31)."""
-    efetivos_ag = parametros_efetivos(GeneticAgent, sobrescritos_ag)
+    efetivos_ag = parametros_efetivos(AgenteGenetico, sobrescritos_ag)
     return {
-        "chrom_length": efetivos_ag["chrom_length"],
-        "avaliacoes": args.avaliacoes or efetivos_ag["population_size"] * efetivos_ag["gens"],
+        "tamanho_cromossomo": efetivos_ag["tamanho_cromossomo"],
+        "avaliacoes": args.avaliacoes or efetivos_ag["tamanho_populacao"] * efetivos_ag["geracoes"],
     }
 
 
@@ -366,103 +366,103 @@ def _funcao_de_benchmark(args, sobrescritos_ag, parametros_busca):
 
 def _criar_pasta_do_run(args):
     """Cria a pasta do run: a indicada em --saida ou logs/run_AAAAMMDD_HHMMSS."""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = args.saida or os.path.join("logs", f"run_{timestamp}")
-    os.makedirs(output_dir, exist_ok=True)
-    return output_dir
+    data_hora = datetime.now().strftime("%Y%m%d_%H%M%S")
+    pasta_saida = args.saida or os.path.join("logs", f"run_{data_hora}")
+    os.makedirs(pasta_saida, exist_ok=True)
+    return pasta_saida
 
 
-def _gravar_metadados(cli_args, args, sobrescritos_ag, parametros_busca, output_dir):
+def _gravar_metadados(argumentos_cli, args, sobrescritos_ag, parametros_busca, pasta_saida):
     """Grava o metadados.json antes de rodar: se algo falhar, o registro do que foi pedido continua lá."""
     parametros_ag = None
     if "genetico" in args.agentes:
-        parametros_ag = parametros_efetivos(GeneticAgent, sobrescritos_ag)
-        parametros_ag.pop("seed", None)  # a semente segue a regra descrita em metadados["sementes"]
-    metadados = coletar_metadados(cli_args, vars(args), parametros_ag)
+        parametros_ag = parametros_efetivos(AgenteGenetico, sobrescritos_ag)
+        parametros_ag.pop("semente", None)  # a semente segue a regra descrita em metadados["sementes"]
+    metadados = coletar_metadados(argumentos_cli, vars(args), parametros_ag)
     if "aleatorio" in args.agentes:
         metadados["parametros_busca_aleatoria"] = parametros_busca
-    salvar_metadados(output_dir, metadados)
+    salvar_metadados(pasta_saida, metadados)
 
 
-def _graficos_avancados_da_combinacao(dados_extra, nome_agente, size, output_dir):
+def _graficos_avancados_da_combinacao(dados_extra, nome_agente, tamanho, pasta_saida):
     """Gera os gráficos avançados de uma combinação numa subpasta própria e informa o que saiu."""
-    advanced_output_dir = os.path.join(output_dir, f"graficos_avancados_{nome_agente}_{size}x{size}")
-    os.makedirs(advanced_output_dir, exist_ok=True)
-    relatorio = gerar_graficos_avancados(dados_extra, advanced_output_dir)
+    pasta_avancados = os.path.join(pasta_saida, f"graficos_avancados_{nome_agente}_{tamanho}x{tamanho}")
+    os.makedirs(pasta_avancados, exist_ok=True)
+    relatorio = gerar_graficos_avancados(dados_extra, pasta_avancados)
     print(
-        f"📊 Gráficos avançados para '{nome_agente}' ({size}x{size}): "
-        f"{len(relatorio['gerados'])} salvos em {advanced_output_dir}"
+        f"📊 Gráficos avançados para '{nome_agente}' ({tamanho}x{tamanho}): "
+        f"{len(relatorio['gerados'])} salvos em {pasta_avancados}"
     )
     if relatorio["falhas"]:
         print(f"⚠️ Gráficos que falharam: {', '.join(relatorio['falhas'])}")
 
 
-def _rodar_combinacao(executar_benchmark, nome_agente, size, execucoes, resultados, output_dir):
+def _rodar_combinacao(executar_benchmark, nome_agente, tamanho, execucoes, resultados, pasta_saida):
     """
     Roda um agente num tamanho de mundo e grava o resultado na hora.
     Pastas, arquivos e gravação parcial desta etapa são garantidos por tests/test_main_etapas.py.
     """
-    print(f"\n🚀 Iniciando benchmark: Agente = '{nome_agente}' | Mundo = {size}x{size}")
-    resultado = executar_benchmark(nome_agente, size, execucoes)
+    print(f"\n🚀 Iniciando benchmark: Agente = '{nome_agente}' | Mundo = {tamanho}x{tamanho}")
+    resultado = executar_benchmark(nome_agente, tamanho, execucoes)
     resultados.append(resultado)
     # Grava a cada etapa: uma queda perde no máximo a etapa em andamento
-    salvar_resultados(resultados, output_dir)
+    salvar_resultados(resultados, pasta_saida)
     if not isinstance(resultado, dict):  # benchmark externo (--benchmark) sem o contrato
-        print(f"⚠️ Resultado nulo para agente '{nome_agente}' no mundo {size}x{size}")
+        print(f"⚠️ Resultado nulo para agente '{nome_agente}' no mundo {tamanho}x{tamanho}")
     elif resultado.get("dados_extra"):  # vale para qualquer agente que devolva dados extras
-        _graficos_avancados_da_combinacao(resultado["dados_extra"], nome_agente, size, output_dir)
-    print(f"✅ Benchmark finalizado: '{nome_agente}' no mundo {size}x{size}")
+        _graficos_avancados_da_combinacao(resultado["dados_extra"], nome_agente, tamanho, pasta_saida)
+    print(f"✅ Benchmark finalizado: '{nome_agente}' no mundo {tamanho}x{tamanho}")
 
 
 def _mostrar_resumo(df_resultados):
     """Mostra no terminal as contagens, as porcentagens e os tempos de cada agente e tamanho."""
-    for _, row in df_resultados.iterrows():
-        agente = row["agente"]
-        tamanho = row["tamanho_mundo"]
-        erros = row.get("erros", 0)  # benchmarks de terceiros podem não ter a coluna
-        total = row["vitorias"] + row["mortes"] + row["sobreviveu"] + erros
+    for _, linha in df_resultados.iterrows():
+        agente = linha["agente"]
+        tamanho = linha["tamanho_mundo"]
+        erros = linha.get("erros", 0)  # benchmarks de terceiros podem não ter a coluna
+        total = linha["vitorias"] + linha["mortes"] + linha["sobreviveu"] + erros
         print(f"\n📊 RESULTADOS - {agente.upper()} | Tamanho: {tamanho}x{tamanho}")
-        print(f"🏆 Vitórias: {row['vitorias']} ({(row['vitorias'] / total) * 100:.1f}%)")
-        print(f"☠️ Mortes: {row['mortes']} ({(row['mortes'] / total) * 100:.1f}%)")
-        print(f"🤔 Sobreviveu sem vencer: {row['sobreviveu']} ({(row['sobreviveu'] / total) * 100:.1f}%)")
+        print(f"🏆 Vitórias: {linha['vitorias']} ({(linha['vitorias'] / total) * 100:.1f}%)")
+        print(f"☠️ Mortes: {linha['mortes']} ({(linha['mortes'] / total) * 100:.1f}%)")
+        print(f"🤔 Sobreviveu sem vencer: {linha['sobreviveu']} ({(linha['sobreviveu'] / total) * 100:.1f}%)")
         if erros:
             print(f"❌ Erros: {erros} ({(erros / total) * 100:.1f}%), detalhes em saida_terminal.txt")
         print(
-            f"⏱️ Tempo total: {formatar_tempo(row['tempo_total'])} | Tempo médio: {formatar_tempo(row['tempo_medio'])}"
+            f"⏱️ Tempo total: {formatar_tempo(linha['tempo_total'])} | Tempo médio: {formatar_tempo(linha['tempo_medio'])}"
         )
 
 
-def rodar_benchmark(cli_args):
+def rodar_benchmark(argumentos_cli):
     """
-    Executa os benchmarks descritos por cli_args e grava tudo na pasta do run, incluindo
+    Executa os benchmarks descritos por argumentos_cli e grava tudo na pasta do run, incluindo
     metadados.json (Fase 4 do plano, #17). Usado pelo main() e pelo reproduzir.py.
     :return: (pasta de saída, DataFrame do resumo)
     """
-    args = criar_parser().parse_args(cli_args)
+    args = criar_parser().parse_args(argumentos_cli)
     sobrescritos_ag = parametros_do_ag(args)
     parametros_busca = _parametros_da_busca(args, sobrescritos_ag)
     executar_benchmark = _funcao_de_benchmark(args, sobrescritos_ag, parametros_busca)
-    output_dir = _criar_pasta_do_run(args)
-    _gravar_metadados(cli_args, args, sobrescritos_ag, parametros_busca, output_dir)
+    pasta_saida = _criar_pasta_do_run(args)
+    _gravar_metadados(argumentos_cli, args, sobrescritos_ag, parametros_busca, pasta_saida)
 
     resultados = []
-    caminho_saida_terminal = os.path.join(output_dir, "saida_terminal.txt")
+    caminho_saida_terminal = os.path.join(pasta_saida, "saida_terminal.txt")
     with capturar_saida_terminal(caminho_saida_terminal):
-        print(f"🚀 Iniciando benchmark em: {output_dir}")
+        print(f"🚀 Iniciando benchmark em: {pasta_saida}")
         print(f"📊 Configuração: {args.execucoes} execuções, tamanhos {args.tamanhos}, agentes {args.agentes}\n")
-        for size in args.tamanhos:
+        for tamanho in args.tamanhos:
             for nome_agente in args.agentes:
-                _rodar_combinacao(executar_benchmark, nome_agente, size, args.execucoes, resultados, output_dir)
+                _rodar_combinacao(executar_benchmark, nome_agente, tamanho, args.execucoes, resultados, pasta_saida)
 
-        df_resultados, csv_path = salvar_resultados(resultados, output_dir)
-        gerar_graficos(df_resultados, output_dir)
-        print(f"\n📊 Resultados salvos em: {csv_path}")
-        print(f"📈 Gráficos básicos salvos em: {output_dir}")
+        df_resultados, caminho_csv = salvar_resultados(resultados, pasta_saida)
+        gerar_graficos(df_resultados, pasta_saida)
+        print(f"\n📊 Resultados salvos em: {caminho_csv}")
+        print(f"📈 Gráficos básicos salvos em: {pasta_saida}")
         _mostrar_resumo(df_resultados)
 
     print(f"\n💾 Saída do terminal salva em: {caminho_saida_terminal}")
-    print(f"🧾 Metadados da execução em: {os.path.join(output_dir, 'metadados.json')}")
-    return output_dir, df_resultados
+    print(f"🧾 Metadados da execução em: {os.path.join(pasta_saida, 'metadados.json')}")
+    return pasta_saida, df_resultados
 
 
 if __name__ == "__main__":

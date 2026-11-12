@@ -28,7 +28,7 @@ FEDOR = "FEDOR"  # o Wumpus vivo está numa casa vizinha
 BRISA = "BRISA"  # há um poço numa casa vizinha
 BRILHO = "BRILHO"  # o ouro está na casa do agente
 
-# Status devolvido por World.step
+# Status devolvido por Mundo.agir
 OK = "OK"
 MORTO = "MORTO"
 GANHOU = "GANHOU"

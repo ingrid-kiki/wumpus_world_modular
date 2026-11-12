@@ -10,7 +10,7 @@
 import benchmark
 import main
 
-AG_RAPIDO = {"genetico": {"population_size": 10, "gens": 4, "chrom_length": 12}}
+AG_RAPIDO = {"genetico": {"tamanho_populacao": 10, "geracoes": 4, "tamanho_cromossomo": 12}}
 CONTAGENS = ("vitorias", "mortes", "sobreviveu", "erros")
 
 

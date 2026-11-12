@@ -10,19 +10,19 @@ import builtins
 import pytest
 
 import main
-from world.world import World
+from world.world import Mundo
 
 
 @pytest.mark.parametrize("tamanho", [1, 0, -3])
 def test_mundo_rejeita_tamanho_invalido(tamanho):
-    """Antes, tamanho 1 entrava em loop infinito em random_pos()."""
+    """Antes, tamanho 1 entrava em loop infinito em posicao_aleatoria()."""
     with pytest.raises(ValueError, match="tamanho 2 ou maior"):
-        World(size=tamanho, seed=0)
+        Mundo(tamanho=tamanho, semente=0)
 
 
 def test_menor_mundo_valido_funciona():
-    w = World(size=2, seed=0)
-    assert {w.agent_pos, w.gold_pos, w.wumpus_pos, *w.pits} == {(0, 0), (0, 1), (1, 0), (1, 1)}
+    w = Mundo(tamanho=2, semente=0)
+    assert {w.posicao_agente, w.posicao_ouro, w.posicao_wumpus, *w.pocos} == {(0, 0), (0, 1), (1, 0), (1, 1)}
 
 
 @pytest.mark.parametrize(
@@ -72,11 +72,11 @@ def test_opcoes_validas_nos_limites():
     )
     assert args.execucoes == 1 and args.tamanhos == [2]
     assert main.parametros_do_ag(args) == {
-        "population_size": 1,
-        "gens": 0,
-        "chrom_length": 1,
-        "mutation_rate": 0.0,
-        "crossover_rate": 1.0,
+        "tamanho_populacao": 1,
+        "geracoes": 0,
+        "tamanho_cromossomo": 1,
+        "taxa_mutacao": 0.0,
+        "taxa_cruzamento": 1.0,
     }
 
 
