@@ -52,11 +52,7 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │   └── run_YYYYMMDD_HHMMSS/   # Subpastas por execução, com CSVs, PNGs e logs
 │      └── advanced_charts_agent_size/   # Resultados dos gráficos avançados
 │
-├── benchmark.py               # Benchmark padrão (4x4)
-├── benchmark_custom.py        # Benchmark customizável via argumentos
-├── benchmark_fast.py          # Benchmark paralelo, organizado por pastas
-├── benchmark_graficos.py      # Benchmark com geração automática de gráficos
-├── benchmark_sideB.py         # Benchmark alternativo para comparação
+├── benchmark.py               # Benchmark único, usado pelo main.py (sequencial ou --paralelo)
 ├── main.py                    # Script principal para execução
 ├── reproduzir.py              # Refaz um run a partir do metadata.json e compara
 ├── CHANGELOG.md               # Histórico de versões
@@ -267,35 +263,26 @@ A janela gráfica mostra:
 
 Compare o desempenho dos agentes de forma automatizada, com resultados organizados em subpastas de `/logs` e geração de gráficos básicos e avançados.
 
-### Benchmark Padrão
-Executa 3 rodadas em 4x4 para os agentes lógico e genético:
+### Pelo `main.py` (recomendado)
+Escolha a opção 1 do menu, passando as opções na linha de comando, ou use a opção 5 e digite as opções:
+```bash
+python main.py --execucoes 30 --sizes 4 6 8 --agentes logico logico_seguro genetico --paralelo
+```
+
+- `--paralelo` roda as execuções em processos paralelos. Compensa em runs longos: o benchmark padrão levou 102 s em
+  paralelo e 258 s em sequência. Em runs curtos, iniciar os processos custa alguns segundos a mais.
+- `--silencioso` esconde as mensagens de cada execução e de cada passo dos agentes.
+- Os resultados são os mesmos nos dois modos.
+
+### Teste rápido
+Executa 3 rodadas em 4x4 de cada agente automático e mostra só o resumo:
 ```bash
 python benchmark.py
 ```
 
-### Benchmark Customizado
-Permite definir número de execuções, tamanhos de mundo e agentes:
-```bash
-python benchmark_custom.py --execucoes 30 --sizes 4 6 8 --agentes logico genetico
-```
-
-### Benchmark Alternativo
-Executa benchmarks em diferentes tamanhos de mundo (4x4, 6x6, 8x8):
-```bash
-python benchmark_sideB.py 
-```
-
-### Benchmark com Gráficos
-Gera relatórios em CSV e gráficos automáticos (barras, tempo médio, etc):
-```bash
-python benchmark_graficos.py --execucoes 20 --sizes 4 6 8 --agentes logico genetico
-```
-
-### Benchmark Paralelo e Avançado
-Executa benchmarks em paralelo, salva resultados e gráficos em subpastas organizadas por execução, e gera gráficos avançados:
-```bash
-python benchmark_fast.py --execucoes 20 --sizes 4 6 8 --agentes logico genetico
-```
+Até a v1.8.0 havia mais quatro arquivos de benchmark (`benchmark_custom.py`, `benchmark_fast.py`, `benchmark_graficos.py` e
+`benchmark_sideB.py`). Eles davam os mesmos resultados e foram trocados pelas opções acima; a justificativa está em
+[`docs/analise-benchmarks-2026-11.md`](docs/analise-benchmarks-2026-11.md).
 
 Os gráficos e resultados serão salvos como arquivos PNG e CSV em subpastas dentro de `/logs/run_YYYYMMDD_HHMMSS/`.
 

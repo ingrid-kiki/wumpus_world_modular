@@ -248,6 +248,16 @@ def criar_parser():
         default=None,
         help="Orçamento da busca aleatória (padrão: população x gerações do AG)",
     )
+    parser.add_argument(
+        "--paralelo",
+        action="store_true",
+        help="Roda as execuções em processos paralelos; compensa em runs longos",
+    )
+    parser.add_argument(
+        "--silencioso",
+        action="store_true",
+        help="Esconde as mensagens de cada execução e de cada passo dos agentes",
+    )
     parser.add_argument("--saida", type=str, default=None, help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
     return parser
 
@@ -315,9 +325,12 @@ def rodar_benchmark(cli_args):
     }
 
     # Carrega o benchmark escolhido pelo usuário; os parâmetros por agente vão junto em toda chamada
+    # --paralelo e --silencioso só são repassados quando usados: um benchmark externo sem essas opções continua funcionando
+    modos = {opcao: True for opcao in ("paralelo", "silencioso") if getattr(args, opcao)}
     executar_benchmark = functools.partial(
         carregar_benchmark(args.benchmark),
         parametros_agentes={"genetico": sobrescritos_ag, "aleatorio": parametros_busca},
+        **modos,
     )
 
     # === Criação do diretório de saída ===

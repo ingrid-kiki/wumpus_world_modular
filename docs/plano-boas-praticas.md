@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a C concluídas, próxima: PR D, benchmark único), com a comparação final da tese depois dela.
+**Status em 11/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a D concluídas, próxima: PR E, funções longas), com a comparação final da tese depois dela.
 
 ## Objetivo
 
@@ -147,7 +147,7 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
 | A | 3.1 Constantes únicas para ações, percepções e status, e nomes para os números soltos | 1,5 a 2 h | Concluída (#72) |
 | B | 3.2 Classe base de agente, formato único de retorno, com as posições no histórico, e lista única de agentes | 2 a 3 h | Concluída (#73) |
 | C | 3.3 Retirar o `Logger`, o parâmetro `logger` e os arquivos `.log` | 1 h | Concluída (#74) |
-| D | 3.4 Um benchmark único, com `--paralelo`; `tempo_total` passa a ser o tempo de relógio também no paralelo | 2 a 3 h | A fazer |
+| D | 3.4 Um benchmark único, com `--paralelo`; `tempo_total` passa a ser o tempo de relógio também no paralelo | 2 a 3 h | Concluída (#76) |
 | E | 3.5 Dividir as 12 funções com mais de 40 linhas e retirar as exceções de complexidade | 2,5 a 3,5 h | A fazer |
 | F | 3.6 Ligar o `Visualizer` ao `--vis` | 2 a 3 h | A fazer |
 | G | 3.7 Nomes em português, saídas sem acento e a regra que confere isso | 2 a 3 h | A fazer |
@@ -159,7 +159,7 @@ A ordem segue as dependências: a classe base usa as constantes, o benchmark ún
 longas vêm depois do benchmark único. Os nomes ficam para o fim, para não criar conflitos com as outras PRs. Em cada PR, o teste de
 referência e os números do `logico_seguro` garantem resultados idênticos, e os diagramas e a lista de testes acompanham o código.
 
-Restam 7 PRs (D a J), com cerca de 12 a 17 h previstas.
+Restam 6 PRs (E a J), com cerca de 10 a 14 h previstas.
 
 **Meta:** nenhuma função acima de 40 linhas, nenhuma com complexidade acima de 10, nenhuma lista repetida. Lançamento: v2.0.0.
 
@@ -179,7 +179,7 @@ Vem depois da Etapa 3, para não comentar código que vai mudar. Código limpo e
 | Etapa | Observado | Melhoria proposta |
 |---|---|---|
 | Gráfico de violino | 35 de 39 s dos gráficos avançados | Amostrar as gerações, ou deixar opcional |
-| Benchmark padrão | Até 12 min, em um processo só | Rodar em paralelo no fluxo principal (`benchmark_fast` já faz isso) |
+| Benchmark padrão | Até 12 min, em um processo só | Rodar em paralelo no fluxo principal (feito na #76: opção `--paralelo`) |
 | Experimentos longos | Nenhum sinal de progresso | Barra de progresso com tempo restante |
 | Saída no terminal | Cada passo de cada execução é impresso | Modo resumido como padrão nos benchmarks |
 | Gráficos | Sempre gerados | Opção `--sem-graficos` para experimentos |
@@ -227,7 +227,8 @@ parênteses é a da tabela de tarefas da etapa. "Plano", "Versão" e "Geral" sã
 | [#72](https://github.com/ingrid-kiki/wumpus_world_modular/pull/72) | 2026-11-12 | 3 (A) | Ações, percepções e status em `world/constantes.py` |
 | [#73](https://github.com/ingrid-kiki/wumpus_world_modular/pull/73) | 2026-11-12 | 3 (B) | Classe base `Agente` e lista única de agentes |
 | [#74](https://github.com/ingrid-kiki/wumpus_world_modular/pull/74) | 2026-11-12 | 3 (C) | Retira o `Logger` e os arquivos `.log` |
-| [#75](https://github.com/ingrid-kiki/wumpus_world_modular/pull/75) | em revisão | Plano | Andamento da Etapa 3 e esta tabela |
+| [#75](https://github.com/ingrid-kiki/wumpus_world_modular/pull/75) | 2026-11-12 | Plano | Andamento da Etapa 3 e esta tabela |
+| [#76](https://github.com/ingrid-kiki/wumpus_world_modular/pull/76) | em revisão | 3 (D) | Benchmark único, com `--paralelo` e `--silencioso` |
 
 Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 
@@ -238,10 +239,10 @@ Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
 | 2. Documentação e diagramas | Concluída | Baixo | Etapa 0 |
-| 3. Código limpo | Restam cerca de 12 a 17 h | **Médio** | Etapa 1 |
+| 3. Código limpo | Restam cerca de 10 a 14 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Restante** | **cerca de 21 a 32 h** | | |
+| **Restante** | **cerca de 19 a 29 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 

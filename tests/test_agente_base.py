@@ -12,10 +12,6 @@ import io
 import pytest
 
 import benchmark
-import benchmark_custom
-import benchmark_fast
-import benchmark_graficos
-import benchmark_sideB
 import main
 from agents.agente import Agente
 from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
@@ -81,5 +77,5 @@ def test_executar_sequencia_para_no_fim_do_jogo():
 
 
 def test_main_e_benchmarks_usam_a_mesma_lista():
-    for modulo in (main, benchmark, benchmark_custom, benchmark_fast, benchmark_graficos, benchmark_sideB):
+    for modulo in (main, benchmark):
         assert modulo.AGENTES_DISPONIVEIS is AGENTES_DISPONIVEIS

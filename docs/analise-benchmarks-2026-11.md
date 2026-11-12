@@ -89,11 +89,15 @@ para cerca de 150 linhas; esse valor só será conhecido depois da mudança.
 
 ## 7. Decisão
 
-Em aberto. A recomendação é a opção 1, ou a 2 se alguém da equipe usar os comandos diretos no dia a dia.
+**Decidido em 11/11/2026:** opção 1. Implementada na PR D da Etapa 3
+([#76](https://github.com/ingrid-kiki/wumpus_world_modular/pull/76)): o `benchmark.py` ganhou os modos `paralelo` e
+`silencioso`, o `main.py` ganhou as opções `--paralelo` e `--silencioso`, e os outros quatro arquivos saíram. O código de
+benchmark passou de 627 para 100 linhas. `tempo_total` passou a ser o tempo de relógio nos dois modos.
 
 ## 8. Como repetir as medições
 
 As duas medições usaram os scripts abaixo, salvos fora do projeto e executados a partir da raiz do repositório, no commit `d76b95e`.
+Eles importam os quatro arquivos que saíram na #76, então só rodam a partir desse commit ou da tag `v1.8.0`.
 
 <details>
 <summary>Comparação dos resultados nos cinco arquivos (seção 3)</summary>

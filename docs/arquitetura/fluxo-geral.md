@@ -50,8 +50,8 @@ flowchart TD
   em andamento.
 - Se `agente.run()` lançar um erro durante o benchmark, `executar_uma` o registra na coluna `erros` e o benchmark continua
   na execução seguinte.
-- `carregar_benchmark` usa `benchmark.py` por padrão. A opção `--benchmark` escolhe outro arquivo, como
-  `benchmark_fast.py`, `benchmark_custom.py`, `benchmark_graficos.py` ou `benchmark_sideB.py`.
+- `carregar_benchmark` usa `benchmark.py` por padrão. A opção `--benchmark` aceita outro arquivo com a mesma função
+  `executar_benchmark`. As opções `--paralelo` e `--silencioso` só são repassadas quando usadas.
 - `reproduzir.py` chama o mesmo `rodar_benchmark` com os argumentos guardados no `metadata.json`, e depois compara os
   resultados com os originais.
 - `experimentos/comparar_metodos.py` não passa por este fluxo: tem linha de comando própria e grava em

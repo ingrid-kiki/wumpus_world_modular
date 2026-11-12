@@ -152,7 +152,9 @@ python main.py --agentes logico --sizes 4 --execucoes 3
 | `--execucoes N` | 32 | Execuções por agente e tamanho |
 | `--sizes A B ...` | 4 6 8 | Tamanhos do mundo (mínimo 2) |
 | `--agentes A B ...` | logico genetico | `logico`, `logico_seguro` (lógico que evita poços), `genetico`, `aleatorio` (busca aleatória, a referência do genético) |
-| `--benchmark ARQUIVO` | benchmark.py | Qual dos 5 arquivos de benchmark usar; `benchmark_fast.py` roda em paralelo |
+| `--paralelo` | desligado | Roda as execuções em processos paralelos; compensa em runs longos |
+| `--silencioso` | desligado | Esconde as mensagens de cada execução e de cada passo dos agentes |
+| `--benchmark ARQUIVO` | benchmark.py | Outro arquivo de benchmark, com a mesma função `executar_benchmark` |
 | `--saida PASTA` | `logs/run_AAAAMMDD_HHMMSS` | Pasta dos resultados |
 | `--populacao N` | 100 | Tamanho da população do genético |
 | `--geracoes N` | 500 | Número de gerações |
@@ -263,20 +265,17 @@ Tempos, memória e CPU variam a cada rodada e não são comparados. Execuções 
 
 ---
 
-## 8. Benchmarks avulsos
+## 8. Benchmark avulso
 
-Os arquivos de benchmark também rodam sozinhos, **mas o `main.py` é o caminho recomendado**: só ele grava o
-`metadata.json` e aceita os parâmetros do genético. Rodados sozinhos, eles usam os padrões do genético.
+O `benchmark.py` também roda sozinho, **mas o `main.py` é o caminho recomendado**: só ele grava o `metadata.json`, os gráficos
+e aceita os parâmetros do genético.
 
 | Comando | Opções | O que gera |
 |---|---|---|
-| `python benchmark.py` | Nenhuma (argumentos são ignorados): 3 execuções em 4x4, lógico e genético | Só resumo na tela |
-| `python benchmark_custom.py` | `--execucoes`, `--sizes`, `--agentes`, `--silent` | Só resumo na tela |
-| `python benchmark_sideB.py` | Nenhuma: 10 execuções em 4x4, 6x6 e 8x8 | Só resumo na tela |
-| `python benchmark_graficos.py` | `--execucoes`, `--sizes`, `--agentes`, `--saida` | CSV e gráficos em `logs/run_.../` |
-| `python benchmark_fast.py` | `--execucoes`, `--sizes`, `--agentes` | Roda em paralelo; CSV e gráficos em `logs/run_.../` |
+| `python benchmark.py` | Nenhuma (argumentos são ignorados): 3 execuções em 4x4 de cada agente automático | Só resumo na tela |
 
-Os cinco dão os mesmos números para os mesmos parâmetros.
+Os antigos `benchmark_custom.py`, `benchmark_fast.py`, `benchmark_graficos.py` e `benchmark_sideB.py` saíram na v2.0.0: davam os
+mesmos resultados, e o que tinham de próprio virou as opções `--paralelo` e `--silencioso` do `main.py`.
 
 ---
 

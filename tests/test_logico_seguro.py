@@ -13,10 +13,6 @@ import pandas as pd
 import pytest
 
 import benchmark
-import benchmark_custom
-import benchmark_fast
-import benchmark_graficos
-import benchmark_sideB
 import main
 from agents.logico_seguro import AgenteLogicoSeguro, BaseConhecimentoSegura
 from world.world import World
@@ -129,9 +125,7 @@ def test_nunca_morre_pelo_wumpus():
 # ---------------------------------------------------------------- Registro no programa
 
 
-@pytest.mark.parametrize(
-    "modulo", [main, benchmark, benchmark_custom, benchmark_fast, benchmark_graficos, benchmark_sideB]
-)
+@pytest.mark.parametrize("modulo", [main, benchmark])
 def test_registrado_no_programa_e_nos_benchmarks(modulo):
     assert modulo.AGENTES_DISPONIVEIS["logico_seguro"] is AgenteLogicoSeguro
 

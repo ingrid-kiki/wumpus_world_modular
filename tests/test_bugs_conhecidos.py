@@ -18,10 +18,6 @@ import numpy as np
 import pytest
 
 import benchmark
-import benchmark_custom
-import benchmark_fast
-import benchmark_graficos
-import benchmark_sideB
 import main
 from agents.genetic_agent import GeneticAgent
 from agents.logic_agent import LogicAgent
@@ -226,7 +222,8 @@ CHAVES_RESULTADO = {
     "dados_extra",
 }
 
-BENCHMARKS = [benchmark, benchmark_custom, benchmark_sideB, benchmark_fast, benchmark_graficos]
+# O benchmark único tem dois modos; antes eram cinco arquivos com o mesmo contrato
+MODOS = {"sequencial": False, "paralelo": True}
 
 
 def _paralelo_sequencial(n_jobs=None):
@@ -234,11 +231,10 @@ def _paralelo_sequencial(n_jobs=None):
     return lambda tarefas: [funcao(*args, **kwargs) for funcao, args, kwargs in tarefas]
 
 
-def _rodar(modulo, monkeypatch, agente_cls, execucoes):
-    monkeypatch.setitem(modulo.AGENTES_DISPONIVEIS, "falso", agente_cls)
-    if hasattr(modulo, "Parallel"):
-        monkeypatch.setattr(modulo, "Parallel", _paralelo_sequencial)
-    return modulo.executar_benchmark("falso", 4, execucoes)
+def _rodar(modo, monkeypatch, agente_cls, execucoes):
+    monkeypatch.setitem(benchmark.AGENTES_DISPONIVEIS, "falso", agente_cls)
+    monkeypatch.setattr(benchmark, "Parallel", _paralelo_sequencial)
+    return benchmark.executar_benchmark("falso", 4, execucoes, paralelo=MODOS[modo])
 
 
 class AgenteQueFalha(AgenteFalso):
@@ -250,28 +246,28 @@ class AgenteQueFalha(AgenteFalso):
         return super().run()
 
 
-@pytest.mark.parametrize("modulo", BENCHMARKS, ids=lambda m: m.__name__)
-def test_benchmarks_cumprem_o_contrato_do_main(modulo, monkeypatch):
+@pytest.mark.parametrize("modo", MODOS)
+def test_benchmarks_cumprem_o_contrato_do_main(modo, monkeypatch):
     """#24 (corrigido): os 5 benchmarks aceitam (agente, tamanho, execuções) e devolvem o mesmo dict."""
-    resultado = _rodar(modulo, monkeypatch, AgenteFalso, 2)
+    resultado = _rodar(modo, monkeypatch, AgenteFalso, 2)
     assert isinstance(resultado, dict) and set(resultado) >= CHAVES_RESULTADO
     assert resultado["vitórias"] + resultado["mortes"] + resultado["sobreviveu"] == 2
     assert resultado["erros"] == 0
     assert resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
 
 
-@pytest.mark.parametrize("modulo", BENCHMARKS, ids=lambda m: m.__name__)
-def test_erro_nao_vira_resultado_nem_derruba_o_benchmark(modulo, monkeypatch, capsys):
+@pytest.mark.parametrize("modo", MODOS)
+def test_erro_nao_vira_resultado_nem_derruba_o_benchmark(modo, monkeypatch, capsys):
     """#30: a execução que falha entra em 'erros'; as outras continuam e o traceback vai para o stderr."""
-    resultado = _rodar(modulo, monkeypatch, AgenteQueFalha, 3)
+    resultado = _rodar(modo, monkeypatch, AgenteQueFalha, 3)
     assert resultado["erros"] == 1
     assert resultado["vitórias"] + resultado["mortes"] + resultado["sobreviveu"] == 2
     assert resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
     assert "RuntimeError: falha de propósito" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("modulo", BENCHMARKS, ids=lambda m: m.__name__)
-def test_dados_extra_vem_da_primeira_execucao_sem_erro(modulo, monkeypatch):
+@pytest.mark.parametrize("modo", MODOS)
+def test_dados_extra_vem_da_primeira_execucao_sem_erro(modo, monkeypatch):
     """#30: se a primeira execução falha, os dados extras vêm da seguinte."""
 
     class FalhaNaPrimeira(AgenteFalso):
@@ -280,7 +276,7 @@ def test_dados_extra_vem_da_primeira_execucao_sem_erro(modulo, monkeypatch):
                 raise RuntimeError("falha de propósito")
             return super().run()
 
-    resultado = _rodar(modulo, monkeypatch, FalhaNaPrimeira, 2)
+    resultado = _rodar(modo, monkeypatch, FalhaNaPrimeira, 2)
     assert resultado["erros"] == 1 and resultado["dados_extra"] == {"fitness": [1.0, 2.0]}
 
 
@@ -320,9 +316,9 @@ def test_benchmark_py_sozinho_nao_roda_o_agente_manual():
     assert "EOF when reading a line" not in saida.stdout + saida.stderr
 
 
-def test_benchmark_fast_preserva_dados_extra():
+def test_simular_execucao_preserva_dados_extra():
     """#24 (corrigido)."""
-    execucao = benchmark_fast.simular_execucao(AgenteFalso, 4, 0)
+    execucao = benchmark.simular_execucao(AgenteFalso, 4, 0)
     assert execucao["dados_extra"].get("fitness") == [1.0, 2.0]
 
 
@@ -360,12 +356,12 @@ def test_csv_do_main_so_tem_colunas_escalares(tmp_path):
     assert not (tmp_path / "dados_extra_logico_4x4.npz").exists()
 
 
-def test_traceback_do_benchmark_fast_chega_ao_terminal_output(tmp_path, monkeypatch):
+def test_traceback_do_modo_paralelo_chega_ao_terminal_output(tmp_path, monkeypatch):
     """#40: com processos paralelos de verdade, o erro aparece uma vez no terminal_output.txt."""
-    monkeypatch.setitem(benchmark_fast.AGENTES_DISPONIVEIS, "falso", AgenteQueFalha)
+    monkeypatch.setitem(benchmark.AGENTES_DISPONIVEIS, "falso", AgenteQueFalha)
     caminho = tmp_path / "terminal_output.txt"
     with main.capturar_saida_terminal(str(caminho)):
-        resultado = benchmark_fast.executar_benchmark("falso", 4, 3)
+        resultado = benchmark.executar_benchmark("falso", 4, 3, paralelo=True)
     assert resultado["erros"] == 1
     log = caminho.read_text(encoding="utf-8")
     assert log.count("RuntimeError: falha de propósito") == 2  # a linha do resumo e a do traceback
