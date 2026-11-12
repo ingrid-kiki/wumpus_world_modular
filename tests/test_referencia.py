@@ -54,7 +54,7 @@ def test_referencia_cobre_o_que_promete(esperado):
     assert len(esperado["mundos"]) == tamanhos * len(referencia.SEMENTES)
     assert por_agente["logico"] == tamanhos * len(referencia.SEMENTES_LOGICO)
     assert por_agente["genetico"] == por_agente["aleatorio"] == tamanhos * len(referencia.SEMENTES)
-    assert set(Counter(e["status"] for e in esperado["execucoes"])) >= {"vitória", "morte"}
+    assert set(Counter(e["status"] for e in esperado["execucoes"])) >= {"vitoria", "morte"}
 
 
 def test_referencia_detecta_mudanca(atual, esperado):

@@ -24,7 +24,7 @@ ARGS_PEQUENOS = [
     "--agentes",
     "logico",
     "genetico",
-    "--sizes",
+    "--tamanhos",
     "4",
     "--execucoes",
     "3",
@@ -75,11 +75,11 @@ def test_benchmark_repassa_os_parametros_so_para_o_agente_certo(monkeypatch):
     assert recebidos["kwargs"] == [{"gens": 7}, {"gens": 7}]
 
 
-# ---------------------------------------------------------------- metadata.json
+# ---------------------------------------------------------------- metadados.json
 
 
 def test_run_grava_metadata_completo(run_pequeno):
-    meta = json.loads((run_pequeno / "metadata.json").read_text(encoding="utf-8"))
+    meta = json.loads((run_pequeno / "metadados.json").read_text(encoding="utf-8"))
     assert meta["versao"] == __version__
     assert set(meta["git"]) == {"commit", "branch", "alteracoes_nao_commitadas", "arquivos_alterados"}
     assert meta["argumentos_cli"][: len(ARGS_PEQUENOS)] == ARGS_PEQUENOS
@@ -92,8 +92,8 @@ def test_run_grava_metadata_completo(run_pequeno):
 
 
 def test_sem_agente_genetico_nao_ha_parametros_do_ag(tmp_path):
-    main.rodar_benchmark(["--agentes", "logico", "--sizes", "4", "--execucoes", "1", "--saida", str(tmp_path)])
-    meta = json.loads((tmp_path / "metadata.json").read_text(encoding="utf-8"))
+    main.rodar_benchmark(["--agentes", "logico", "--tamanhos", "4", "--execucoes", "1", "--saida", str(tmp_path)])
+    meta = json.loads((tmp_path / "metadados.json").read_text(encoding="utf-8"))
     assert meta["parametros_ag"] is None
 
 
@@ -107,12 +107,32 @@ def test_reproduzir_da_o_mesmo_resultado(run_pequeno, tmp_path):
 def test_reproduzir_detecta_resultado_diferente(run_pequeno, tmp_path):
     copia = tmp_path / "adulterado"
     copia.mkdir()
-    (copia / "metadata.json").write_text((run_pequeno / "metadata.json").read_text(encoding="utf-8"), encoding="utf-8")
+    (copia / "metadados.json").write_text(
+        (run_pequeno / "metadados.json").read_text(encoding="utf-8"), encoding="utf-8"
+    )
     csv = (run_pequeno / "resultados_benchmark.csv").read_text(encoding="utf-8").splitlines()
     cab, linha = csv[0], csv[1].split(",")
     linha[2] = str(int(linha[2]) + 1)  # uma vitória a mais
     (copia / "resultados_benchmark.csv").write_text("\n".join([cab, ",".join(linha), *csv[2:]]), encoding="utf-8")
     assert reproduzir.main([str(copia), "--saida", str(tmp_path / "nova")]) == 1
+
+
+def test_reproduzir_le_um_run_antigo(run_pequeno, tmp_path):
+    """Runs gravados até a v1.8.0: metadata.json, opção --sizes e colunas com acento."""
+    antigo = tmp_path / "antigo"
+    antigo.mkdir()
+    meta = json.loads((run_pequeno / "metadados.json").read_text(encoding="utf-8"))
+    meta["argumentos_cli"] = ["--sizes" if a == "--tamanhos" else a for a in meta["argumentos_cli"]]
+    (antigo / "metadata.json").write_text(json.dumps(meta), encoding="utf-8")
+    csv = (run_pequeno / "resultados_benchmark.csv").read_text(encoding="utf-8")
+    csv = csv.replace("vitorias", "vitórias").replace("tempo_medio", "tempo_médio")
+    (antigo / "resultados_benchmark.csv").write_text(csv, encoding="utf-8")
+    assert reproduzir.main([str(antigo), "--saida", str(tmp_path / "nova")]) == 0
+
+
+def test_atualizar_opcoes_troca_as_opcoes_antigas():
+    assert reproduzir.atualizar_opcoes(["--sizes", "4", "--execucoes=2"]) == ["--tamanhos", "4", "--execucoes=2"]
+    assert reproduzir.atualizar_opcoes(["--sizes=4"]) == ["--tamanhos=4"]
 
 
 def test_reproduzir_sem_metadata(tmp_path):

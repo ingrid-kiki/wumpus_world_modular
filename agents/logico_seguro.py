@@ -32,7 +32,7 @@ class BaseConhecimentoSegura(LogicKnowledgeBase):
         """Casas visitadas e vizinhas de casa visitada sem BRISA: em nenhuma delas pode haver poço."""
         seguras = set(self.known)
         for pos, info in self.known.items():
-            if BRISA not in info["percepções"]:
+            if BRISA not in info["percepcoes"]:
                 seguras.update(vizinha for vizinha, _ in self.vizinhas_de(pos))
         return seguras
 
@@ -43,14 +43,14 @@ class BaseConhecimentoSegura(LogicKnowledgeBase):
     def suspeita(self, casa):
         """Quantas casas visitadas ao lado de `casa` sentiram BRISA: quanto maior, mais provável o poço."""
         return sum(
-            BRISA in self.known[vizinha]["percepções"] for vizinha, _ in self.vizinhas_de(casa) if vizinha in self.known
+            BRISA in self.known[vizinha]["percepcoes"] for vizinha, _ in self.vizinhas_de(casa) if vizinha in self.known
         )
 
     def poco_certo(self, casa, seguras):
         """True se alguma casa com BRISA ao lado de `casa` não tem outra explicação para a brisa além dela."""
         for vizinha, _ in self.vizinhas_de(casa):
             info = self.known.get(vizinha)
-            if info and BRISA in info["percepções"]:
+            if info and BRISA in info["percepcoes"]:
                 possiveis = [q for q, _ in self.vizinhas_de(vizinha) if q not in seguras]
                 if possiveis == [casa]:
                     return True

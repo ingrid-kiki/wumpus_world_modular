@@ -64,7 +64,7 @@ def test_benchmark_usa_o_mesmo_orcamento_do_ag(tmp_path):
             "--agentes",
             "aleatorio",
             "genetico",
-            "--sizes",
+            "--tamanhos",
             "4",
             "--execucoes",
             "2",
@@ -80,9 +80,9 @@ def test_benchmark_usa_o_mesmo_orcamento_do_ag(tmp_path):
     )
     assert list(df["agente"]) == ["aleatorio", "genetico"]
     assert df["erros"].sum() == 0
-    meta = json.loads((pasta / "metadata.json").read_text(encoding="utf-8"))
+    meta = json.loads((pasta / "metadados.json").read_text(encoding="utf-8"))
     assert meta["parametros_busca_aleatoria"] == {"chrom_length": 15, "avaliacoes": 50}
-    assert not (pasta / "advanced_charts_aleatorio_4x4").exists()  # não tem dados extras
+    assert not (pasta / "graficos_avancados_aleatorio_4x4").exists()  # não tem dados extras
     assert len(pd.read_csv(pasta / "resultados_benchmark.csv")) == 2
 
 
@@ -92,7 +92,7 @@ def test_orcamento_explicito_tem_prioridade(tmp_path):
         [
             "--agentes",
             "aleatorio",
-            "--sizes",
+            "--tamanhos",
             "4",
             "--execucoes",
             "1",
@@ -104,5 +104,5 @@ def test_orcamento_explicito_tem_prioridade(tmp_path):
             str(pasta),
         ]
     )
-    meta = json.loads((pasta / "metadata.json").read_text(encoding="utf-8"))
+    meta = json.loads((pasta / "metadados.json").read_text(encoding="utf-8"))
     assert meta["parametros_busca_aleatoria"] == {"chrom_length": 5, "avaliacoes": 7}

@@ -83,7 +83,7 @@ def test_opcao_chega_ao_agente_e_ao_metadata(tmp_path):
         [
             "--agentes",
             "genetico",
-            "--sizes",
+            "--tamanhos",
             "4",
             "--execucoes",
             "1",
@@ -99,7 +99,7 @@ def test_opcao_chega_ao_agente_e_ao_metadata(tmp_path):
             str(pasta),
         ]
     )
-    meta = json.loads((pasta / "metadata.json").read_text(encoding="utf-8"))
+    meta = json.loads((pasta / "metadados.json").read_text(encoding="utf-8"))
     assert meta["parametros_ag"]["proximidade"] == 20.0
 
 
@@ -109,7 +109,7 @@ def test_sem_a_opcao_o_padrao_e_o_fitness_original(tmp_path):
         [
             "--agentes",
             "genetico",
-            "--sizes",
+            "--tamanhos",
             "4",
             "--execucoes",
             "1",
@@ -123,7 +123,7 @@ def test_sem_a_opcao_o_padrao_e_o_fitness_original(tmp_path):
             str(pasta),
         ]
     )
-    meta = json.loads((pasta / "metadata.json").read_text(encoding="utf-8"))
+    meta = json.loads((pasta / "metadados.json").read_text(encoding="utf-8"))
     assert meta["parametros_ag"]["proximidade"] == 0.0
 
 

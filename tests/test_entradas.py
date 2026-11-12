@@ -31,8 +31,8 @@ def test_menor_mundo_valido_funciona():
         (["--execucoes", "0"], "precisa ser 1 ou maior"),
         (["--execucoes", "-1"], "precisa ser 1 ou maior"),
         (["--execucoes", "abc"], "não é um número inteiro"),
-        (["--sizes", "1"], "precisa ser 2 ou maior"),
-        (["--sizes", "0"], "precisa ser 2 ou maior"),
+        (["--tamanhos", "1"], "precisa ser 2 ou maior"),
+        (["--tamanhos", "0"], "precisa ser 2 ou maior"),
         (["--populacao", "0"], "precisa ser 1 ou maior"),
         (["--geracoes", "-1"], "precisa ser 0 ou maior"),
         (["--cromossomo", "0"], "precisa ser 1 ou maior"),
@@ -56,7 +56,7 @@ def test_opcoes_validas_nos_limites():
         [
             "--execucoes",
             "1",
-            "--sizes",
+            "--tamanhos",
             "2",
             "--populacao",
             "1",
@@ -70,7 +70,7 @@ def test_opcoes_validas_nos_limites():
             "1",
         ]
     )
-    assert args.execucoes == 1 and args.sizes == [2]
+    assert args.execucoes == 1 and args.tamanhos == [2]
     assert main.parametros_do_ag(args) == {
         "population_size": 1,
         "gens": 0,
@@ -82,7 +82,7 @@ def test_opcoes_validas_nos_limites():
 
 def test_opcoes_padrao_continuam_validas():
     args = main.criar_parser().parse_args([])
-    assert args.execucoes == 32 and args.sizes == [4, 6, 8] and args.benchmark == "benchmark.py"
+    assert args.execucoes == 32 and args.tamanhos == [4, 6, 8] and args.benchmark == "benchmark.py"
     assert args.agentes == ["logico", "genetico"]
 
 
@@ -122,7 +122,7 @@ def test_cromossomo_de_um_gene_nao_gera_erro(tmp_path):
         [
             "--agentes",
             "genetico",
-            "--sizes",
+            "--tamanhos",
             "4",
             "--execucoes",
             "2",

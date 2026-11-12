@@ -16,8 +16,9 @@ line-length = 120
 extend-exclude = ["pygad"]
 
 [tool.ruff.lint]
-# Erros reais (F, E9), imports (I), espaços (W), sintaxe antiga (UP), armadilhas (B), simplificações (SIM) e complexidade (C90).
-select = ["E9", "F", "I", "W", "UP", "B", "SIM", "C90"]
+# Erros reais (F, E9), imports (I), espaços (W), sintaxe antiga (UP), armadilhas (B), simplificações (SIM),
+# complexidade (C90) e nomes sem acento (PLC2401, PLC2403; textos usados como nome: tests/test_nomes_sem_acento.py).
+select = ["E9", "F", "I", "W", "UP", "B", "SIM", "C90", "PLC2401", "PLC2403"]
 
 [tool.ruff.lint.mccabe]
 # Funções acima do limite só com "# noqa: C901" e justificativa; tests/test_tamanho_das_funcoes.py confere onde.

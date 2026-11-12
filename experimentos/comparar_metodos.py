@@ -15,7 +15,7 @@
 #     python -m experimentos.comparar_metodos --fase confirmacao --mundos 20    (teste rápido)
 #
 # Saída em logs/exp31_<fase>_AAAAMMDD_HHMMSS/: tentativas.csv (uma linha por método e mundo),
-# resumo.csv, comparacoes.csv e metadata.json.
+# resumo.csv, comparacoes.csv e metadados.json.
 """
 
 import argparse
@@ -214,8 +214,8 @@ def _criar_parser():
 
 
 def _gravar_metadados(saida, args, fase):
-    """Grava o metadata.json da fase antes de rodar."""
-    with open(os.path.join(saida, "metadata.json"), "w", encoding="utf-8") as f:
+    """Grava o metadados.json da fase antes de rodar."""
+    with open(os.path.join(saida, "metadados.json"), "w", encoding="utf-8") as f:
         json.dump(
             {
                 "versao": __version__,

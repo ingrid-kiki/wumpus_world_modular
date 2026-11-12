@@ -89,7 +89,7 @@ def _casos_do_agente_logico():
     def decidir(posicao, visitas):
         base = LogicKnowledgeBase(size=3)
         base.current_pos = posicao
-        base.known = {casa: {"seguro": True, "visitado": True, "percepções": []} for casa in visitas}
+        base.known = {casa: {"seguro": True, "visitado": True, "percepcoes": []} for casa in visitas}
         base.visits = dict(visitas)
         return base.infer_action([])
 
