@@ -13,7 +13,7 @@ python -m pytest
 ```
 
 ```bash
-python -m pytest tests/test_referencia.py
+python -m pytest tests/regras/test_referencia.py
 ```
 
 ```bash
@@ -22,45 +22,62 @@ python -m pytest -k logico_seguro
 
 O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3.13, e exige pelo menos 78% de cobertura.
 
+## Organização da pasta `tests/`
+
+Os testes ficam em subpastas por assunto, que espelham o pacote `wumpus/`:
+
+| Pasta | O que testa |
+|---|---|
+| `tests/mundo/` | O mundo e as constantes do jogo |
+| `tests/agentes/` | Os agentes, a classe base e a busca aleatória |
+| `tests/ag/` | O algoritmo genético (bônus de proximidade) |
+| `tests/visual/` | A janela que reproduz a partida |
+| `tests/utilitarios/` | Os gráficos |
+| `tests/programa/` | O `main.py`, o benchmark, o `reproduzir.py`, a saída do terminal e os experimentos |
+| `tests/regras/` | As regras do projeto: o teste de referência, os bugs que não podem voltar e os padrões conferidos automaticamente (lista de testes, tipos, acentos, tamanho das funções e diagrama de classes) |
+
+O `tests/conftest.py` fica na raiz de `tests/` e vale para todas as subpastas. Para rodar só uma pasta:
+`python -m pytest tests/agentes`.
+
 ## Resumo por arquivo
 
-| Arquivo | Casos | Foco |
-|---|---|---|
-| `test_referencia.py` | 9 | Resultados não mudam sem decisão explícita |
-| `test_reprodutibilidade.py` | 16 | Metadados, reprodução de um run e otimizações do AG |
-| `test_bugs_conhecidos.py` | 37 | Bugs corrigidos que não podem voltar |
-| `test_entradas.py` | 24 | Entradas inválidas com mensagem clara |
-| `test_constantes.py` | 3 | Ações, percepções e status num lugar só |
-| `test_nomes_sem_acento.py` | 4 | Nada que o programa grava ou usa como chave tem acento |
-| `test_agente_base.py` | 13 | Classe base e lista única de agentes |
-| `test_world.py` | 1 | Criação do mundo |
-| `test_logic_agent.py` | 1 | Criação do agente lógico |
-| `test_logico_seguro.py` | 16 | Agente lógico que evita poços |
-| `test_manual_agent.py` | 1 | Criação do agente manual |
-| `test_genetic_agent.py` | 1 | Criação e retorno do agente genético |
-| `test_action_distribution.py` | 1 | O agente genético executa ações |
-| `test_execution_time.py` | 1 | O agente genético termina em tempo razoável |
-| `test_final_status.py` | 1 | O agente genético termina num estado válido |
-| `test_fitness_history.py` | 1 | O agente genético registra o fitness |
-| `test_trajectory_length.py` | 1 | O agente genético gera uma trajetória |
-| `test_busca_aleatoria.py` | 6 | Busca aleatória, a referência do genético |
-| `test_proximidade.py` | 9 | Bônus de proximidade ao ouro no fitness |
-| `test_benchmark.py` | 4 | Benchmark único: modos sequencial e paralelo, silencioso e tempos |
-| `test_visualizer.py` | 6 | Janela que reproduz a partida e pergunta no menu |
-| `test_main_etapas.py` | 7 | Arquivos de cada run e resistência a quedas |
-| `test_saida_redirecionada.py` | 2 | Saída redirecionada para arquivo sem quebrar no Windows |
-| `test_graficos.py` | 9 | Gráficos nunca interrompem o benchmark |
-| `test_experimento_31.py` | 7 | Script de comparação de métodos da #31 |
-| `test_diagramas.py` | 7 | Diagrama de classes alinhado com o código |
-| `test_lista_de_testes.py` | 2 | Esta lista alinhada com os testes |
-| `test_tamanho_das_funcoes.py` | 2 | Funções com até 40 linhas e exceções de complexidade só onde registrado |
-| `test_tipos.py` | 2 | Toda função pública tem tipos nos parâmetros e no retorno |
+| Arquivo | Casos | Pasta | Foco |
+|---|---|---|---|
+| `test_constantes.py` | 3 | `mundo/` | Ações, percepções e status num lugar só |
+| `test_mundo.py` | 1 | `mundo/` | Criação do mundo |
+| `test_agente_base.py` | 13 | `agentes/` | Classe base e lista única de agentes |
+| `test_agente_logico.py` | 1 | `agentes/` | Criação do agente lógico |
+| `test_logico_seguro.py` | 16 | `agentes/` | Agente lógico que evita poços |
+| `test_agente_manual.py` | 1 | `agentes/` | Criação do agente manual |
+| `test_agente_genetico.py` | 1 | `agentes/` | Criação e retorno do agente genético |
+| `test_distribuicao_das_acoes.py` | 1 | `agentes/` | O agente genético executa ações |
+| `test_tempo_de_execucao.py` | 1 | `agentes/` | O agente genético termina em tempo razoável |
+| `test_estado_final.py` | 1 | `agentes/` | O agente genético termina num estado válido |
+| `test_historico_de_fitness.py` | 1 | `agentes/` | O agente genético registra o fitness |
+| `test_tamanho_da_trajetoria.py` | 1 | `agentes/` | O agente genético gera uma trajetória |
+| `test_busca_aleatoria.py` | 6 | `agentes/` | Busca aleatória, a referência do genético |
+| `test_proximidade.py` | 9 | `ag/` | Bônus de proximidade ao ouro no fitness |
+| `test_visualizador.py` | 6 | `visual/` | Janela que reproduz a partida e pergunta no menu |
+| `test_graficos.py` | 9 | `utilitarios/` | Gráficos nunca interrompem o benchmark |
+| `test_reprodutibilidade.py` | 16 | `programa/` | Metadados, reprodução de um run e otimizações do AG |
+| `test_entradas.py` | 24 | `programa/` | Entradas inválidas com mensagem clara |
+| `test_benchmark.py` | 4 | `programa/` | Benchmark único: modos sequencial e paralelo, silencioso e tempos |
+| `test_main_etapas.py` | 7 | `programa/` | Arquivos de cada run e resistência a quedas |
+| `test_saida_redirecionada.py` | 2 | `programa/` | Saída redirecionada para arquivo sem quebrar no Windows |
+| `test_experimento_31.py` | 7 | `programa/` | Script de comparação de métodos da #31 |
+| `test_referencia.py` | 9 | `regras/` | Resultados não mudam sem decisão explícita |
+| `test_bugs_conhecidos.py` | 37 | `regras/` | Bugs corrigidos que não podem voltar |
+| `test_nomes_sem_acento.py` | 4 | `regras/` | Nada que o programa grava ou usa como chave tem acento |
+| `test_diagramas.py` | 7 | `regras/` | Diagrama de classes alinhado com o código |
+| `test_lista_de_testes.py` | 2 | `regras/` | Esta lista alinhada com os testes |
+| `test_tamanho_das_funcoes.py` | 2 | `regras/` | Funções com até 40 linhas e exceções de complexidade só onde registrado |
+| `test_tipos.py` | 2 | `regras/` | Toda função pública tem tipos nos parâmetros e no retorno |
 
 ## Resultados não mudam sem decisão
 
 ### `test_referencia.py`
 
-Compara os resultados atuais com `tests/referencia.json`: mundos de tamanho 4, 6 e 8 com sementes 0 a 4. Para atualizar a
+Compara os resultados atuais com `tests/regras/referencia.json`: mundos de tamanho 4, 6 e 8 com sementes 0 a 4. Para atualizar a
 referência numa mudança intencional, veja o CONTRIBUTING.
 
 | Teste | Casos | O que garante |
@@ -146,7 +163,7 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 |---|---|---|
 | `test_ordem_das_acoes_nao_muda` | 1 | A ordem das ações continua a mesma, porque os sorteios dos experimentos dependem dela |
 | `test_deslocamentos_cobrem_os_movimentos_na_mesma_ordem` | 1 | Cada movimento tem um deslocamento, na mesma ordem da lista de movimentos |
-| `test_nenhum_arquivo_escreve_acoes_percepcoes_ou_status_a_mao` | 1 | Fora de `world/constantes.py`, ações, percepções e status só aparecem pelas constantes |
+| `test_nenhum_arquivo_escreve_acoes_percepcoes_ou_status_a_mao` | 1 | Fora de `wumpus/mundo/constantes.py`, ações, percepções e status só aparecem pelas constantes |
 
 ### `test_nomes_sem_acento.py`
 
@@ -159,7 +176,7 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 
 Os nomes do código (variáveis, funções e classes) são conferidos pelo `ruff`, com as regras `PLC2401` e `PLC2403`.
 
-### `test_world.py`
+### `test_mundo.py`
 
 | Teste | Casos | O que garante |
 |---|---|---|
@@ -167,9 +184,9 @@ Os nomes do código (variáveis, funções e classes) são conferidos pelo `ruff
 
 ## Agentes
 
-Os arquivos `test_world.py`, `test_logic_agent.py`, `test_manual_agent.py`, `test_genetic_agent.py`, `test_action_distribution.py`,
-`test_execution_time.py`, `test_final_status.py`, `test_fitness_history.py` e `test_trajectory_length.py` são os testes mais antigos
-do projeto. Eles verificam o mínimo, como a existência de atributos, e o comportamento fica coberto pelos testes acima e abaixo.
+Os arquivos `test_mundo.py`, `test_agente_logico.py`, `test_agente_manual.py`, `test_agente_genetico.py`, `test_distribuicao_das_acoes.py`,
+`test_tempo_de_execucao.py`, `test_estado_final.py`, `test_historico_de_fitness.py` e `test_tamanho_da_trajetoria.py` são os testes mais antigos
+do projeto; até a v1.8.0, seus nomes eram em inglês. Eles verificam o mínimo, como a existência de atributos, e o comportamento fica coberto pelos testes acima e abaixo.
 
 ### `test_agente_base.py`
 
@@ -182,7 +199,7 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_executar_sequencia_para_no_fim_do_jogo` | 1 | Uma sequência de ações para quando o jogo termina, e cada passo guarda a posição |
 | `test_main_e_benchmarks_usam_a_mesma_lista` | 1 | O `main.py` e o benchmark usam o mesmo dicionário de agentes |
 
-### `test_logic_agent.py` e `test_manual_agent.py`
+### `test_agente_logico.py` e `test_agente_manual.py`
 
 | Teste | Casos | O que garante |
 |---|---|---|
@@ -207,7 +224,7 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_registrado_no_programa_e_nos_benchmarks` | 2 | O agente está disponível no `main.py` e no benchmark |
 | `test_roda_num_benchmark_pela_linha_de_comando` | 1 | `--agentes logico_seguro` roda um benchmark completo |
 
-### `test_genetic_agent.py` e testes simples do agente genético
+### `test_agente_genetico.py` e testes simples do agente genético
 
 | Teste | Casos | O que garante |
 |---|---|---|
@@ -254,7 +271,7 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_tempo_total_e_de_relogio_e_tempo_medio_e_a_media_das_execucoes` | 1 | `tempo_total` é o tempo de relógio e `tempo_medio`, a média das execuções |
 | `test_opcoes_do_main_chegam_ao_benchmark` | 1 | `--paralelo` e `--silencioso` chegam ao benchmark, e sem elas nada é repassado |
 
-### `test_visualizer.py`
+### `test_visualizador.py`
 
 | Teste | Casos | O que garante |
 |---|---|---|
@@ -347,7 +364,7 @@ O `mypy`, no CI e no `pre-commit`, confere se os tipos estão certos; estes test
 
 ## Como manter esta lista
 
-Ao criar, renomear ou remover um teste, atualize esta página na mesma PR. O teste `tests/test_lista_de_testes.py` falha
+Ao criar, renomear ou remover um teste, atualize esta página na mesma PR. O teste `tests/regras/test_lista_de_testes.py` falha
 enquanto a lista estiver desatualizada e mostra o que mudou. Para ver os testes que o pytest encontra:
 
 ```bash

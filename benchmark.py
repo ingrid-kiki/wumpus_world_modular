@@ -24,10 +24,10 @@ from typing import Any
 
 from joblib import Parallel, delayed
 
-from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
-from utils.execucao import contar, executar_uma, relatar_erro
-from utils.terminal import usar_utf8_na_saida
-from world.world import Mundo
+from wumpus.agentes.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
+from wumpus.mundo.mundo import Mundo
+from wumpus.utilitarios.execucao import contar, executar_uma, relatar_erro
+from wumpus.utilitarios.terminal import usar_utf8_na_saida
 
 
 def simular_execucao(

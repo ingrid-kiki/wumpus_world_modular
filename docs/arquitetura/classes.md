@@ -1,7 +1,7 @@
 # Diagrama de classes
 
 Mostra as 13 classes do programa, com seus atributos, métodos e relações. Ficam de fora as funções soltas de módulos como
-`main.py` e `utils/`, a classe interna `SaidaDupla` de `main.py` e os testes.
+`main.py` e `wumpus/utilitarios/`, a classe interna `SaidaDupla` de `main.py` e os testes.
 
 ```mermaid
 classDiagram
@@ -183,25 +183,25 @@ classDiagram
 
 | Classe | Arquivo |
 |---|---|
-| `Mundo` | `world/world.py` |
-| `AgenteManual` | `agents/manual_agent.py` |
-| `AgenteLogico` | `agents/logic_agent.py` |
-| `BaseConhecimento` | `agents/logic_knowledge_base.py` |
-| `Agente` | `agents/agente.py` |
-| `AgenteLogicoSeguro` | `agents/logico_seguro.py` |
-| `BaseConhecimentoSegura` | `agents/logico_seguro.py` |
-| `AgenteGenetico` | `agents/genetic_agent.py` |
-| `AgenteAleatorio` | `agents/random_search_agent.py` |
-| `AlgoritmoGenetico` | `ga/ga_core.py` |
-| `Individuo` | `ga/individual.py` |
+| `Mundo` | `wumpus/mundo/mundo.py` |
+| `AgenteManual` | `wumpus/agentes/agente_manual.py` |
+| `AgenteLogico` | `wumpus/agentes/agente_logico.py` |
+| `BaseConhecimento` | `wumpus/agentes/base_conhecimento.py` |
+| `Agente` | `wumpus/agentes/agente.py` |
+| `AgenteLogicoSeguro` | `wumpus/agentes/logico_seguro.py` |
+| `BaseConhecimentoSegura` | `wumpus/agentes/logico_seguro.py` |
+| `AgenteGenetico` | `wumpus/agentes/agente_genetico.py` |
+| `AgenteAleatorio` | `wumpus/agentes/agente_aleatorio.py` |
+| `AlgoritmoGenetico` | `wumpus/ag/algoritmo_genetico.py` |
+| `Individuo` | `wumpus/ag/individuo.py` |
 | `AGVariante` | `experimentos/comparar_metodos.py` |
-| `Visualizador` | `visual/visualizer.py` |
+| `Visualizador` | `wumpus/visual/visualizador.py` |
 
 ## Observações sobre o código atual
 
 - **Todos os agentes herdam de `Agente`**, a classe base abstrata. Ela guarda o `Mundo` e o `historico`, e `executar()` devolve o
   resultado no formato único: `historico`, `passos` e `dados_extra`. A lista única `AGENTES_DISPONIVEIS`, em
-  `agents/registro.py`, escolhe os agentes pelo nome em todo o programa.
+  `wumpus/agentes/registro.py`, escolhe os agentes pelo nome em todo o programa.
 - **`AgenteLogicoSeguro` herda de `AgenteLogico`** e só troca a base de conhecimento: o laço de percepção e ação é o mesmo,
   e a decisão passa a evitar poços ([investigação de 11/11/2026](../investigacao-agente-logico-2026-11.md)).
 - **`AlgoritmoGenetico` e `AgenteAleatorio` avaliam com o mesmo fitness**, o método `Individuo.avaliar`.

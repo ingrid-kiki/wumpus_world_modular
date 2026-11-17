@@ -23,6 +23,25 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   O `Visualizer` (hoje `Visualizador`) existia, mas não estava ligado ao programa; agora refaz a partida a partir do estado inicial do mundo.
 
 ### Alterado
+- **O código virou o pacote `wumpus/`**, com arquivos e pastas em português, e pode ser instalado com `pip install -e .`.
+  O `pyproject.toml` ganhou a seção `[project]`: a versão vem de `wumpus/utilitarios/versao.py`, e as dependências, do
+  `requirements.txt`. Os comandos `python main.py`, `python reproduzir.py` e `--benchmark benchmark.py` não mudam. Quem
+  importa o código usa os caminhos novos:
+
+  | Até a v1.8.0 | Agora |
+  |---|---|
+  | `world/world.py`, `world/constantes.py` | `wumpus/mundo/mundo.py`, `wumpus/mundo/constantes.py` |
+  | `agents/agente.py`, `agents/registro.py`, `agents/logico_seguro.py` | `wumpus/agentes/agente.py`, `wumpus/agentes/registro.py`, `wumpus/agentes/logico_seguro.py` |
+  | `agents/logic_agent.py`, `agents/logic_knowledge_base.py` | `wumpus/agentes/agente_logico.py`, `wumpus/agentes/base_conhecimento.py` |
+  | `agents/genetic_agent.py`, `agents/manual_agent.py`, `agents/random_search_agent.py` | `wumpus/agentes/agente_genetico.py`, `wumpus/agentes/agente_manual.py`, `wumpus/agentes/agente_aleatorio.py` |
+  | `ga/ga_core.py`, `ga/individual.py` | `wumpus/ag/algoritmo_genetico.py`, `wumpus/ag/individuo.py` |
+  | `visual/visualizer.py` | `wumpus/visual/visualizador.py` |
+  | `utils/*.py` | `wumpus/utilitarios/*.py` |
+
+  Os testes em inglês também mudaram de nome (por exemplo, `test_world.py` virou `test_mundo.py`), e a pasta `tests/`
+  ganhou subpastas por assunto: `mundo/`, `agentes/`, `ag/`, `visual/`, `utilitarios/`, `programa/` e `regras/`. O teste
+  de referência passa a ser atualizado com `python -m tests.regras.referencia`. Os resultados não
+  mudam: contagens, `.npz`, 19 gráficos e saída do terminal idênticos, e um run antigo foi refeito com sucesso.
 - **Os nomes do código estão em português**: classes, métodos, atributos, parâmetros e variáveis. Quem importa o código
   precisa usar os nomes novos; os nomes dos arquivos `.py` e das pastas mudam na organização em pacote. Os principais:
 

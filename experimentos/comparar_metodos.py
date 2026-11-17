@@ -32,13 +32,13 @@ import pandas as pd
 from joblib import Parallel, delayed
 from scipy.stats import binomtest
 
-from ga.ga_core import AlgoritmoGenetico
-from ga.individual import Individuo, fitness_de
-from utils.reprodutibilidade import estado_do_git, versoes_das_bibliotecas
-from utils.terminal import usar_utf8_na_saida
-from utils.versao import __version__
-from world.constantes import ACOES, FIM_DE_JOGO
-from world.world import Mundo
+from wumpus.ag.algoritmo_genetico import AlgoritmoGenetico
+from wumpus.ag.individuo import Individuo, fitness_de
+from wumpus.mundo.constantes import ACOES, FIM_DE_JOGO
+from wumpus.mundo.mundo import Mundo
+from wumpus.utilitarios.reprodutibilidade import estado_do_git, versoes_das_bibliotecas
+from wumpus.utilitarios.terminal import usar_utf8_na_saida
+from wumpus.utilitarios.versao import __version__
 
 REFERENCIA = "busca_aleatoria"
 

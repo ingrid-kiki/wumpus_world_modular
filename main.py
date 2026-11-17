@@ -18,12 +18,12 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from agents.genetic_agent import AgenteGenetico
-from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
-from utils.graficos import gerar_graficos, gerar_graficos_avancados
-from utils.reprodutibilidade import coletar_metadados, parametros_efetivos, salvar_metadados
-from utils.terminal import usar_utf8_na_saida
-from world.world import TAMANHO_MINIMO, Mundo
+from wumpus.agentes.agente_genetico import AgenteGenetico
+from wumpus.agentes.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
+from wumpus.mundo.mundo import TAMANHO_MINIMO, Mundo
+from wumpus.utilitarios.graficos import gerar_graficos, gerar_graficos_avancados
+from wumpus.utilitarios.reprodutibilidade import coletar_metadados, parametros_efetivos, salvar_metadados
+from wumpus.utilitarios.terminal import usar_utf8_na_saida
 
 
 def menu_interativo() -> str:
@@ -63,7 +63,7 @@ def perguntar_sim_ou_nao(pergunta: str) -> bool:
 def mostrar_partida(mundo_inicial: Mundo, historico: list[dict[str, Any]]) -> None:
     """Abre a janela que reproduz a partida; sem pygame ou sem tela, avisa e segue."""
     try:
-        from visual.visualizer import Visualizador  # o pygame só é carregado se a janela for pedida
+        from wumpus.visual.visualizador import Visualizador  # o pygame só é carregado se a janela for pedida
 
         Visualizador(mundo_inicial).reproduzir(historico)
     except Exception as e:  # a janela é opcional: a partida já terminou e foi mostrada no terminal

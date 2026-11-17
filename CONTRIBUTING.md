@@ -44,7 +44,8 @@ Regras:
 - **Nunca misture código e resultados de execução no mesmo commit.**
 - Correção de bug vem acompanhada do teste que mostra o bug.
 - Ao criar, renomear ou remover um teste, atualize [`docs/testes.md`](docs/testes.md) na mesma PR: o CI
-  falha enquanto a lista estiver desatualizada.
+  falha enquanto a lista estiver desatualizada. Os testes ficam na subpasta de `tests/` do assunto que testam
+  (`mundo/`, `agentes/`, `ag/`, `visual/`, `utilitarios/`, `programa/` ou `regras/`), como explicado na lista.
 - Antes do commit, rode `ruff format .`, `ruff check .` e `mypy`: o CI recusa código fora do padrão.
 
 ### Checagem automática antes do commit
@@ -75,10 +76,10 @@ As regras marcadas com **(CI)** são verificadas pelo `ruff`. As demais valem na
 - Código novo usa nomes em português e sem abreviações obscuras: `taxa_mutacao`, não `tm`.
 - Sem acentos em identificadores, chaves de dicionário, colunas do CSV e nomes de arquivos. Mensagens para as pessoas e
   documentação mantêm os acentos. O `ruff` (regras `PLC2401` e `PLC2403`) barra acentos nos nomes do código, e
-  `tests/test_nomes_sem_acento.py` barra acentos nos textos usados como nome (chaves, colunas, status, arquivos) e em
+  `tests/regras/test_nomes_sem_acento.py` barra acentos nos textos usados como nome (chaves, colunas, status, arquivos) e em
   tudo o que um run grava.
-- Os nomes do código (classes, métodos, atributos, parâmetros e variáveis) estão em português desde a #83. Os nomes dos
-  arquivos `.py` e das pastas ainda estão em inglês e mudam na PR I da Etapa 3, junto com a organização em pacote.
+- Os nomes do código (classes, métodos, atributos, parâmetros e variáveis) estão em português desde a #83, e os nomes
+  dos arquivos e das pastas, desde a #86, quando o código passou para o pacote `wumpus/`.
 - Dê nome aos números com significado: `TAMANHO_MINIMO`, em vez de um `2` solto no código.
 
 ### Funções
@@ -88,8 +89,8 @@ As regras marcadas com **(CI)** são verificadas pelo `ruff`. As demais valem na
 - **(CI)** Complexidade de no máximo 10 por função. Exceções levam `# noqa: C901` e o motivo no mesmo comentário.
 - **(CI)** Linhas de até 120 caracteres.
 - **(CI)** Toda função pública (nome sem `_` no começo) e todo `__init__` têm tipos nos parâmetros e no retorno, e o
-  `mypy` confere se eles estão certos. Use os tipos de `world/constantes.py` (`Posicao`, `Percepcao`) e de
-  `agents/agente.py` (`Resultado`, `Passo`) em vez de repetir `tuple[int, int]` ou `dict[str, Any]`.
+  `mypy` confere se eles estão certos. Use os tipos de `wumpus/mundo/constantes.py` (`Posicao`, `Percepcao`) e de
+  `wumpus/agentes/agente.py` (`Resultado`, `Passo`) em vez de repetir `tuple[int, int]` ou `dict[str, Any]`.
 
 ### Docstrings
 
@@ -129,22 +130,22 @@ A documentação do andamento também é atualizada em toda PR, para não ficar 
   PR nova e a data de merge da anterior;
 - o [`docs/plano-de-acao.md`](docs/plano-de-acao.md): status das fases.
 
-A versão fica num lugar só: `utils/versao.py`. Entre lançamentos ela tem o sufixo `.dev0` (ex.: `1.5.0.dev0`).
+A versão fica num lugar só: `wumpus/utilitarios/versao.py`. Entre lançamentos ela tem o sufixo `.dev0` (ex.: `1.5.0.dev0`).
 Para lançar:
 
-1. Tire o `.dev0` em `utils/versao.py` e dê número e data à seção `[Não lançado]` do CHANGELOG.
+1. Tire o `.dev0` em `wumpus/utilitarios/versao.py` e dê número e data à seção `[Não lançado]` do CHANGELOG.
 2. Faça o merge na `main` e crie a tag `vX.Y.Z` no commit de merge, com um GitHub Release.
 3. Volte a versão para a próxima `.dev0` num commit seguinte.
 
 ## Resultados de referência
 
-`tests/test_referencia.py` compara os resultados atuais com `tests/referencia.json`: mundos gerados, sequências de
+`tests/regras/test_referencia.py` compara os resultados atuais com `tests/regras/referencia.json`: mundos gerados, sequências de
 ações e regras do fitness. Se ele falhar sem que você quisesse mudar resultados, há uma regressão.
 
 Se a mudança for intencional, regenere o arquivo e explique o motivo no commit e no CHANGELOG:
 
 ```bash
-python -m tests.referencia
+python -m tests.regras.referencia
 ```
 
 ## Experimentos

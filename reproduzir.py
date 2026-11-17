@@ -22,9 +22,9 @@ from typing import Any
 
 import pandas as pd
 
-from utils.reprodutibilidade import carregar_metadados, estado_do_git, versoes_das_bibliotecas
-from utils.terminal import usar_utf8_na_saida
-from utils.versao import __version__
+from wumpus.utilitarios.reprodutibilidade import carregar_metadados, estado_do_git, versoes_das_bibliotecas
+from wumpus.utilitarios.terminal import usar_utf8_na_saida
+from wumpus.utilitarios.versao import __version__
 
 COLUNAS_COMPARADAS = ["agente", "tamanho_mundo", "vitorias", "mortes", "sobreviveu"]
 # Nomes usados até a v1.8.0, traduzidos para os atuais ao ler um run antigo

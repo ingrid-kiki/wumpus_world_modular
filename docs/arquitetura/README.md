@@ -28,6 +28,6 @@ Diagramas que explicam como o programa é organizado e como uma execução acont
 
 Mudou o que um diagrama mostra? Atualize o diagrama na mesma PR.
 
-O diagrama de classes é conferido por `tests/test_diagramas.py`: o teste falha se o diagrama citar uma classe que não
+O diagrama de classes é conferido por `tests/regras/test_diagramas.py`: o teste falha se o diagrama citar uma classe que não
 existe, ou se o código tiver uma classe fora do diagrama. A pasta `tests/` não entra nessa conferência. Os
 demais diagramas dependem da revisão da PR.

@@ -1,5 +1,30 @@
-# Configuração das ferramentas de desenvolvimento.
-# O empacotamento do projeto ([project]) entra na Fase 5 (v2.0.0).
+# Empacotamento do projeto e configuração das ferramentas de desenvolvimento.
+# Instalação para desenvolver: pip install -e .  (as dependências vêm do requirements.txt, com as versões fixadas)
+
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wumpus-world-modular"
+description = "Wumpus World com agentes manual, lógico, lógico seguro, genético e de busca aleatória, para pesquisa e ensino de IA"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Alfa Marine" }, { name = "Ingrid Mendes" }]
+# A versão fica num lugar só (wumpus/utilitarios/versao.py), e as dependências, no requirements.txt
+dynamic = ["version", "dependencies"]
+
+[project.urls]
+"Repositório" = "https://github.com/ingrid-kiki/wumpus_world_modular"
+
+[tool.setuptools.dynamic]
+version = { attr = "wumpus.utilitarios.versao.__version__" }
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools.packages.find]
+include = ["wumpus*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -13,7 +38,6 @@ addopts = "-ra"
 [tool.ruff]
 target-version = "py312"
 line-length = 120
-extend-exclude = ["pygad"]
 
 [tool.ruff.lint]
 # Erros reais (F, E9), imports (I), espaços (W), sintaxe antiga (UP), armadilhas (B), simplificações (SIM),
@@ -28,7 +52,7 @@ max-complexity = 10
 # sysmon usa o mecanismo de monitoramento do Python 3.12+
 core = "sysmon"
 source = ["."]
-omit = ["tests/*", "pygad/*", ".venv/*", "logs/*"]
+omit = ["tests/*", ".venv/*", "logs/*"]
 
 [tool.coverage.report]
 # Mínimo igual ao medido na Etapa 1 (79%), com 1 ponto de folga para diferenças entre Windows e Linux
@@ -37,7 +61,7 @@ fail_under = 78
 [tool.mypy]
 # Checagem dos tipos (Etapa 3, PR H). Os testes ficam de fora; tests/test_tipos.py exige tipos nas funções públicas.
 python_version = "3.12"
-files = ["main.py", "benchmark.py", "reproduzir.py", "agents", "ga", "world", "utils", "visual", "experimentos"]
+files = ["main.py", "benchmark.py", "reproduzir.py", "wumpus", "experimentos"]
 # Bibliotecas sem tipos publicados (seaborn, joblib, scikit-learn...) são tratadas como Any
 ignore_missing_imports = true
 # Uma função com tipos precisa tê-los em todos os parâmetros e no retorno
