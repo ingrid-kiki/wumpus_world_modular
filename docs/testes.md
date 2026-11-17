@@ -1,7 +1,7 @@
 # Testes do projeto
 
-Lista dos testes automáticos, com o que cada um garante. Situação em 12/11/2026: **192 casos de teste**, vindos de
-**145 funções** em **28 arquivos** da pasta `tests/`.
+Lista dos testes automáticos, com o que cada um garante. Situação em 16/11/2026: **194 casos de teste**, vindos de
+**147 funções** em **29 arquivos** da pasta `tests/`.
 
 Um teste parametrizado roda a mesma função com entradas diferentes. Cada entrada conta como um caso, e a coluna "Casos" mostra
 quantos são.
@@ -54,6 +54,7 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | `test_diagramas.py` | 7 | Diagrama de classes alinhado com o código |
 | `test_lista_de_testes.py` | 2 | Esta lista alinhada com os testes |
 | `test_tamanho_das_funcoes.py` | 2 | Funções com até 40 linhas e exceções de complexidade só onde registrado |
+| `test_tipos.py` | 2 | Toda função pública tem tipos nos parâmetros e no retorno |
 
 ## Resultados não mudam sem decisão
 
@@ -326,6 +327,16 @@ Os dois rodam os scripts como processos novos, com `PYTHONIOENCODING=cp1252`, a 
 |---|---|---|
 | `test_nenhuma_funcao_passa_de_40_linhas` | 1 | Nenhuma função do programa passa de 40 linhas; hoje não há exceção registrada |
 | `test_excecoes_de_complexidade_so_onde_registrado` | 1 | A marca `# noqa: C901` só aparece nos arquivos das exceções registradas; hoje, em nenhum |
+
+### `test_tipos.py`
+
+O `mypy`, no CI e no `pre-commit`, confere se os tipos estão certos; estes testes garantem que eles existem, porque o
+`mypy` aceita uma função sem nenhum tipo.
+
+| Teste | Casos | O que garante |
+|---|---|---|
+| `test_funcoes_publicas_tem_tipos` | 1 | Toda função pública do programa e todo `__init__` têm tipos em todos os parâmetros e no retorno |
+| `test_regra_acusa_funcao_sem_tipos` | 1 | A leitura do código acusa parâmetro e retorno sem tipo, e ignora funções privadas |
 
 ### `test_lista_de_testes.py`
 

@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 12/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a F, G1 e G2 concluídas, próxima: PR H, tipos), com a comparação final da tese depois dela.
+**Status em 16/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a F, G1, G2 e H concluídas, próxima: PR I, pacote), com a comparação final da tese depois dela.
 
 ## Objetivo
 
@@ -25,7 +25,7 @@ Medido com o mesmo script nas duas datas, sem contar os testes e `pygad/`. A col
 |---|---|---|
 | Funções (sem testes e `pygad/`) | 115 | 149 |
 | Funções sem docstring | 60 (52%) | 35 (23%) |
-| Funções com anotação de tipos | 0 | 0 (fica para a PR H) |
+| Funções com anotação de tipos | 0 | 0; desde a #85, todas as 108 públicas e construtores, conferidas pelo `mypy` |
 | Funções com mais de 30 linhas | 16; as maiores têm 148, 95 e 91 linhas | 6; a maior tem 40 linhas |
 | Funções muito complexas (C901 > 10) | 2: `gerar_graficos_avancados` e `draw_world` | 0 |
 | Linhas de comentário | 17% | 14% (as docstrings novas não contam; comentários são a Etapa 4) |
@@ -112,7 +112,7 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
 - Classe base de agente, com um contrato único para `run()` (concluído, #73).
 - Um benchmark único no lugar dos 5, com as opções atuais (concluído, #76).
 - Dividir as funções grandes: `gerar_graficos_avancados`, `GeneticAlgorithm.run`, `rodar_benchmark` (concluído, #77 e #78).
-- Anotações de tipos nas funções públicas.
+- Anotações de tipos nas funções públicas (concluído, #85, com o `mypy` no CI e no `pre-commit`).
 - Nomes em português e sem acentos em identificadores, chaves, colunas e arquivos (decidido; ver abaixo).
 - Destino de `pygad/`: guardada na tag `archive/pygad-original` e retirada da `main` (decidido em 12/11/2026, #80).
   `visual/` passou a ser usado na #78, e o `logger` saiu na #74.
@@ -162,7 +162,7 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
 | F | 3.6 Ligar o `Visualizer` ao `--vis` e dividir `draw_world`, a última função longa | 2 a 3 h | Concluída (#78), com pergunta no menu |
 | G1 | 3.7 Saídas sem acento e em português (colunas, status, arquivos e `--tamanhos`), a regra automática e a leitura de runs antigos | 1,5 a 2 h | Concluída (#81) |
 | G2 | 3.8 Nomes do código em português: classes, métodos, atributos e parâmetros | 2 a 3 h | Concluída (#83) |
-| H | 3.9 Tipos nas funções públicas | 1,5 a 2 h | A fazer |
+| H | 3.9 Tipos nas funções públicas, com `mypy` no CI e no `pre-commit` | 2 a 2,5 h | Concluída (#85) |
 | I | 3.10 Organizar em pacote, com nomes de arquivos em português e `pyproject.toml` completo, decidir o uso do `.npz` e resolver a [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29) (gráficos com todas as execuções) | 4,5 a 5 h | A fazer |
 | J | 3.11 Lançar a v2.0.0 | 30 min | A fazer |
 
@@ -170,7 +170,7 @@ A ordem segue as dependências: a classe base usa as constantes, o benchmark ún
 longas vêm depois do benchmark único. Os nomes ficam para o fim, para não criar conflitos com as outras PRs. Em cada PR, o teste de
 referência e os números do `logico_seguro` garantem resultados idênticos, e os diagramas e a lista de testes acompanham o código.
 
-Restam 3 PRs (H a J), com cerca de 6,5 a 7,5 h previstas; a #29 entrou na PR I em 12/11/2026.
+Restam 2 PRs (I e J), com cerca de 5 a 5,5 h previstas; a #29 entrou na PR I em 12/11/2026.
 
 **Meta:** nenhuma função acima de 40 linhas, nenhuma com complexidade acima de 10, nenhuma lista repetida. Lançamento: v2.0.0.
 
@@ -248,7 +248,8 @@ issues antes da v2.0.0, e "Correção" corrige um erro achado durante o trabalho
 | [#81](https://github.com/ingrid-kiki/wumpus_world_modular/pull/81) | 2026-11-12 | 3 (G1) | Saídas sem acento e em português, com regra automática |
 | [#82](https://github.com/ingrid-kiki/wumpus_world_modular/pull/82) | 2026-11-12 | Correção | Saída redirecionada no Windows não quebra mais com emojis |
 | [#83](https://github.com/ingrid-kiki/wumpus_world_modular/pull/83) | 2026-11-12 | 3 (G2) | Nomes do código em português |
-| [#84](https://github.com/ingrid-kiki/wumpus_world_modular/pull/84) | em revisão | Plano | Registro da revisão completa depois da troca de nomes |
+| [#84](https://github.com/ingrid-kiki/wumpus_world_modular/pull/84) | 2026-11-12 | Plano | Registro da revisão completa depois da troca de nomes |
+| [#85](https://github.com/ingrid-kiki/wumpus_world_modular/pull/85) | em revisão | 3 (H) | Tipos nas funções públicas, com `mypy` no CI e no `pre-commit` |
 
 Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 
@@ -259,10 +260,10 @@ Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
 | 2. Documentação e diagramas | Concluída | Baixo | Etapa 0 |
-| 3. Código limpo | Restam cerca de 6,5 a 7,5 h | **Médio** | Etapa 1 |
+| 3. Código limpo | Restam cerca de 5 a 5,5 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Restante** | **cerca de 15,5 a 22,5 h** | | |
+| **Restante** | **cerca de 14 a 20,5 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 

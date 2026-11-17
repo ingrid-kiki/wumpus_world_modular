@@ -11,6 +11,9 @@ Veja as regras em [CONTRIBUTING.md](CONTRIBUTING.md).
 Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md).
 
 ### Adicionado
+- Tipos em todas as funções públicas e nos construtores (108 funções), com os tipos comuns `Posicao`, `Percepcao`,
+  `Passo` e `Resultado`. O `mypy` 2.4.1 confere os tipos no CI e no `pre-commit`, e `tests/test_tipos.py` impede
+  função pública sem tipos. Os resultados não mudam: contagens, `.npz`, 19 gráficos e saída do terminal idênticos.
 - Regra automática contra acentos em nomes: o `ruff` (regras `PLC2401` e `PLC2403`) confere os nomes do código, e
   `tests/test_nomes_sem_acento.py`, os textos usados como nome e tudo o que um run grava.
 - Opções `--paralelo` e `--silencioso` no `main.py`. `--paralelo` roda as execuções em processos paralelos (o benchmark padrão

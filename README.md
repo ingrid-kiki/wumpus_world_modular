@@ -104,6 +104,7 @@ pip install -r requirements-dev.txt
 python -m pytest
 ruff check .
 ruff format .
+mypy
 ```
 
 Para ver a cobertura de testes: `python -m pytest --cov --cov-report=term`. O que cada teste verifica está em

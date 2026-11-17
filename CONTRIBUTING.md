@@ -45,7 +45,7 @@ Regras:
 - Correção de bug vem acompanhada do teste que mostra o bug.
 - Ao criar, renomear ou remover um teste, atualize [`docs/testes.md`](docs/testes.md) na mesma PR: o CI
   falha enquanto a lista estiver desatualizada.
-- Antes do commit, rode `ruff format .` e `ruff check .`: o CI recusa código fora do padrão.
+- Antes do commit, rode `ruff format .`, `ruff check .` e `mypy`: o CI recusa código fora do padrão.
 
 ### Checagem automática antes do commit
 
@@ -87,6 +87,9 @@ As regras marcadas com **(CI)** são verificadas pelo `ruff`. As demais valem na
 - Procure ficar em até 30 linhas.
 - **(CI)** Complexidade de no máximo 10 por função. Exceções levam `# noqa: C901` e o motivo no mesmo comentário.
 - **(CI)** Linhas de até 120 caracteres.
+- **(CI)** Toda função pública (nome sem `_` no começo) e todo `__init__` têm tipos nos parâmetros e no retorno, e o
+  `mypy` confere se eles estão certos. Use os tipos de `world/constantes.py` (`Posicao`, `Percepcao`) e de
+  `agents/agente.py` (`Resultado`, `Passo`) em vez de repetir `tuple[int, int]` ou `dict[str, Any]`.
 
 ### Docstrings
 
