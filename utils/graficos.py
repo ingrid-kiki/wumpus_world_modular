@@ -18,6 +18,7 @@ matplotlib.use("Agg")  # só salva arquivos, nunca abre janela (evita depender d
 import os
 import sys
 import traceback
+from typing import Any
 
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np
@@ -72,7 +73,7 @@ def _barras_por_tamanho(df, coluna, titulo, rotulo_y, nome, pasta_saida):
     _salvar(pasta_saida, nome)
 
 
-def gerar_graficos(df, pasta_saida):
+def gerar_graficos(df: Any, pasta_saida: str) -> dict[str, list[str]]:
     """
     Gera gráficos básicos de barras para vitórias, mortes, sobrevivências e tempo médio.
     Salva cada gráfico na pasta de saída especificada.
@@ -252,7 +253,7 @@ GRAFICOS_AVANCADOS = [
 ]
 
 
-def gerar_graficos_avancados(dados_extra, pasta_saida):
+def gerar_graficos_avancados(dados_extra: dict[str, Any], pasta_saida: str) -> dict[str, list[str]]:
     """
     Gera gráficos avançados a partir dos dados extras coletados durante as execuções.
     Cada gráfico é salvo na pasta de saída. Os dados esperados devem estar em arrays/listas.

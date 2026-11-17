@@ -26,13 +26,14 @@ import random
 import time
 from collections import deque
 from datetime import datetime
+from typing import Any
 
 import pandas as pd
 from joblib import Parallel, delayed
 from scipy.stats import binomtest
 
 from ga.ga_core import AlgoritmoGenetico
-from ga.individual import Individuo
+from ga.individual import Individuo, fitness_de
 from utils.reprodutibilidade import estado_do_git, versoes_das_bibliotecas
 from utils.terminal import usar_utf8_na_saida
 from utils.versao import __version__
@@ -42,7 +43,7 @@ from world.world import Mundo
 REFERENCIA = "busca_aleatoria"
 
 
-def resolvivel(mundo):
+def resolvivel(mundo: Mundo) -> bool:
     """True se existe caminho até o ouro sem pisar em poço (o Wumpus pode ser morto com um tiro)."""
     fila, vistos = deque([(0, 0)]), {(0, 0)}
     while fila:
@@ -62,7 +63,7 @@ def resolvivel(mundo):
     return False
 
 
-def venceu(mundo, cromossomo):
+def venceu(mundo: Mundo, cromossomo: list[str]) -> bool:
     """Executa a sequência numa cópia do mundo e diz se o agente venceu."""
     copia = mundo.clonar()
     for acao in cromossomo:
@@ -72,30 +73,32 @@ def venceu(mundo, cromossomo):
     return copia.ganhou
 
 
-def fitness_real(mundo, cromossomo):
+def fitness_real(mundo: Mundo, cromossomo: list[str]) -> float:
     ind = Individuo(0)
     ind.cromossomo = list(cromossomo)
     ind.avaliar(mundo)
-    return ind.fitness
+    return fitness_de(ind)
 
 
 class AGVariante(AlgoritmoGenetico):
     """O AlgoritmoGenetico do projeto, com seleção e fitness trocáveis para testar as hipóteses."""
 
-    def __init__(self, *args, selecao="truncamento", torneio_k=3, **kwargs):
+    def __init__(self, *args: Any, selecao: str = "truncamento", torneio_k: int = 3, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.selecao, self.torneio_k = selecao, torneio_k
 
-    def selecionar(self, populacao):
+    def selecionar(self, populacao: list[Individuo]) -> Individuo:
         if self.selecao == "truncamento":
             return super().selecionar(populacao)
         competidores = self.gerador.sample(populacao, min(self.torneio_k, len(populacao)))
-        return max(competidores, key=lambda ind: ind.fitness).copia()
+        return max(competidores, key=fitness_de).copia()
 
 
-def busca_aleatoria(mundo, orcamento, genes, semente, **_):
+def busca_aleatoria(
+    mundo: Mundo, orcamento: int, genes: int, semente: int, **_: Any
+) -> tuple[list[str] | None, dict[str, Any]]:
     gerador, melhor, melhor_f = random.Random(semente), None, None
-    for _ in range(orcamento):
+    for _tentativa in range(orcamento):
         c = [gerador.choice(ACOES) for _ in range(genes)]
         f = fitness_real(mundo, c)
         if melhor_f is None or f > melhor_f:
@@ -103,7 +106,16 @@ def busca_aleatoria(mundo, orcamento, genes, semente, **_):
     return melhor, {}
 
 
-def genetico(mundo, orcamento, genes, semente, populacao=40, mutacao=0.02, cruzamento=0.8, **variante):
+def genetico(
+    mundo: Mundo,
+    orcamento: int,
+    genes: int,
+    semente: int,
+    populacao: int = 40,
+    mutacao: float = 0.02,
+    cruzamento: float = 0.8,
+    **variante: Any,
+) -> tuple[list[str], dict[str, Any]]:
     # A população inicial e a última geração entram no orçamento: populacao x (geracoes + 1) <= orcamento
     geracoes = max(1, orcamento // populacao - 1)
     ag = AGVariante(populacao, geracoes, genes, mutacao, cruzamento, semente=semente, **variante)
@@ -112,11 +124,11 @@ def genetico(mundo, orcamento, genes, semente, populacao=40, mutacao=0.02, cruza
     return resultado["melhor"].cromossomo, {"repetidas": ag.acertos_cache / total if total else 0.0}
 
 
-def _ag(**parametros):
+def _ag(**parametros: Any) -> tuple[Any, dict[str, Any]]:
     return genetico, parametros
 
 
-METODOS = {
+METODOS: dict[str, tuple[Any, dict[str, Any]]] = {
     "busca_aleatoria": (busca_aleatoria, {}),
     "ag_projeto": _ag(),  # configuração atual: pais entre os 10 melhores, mutação 0,02, cruzamento 0,8
     # H1, pressão seletiva e diversidade
@@ -136,7 +148,7 @@ METODOS = {
     "ag_padrao_proximidade": _ag(populacao=100, proximidade=20.0),
 }
 
-FASES = {
+FASES: dict[str, dict[str, Any]] = {
     "confirmacao": {
         "metodos": ["busca_aleatoria", "ag_projeto"],
         # (tamanho do mundo, genes, orçamento)
@@ -154,7 +166,7 @@ FASES = {
 }
 
 
-def tentar(nome, mundo_n, genes, orcamento, semente):
+def tentar(nome: str, mundo_n: int, genes: int, orcamento: int, semente: int) -> dict[str, Any]:
     mundo = Mundo(tamanho=mundo_n, semente=semente)
     funcao, parametros = METODOS[nome]
     inicio = time.perf_counter()
@@ -173,7 +185,7 @@ def tentar(nome, mundo_n, genes, orcamento, semente):
     }
 
 
-def holm(pvalores):
+def holm(pvalores: list[float]) -> list[float]:
     """Correção de Holm: devolve os p-valores ajustados, na ordem original."""
     ordem = sorted(range(len(pvalores)), key=pvalores.__getitem__)
     ajustados, maior = [0.0] * len(pvalores), 0.0
@@ -183,7 +195,7 @@ def holm(pvalores):
     return ajustados
 
 
-def comparar(tentativas):
+def comparar(tentativas: pd.DataFrame) -> pd.DataFrame:
     """Compara cada método com a busca aleatória, pareando por mundo (McNemar exato)."""
     linhas = []
     chaves = ["mundo", "genes", "orcamento"]
@@ -258,7 +270,7 @@ def _gravar_resultados(tentativas, saida):
     return comparacoes
 
 
-def main():
+def main() -> None:
     args = _criar_parser().parse_args()
     fase = FASES[args.fase]
     saida = args.saida or os.path.join("logs", f"exp31_{args.fase}_{datetime.now():%Y%m%d_%H%M%S}")

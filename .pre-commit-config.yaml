@@ -1,9 +1,18 @@
 # Checagens rápidas antes de cada commit. Instalação: pre-commit install
 # Manter "rev" igual à versão do ruff em requirements-dev.txt, para dar o mesmo resultado do CI.
 # Os testes ficam de fora, porque são demorados para cada commit: rodam com python -m pytest e no CI.
+# Manter o "rev" do mypy igual à versão em requirements-dev.txt. O gancho instala o próprio mypy e o numpy;
+# as outras bibliotecas ficam sem tipos aqui, então o CI, que tem todas, é a checagem completa.
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.4
     hooks:
       - id: ruff-check
       - id: ruff-format
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v2.4.1
+    hooks:
+      - id: mypy
+        # Confere os arquivos listados em [tool.mypy] do pyproject.toml, como no CI
+        pass_filenames: false
+        additional_dependencies: [numpy==2.5.4]

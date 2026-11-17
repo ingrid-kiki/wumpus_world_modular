@@ -11,23 +11,24 @@
 
 import numpy as np
 
-from agents.agente import Agente
+from agents.agente import Agente, Resultado
 from ga.ga_core import AlgoritmoGenetico  # Importa o núcleo do algoritmo genético
 from world.constantes import ACOES
+from world.world import Mundo
 
 
 class AgenteGenetico(Agente):
     def __init__(
         self,
-        mundo,
-        tamanho_populacao=100,
-        geracoes=500,
-        tamanho_cromossomo=100,
-        taxa_mutacao=0.02,
-        taxa_cruzamento=0.8,
-        semente=None,
-        proximidade=0.0,
-    ):
+        mundo: Mundo,
+        tamanho_populacao: int = 100,
+        geracoes: int = 500,
+        tamanho_cromossomo: int = 100,
+        taxa_mutacao: float = 0.02,
+        taxa_cruzamento: float = 0.8,
+        semente: int | None = None,
+        proximidade: float = 0.0,
+    ) -> None:
         super().__init__(mundo)
         # Sem semente explícita, usa a do mundo: mesma semente -> mesmo resultado (#23)
         if semente is None:
@@ -43,7 +44,7 @@ class AgenteGenetico(Agente):
             proximidade=proximidade,
         )
 
-    def executar(self):
+    def executar(self) -> Resultado:
         """
         Executa o algoritmo genético para encontrar a melhor sequência de ações.
         """

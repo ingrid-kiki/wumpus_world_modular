@@ -14,11 +14,12 @@
 import sys
 import time
 import traceback
+from typing import Any
 
 STATUS_POSSIVEIS = ("vitoria", "morte", "sobreviveu", "erro")
 
 
-def classificar(mundo):
+def classificar(mundo: Any) -> str:
     """Resultado de uma execução a partir do estado final do mundo."""
     if mundo.ganhou:
         return "vitoria"
@@ -27,12 +28,12 @@ def classificar(mundo):
     return "sobreviveu"
 
 
-def relatar_erro(detalhe):
+def relatar_erro(detalhe: str) -> None:
     """Escreve o relato de um erro no stderr, que o main.py grava no saida_terminal.txt."""
     print(detalhe, file=sys.stderr)
 
 
-def executar_uma(agente, mundo, rotulo="", relatar=True):
+def executar_uma(agente: Any, mundo: Any, rotulo: str = "", relatar: bool = True) -> dict[str, Any]:
     """
     Roda agente.executar() uma vez, sem deixar uma exceção derrubar o benchmark.
     :param relatar: False quando a execução roda em outro processo: o stderr de lá não chega ao
@@ -60,7 +61,7 @@ def executar_uma(agente, mundo, rotulo="", relatar=True):
     }
 
 
-def contar(status):
+def contar(status: list[str]) -> dict[str, int]:
     """Conta os status no formato do resultado dos benchmarks."""
     return {
         "vitorias": status.count("vitoria"),

@@ -14,7 +14,7 @@ import codecs
 import sys
 
 
-def usar_utf8_na_saida():
+def usar_utf8_na_saida() -> None:
     """Passa stdout e stderr para UTF-8, se ainda não estiverem; um terminal que já usa UTF-8 não muda."""
     for fluxo in (sys.stdout, sys.stderr):
         codificacao = getattr(fluxo, "encoding", None)

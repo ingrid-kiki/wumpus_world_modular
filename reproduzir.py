@@ -18,6 +18,7 @@
 import argparse
 import os
 import sys
+from typing import Any
 
 import pandas as pd
 
@@ -34,7 +35,7 @@ OPCOES_ANTIGAS = {"--sizes": "--tamanhos"}
 BENCHMARKS_RETIRADOS = {"benchmark_custom.py", "benchmark_fast.py", "benchmark_graficos.py", "benchmark_sideB.py"}
 
 
-def sem_opcao(argumentos, opcao):
+def sem_opcao(argumentos: list[str], opcao: str) -> list[str]:
     """Remove uma opção e seu valor de uma lista de argumentos de linha de comando."""
     saida, pular = [], False
     for arg in argumentos:
@@ -50,17 +51,17 @@ def sem_opcao(argumentos, opcao):
     return saida
 
 
-def _benchmark_atual(arquivo):
+def _benchmark_atual(arquivo: str) -> str:
     """benchmark.py no lugar de um benchmark retirado; qualquer outro arquivo continua o mesmo."""
     return "benchmark.py" if os.path.basename(arquivo) in BENCHMARKS_RETIRADOS else arquivo
 
 
-def atualizar_opcoes(argumentos):
+def atualizar_opcoes(argumentos: list[str]) -> list[str]:
     """
     Troca as opções antigas pelas atuais (ex.: --sizes por --tamanhos) e os benchmarks
     retirados pelo benchmark.py, para refazer runs gravados até a v1.8.0.
     """
-    saida = []
+    saida: list[str] = []
     for arg in argumentos:
         if saida and saida[-1] == "--benchmark":  # o valor de "--benchmark ARQUIVO"
             saida.append(_benchmark_atual(arg))
@@ -72,12 +73,12 @@ def atualizar_opcoes(argumentos):
     return saida
 
 
-def ler_resultados(caminho):
+def ler_resultados(caminho: str) -> pd.DataFrame:
     """Lê um resultados_benchmark.csv, com as colunas antigas já traduzidas."""
     return pd.read_csv(caminho).rename(columns=COLUNAS_ANTIGAS)
 
 
-def avisos_de_ambiente(meta):
+def avisos_de_ambiente(meta: dict[str, Any]) -> list[str]:
     """Diferenças de código ou de ambiente que podem explicar resultados diferentes."""
     avisos = []
     git_atual, git_original = estado_do_git(), meta.get("git") or {}
@@ -99,7 +100,7 @@ def avisos_de_ambiente(meta):
     return avisos
 
 
-def comparar(csv_original, csv_novo):
+def comparar(csv_original: str, csv_novo: str) -> tuple[bool, pd.DataFrame]:
     """Devolve (iguais, tabela) comparando só as colunas determinísticas."""
     a, b = ler_resultados(csv_original), ler_resultados(csv_novo)
     # "erros" existe a partir da v1.6.0 (#30); só entra na comparação se os dois CSVs tiverem
@@ -112,7 +113,7 @@ def comparar(csv_original, csv_novo):
     return iguais, tabela
 
 
-def main(argv=None):
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Refaz um benchmark a partir do metadados.json e compara os resultados"
     )

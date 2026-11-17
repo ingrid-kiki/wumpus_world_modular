@@ -8,12 +8,12 @@
 # educacionais, testes e comparação com agentes automáticos do projeto.
 """
 
-from agents.agente import Agente
+from agents.agente import Agente, Resultado
 from world.constantes import ACOES
 
 
 class AgenteManual(Agente):
-    def executar(self):
+    def executar(self) -> Resultado:
         """
         Agente controlado manualmente pelo usuário via terminal.
         Recebe comandos de ação e interage com o ambiente passo a passo.
