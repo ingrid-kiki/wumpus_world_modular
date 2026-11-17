@@ -12,7 +12,7 @@ sequenceDiagram
     participant M as Mundo
     participant A as Agente
     participant S as salvar_resultados
-    participant G as utils/graficos
+    participant G as wumpus/utilitarios/graficos
 
     R->>R: valida argumentos, cria a pasta e grava metadados.json
 

@@ -154,6 +154,7 @@ Depois da v1.7.0, o trabalho seguiu o [plano de boas práticas](plano-boas-prati
 | 12/11 | Etapa 3, PR G2: nomes do código em português (classes, métodos, atributos, parâmetros e variáveis) | #83 |
 | 12/11 | Revisão completa depois da troca de nomes: nenhum erro no programa | #84 |
 | 16/11 | Etapa 3, PR H: tipos nas 108 funções públicas e construtores, com `mypy` no CI e no `pre-commit` | #85 |
+| 16/11 | Etapa 3, PR I1: pacote `wumpus/`, arquivos e pastas em português, `pyproject` completo | #86 |
 
 Em toda a Etapa 3, o teste de referência, os números do `logico_seguro` e a comparação byte a byte dos gráficos provaram
 que os resultados não mudaram. A única regeneração da referência (#73) foi de formato, com as 165 execuções conferidas antes.
@@ -192,6 +193,7 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 | Oferecer a janela por uma pergunta no menu, e não por `--vis` | Ingrid | #78 |
 | Toda PR atualiza o histórico, o plano de boas práticas e o plano de ação | Ingrid | #79 |
 | Tipos conferidos automaticamente pelo `mypy`, no CI e no `pre-commit` | Ingrid | #85 |
+| Dividir a PR I em I1 (pacote) e I2 (#29 e `.npz`); pacote `wumpus/` com os comandos iguais na raiz | Ingrid | #86 |
 | A LICENSE cita Ingrid Mendes e Alfa Marine | Ingrid | #41, #80 |
 | Guardar `pygad/` na tag `archive/pygad-original` e retirá-la da `main` | Ingrid | #15, #80 |
 | Apagar do GitHub as 45 branches já mescladas (todas contidas na `main`) | Ingrid | #42 |
@@ -204,7 +206,7 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 
 | Item | Onde |
 |---|---|
-| Etapa 3: PRs I e J (pacote com nomes de arquivos em português, `.npz` e #29) e lançamento da v2.0.0 | [plano de boas práticas](plano-boas-praticas.md), #42 |
+| Etapa 3: PRs I2 e J (#29 e `.npz`) e lançamento da v2.0.0 | [plano de boas práticas](plano-boas-praticas.md), #42 |
 | Comparação final para a tese: busca aleatória, AG original, AG com proximidade e `logico_seguro`, em orçamentos menores | #31 |
 | Testar proximidade com mutação 0,1 e medir a variação do próprio AG (várias execuções por mundo) | #31 |
 | Rodar de novo os experimentos da tese com o código da v2.0.0 | Fase 4.6 |

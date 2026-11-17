@@ -77,8 +77,8 @@ As regras marcadas com **(CI)** são verificadas pelo `ruff`. As demais valem na
   documentação mantêm os acentos. O `ruff` (regras `PLC2401` e `PLC2403`) barra acentos nos nomes do código, e
   `tests/test_nomes_sem_acento.py` barra acentos nos textos usados como nome (chaves, colunas, status, arquivos) e em
   tudo o que um run grava.
-- Os nomes do código (classes, métodos, atributos, parâmetros e variáveis) estão em português desde a #83. Os nomes dos
-  arquivos `.py` e das pastas ainda estão em inglês e mudam na PR I da Etapa 3, junto com a organização em pacote.
+- Os nomes do código (classes, métodos, atributos, parâmetros e variáveis) estão em português desde a #83, e os nomes
+  dos arquivos e das pastas, desde a #86, quando o código passou para o pacote `wumpus/`.
 - Dê nome aos números com significado: `TAMANHO_MINIMO`, em vez de um `2` solto no código.
 
 ### Funções
@@ -88,8 +88,8 @@ As regras marcadas com **(CI)** são verificadas pelo `ruff`. As demais valem na
 - **(CI)** Complexidade de no máximo 10 por função. Exceções levam `# noqa: C901` e o motivo no mesmo comentário.
 - **(CI)** Linhas de até 120 caracteres.
 - **(CI)** Toda função pública (nome sem `_` no começo) e todo `__init__` têm tipos nos parâmetros e no retorno, e o
-  `mypy` confere se eles estão certos. Use os tipos de `world/constantes.py` (`Posicao`, `Percepcao`) e de
-  `agents/agente.py` (`Resultado`, `Passo`) em vez de repetir `tuple[int, int]` ou `dict[str, Any]`.
+  `mypy` confere se eles estão certos. Use os tipos de `wumpus/mundo/constantes.py` (`Posicao`, `Percepcao`) e de
+  `wumpus/agentes/agente.py` (`Resultado`, `Passo`) em vez de repetir `tuple[int, int]` ou `dict[str, Any]`.
 
 ### Docstrings
 
@@ -129,10 +129,10 @@ A documentação do andamento também é atualizada em toda PR, para não ficar 
   PR nova e a data de merge da anterior;
 - o [`docs/plano-de-acao.md`](docs/plano-de-acao.md): status das fases.
 
-A versão fica num lugar só: `utils/versao.py`. Entre lançamentos ela tem o sufixo `.dev0` (ex.: `1.5.0.dev0`).
+A versão fica num lugar só: `wumpus/utilitarios/versao.py`. Entre lançamentos ela tem o sufixo `.dev0` (ex.: `1.5.0.dev0`).
 Para lançar:
 
-1. Tire o `.dev0` em `utils/versao.py` e dê número e data à seção `[Não lançado]` do CHANGELOG.
+1. Tire o `.dev0` em `wumpus/utilitarios/versao.py` e dê número e data à seção `[Não lançado]` do CHANGELOG.
 2. Faça o merge na `main` e crie a tag `vX.Y.Z` no commit de merge, com um GitHub Release.
 3. Volte a versão para a próxima `.dev0` num commit seguinte.
 

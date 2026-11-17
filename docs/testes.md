@@ -33,20 +33,20 @@ O CI roda todos os testes a cada PR, no Ubuntu e no Windows, com Python 3.12 e 3
 | `test_constantes.py` | 3 | Ações, percepções e status num lugar só |
 | `test_nomes_sem_acento.py` | 4 | Nada que o programa grava ou usa como chave tem acento |
 | `test_agente_base.py` | 13 | Classe base e lista única de agentes |
-| `test_world.py` | 1 | Criação do mundo |
-| `test_logic_agent.py` | 1 | Criação do agente lógico |
+| `test_mundo.py` | 1 | Criação do mundo |
+| `test_agente_logico.py` | 1 | Criação do agente lógico |
 | `test_logico_seguro.py` | 16 | Agente lógico que evita poços |
-| `test_manual_agent.py` | 1 | Criação do agente manual |
-| `test_genetic_agent.py` | 1 | Criação e retorno do agente genético |
-| `test_action_distribution.py` | 1 | O agente genético executa ações |
-| `test_execution_time.py` | 1 | O agente genético termina em tempo razoável |
-| `test_final_status.py` | 1 | O agente genético termina num estado válido |
-| `test_fitness_history.py` | 1 | O agente genético registra o fitness |
-| `test_trajectory_length.py` | 1 | O agente genético gera uma trajetória |
+| `test_agente_manual.py` | 1 | Criação do agente manual |
+| `test_agente_genetico.py` | 1 | Criação e retorno do agente genético |
+| `test_distribuicao_das_acoes.py` | 1 | O agente genético executa ações |
+| `test_tempo_de_execucao.py` | 1 | O agente genético termina em tempo razoável |
+| `test_estado_final.py` | 1 | O agente genético termina num estado válido |
+| `test_historico_de_fitness.py` | 1 | O agente genético registra o fitness |
+| `test_tamanho_da_trajetoria.py` | 1 | O agente genético gera uma trajetória |
 | `test_busca_aleatoria.py` | 6 | Busca aleatória, a referência do genético |
 | `test_proximidade.py` | 9 | Bônus de proximidade ao ouro no fitness |
 | `test_benchmark.py` | 4 | Benchmark único: modos sequencial e paralelo, silencioso e tempos |
-| `test_visualizer.py` | 6 | Janela que reproduz a partida e pergunta no menu |
+| `test_visualizador.py` | 6 | Janela que reproduz a partida e pergunta no menu |
 | `test_main_etapas.py` | 7 | Arquivos de cada run e resistência a quedas |
 | `test_saida_redirecionada.py` | 2 | Saída redirecionada para arquivo sem quebrar no Windows |
 | `test_graficos.py` | 9 | Gráficos nunca interrompem o benchmark |
@@ -146,7 +146,7 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 |---|---|---|
 | `test_ordem_das_acoes_nao_muda` | 1 | A ordem das ações continua a mesma, porque os sorteios dos experimentos dependem dela |
 | `test_deslocamentos_cobrem_os_movimentos_na_mesma_ordem` | 1 | Cada movimento tem um deslocamento, na mesma ordem da lista de movimentos |
-| `test_nenhum_arquivo_escreve_acoes_percepcoes_ou_status_a_mao` | 1 | Fora de `world/constantes.py`, ações, percepções e status só aparecem pelas constantes |
+| `test_nenhum_arquivo_escreve_acoes_percepcoes_ou_status_a_mao` | 1 | Fora de `wumpus/mundo/constantes.py`, ações, percepções e status só aparecem pelas constantes |
 
 ### `test_nomes_sem_acento.py`
 
@@ -159,7 +159,7 @@ Cada teste descreve o comportamento correto de um bug já corrigido. Se algum fa
 
 Os nomes do código (variáveis, funções e classes) são conferidos pelo `ruff`, com as regras `PLC2401` e `PLC2403`.
 
-### `test_world.py`
+### `test_mundo.py`
 
 | Teste | Casos | O que garante |
 |---|---|---|
@@ -167,9 +167,9 @@ Os nomes do código (variáveis, funções e classes) são conferidos pelo `ruff
 
 ## Agentes
 
-Os arquivos `test_world.py`, `test_logic_agent.py`, `test_manual_agent.py`, `test_genetic_agent.py`, `test_action_distribution.py`,
-`test_execution_time.py`, `test_final_status.py`, `test_fitness_history.py` e `test_trajectory_length.py` são os testes mais antigos
-do projeto. Eles verificam o mínimo, como a existência de atributos, e o comportamento fica coberto pelos testes acima e abaixo.
+Os arquivos `test_mundo.py`, `test_agente_logico.py`, `test_agente_manual.py`, `test_agente_genetico.py`, `test_distribuicao_das_acoes.py`,
+`test_tempo_de_execucao.py`, `test_estado_final.py`, `test_historico_de_fitness.py` e `test_tamanho_da_trajetoria.py` são os testes mais antigos
+do projeto; até a v1.8.0, seus nomes eram em inglês. Eles verificam o mínimo, como a existência de atributos, e o comportamento fica coberto pelos testes acima e abaixo.
 
 ### `test_agente_base.py`
 
@@ -182,7 +182,7 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_executar_sequencia_para_no_fim_do_jogo` | 1 | Uma sequência de ações para quando o jogo termina, e cada passo guarda a posição |
 | `test_main_e_benchmarks_usam_a_mesma_lista` | 1 | O `main.py` e o benchmark usam o mesmo dicionário de agentes |
 
-### `test_logic_agent.py` e `test_manual_agent.py`
+### `test_agente_logico.py` e `test_agente_manual.py`
 
 | Teste | Casos | O que garante |
 |---|---|---|
@@ -207,7 +207,7 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_registrado_no_programa_e_nos_benchmarks` | 2 | O agente está disponível no `main.py` e no benchmark |
 | `test_roda_num_benchmark_pela_linha_de_comando` | 1 | `--agentes logico_seguro` roda um benchmark completo |
 
-### `test_genetic_agent.py` e testes simples do agente genético
+### `test_agente_genetico.py` e testes simples do agente genético
 
 | Teste | Casos | O que garante |
 |---|---|---|
@@ -254,7 +254,7 @@ do projeto. Eles verificam o mínimo, como a existência de atributos, e o compo
 | `test_tempo_total_e_de_relogio_e_tempo_medio_e_a_media_das_execucoes` | 1 | `tempo_total` é o tempo de relógio e `tempo_medio`, a média das execuções |
 | `test_opcoes_do_main_chegam_ao_benchmark` | 1 | `--paralelo` e `--silencioso` chegam ao benchmark, e sem elas nada é repassado |
 
-### `test_visualizer.py`
+### `test_visualizador.py`
 
 | Teste | Casos | O que garante |
 |---|---|---|
@@ -317,7 +317,7 @@ Os dois rodam os scripts como processos novos, com `PYTHONIOENCODING=cp1252`, a 
 | `test_membros_e_comentarios_nao_contam_como_classes` | 1 | Atributos, métodos e comentários não são confundidos com classes |
 | `test_ignora_outros_tipos_de_diagrama` | 1 | Fluxogramas e outros diagramas são ignorados |
 | `test_le_arquivo_com_quebra_de_linha_do_windows` | 1 | Arquivos salvos no Windows são lidos corretamente |
-| `test_encontra_classes_do_programa_e_ignora_pastas_de_fora` | 1 | A leitura do código encontra as classes do programa e ignora `pygad/` e `tests/` |
+| `test_encontra_classes_do_programa_e_ignora_pastas_de_fora` | 1 | A leitura do código encontra as classes do programa e ignora `tests/` e as pastas geradas, como `build/` |
 | `test_nao_conta_classe_aninhada` | 1 | Classes dentro de funções ou de outras classes não contam |
 | `test_diagrama_de_classes_bate_com_o_codigo` | 1 | Toda classe do diagrama existe no código, e toda classe do código está no diagrama |
 

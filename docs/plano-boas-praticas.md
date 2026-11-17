@@ -2,7 +2,7 @@
 
 Plano de 09/11/2026. Relaciona-se com o [plano de ação](plano-de-acao.md) original e com a [#42](https://github.com/ingrid-kiki/wumpus_world_modular/issues/42).
 
-**Status em 16/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a F, G1, G2 e H concluídas, próxima: PR I, pacote), com a comparação final da tese depois dela.
+**Status em 16/11/2026:** Etapas 0, 1 e 2 concluídas; v1.8.0 lançada como base antes da refatoração; Etapa 3 em andamento (antecipada; PRs A a F, G1, G2, H e I1 concluídas, próxima: PR I2, #29 e `.npz`), com a comparação final da tese depois dela.
 
 ## Objetivo
 
@@ -118,7 +118,7 @@ Os diagramas estão em [`docs/arquitetura/`](arquitetura/README.md).
   `visual/` passou a ser usado na #78, e o `logger` saiu na #74.
 - Decidir o uso do `dados_extra_AGENTE_NxN.npz`: hoje ele é gravado em todo run, mas nenhuma parte do programa o lê.
   Uma opção é gerar os gráficos avançados a partir dele, o que também ajudaria na [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29).
-- Organizar em pacote, com `pyproject.toml` completo.
+- Organizar em pacote, com `pyproject.toml` completo (concluído, #86: pacote `wumpus/`).
 
 **Ajustes apontados pelo diagrama de classes (decididos em 11/11/2026; entram nas PRs B, C e F abaixo):**
 
@@ -163,14 +163,15 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
 | G1 | 3.7 Saídas sem acento e em português (colunas, status, arquivos e `--tamanhos`), a regra automática e a leitura de runs antigos | 1,5 a 2 h | Concluída (#81) |
 | G2 | 3.8 Nomes do código em português: classes, métodos, atributos e parâmetros | 2 a 3 h | Concluída (#83) |
 | H | 3.9 Tipos nas funções públicas, com `mypy` no CI e no `pre-commit` | 2 a 2,5 h | Concluída (#85) |
-| I | 3.10 Organizar em pacote, com nomes de arquivos em português e `pyproject.toml` completo, decidir o uso do `.npz` e resolver a [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29) (gráficos com todas as execuções) | 4,5 a 5 h | A fazer |
-| J | 3.11 Lançar a v2.0.0 | 30 min | A fazer |
+| I1 | 3.10 Organizar em pacote (`wumpus/`), com nomes de arquivos e pastas em português e `pyproject.toml` completo | 2,5 h | Concluída (#86) |
+| I2 | 3.11 Decidir o uso do `.npz` e resolver a [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29) (gráficos com todas as execuções) | 2,5 h | A fazer |
+| J | 3.12 Lançar a v2.0.0 | 30 min | A fazer |
 
 A ordem segue as dependências: a classe base usa as constantes, o benchmark único e o `--vis` dependem da classe base, e as funções
 longas vêm depois do benchmark único. Os nomes ficam para o fim, para não criar conflitos com as outras PRs. Em cada PR, o teste de
 referência e os números do `logico_seguro` garantem resultados idênticos, e os diagramas e a lista de testes acompanham o código.
 
-Restam 2 PRs (I e J), com cerca de 5 a 5,5 h previstas; a #29 entrou na PR I em 12/11/2026.
+Restam 2 PRs (I2 e J), com cerca de 3 h previstas; a PR I foi dividida em I1 e I2 em 16/11/2026, e a #29 entrou na PR I em 12/11/2026.
 
 **Meta:** nenhuma função acima de 40 linhas, nenhuma com complexidade acima de 10, nenhuma lista repetida. Lançamento: v2.0.0.
 
@@ -249,7 +250,8 @@ issues antes da v2.0.0, e "Correção" corrige um erro achado durante o trabalho
 | [#82](https://github.com/ingrid-kiki/wumpus_world_modular/pull/82) | 2026-11-12 | Correção | Saída redirecionada no Windows não quebra mais com emojis |
 | [#83](https://github.com/ingrid-kiki/wumpus_world_modular/pull/83) | 2026-11-12 | 3 (G2) | Nomes do código em português |
 | [#84](https://github.com/ingrid-kiki/wumpus_world_modular/pull/84) | 2026-11-12 | Plano | Registro da revisão completa depois da troca de nomes |
-| [#85](https://github.com/ingrid-kiki/wumpus_world_modular/pull/85) | em revisão | 3 (H) | Tipos nas funções públicas, com `mypy` no CI e no `pre-commit` |
+| [#85](https://github.com/ingrid-kiki/wumpus_world_modular/pull/85) | 2026-11-16 | 3 (H) | Tipos nas funções públicas, com `mypy` no CI e no `pre-commit` |
+| [#86](https://github.com/ingrid-kiki/wumpus_world_modular/pull/86) | em revisão | 3 (I1) | Pacote `wumpus/`, arquivos em português e `pyproject` completo |
 
 Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 
@@ -260,10 +262,10 @@ Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 | 0. Pré-requisitos | Concluída | — | — |
 | 1. Padrões e medição | Concluída | Baixo | Etapa 0 |
 | 2. Documentação e diagramas | Concluída | Baixo | Etapa 0 |
-| 3. Código limpo | Restam cerca de 5 a 5,5 h | **Médio** | Etapa 1 |
+| 3. Código limpo | Restam cerca de 3 h | **Médio** | Etapa 1 |
 | 4. Código comentado | 5–8 h | Baixo | Etapa 3 |
 | 5. Otimização | 4–7 h | Médio | Etapas 1 e 3 |
-| **Restante** | **cerca de 14 a 20,5 h** | | |
+| **Restante** | **cerca de 12 a 18 h** | | |
 
 As estimativas são de trabalho conjunto; revisões e o tempo de máquina dos experimentos vêm à parte.
 

@@ -19,28 +19,33 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 
 ```
 .
-├── agents/               # Agentes implementados
-│   ├── genetic_agent.py
-│   ├── logic_agent.py
-│   ├── logic_knowledge_base.py
-│   └── manual_agent.py
+├── wumpus/                    # O pacote do programa (instalável com pip install -e .)
+│   ├── mundo/                # O ambiente
+│   │   ├── constantes.py     # Ações, percepções, status e os tipos Posicao e Percepcao
+│   │   └── mundo.py          # Classe Mundo
+│   ├── agentes/              # Os agentes
+│   │   ├── agente.py         # Classe base Agente e o formato único de resultado
+│   │   ├── registro.py       # Lista única dos agentes, escolhidos pelo nome
+│   │   ├── agente_manual.py
+│   │   ├── agente_logico.py
+│   │   ├── base_conhecimento.py
+│   │   ├── logico_seguro.py
+│   │   ├── agente_genetico.py
+│   │   └── agente_aleatorio.py
+│   ├── ag/                   # Núcleo do algoritmo genético
+│   │   ├── algoritmo_genetico.py
+│   │   └── individuo.py
+│   ├── visual/               # Janela que reproduz a partida (pygame)
+│   │   └── visualizador.py
+│   └── utilitarios/
+│       ├── execucao.py       # Roda um agente uma vez e classifica o resultado
+│       ├── graficos.py       # Gráficos básicos e avançados
+│       ├── reprodutibilidade.py  # metadados.json de cada execução
+│       ├── terminal.py       # Saída em UTF-8, também quando redirecionada
+│       └── versao.py         # Versão do projeto (fonte única)
 │
-├── ga/                   # Núcleo do algoritmo genético
-│   ├── ga_core.py
-│   └── individual.py
-│
-├── visual/               # Visualização gráfica com Pygame
-│   └── visualizer.py
-│
-├── world/                # Ambiente do mundo de Wumpus
-│   └── world.py
-│
-├── utils/                # Utilitários do projeto
-│   ├── execucao.py       # Roda um agente uma vez e classifica o resultado
-│   ├── graficos.py       # Geração de gráficos básicos e avançados
-│   ├── reprodutibilidade.py  # metadados.json de cada execução
-│   ├── terminal.py       # Saída em UTF-8, também quando redirecionada
-│   └── versao.py         # Versão do projeto (fonte única)
+├── experimentos/             # Comparação de métodos de busca (#31)
+├── tests/                    # Testes automáticos (lista em docs/testes.md)
 │
 ├── docs/                 # Análises, plano de ação e relato das decisões (comece por docs/README.md)
 │
@@ -53,6 +58,7 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │      └── graficos_avancados_AGENTE_NxN/   # Resultados dos gráficos avançados
 │
 ├── benchmark.py               # Benchmark único, usado pelo main.py (sequencial ou --paralelo)
+├── pyproject.toml             # Pacote, versão, dependências e configuração das ferramentas
 ├── main.py                    # Script principal para execução
 ├── reproduzir.py              # Refaz um run a partir do metadados.json e compara
 ├── CHANGELOG.md               # Histórico de versões
@@ -88,7 +94,8 @@ Ative o ambiente antes de instalar e sempre que abrir um terminal novo:
 source .venv/bin/activate     # Linux e macOS
 ```
 
-Com o ambiente ativo, instale as dependências:
+Com o ambiente ativo, instale as dependências (ou `pip install -e .`, que instala o pacote `wumpus` com as mesmas
+dependências e permite importá-lo de qualquer pasta):
 
 ```bash
 pip install -r requirements.txt
@@ -154,7 +161,7 @@ Na opção 5, digite os argumentos do benchmark, por exemplo:
 | `--avaliacoes` | população × gerações | Orçamento da busca aleatória (agente `aleatorio`) |
 | `--saida` | `logs/run_AAAAMMDD_HHMMSS` | Pasta de saída |
 
-Antes, os parâmetros do genético só podiam ser mudados editando `agents/genetic_agent.py`.
+Antes, os parâmetros do genético só podiam ser mudados editando `wumpus/agentes/agente_genetico.py`.
 
 ### 🔁 Reproduzir uma execução
 
@@ -246,7 +253,7 @@ Sem semente explícita, o AG usa a semente do mundo: o mesmo mundo produz sempre
 
 ## 🖼️ Interface Visual
 
-Oferecida no fim das opções 2, 3 e 4 do menu, a janela (`visual/visualizer.py`) refaz a partida passo a passo e mostra:
+Oferecida no fim das opções 2, 3 e 4 do menu, a janela (`wumpus/visual/visualizador.py`) refaz a partida passo a passo e mostra:
 
 - 🟥 Wumpus  
 - 🕳️ Poços  
