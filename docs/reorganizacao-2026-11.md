@@ -135,7 +135,7 @@ foi a única mudança que superou a busca aleatória com significância.
 
 ---
 
-## 7. Continuação (09 a 12/11/2026)
+## 7. Continuação (09 a 16/11/2026)
 
 Depois da v1.7.0, o trabalho seguiu o [plano de boas práticas](plano-boas-praticas.md), que tem a lista completa das PRs.
 
@@ -205,7 +205,7 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 
 ---
 
-## 8. Pendências (atualizado em 12/11/2026)
+## 8. Pendências (atualizado em 16/11/2026)
 
 | Item | Onde |
 |---|---|

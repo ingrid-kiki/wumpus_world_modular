@@ -19,20 +19,21 @@ caso de uso, fluxogramas, código comentado para aprendizado e etapas do process
 
 ## Estado medido
 
-Medido com o mesmo script nas duas datas, sem contar os testes e `pygad/`. A coluna de 12/11/2026 é a da PR F da Etapa 3.
+Medido com as mesmas regras nas três datas, sem contar os testes. A coluna de 12/11/2026 é a da PR F da Etapa 3, e a de
+16/11/2026, a da PR I1.
 
-| Indicador | 09/11/2026 (início) | 12/11/2026 |
-|---|---|---|
-| Funções (sem testes e `pygad/`) | 115 | 149 |
-| Funções sem docstring | 60 (52%) | 35 (23%) |
-| Funções com anotação de tipos | 0 | 0; desde a #85, todas as 108 públicas e construtores, conferidas pelo `mypy` |
-| Funções com mais de 30 linhas | 16; as maiores têm 148, 95 e 91 linhas | 6; a maior tem 40 linhas |
-| Funções muito complexas (C901 > 10) | 2: `gerar_graficos_avancados` e `draw_world` | 0 |
-| Linhas de comentário | 17% | 14% (as docstrings novas não contam; comentários são a Etapa 4) |
-| Lista de ações repetida | em 4 arquivos; agentes disponíveis em 6; 5 benchmarks quase iguais | nenhuma: `world/constantes.py`, `agents/registro.py` e um benchmark só |
-| Diagramas | só um diagrama de classes, na análise inicial, já desatualizado | 8 arquivos em `docs/arquitetura/` |
-| Cobertura de testes | não medida (131 testes) | 92% (183 testes) |
-| Tempo do CI | cerca de 2 min por PR | cerca de 5 min por PR |
+| Indicador | 09/11/2026 (início) | 12/11/2026 | 16/11/2026 |
+|---|---|---|---|
+| Funções (sem testes e `pygad/`) | 115 | 149 | 154 |
+| Funções sem docstring | 60 (52%) | 35 (23%) | 34 (22%) |
+| Funções com anotação de tipos | 0 | 0 | 115, entre elas todas as 108 públicas e construtores (#85), conferidas pelo `mypy` |
+| Funções com mais de 30 linhas | 16; as maiores têm 148, 95 e 91 linhas | 6; a maior tem 40 linhas | 7; a maior tem 40 linhas |
+| Funções muito complexas (C901 > 10) | 2: `gerar_graficos_avancados` e `draw_world` | 0 | 0 |
+| Linhas de comentário | 17% | 14% (as docstrings novas não contam; comentários são a Etapa 4) | 14% |
+| Lista de ações repetida | em 4 arquivos; agentes disponíveis em 6; 5 benchmarks quase iguais | nenhuma: `world/constantes.py`, `agents/registro.py` e um benchmark só | nenhuma: `wumpus/mundo/constantes.py`, `wumpus/agentes/registro.py` e um benchmark só |
+| Diagramas | só um diagrama de classes, na análise inicial, já desatualizado | 8 arquivos em `docs/arquitetura/` | 8 arquivos, revistos a cada PR |
+| Cobertura de testes | não medida (131 testes) | 92% (183 testes) | 92% (194 testes, em subpastas por assunto) |
+| Tempo do CI | cerca de 2 min por PR | cerca de 5 min por PR | 2 a 3 min por PR, com o `mypy` (medido nas execuções de 16/11/2026) |
 
 ## Etapas
 
@@ -147,8 +148,8 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
   conferida automaticamente desde a #81, e o `reproduzir.py` continua lendo runs antigos.
 - **Um benchmark só**, com `--paralelo` e uma opção para menos mensagens. Os outros quatro arquivos saem, e `--benchmark`
   continua aceitando arquivos externos. A justificativa está em [`analise-benchmarks-2026-11.md`](analise-benchmarks-2026-11.md).
-- **Em aberto:** o uso do `.npz` (PR I). A janela é oferecida por uma pergunta no menu (decidido em 12/11/2026), e a pasta
-  `pygad/` foi guardada numa tag (#80). A janela é oferecida por uma pergunta no menu (decidido em 12/11/2026).
+- **Em aberto:** o uso do `.npz` (PR I2). A janela é oferecida por uma pergunta no menu (decidido em 12/11/2026), e a pasta
+  `pygad/` foi guardada numa tag (#80).
 
 **Divisão em tarefas (cada PR é mesclada antes de abrir a próxima; aprovada em 11/11/2026):**
 

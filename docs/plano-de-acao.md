@@ -4,7 +4,7 @@ Base: [analise-inicial-2026-11.md](analise-inicial-2026-11.md) (os números entr
 seções 3 e 4 de lá). Decisões de equipe: [#17](https://github.com/ingrid-kiki/wumpus_world_modular/issues/17).
 O relato do que foi feito está em [reorganizacao-2026-11.md](reorganizacao-2026-11.md).
 
-## Status (atualizado em 12/11/2026, v1.8.0 lançada e `2.0.0.dev0` em andamento)
+## Status (atualizado em 16/11/2026, v1.8.0 lançada e `2.0.0.dev0` em andamento)
 
 | Fase | Status | Onde |
 |---|---|---|
@@ -33,7 +33,7 @@ O relato do que foi feito está em [reorganizacao-2026-11.md](reorganizacao-2026
 
 **Fase 5 nas PRs da Etapa 3:**
 
-| Tarefa do plano original | Situação em 12/11/2026 |
+| Tarefa do plano original | Situação em 16/11/2026 |
 |---|---|
 | 5.1 Pacote com `pyproject.toml` | Feito na #86: pacote `wumpus/` (`mundo`, `agentes`, `ag`, `visual`, `utilitarios`), instalável com `pip install -e .` |
 | 5.2 `constants.py` | Feito na #72, como `world/constantes.py` |
