@@ -9,6 +9,10 @@
 # pela posição na sequência, então mudar a ordem muda os resultados dos experimentos.
 """
 
+# Tipos usados em todo o programa
+Posicao = tuple[int, int]  # (linha, coluna) de uma casa
+Percepcao = list[str]  # o que o agente sente numa casa: FEDOR, BRISA e BRILHO
+
 # Ações
 CIMA = "CIMA"
 BAIXO = "BAIXO"

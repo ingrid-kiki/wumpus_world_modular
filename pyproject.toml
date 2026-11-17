@@ -33,3 +33,14 @@ omit = ["tests/*", "pygad/*", ".venv/*", "logs/*"]
 [tool.coverage.report]
 # Mínimo igual ao medido na Etapa 1 (79%), com 1 ponto de folga para diferenças entre Windows e Linux
 fail_under = 78
+
+[tool.mypy]
+# Checagem dos tipos (Etapa 3, PR H). Os testes ficam de fora; tests/test_tipos.py exige tipos nas funções públicas.
+python_version = "3.12"
+files = ["main.py", "benchmark.py", "reproduzir.py", "agents", "ga", "world", "utils", "visual", "experimentos"]
+# Bibliotecas sem tipos publicados (seaborn, joblib, scikit-learn...) são tratadas como Any
+ignore_missing_imports = true
+# Uma função com tipos precisa tê-los em todos os parâmetros e no retorno
+disallow_incomplete_defs = true
+# Confere também o corpo das funções que ainda não têm tipos
+check_untyped_defs = true

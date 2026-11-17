@@ -11,7 +11,9 @@ import os
 import shlex
 import sys
 import traceback
+from collections.abc import Callable, Iterator
 from datetime import datetime
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -24,7 +26,7 @@ from utils.terminal import usar_utf8_na_saida
 from world.world import TAMANHO_MINIMO, Mundo
 
 
-def menu_interativo():
+def menu_interativo() -> str:
     print("=== Wumpus World ===")
     print("Escolha o modo de execução:")
     print("1 - Benchmark (vários agentes e tamanhos)")
@@ -36,7 +38,7 @@ def menu_interativo():
     return escolha
 
 
-def perguntar_inteiro(pergunta, minimo=None, opcional=False):
+def perguntar_inteiro(pergunta: str, minimo: int | None = None, opcional: bool = False) -> int | None:
     """Repete a pergunta até receber um inteiro válido; em branco devolve None se for opcional (#38)."""
     while True:
         resposta = input(pergunta).strip()
@@ -53,12 +55,12 @@ def perguntar_inteiro(pergunta, minimo=None, opcional=False):
         return valor
 
 
-def perguntar_sim_ou_nao(pergunta):
+def perguntar_sim_ou_nao(pergunta: str) -> bool:
     """True só se a resposta for "s" ou "sim"; em branco ou qualquer outra coisa, False."""
     return input(pergunta).strip().lower() in ("s", "sim")
 
 
-def mostrar_partida(mundo_inicial, historico):
+def mostrar_partida(mundo_inicial: Mundo, historico: list[dict[str, Any]]) -> None:
     """Abre a janela que reproduz a partida; sem pygame ou sem tela, avisa e segue."""
     try:
         from visual.visualizer import Visualizador  # o pygame só é carregado se a janela for pedida
@@ -68,9 +70,10 @@ def mostrar_partida(mundo_inicial, historico):
         print(f"⚠️ Não foi possível abrir a janela: {type(e).__name__}: {e}")
 
 
-def execucao_unica(agente_nome):
+def execucao_unica(agente_nome: str) -> None:
     """Uma partida de um agente, com tamanho e semente pedidos no menu, e a janela opcional no fim."""
     tamanho = perguntar_inteiro("Tamanho do mundo (ex: 4): ", minimo=TAMANHO_MINIMO)
+    assert tamanho is not None  # sem opcional=True, a pergunta se repete até receber um número
     semente = perguntar_inteiro("Semente aleatória (opcional, pressione Enter para aleatório): ", opcional=True)
 
     mundo = Mundo(tamanho=tamanho, semente=semente)
@@ -83,15 +86,17 @@ def execucao_unica(agente_nome):
         mostrar_partida(mundo_inicial, resultado["historico"])
 
 
-def carregar_benchmark(caminho):
+def carregar_benchmark(caminho: str) -> Callable[..., Any]:
     """Importa dinamicamente um módulo de benchmark pelo caminho."""
     especificacao = importlib.util.spec_from_file_location("modulo_benchmark", caminho)
+    if especificacao is None or especificacao.loader is None:
+        raise ImportError(f"não foi possível carregar o benchmark {caminho}")
     modulo_benchmark = importlib.util.module_from_spec(especificacao)
     especificacao.loader.exec_module(modulo_benchmark)
     return modulo_benchmark.executar_benchmark
 
 
-def formatar_tempo(segundos):
+def formatar_tempo(segundos: float) -> str:
     """
     Formata tempo em segundos para uma string legível.
     Retorna em minutos se >= 60s, senão em segundos.
@@ -103,7 +108,7 @@ def formatar_tempo(segundos):
         return f"{segundos:.2f}s"
 
 
-def salvar_resultados(resultados, pasta_saida):
+def salvar_resultados(resultados: list[Any], pasta_saida: str) -> tuple[pd.DataFrame, str]:
     """
     Salva o resumo dos benchmarks em resultados_benchmark.csv, só com colunas escalares.
     Os dados extras (arrays do AG) vão para dados_extra_<agente>_<N>x<N>.npz, um arquivo por
@@ -116,7 +121,9 @@ def salvar_resultados(resultados, pasta_saida):
         if dados_extra:
             nome = f"dados_extra_{r['agente']}_{r['tamanho_mundo']}x{r['tamanho_mundo']}.npz"
             with _gravacao_atomica(os.path.join(pasta_saida, nome), "wb") as f:
-                np.savez_compressed(f, **{chave: np.asarray(valor) for chave, valor in dados_extra.items()})
+                arrays = {chave: np.asarray(valor) for chave, valor in dados_extra.items()}
+                # Os tipos do numpy confundem os arrays nomeados com a opção allow_pickle
+                np.savez_compressed(f, **arrays)  # type: ignore[arg-type]
     df = pd.DataFrame([{k: v for k, v in r.items() if k != "dados_extra"} for r in validos])
     caminho_csv = os.path.join(pasta_saida, "resultados_benchmark.csv")
     with _gravacao_atomica(caminho_csv, "w", encoding="utf-8", newline="") as f:
@@ -125,7 +132,7 @@ def salvar_resultados(resultados, pasta_saida):
 
 
 @contextlib.contextmanager
-def _gravacao_atomica(caminho, modo, **kwargs):
+def _gravacao_atomica(caminho: str, modo: str, **kwargs: Any) -> Iterator[Any]:
     """Grava num arquivo temporário e só então substitui o definitivo: uma queda no meio não corrompe o anterior."""
     temporario = f"{caminho}.tmp"
     with open(temporario, modo, **kwargs) as arquivo:
@@ -134,7 +141,7 @@ def _gravacao_atomica(caminho, modo, **kwargs):
 
 
 @contextlib.contextmanager
-def capturar_saida_terminal(caminho=None):
+def capturar_saida_terminal(caminho: str | None = None) -> Iterator[io.StringIO]:
     """
     Context manager para capturar toda a saída do terminal durante a execução.
     Permite salvar a saída do terminal em um arquivo para análise posterior.
@@ -148,18 +155,18 @@ def capturar_saida_terminal(caminho=None):
     try:
 
         class SaidaDupla:
-            def __init__(self, terminal, buffer):
+            def __init__(self, terminal: Any, buffer: io.StringIO) -> None:
                 self.terminal = terminal
                 self.buffer = buffer
 
-            def write(self, texto):
+            def write(self, texto: str) -> None:
                 self.terminal.write(texto)
                 self.buffer.write(texto)
                 if arquivo:
                     arquivo.write(texto)
                     arquivo.flush()
 
-            def flush(self):
+            def flush(self) -> None:
                 self.terminal.flush()
                 self.buffer.flush()
 
@@ -176,10 +183,10 @@ def capturar_saida_terminal(caminho=None):
             arquivo.close()
 
 
-def inteiro_minimo(minimo):
+def inteiro_minimo(minimo: int) -> Callable[[str], int]:
     """Tipo para o argparse: inteiro maior ou igual a `minimo` (#38)."""
 
-    def converter(texto):
+    def converter(texto: str) -> int:
         try:
             valor = int(texto)
         except ValueError:
@@ -191,7 +198,7 @@ def inteiro_minimo(minimo):
     return converter
 
 
-def taxa(texto):
+def taxa(texto: str) -> float:
     """Tipo para o argparse: número entre 0 e 1 (#38)."""
     try:
         valor = float(texto)
@@ -202,7 +209,7 @@ def taxa(texto):
     return valor
 
 
-def peso(texto):
+def peso(texto: str) -> float:
     """Tipo para o argparse: número maior ou igual a zero."""
     try:
         valor = float(texto)
@@ -213,7 +220,7 @@ def peso(texto):
     return valor
 
 
-def arquivo_existente(caminho):
+def arquivo_existente(caminho: str) -> str:
     """Tipo para o argparse: caminho de um arquivo que existe (#38)."""
     if not os.path.isfile(caminho):
         raise argparse.ArgumentTypeError(f"arquivo não encontrado: {caminho}")
@@ -288,7 +295,7 @@ def _opcoes_de_execucao(parser):
     parser.add_argument("--saida", type=str, default=None, help="Pasta de saída (padrão: logs/run_AAAAMMDD_HHMMSS)")
 
 
-def criar_parser():
+def criar_parser() -> argparse.ArgumentParser:
     """Linha de comando do benchmark, usada pelas opções 1 e 5 do menu e pelo reproduzir.py."""
     parser = argparse.ArgumentParser(description="Executa benchmarks no Wumpus World")
     _opcoes_basicas(parser)
@@ -297,7 +304,7 @@ def criar_parser():
     return parser
 
 
-def separar_argumentos(linha, windows=os.name == "nt"):
+def separar_argumentos(linha: str, windows: bool = os.name == "nt") -> list[str]:
     """
     Separa a linha digitada na opção 5 em argumentos, respeitando aspas.
     No Windows, a barra invertida é separador de caminho: sem isso o shlex a apagaria (#39).
@@ -305,7 +312,7 @@ def separar_argumentos(linha, windows=os.name == "nt"):
     return shlex.split(linha.replace("\\", "\\\\") if windows else linha)
 
 
-def parametros_do_ag(args):
+def parametros_do_ag(args: argparse.Namespace) -> dict[str, Any]:
     """Parâmetros do AgenteGenetico informados na linha de comando (só os que foram passados)."""
     return {
         nome: getattr(args, opcao)
@@ -314,7 +321,7 @@ def parametros_do_ag(args):
     }
 
 
-def main():
+def main() -> None:
     escolha = menu_interativo()
 
     if escolha == "1":
@@ -432,7 +439,7 @@ def _mostrar_resumo(df_resultados):
         )
 
 
-def rodar_benchmark(argumentos_cli):
+def rodar_benchmark(argumentos_cli: list[str]) -> tuple[str, pd.DataFrame]:
     """
     Executa os benchmarks descritos por argumentos_cli e grava tudo na pasta do run, incluindo
     metadados.json (Fase 4 do plano, #17). Usado pelo main() e pelo reproduzir.py.
@@ -445,7 +452,7 @@ def rodar_benchmark(argumentos_cli):
     pasta_saida = _criar_pasta_do_run(args)
     _gravar_metadados(argumentos_cli, args, sobrescritos_ag, parametros_busca, pasta_saida)
 
-    resultados = []
+    resultados: list[Any] = []
     caminho_saida_terminal = os.path.join(pasta_saida, "saida_terminal.txt")
     with capturar_saida_terminal(caminho_saida_terminal):
         print(f"🚀 Iniciando benchmark em: {pasta_saida}")

@@ -9,21 +9,23 @@
 # e o agente pode ser usado nos benchmarks do projeto.
 """
 
-from agents.agente import Agente
+from agents.agente import Agente, Resultado
 from agents.logic_knowledge_base import BaseConhecimento
+from world.constantes import Percepcao
+from world.world import Mundo
 
 PASSOS_POR_CASA = 4  # limite de passos: 4 vezes o número de casas do mundo (#18)
 
 
 class AgenteLogico(Agente):
-    def __init__(self, mundo, max_passos=None):
+    def __init__(self, mundo: Mundo, max_passos: int | None = None) -> None:
         super().__init__(mundo)
         # Base de conhecimento lógica para inferências; conhece o tamanho do grid (#18)
-        self.conhecimento = BaseConhecimento(tamanho=mundo.tamanho)
+        self.conhecimento: BaseConhecimento = BaseConhecimento(tamanho=mundo.tamanho)
         # Limite de passos: garante que executar() sempre termina (#18)
         self.max_passos = max_passos if max_passos is not None else PASSOS_POR_CASA * mundo.tamanho * mundo.tamanho
 
-    def executar(self):
+    def executar(self) -> Resultado:
         """
         Executa o ciclo de vida do agente lógico.
         Atualiza a base de conhecimento e decide a próxima ação com regras simples.
@@ -61,7 +63,7 @@ class AgenteLogico(Agente):
 
         return self.resultado()
 
-    def decidir_acao(self, percepcao):
+    def decidir_acao(self, percepcao: Percepcao) -> str:
         """
         Aplica a lógica simbólica do agente baseada nas percepções recebidas.
         Retorna a próxima ação lógica a ser executada.

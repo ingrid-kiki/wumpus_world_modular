@@ -18,6 +18,7 @@ pre-commit install
 python -m pytest
 ruff check .
 ruff format .
+mypy
 python main.py
 python reproduzir.py logs/run_AAAAMMDD_HHMMSS
 python -m experimentos.comparar_metodos --fase confirmacao

@@ -15,22 +15,30 @@
 """
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterable
+from typing import Any
 
-from world.constantes import FIM_DE_JOGO
+from world.constantes import FIM_DE_JOGO, Percepcao
+from world.world import Mundo
+
+# Um passo do histórico: passo, acao, percepcao, status e posicao
+Passo = dict[str, Any]
+# O que executar() devolve: historico, passos, dados_extra e campos próprios de cada agente
+Resultado = dict[str, Any]
 
 
 class Agente(ABC):
     """Contrato comum dos agentes: recebem o mundo e devolvem o resultado de executar() no formato único."""
 
-    def __init__(self, mundo):
+    def __init__(self, mundo: Mundo) -> None:
         self.mundo = mundo
-        self.historico = []
+        self.historico: list[Passo] = []
 
     @abstractmethod
-    def executar(self):
+    def executar(self) -> Resultado:
         """Joga uma partida no mundo e devolve self.resultado(...)."""
 
-    def registrar_passo(self, acao, percepcao, status):
+    def registrar_passo(self, acao: str, percepcao: Percepcao, status: str) -> None:
         """Acrescenta ao histórico um passo já executado, com a posição do agente depois da ação."""
         self.historico.append(
             {
@@ -42,7 +50,7 @@ class Agente(ABC):
             }
         )
 
-    def executar_sequencia(self, acoes, mostrar=False):
+    def executar_sequencia(self, acoes: Iterable[str], mostrar: bool = False) -> None:
         """Executa as ações no mundo real, na ordem, até o fim da sequência ou do jogo."""
         for acao in acoes:
             percepcao, status = self.mundo.agir(acao)
@@ -55,6 +63,6 @@ class Agente(ABC):
             if status in FIM_DE_JOGO:
                 break
 
-    def resultado(self, dados_extra=None, **extras):
+    def resultado(self, dados_extra: dict[str, Any] | None = None, **extras: Any) -> Resultado:
         """Resultado no formato único; `extras` acrescenta campos próprios do agente."""
         return {"historico": self.historico, "passos": len(self.historico), "dados_extra": dados_extra or {}, **extras}

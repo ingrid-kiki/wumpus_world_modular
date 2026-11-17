@@ -9,8 +9,10 @@
 """
 
 import random
+from typing import Any
 
-from world.constantes import ACOES, ACOES_DE_MOVIMENTO, AGARRAR, BRILHO, GANHOU, MORTO, TIRO
+from world.constantes import ACOES, ACOES_DE_MOVIMENTO, AGARRAR, BRILHO, GANHOU, MORTO, TIRO, Percepcao
+from world.world import Mundo
 
 # Pontos do fitness (ver docs/arquitetura/fluxo-ag.md)
 PENALIDADE_MORTE = 100
@@ -21,7 +23,7 @@ CUSTO_OUTRA_ACAO = 1
 BONUS_SOBREVIVENCIA = 10
 
 
-def acao_aleatoria(gerador=random):
+def acao_aleatoria(gerador: Any = random) -> str:
     # Retorna uma ação aleatória válida para o agente
     return gerador.choice(ACOES)
 
@@ -31,7 +33,7 @@ def _distancia(pos, alvo):
     return abs(pos[0] - alvo[0]) + abs(pos[1] - alvo[1])
 
 
-def _pontuar_acao(pontuacao, acao, percepcao, mundo):
+def _pontuar_acao(pontuacao: float, acao: str, percepcao: Percepcao, mundo: Mundo) -> float:
     """Soma à pontuação os pontos de uma ação que não matou o agente, na mesma ordem de sempre."""
     if acao == AGARRAR and BRILHO in percepcao:
         pontuacao += BONUS_OURO  # Bônus se encontrar o ouro
@@ -47,22 +49,22 @@ def _pontuar_acao(pontuacao, acao, percepcao, mundo):
 
 
 class Individuo:
-    def __init__(self, tamanho_cromossomo, gerador=None):
+    def __init__(self, tamanho_cromossomo: int, gerador: random.Random | None = None) -> None:
         # Gerador aleatório do AG (ou o módulo random, se não for informado)
-        gerador = gerador if gerador is not None else random
+        sorteio: Any = gerador if gerador is not None else random
         # Inicializa o cromossomo com uma sequência aleatória de ações
-        self.cromossomo = [acao_aleatoria(gerador) for _ in range(tamanho_cromossomo)]
+        self.cromossomo: list[str] = [acao_aleatoria(sorteio) for _ in range(tamanho_cromossomo)]
         # Valor de fitness (avaliação de desempenho do indivíduo)
-        self.fitness = None
+        self.fitness: float | None = None
 
-    def copia(self):
+    def copia(self) -> "Individuo":
         """Cópia independente do cromossomo, mantendo o fitness (mais rápida que copy.deepcopy)."""
         novo = Individuo(0)
         novo.cromossomo = list(self.cromossomo)
         novo.fitness = self.fitness
         return novo
 
-    def avaliar(self, mundo, proximidade=0.0):
+    def avaliar(self, mundo: Mundo, proximidade: float = 0.0) -> None:
         """
         Executa a sequência de ações no mundo e avalia o desempenho.
         :param mundo: Instância do mundo do Wumpus para simulação
@@ -72,7 +74,7 @@ class Individuo:
         :return: Nenhum retorno, mas atualiza o atributo fitness do indivíduo
         """
         mundo_simulado = mundo.clonar()  # Cria uma cópia do mundo para simulação
-        pontuacao = 0  # Inicializa a pontuação
+        pontuacao: float = 0  # Inicializa a pontuação
         menor_distancia = _distancia(mundo_simulado.posicao_agente, mundo.posicao_ouro)
         for acao in self.cromossomo:
             # Executa cada ação do cromossomo no mundo simulado
@@ -95,3 +97,10 @@ class Individuo:
             pontuacao += proximidade * (1 - menor_distancia / distancia_maxima)
         # Salva o fitness final do indivíduo
         self.fitness = pontuacao
+
+
+def fitness_de(individuo: Individuo) -> float:
+    """Fitness de um indivíduo já avaliado: ordenar e comparar exigem um número, nunca None."""
+    if individuo.fitness is None:
+        raise ValueError("o indivíduo ainda não foi avaliado")
+    return individuo.fitness

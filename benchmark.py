@@ -20,6 +20,7 @@
 import contextlib
 import io
 import time
+from typing import Any
 
 from joblib import Parallel, delayed
 
@@ -29,7 +30,15 @@ from utils.terminal import usar_utf8_na_saida
 from world.world import Mundo
 
 
-def simular_execucao(classe_agente, tamanho_mundo, semente, parametros=None, silencioso=False, relatar=True, rotulo=""):
+def simular_execucao(
+    classe_agente: type,
+    tamanho_mundo: int,
+    semente: int,
+    parametros: dict[str, Any] | None = None,
+    silencioso: bool = False,
+    relatar: bool = True,
+    rotulo: str = "",
+) -> dict[str, Any]:
     """
     Uma execução: cria o mundo com a semente, roda o agente e classifica o resultado.
     :param relatar: False em outro processo, onde o stderr não chega ao saida_terminal.txt;
@@ -50,7 +59,9 @@ def simular_execucao(classe_agente, tamanho_mundo, semente, parametros=None, sil
     }
 
 
-def resumir(agente_nome, tamanho_mundo, execucoes, tempo_de_relogio):
+def resumir(
+    agente_nome: str, tamanho_mundo: int, execucoes: list[dict[str, Any]], tempo_de_relogio: float
+) -> dict[str, Any]:
     """Resultado de uma combinação de agente e tamanho, no formato que o main.py grava no CSV."""
     return {
         "agente": agente_nome,
@@ -64,8 +75,13 @@ def resumir(agente_nome, tamanho_mundo, execucoes, tempo_de_relogio):
 
 
 def executar_benchmark(
-    agente_nome, tamanho_mundo=4, num_execucoes=10, parametros_agentes=None, paralelo=False, silencioso=False
-):
+    agente_nome: str,
+    tamanho_mundo: int = 4,
+    num_execucoes: int = 10,
+    parametros_agentes: dict[str, dict[str, Any]] | None = None,
+    paralelo: bool = False,
+    silencioso: bool = False,
+) -> dict[str, Any]:
     """Roda `num_execucoes` partidas do agente em mundos `tamanho_mundo` x `tamanho_mundo` e devolve o resumo."""
     classe_agente = AGENTES_DISPONIVEIS[agente_nome]
     parametros = (parametros_agentes or {}).get(agente_nome, {})

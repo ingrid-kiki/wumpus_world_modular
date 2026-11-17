@@ -12,13 +12,25 @@
 import copy
 import random
 
-from world.constantes import AGARRAR, BRILHO, BRISA, DESLOCAMENTOS, FEDOR, GANHOU, MORTO, OK, TIRO
+from world.constantes import (
+    AGARRAR,
+    BRILHO,
+    BRISA,
+    DESLOCAMENTOS,
+    FEDOR,
+    GANHOU,
+    MORTO,
+    OK,
+    TIRO,
+    Percepcao,
+    Posicao,
+)
 
 TAMANHO_MINIMO = 2
 
 
 class Mundo:
-    def __init__(self, tamanho, semente=None):
+    def __init__(self, tamanho: int, semente: int | None = None) -> None:
         """
         Inicializa o mundo do Wumpus.
         :param tamanho: Tamanho do mundo (quadrado tamanho x tamanho)
@@ -39,7 +51,7 @@ class Mundo:
             excluir=[self.posicao_agente, self.posicao_ouro]
         )  # Posição do Wumpus
         # Lista de posições dos poços: sem repetir casa e sem cair no agente, no ouro ou no Wumpus (#22)
-        self.pocos = []
+        self.pocos: list[Posicao] = []
         for _ in range(tamanho // 2):
             ocupadas = [self.posicao_agente, self.posicao_ouro, self.posicao_wumpus, *self.pocos]
             self.pocos.append(self.posicao_aleatoria(excluir=ocupadas))
@@ -49,7 +61,7 @@ class Mundo:
         self.grito = False  # Indica se o último tiro matou o Wumpus
         self.ganhou = False  # Indica se o agente venceu
 
-    def posicao_aleatoria(self, excluir=None):
+    def posicao_aleatoria(self, excluir: list[Posicao] | None = None) -> Posicao:
         """
         Gera uma posição aleatória no mundo, excluindo as posições fornecidas.
         :param excluir: Lista de posições a serem evitadas
@@ -61,7 +73,7 @@ class Mundo:
             if pos not in excluir:
                 return pos
 
-    def agir(self, acao):
+    def agir(self, acao: str) -> tuple[Percepcao, str]:
         """
         Executa uma ação no ambiente: movimento + interação.
         :param acao: Ação a ser executada ('CIMA', 'BAIXO', 'ESQUERDA', 'DIREITA', 'AGARRAR', 'TIRO')
@@ -75,7 +87,7 @@ class Mundo:
         status = self.interagir(acao)  # Interações separadas
         return self.perceber(), status
 
-    def mover_agente(self, acao):
+    def mover_agente(self, acao: str) -> None:
         """
         Move o agente no grid se a ação for de movimento.
         """
@@ -84,7 +96,7 @@ class Mundo:
         if 0 <= x < self.tamanho and 0 <= y < self.tamanho:  # contra a parede, o agente fica onde está
             self.posicao_agente = (x, y)
 
-    def interagir(self, acao):
+    def interagir(self, acao: str) -> str:
         """
         Aplica os efeitos da ação (pegar ouro, atirar, morrer etc.).
         :return: status final da jogada
@@ -115,7 +127,7 @@ class Mundo:
 
         return OK
 
-    def perceber(self):
+    def perceber(self) -> Percepcao:
         """
         Retorna as percepções do agente na posição atual.
         :return: Lista de percepções ('FEDOR', 'BRISA', 'BRILHO')
@@ -138,14 +150,14 @@ class Mundo:
 
         return percepcao
 
-    def terminou(self):
+    def terminou(self) -> bool:
         """
         Verifica se o jogo terminou (vitória ou morte).
         :return: True se terminou, False caso contrário
         """
         return self.ganhou or not self.agente_vivo
 
-    def clonar(self):
+    def clonar(self) -> "Mundo":
         """
         Retorna uma cópia independente do mundo (útil para simulações).
         As posições são tuplas (imutáveis), então basta copiar os atributos e a lista de poços.
@@ -157,7 +169,7 @@ class Mundo:
         novo.pocos = list(self.pocos)
         return novo
 
-    def adjacentes(self, pos_a, pos_b):
+    def adjacentes(self, pos_a: Posicao, pos_b: Posicao) -> bool:
         """
         Verifica se duas posições são adjacentes (cima, baixo, esquerda, direita).
         :param pos_a: Primeira posição (x, y)

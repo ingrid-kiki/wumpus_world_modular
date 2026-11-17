@@ -11,9 +11,12 @@
 # próprias, e os avisos de grito, morte e vitória ficam no canto de cima.
 """
 
+from typing import Any
+
 import pygame
 
-from world.constantes import BRILHO, BRISA, FEDOR
+from world.constantes import BRILHO, BRISA, FEDOR, Percepcao, Posicao
+from world.world import Mundo
 
 TAMANHO_DA_CASA = 100  # pixels
 PASSOS_POR_SEGUNDO = 2
@@ -33,7 +36,7 @@ NOMES_DAS_PERCEPCOES = ((BRISA, "brisa"), (FEDOR, "fedor"), (BRILHO, "brilho"))
 
 
 class Visualizador:
-    def __init__(self, mundo, tamanho_casa=TAMANHO_DA_CASA):
+    def __init__(self, mundo: Mundo, tamanho_casa: int = TAMANHO_DA_CASA) -> None:
         """Abre a janela do tamanho do mundo. `mundo` é o mundo que será desenhado e alterado na reprodução."""
         pygame.init()
         self.mundo = mundo
@@ -44,7 +47,7 @@ class Visualizador:
         self.fonte_pequena = pygame.font.SysFont(None, 20)
         self.relogio = pygame.time.Clock()
 
-    def desenhar_casa(self, x, y, cor, texto=None):
+    def desenhar_casa(self, x: int, y: int, cor: tuple[int, int, int], texto: str | None = None) -> None:
         """Pinta a casa (x, y), com borda e um texto opcional no canto."""
         retangulo = pygame.Rect(y * self.tamanho_casa, x * self.tamanho_casa, self.tamanho_casa, self.tamanho_casa)
         pygame.draw.rect(self.tela, cor, retangulo)
@@ -52,7 +55,7 @@ class Visualizador:
         if texto:
             self.tela.blit(self.fonte.render(texto, True, CORES["borda"]), (retangulo.x + 10, retangulo.y + 10))
 
-    def desenhar_mundo(self, passo=None):
+    def desenhar_mundo(self, passo: dict[str, Any] | None = None) -> None:
         """Desenha o estado atual do mundo; `passo` é o item do histórico que levou até ele, se houver."""
         self.tela.fill(CORES["fundo"])
         self._desenhar_percepcoes()
@@ -60,7 +63,7 @@ class Visualizador:
         self._desenhar_avisos(passo)
         pygame.display.flip()
 
-    def _percepcao_na_casa(self, pos):
+    def _percepcao_na_casa(self, pos: Posicao) -> Percepcao:
         """O que o agente perceberia na casa `pos`, sem mudar o mundo."""
         posicao_real = self.mundo.posicao_agente
         self.mundo.posicao_agente = pos
@@ -103,7 +106,12 @@ class Visualizador:
             # Fundo branco atrás do texto, para ele não se misturar com as percepções da casa
             self.tela.blit(self.fonte.render(texto, True, cor, CORES["fundo"]), (10, 10 + 30 * linha))
 
-    def reproduzir(self, historico, passos_por_segundo=PASSOS_POR_SEGUNDO, esperar_fechar=True):
+    def reproduzir(
+        self,
+        historico: list[dict[str, Any]],
+        passos_por_segundo: int = PASSOS_POR_SEGUNDO,
+        esperar_fechar: bool = True,
+    ) -> int:
         """
         Mostra o estado inicial e refaz, no mundo da janela, cada ação do histórico.
         Ao fim, espera a pessoa fechar a janela (a menos que `esperar_fechar` seja False).

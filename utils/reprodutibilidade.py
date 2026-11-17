@@ -18,6 +18,7 @@ import subprocess
 import sys
 from datetime import datetime
 from importlib import metadata
+from typing import Any
 
 from utils.versao import __version__
 
@@ -35,7 +36,7 @@ REGRA_DAS_SEMENTES = (
 )
 
 
-def _git(*args, cwd=None):
+def _git(*args: str, cwd: str | None = None) -> str | None:
     """Roda um comando git e devolve a saída, ou None se o git não estiver disponível."""
     try:
         saida = subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True, check=True, timeout=10)
@@ -45,7 +46,7 @@ def _git(*args, cwd=None):
         return None
 
 
-def estado_do_git(cwd=None):
+def estado_do_git(cwd: str | None = None) -> dict[str, Any]:
     """
     Commit atual e se há alterações não commitadas em arquivos versionados.
     Arquivos ignorados (logs/, .venv/) e não versionados não contam.
@@ -63,8 +64,8 @@ def estado_do_git(cwd=None):
     }
 
 
-def versoes_das_bibliotecas(nomes=BIBLIOTECAS):
-    versoes = {}
+def versoes_das_bibliotecas(nomes: list[str] = BIBLIOTECAS) -> dict[str, str | None]:
+    versoes: dict[str, str | None] = {}
     for nome in nomes:
         try:
             versoes[nome] = metadata.version(nome)
@@ -73,15 +74,20 @@ def versoes_das_bibliotecas(nomes=BIBLIOTECAS):
     return versoes
 
 
-def parametros_efetivos(classe, sobrescritos=None):
+def parametros_efetivos(classe: type, sobrescritos: dict[str, Any] | None = None) -> dict[str, Any]:
     """Valores padrão do __init__ da classe, com os sobrescritos aplicados por cima."""
-    assinatura = inspect.signature(classe.__init__)
+    assinatura = inspect.signature(classe)  # parâmetros do __init__, sem o self
     padroes = {nome: p.default for nome, p in assinatura.parameters.items() if p.default is not inspect.Parameter.empty}
     padroes.update(sobrescritos or {})
     return padroes
 
 
-def coletar_metadados(argumentos_cli, argumentos, parametros_ag, cwd=None):
+def coletar_metadados(
+    argumentos_cli: list[str],
+    argumentos: dict[str, Any],
+    parametros_ag: dict[str, Any] | None,
+    cwd: str | None = None,
+) -> dict[str, Any]:
     """
     Monta o dicionário salvo em metadados.json.
     :param argumentos_cli: lista de argumentos como digitados (ex.: ["--tamanhos", "4", "6"])
@@ -102,14 +108,14 @@ def coletar_metadados(argumentos_cli, argumentos, parametros_ag, cwd=None):
     }
 
 
-def salvar_metadados(pasta, metadados):
+def salvar_metadados(pasta: str, metadados: dict[str, Any]) -> str:
     caminho = os.path.join(pasta, ARQUIVO_METADADOS)
     with open(caminho, "w", encoding="utf-8") as f:
         json.dump(metadados, f, ensure_ascii=False, indent=2, default=str)
     return caminho
 
 
-def carregar_metadados(pasta):
+def carregar_metadados(pasta: str) -> dict[str, Any]:
     """Lê o metadados.json do run, ou o metadata.json de runs gravados até a v1.8.0."""
     caminho = os.path.join(pasta, ARQUIVO_METADADOS)
     if not os.path.exists(caminho):
