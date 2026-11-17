@@ -14,8 +14,8 @@ import pytest
 
 import benchmark
 import main
-from agents.logico_seguro import AgenteLogicoSeguro, BaseConhecimentoSegura
-from world.world import Mundo
+from wumpus.agentes.logico_seguro import AgenteLogicoSeguro, BaseConhecimentoSegura
+from wumpus.mundo.mundo import Mundo
 
 
 def base_com(tamanho, visitadas, atual):

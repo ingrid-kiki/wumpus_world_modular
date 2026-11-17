@@ -9,8 +9,8 @@ import pandas as pd
 import pytest
 
 from experimentos import comparar_metodos as exp
-from ga.ga_core import AlgoritmoGenetico
-from world.world import Mundo
+from wumpus.ag.algoritmo_genetico import AlgoritmoGenetico
+from wumpus.mundo.mundo import Mundo
 
 
 def mundo_fixo(pocos, ouro=(1, 1)):

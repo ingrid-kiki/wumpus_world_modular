@@ -13,11 +13,11 @@ import pytest
 import benchmark
 import main
 import reproduzir
-from agents.genetic_agent import AgenteGenetico
-from ga.ga_core import AlgoritmoGenetico
-from ga.individual import Individuo
-from utils.versao import __version__
-from world.world import Mundo
+from wumpus.ag.algoritmo_genetico import AlgoritmoGenetico
+from wumpus.ag.individuo import Individuo
+from wumpus.agentes.agente_genetico import AgenteGenetico
+from wumpus.mundo.mundo import Mundo
+from wumpus.utilitarios.versao import __version__
 
 # Benchmark pequeno e completo (os dois agentes), usado por vários testes
 ARGS_PEQUENOS = [

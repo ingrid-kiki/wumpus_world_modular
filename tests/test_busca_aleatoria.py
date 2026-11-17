@@ -11,9 +11,9 @@ import random
 import pandas as pd
 
 import main
-from agents.random_search_agent import AgenteAleatorio
-from ga.individual import Individuo
-from world.world import Mundo
+from wumpus.ag.individuo import Individuo
+from wumpus.agentes.agente_aleatorio import AgenteAleatorio
+from wumpus.mundo.mundo import Mundo
 
 
 def acoes(resultado):

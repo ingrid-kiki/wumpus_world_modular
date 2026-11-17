@@ -13,9 +13,9 @@ import pytest
 
 import benchmark
 import main
-from agents.agente import Agente
-from agents.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
-from world.world import Mundo
+from wumpus.agentes.agente import Agente
+from wumpus.agentes.registro import AGENTES_AUTOMATICOS, AGENTES_DISPONIVEIS
+from wumpus.mundo.mundo import Mundo
 
 PARAMETROS_RAPIDOS = {
     "logico": {},

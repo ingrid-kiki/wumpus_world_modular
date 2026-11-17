@@ -14,7 +14,7 @@ import ast
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
-PASTAS_IGNORADAS = {"__pycache__", "logs", "venv", ".venv", ".git", "tests"}
+PASTAS_IGNORADAS = {"__pycache__", "logs", "venv", ".venv", ".git", "tests", "build", "dist"}
 
 
 def funcoes_publicas_sem_tipos(raiz=RAIZ):

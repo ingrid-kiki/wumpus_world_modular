@@ -10,7 +10,7 @@ import builtins
 import pytest
 
 import main
-from world.world import Mundo
+from wumpus.mundo.mundo import Mundo
 
 
 @pytest.mark.parametrize("tamanho", [1, 0, -3])

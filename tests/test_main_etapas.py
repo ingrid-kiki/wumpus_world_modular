@@ -11,8 +11,8 @@ import pandas as pd
 import pytest
 
 import main
-from agents.genetic_agent import AgenteGenetico
-from world.world import Mundo
+from wumpus.agentes.agente_genetico import AgenteGenetico
+from wumpus.mundo.mundo import Mundo
 
 ARGS_AG = ["--populacao", "10", "--geracoes", "3", "--cromossomo", "10"]
 GRAFICOS_AVANCADOS = {

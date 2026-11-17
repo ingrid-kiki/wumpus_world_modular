@@ -10,10 +10,10 @@ import json
 import pytest
 
 import main
-from agents.genetic_agent import AgenteGenetico
-from ga.ga_core import AlgoritmoGenetico
-from ga.individual import Individuo
-from world.world import Mundo
+from wumpus.ag.algoritmo_genetico import AlgoritmoGenetico
+from wumpus.ag.individuo import Individuo
+from wumpus.agentes.agente_genetico import AgenteGenetico
+from wumpus.mundo.mundo import Mundo
 
 
 def mundo():

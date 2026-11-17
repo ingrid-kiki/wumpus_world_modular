@@ -19,13 +19,13 @@ import pytest
 
 import benchmark
 import main
-from agents.genetic_agent import AgenteGenetico
-from agents.logic_agent import AgenteLogico
-from agents.logic_knowledge_base import BaseConhecimento
-from ga.ga_core import AlgoritmoGenetico
-from ga.individual import Individuo
 from tests.conftest import GA_RAPIDO
-from world.world import Mundo
+from wumpus.ag.algoritmo_genetico import AlgoritmoGenetico
+from wumpus.ag.individuo import Individuo
+from wumpus.agentes.agente_genetico import AgenteGenetico
+from wumpus.agentes.agente_logico import AgenteLogico
+from wumpus.agentes.base_conhecimento import BaseConhecimento
+from wumpus.mundo.mundo import Mundo
 
 ISSUE = "https://github.com/ingrid-kiki/wumpus_world_modular/issues/"
 

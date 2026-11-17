@@ -20,13 +20,13 @@ import io
 import json
 import pathlib
 
-from agents.genetic_agent import AgenteGenetico
-from agents.logic_agent import AgenteLogico
-from agents.logic_knowledge_base import BaseConhecimento
-from agents.random_search_agent import AgenteAleatorio
-from ga.individual import Individuo
-from utils.execucao import classificar
-from world.world import Mundo
+from wumpus.ag.individuo import Individuo
+from wumpus.agentes.agente_aleatorio import AgenteAleatorio
+from wumpus.agentes.agente_genetico import AgenteGenetico
+from wumpus.agentes.agente_logico import AgenteLogico
+from wumpus.agentes.base_conhecimento import BaseConhecimento
+from wumpus.mundo.mundo import Mundo
+from wumpus.utilitarios.execucao import classificar
 
 ARQUIVO = pathlib.Path(__file__).with_name("referencia.json")
 TAMANHOS = (4, 6, 8)

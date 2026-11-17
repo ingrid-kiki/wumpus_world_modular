@@ -22,10 +22,10 @@ import numpy as np
 import pandas as pd
 
 import main
-from utils.execucao import STATUS_POSSIVEIS
+from wumpus.utilitarios.execucao import STATUS_POSSIVEIS
 
 RAIZ = Path(__file__).resolve().parent.parent
-PASTAS_IGNORADAS = {"__pycache__", "logs", "venv", ".venv", ".git"}
+PASTAS_IGNORADAS = {"__pycache__", "logs", "venv", ".venv", ".git", "build", "dist"}
 # Texto sem espaço e só com letras minúsculas, números, _ . - /: é um nome (chave, coluna, arquivo, opção)
 PARECE_NOME = re.compile(r"^[-a-z0-9_./áéíóúâêôãõçà]+$")
 # Nomes antigos citados de propósito: o reproduzir.py os traduz ao ler runs gravados até a v1.8.0,

@@ -1,0 +1,44 @@
+# ==============================
+# tests/test_tempo_de_execucao.py
+# ==============================
+"""
+# Este arquivo contém um teste unitário para medir o tempo de execução do agente genético (AgenteGenetico)
+# no ambiente Wumpus World. O objetivo é garantir que o agente executa dentro de um tempo razoável,
+# ajudando a identificar possíveis problemas de desempenho ou loops infinitos.
+#
+# Explicação do teste:
+# - Cria uma instância do mundo (Mundo) com tamanho 4x4 e semente fixa para reprodutibilidade.
+# - Cria uma instância do agente genético (AgenteGenetico) passando o mundo criado.
+# - Mede o tempo antes e depois de executar o método executar() do agente.
+# - Calcula a duração da execução.
+# - Imprime o tempo de execução para análise didática.
+# - Garante que o tempo de execução está abaixo de um limite (ex: 10 segundos).
+#   Esse limite pode ser ajustado conforme a complexidade do agente e do ambiente.
+#
+# Esse teste é útil para monitorar a performance dos agentes durante o desenvolvimento.
+"""
+
+import time
+
+from tests.conftest import GA_RAPIDO
+from wumpus.agentes.agente_genetico import AgenteGenetico
+from wumpus.mundo.mundo import Mundo
+
+
+def test_tempo_de_execucao():
+    # Cria o mundo e o agente genético
+    mundo = Mundo(tamanho=4, semente=42)
+    agente = AgenteGenetico(mundo, **GA_RAPIDO)
+    # Marca o tempo inicial
+    start = time.time()
+    # Executa o agente
+    agente.executar()
+    # Marca o tempo final
+    end = time.time()
+
+    # Calcula a duração da execução
+    duration = end - start
+    # Imprime o tempo de execução para análise didática
+    print(f"⏱️ Tempo de execução: {duration:.2f}s")
+    # Garante que o tempo de execução está dentro do limite esperado
+    assert duration < 10  # ajuste conforme necessário

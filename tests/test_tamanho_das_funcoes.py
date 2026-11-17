@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
-PASTAS_IGNORADAS = {"__pycache__", "logs", "pygad", "tests", "venv"}
+PASTAS_IGNORADAS = {"__pycache__", "logs", "tests", "venv", "build", "dist"}  # build/ e dist/ vêm de construir o pacote
 LIMITE_DE_LINHAS = 40
 # Exceções registradas aqui, no formato 'arquivo:função'; hoje não há nenhuma
 EXCECOES = set()

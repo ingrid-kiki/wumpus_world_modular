@@ -10,9 +10,9 @@ import pytest
 import seaborn as sns
 
 import main
-from agents.genetic_agent import AgenteGenetico
-from utils import graficos
-from world.world import Mundo
+from wumpus.agentes.agente_genetico import AgenteGenetico
+from wumpus.mundo.mundo import Mundo
+from wumpus.utilitarios import graficos
 
 GRAFICOS = {
     "memoria_cpu",

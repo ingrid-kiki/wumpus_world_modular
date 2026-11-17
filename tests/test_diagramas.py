@@ -15,7 +15,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 DIAGRAMA_DE_CLASSES = RAIZ / "docs" / "arquitetura" / "classes.md"
 
 # Pastas que não fazem parte do programa documentado (pastas ocultas, como .venv, são ignoradas sempre)
-PASTAS_IGNORADAS = {"__pycache__", "logs", "pygad", "tests", "venv"}
+PASTAS_IGNORADAS = {"__pycache__", "logs", "tests", "venv", "build", "dist"}  # build/ e dist/ vêm de construir o pacote
 
 BLOCO_MERMAID = re.compile(r"```mermaid\n(.*?)```", re.DOTALL)
 DECLARACAO = re.compile(r"^\s*class\s+(\w+)")
@@ -82,7 +82,7 @@ def test_le_arquivo_com_quebra_de_linha_do_windows():
 def test_encontra_classes_do_programa_e_ignora_pastas_de_fora():
     classes = classes_do_codigo()
     assert {"Mundo", "AlgoritmoGenetico", "AGVariante", "Agente"} <= classes
-    assert "GA" not in classes  # classe principal de pygad/
+    assert "GA" not in classes  # classe da antiga pasta pygad/, que hoje só está na tag archive/pygad-original
 
 
 def test_nao_conta_classe_aninhada(tmp_path):
