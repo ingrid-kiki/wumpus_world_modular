@@ -38,7 +38,9 @@ Próximas etapas em [`docs/plano-boas-praticas.md`](docs/plano-boas-praticas.md)
   | `visual/visualizer.py` | `wumpus/visual/visualizador.py` |
   | `utils/*.py` | `wumpus/utilitarios/*.py` |
 
-  Os testes em inglês também mudaram de nome (por exemplo, `test_world.py` virou `test_mundo.py`). Os resultados não
+  Os testes em inglês também mudaram de nome (por exemplo, `test_world.py` virou `test_mundo.py`), e a pasta `tests/`
+  ganhou subpastas por assunto: `mundo/`, `agentes/`, `ag/`, `visual/`, `utilitarios/`, `programa/` e `regras/`. O teste
+  de referência passa a ser atualizado com `python -m tests.regras.referencia`. Os resultados não
   mudam: contagens, `.npz`, 19 gráficos e saída do terminal idênticos, e um run antigo foi refeito com sucesso.
 - **Os nomes do código estão em português**: classes, métodos, atributos, parâmetros e variáveis. Quem importa o código
   precisa usar os nomes novos; os nomes dos arquivos `.py` e das pastas mudam na organização em pacote. Os principais:

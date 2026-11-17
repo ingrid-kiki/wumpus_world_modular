@@ -45,7 +45,7 @@ Este projeto simula o clássico **Wumpus World** com suporte a **diferentes tipo
 │       └── versao.py         # Versão do projeto (fonte única)
 │
 ├── experimentos/             # Comparação de métodos de busca (#31)
-├── tests/                    # Testes automáticos (lista em docs/testes.md)
+├── tests/                    # Testes automáticos, em subpastas por assunto (lista em docs/testes.md)
 │
 ├── docs/                 # Análises, plano de ação e relato das decisões (comece por docs/README.md)
 │
@@ -120,10 +120,10 @@ Para ver a cobertura de testes: `python -m pytest --cov --cov-report=term`. O qu
 Para quem vai contribuir: o gancho do `pre-commit` não vem ativado ao clonar. Rode `pre-commit install` uma vez em cada
 clone, como explicado em [CONTRIBUTING.md](CONTRIBUTING.md#checagem-automática-antes-do-commit).
 
-O [teste de referência](tests/referencia.py) garante que os resultados não mudam sem uma decisão explícita.
+O [teste de referência](tests/regras/referencia.py) garante que os resultados não mudam sem uma decisão explícita.
 
 Os bugs corrigidos na reorganização (issues #18 a #24) têm testes de regressão em
-[`tests/test_bugs_conhecidos.py`](tests/test_bugs_conhecidos.py). O CI roda os testes em cada push e PR para a `main`.
+[`tests/regras/test_bugs_conhecidos.py`](tests/regras/test_bugs_conhecidos.py). O CI roda os testes em cada push e PR para a `main`.
 
 ---
 

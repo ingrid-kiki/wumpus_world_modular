@@ -154,7 +154,8 @@ Depois da v1.7.0, o trabalho seguiu o [plano de boas práticas](plano-boas-prati
 | 12/11 | Etapa 3, PR G2: nomes do código em português (classes, métodos, atributos, parâmetros e variáveis) | #83 |
 | 12/11 | Revisão completa depois da troca de nomes: nenhum erro no programa | #84 |
 | 16/11 | Etapa 3, PR H: tipos nas 108 funções públicas e construtores, com `mypy` no CI e no `pre-commit` | #85 |
-| 16/11 | Etapa 3, PR I1: pacote `wumpus/`, arquivos e pastas em português, `pyproject` completo | #86 |
+| 16/11 | Etapa 3, PR I1: pacote `wumpus/`, arquivos e pastas em português, `pyproject` completo e `tests/` em subpastas | #86 |
+| 16/11 | Issue aberta: testes leem a cópia do código em `build/` depois de construir o pacote | #87 |
 
 Em toda a Etapa 3, o teste de referência, os números do `logico_seguro` e a comparação byte a byte dos gráficos provaram
 que os resultados não mudaram. A única regeneração da referência (#73) foi de formato, com as 165 execuções conferidas antes.
@@ -194,6 +195,8 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 | Toda PR atualiza o histórico, o plano de boas práticas e o plano de ação | Ingrid | #79 |
 | Tipos conferidos automaticamente pelo `mypy`, no CI e no `pre-commit` | Ingrid | #85 |
 | Dividir a PR I em I1 (pacote) e I2 (#29 e `.npz`); pacote `wumpus/` com os comandos iguais na raiz | Ingrid | #86 |
+| Organizar `tests/` em subpastas por assunto | Ingrid | #86 |
+| Tratar o problema da pasta `build/` numa issue e numa PR à parte | Ingrid | #87 |
 | A LICENSE cita Ingrid Mendes e Alfa Marine | Ingrid | #41, #80 |
 | Guardar `pygad/` na tag `archive/pygad-original` e retirá-la da `main` | Ingrid | #15, #80 |
 | Apagar do GitHub as 45 branches já mescladas (todas contidas na `main`) | Ingrid | #42 |
@@ -214,5 +217,6 @@ que os resultados não mudaram. A única regeneração da referência (#73) foi 
 | Agente PyGAD sobre o nosso `World`, depois DEAP; o código antigo está na tag `archive/pygad-original` | #15 |
 | Outras metaheurísticas (recozimento, busca tabu, colônia de formigas) | #16 |
 | Etapas 4 (código comentado) e 5 (otimização) do plano de boas práticas | [plano de boas práticas](plano-boas-praticas.md) |
+| Testes que percorrem o código ignorarem a cópia em `build/` | #87 |
 | Fase 6: reescrever o histórico (dados antigos, `Co-Authored-By` e e-mail pessoal) | #17 |
 | Instalar o gancho do `pre-commit` em cada clone (`pre-commit install`) | [CONTRIBUTING](../CONTRIBUTING.md) |

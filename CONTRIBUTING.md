@@ -44,7 +44,8 @@ Regras:
 - **Nunca misture código e resultados de execução no mesmo commit.**
 - Correção de bug vem acompanhada do teste que mostra o bug.
 - Ao criar, renomear ou remover um teste, atualize [`docs/testes.md`](docs/testes.md) na mesma PR: o CI
-  falha enquanto a lista estiver desatualizada.
+  falha enquanto a lista estiver desatualizada. Os testes ficam na subpasta de `tests/` do assunto que testam
+  (`mundo/`, `agentes/`, `ag/`, `visual/`, `utilitarios/`, `programa/` ou `regras/`), como explicado na lista.
 - Antes do commit, rode `ruff format .`, `ruff check .` e `mypy`: o CI recusa código fora do padrão.
 
 ### Checagem automática antes do commit
@@ -75,7 +76,7 @@ As regras marcadas com **(CI)** são verificadas pelo `ruff`. As demais valem na
 - Código novo usa nomes em português e sem abreviações obscuras: `taxa_mutacao`, não `tm`.
 - Sem acentos em identificadores, chaves de dicionário, colunas do CSV e nomes de arquivos. Mensagens para as pessoas e
   documentação mantêm os acentos. O `ruff` (regras `PLC2401` e `PLC2403`) barra acentos nos nomes do código, e
-  `tests/test_nomes_sem_acento.py` barra acentos nos textos usados como nome (chaves, colunas, status, arquivos) e em
+  `tests/regras/test_nomes_sem_acento.py` barra acentos nos textos usados como nome (chaves, colunas, status, arquivos) e em
   tudo o que um run grava.
 - Os nomes do código (classes, métodos, atributos, parâmetros e variáveis) estão em português desde a #83, e os nomes
   dos arquivos e das pastas, desde a #86, quando o código passou para o pacote `wumpus/`.
@@ -138,13 +139,13 @@ Para lançar:
 
 ## Resultados de referência
 
-`tests/test_referencia.py` compara os resultados atuais com `tests/referencia.json`: mundos gerados, sequências de
+`tests/regras/test_referencia.py` compara os resultados atuais com `tests/regras/referencia.json`: mundos gerados, sequências de
 ações e regras do fitness. Se ele falhar sem que você quisesse mudar resultados, há uma regressão.
 
 Se a mudança for intencional, regenere o arquivo e explique o motivo no commit e no CHANGELOG:
 
 ```bash
-python -m tests.referencia
+python -m tests.regras.referencia
 ```
 
 ## Experimentos

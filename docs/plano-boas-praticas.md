@@ -163,7 +163,7 @@ da etapa. O teste de referência precisa continuar passando em cada ajuste, cada
 | G1 | 3.7 Saídas sem acento e em português (colunas, status, arquivos e `--tamanhos`), a regra automática e a leitura de runs antigos | 1,5 a 2 h | Concluída (#81) |
 | G2 | 3.8 Nomes do código em português: classes, métodos, atributos e parâmetros | 2 a 3 h | Concluída (#83) |
 | H | 3.9 Tipos nas funções públicas, com `mypy` no CI e no `pre-commit` | 2 a 2,5 h | Concluída (#85) |
-| I1 | 3.10 Organizar em pacote (`wumpus/`), com nomes de arquivos e pastas em português e `pyproject.toml` completo | 2,5 h | Concluída (#86) |
+| I1 | 3.10 Organizar em pacote (`wumpus/`), com nomes de arquivos e pastas em português, `pyproject.toml` completo e `tests/` em subpastas por assunto | 2,5 h | Concluída (#86) |
 | I2 | 3.11 Decidir o uso do `.npz` e resolver a [#29](https://github.com/ingrid-kiki/wumpus_world_modular/issues/29) (gráficos com todas as execuções) | 2,5 h | A fazer |
 | J | 3.12 Lançar a v2.0.0 | 30 min | A fazer |
 
@@ -251,7 +251,7 @@ issues antes da v2.0.0, e "Correção" corrige um erro achado durante o trabalho
 | [#83](https://github.com/ingrid-kiki/wumpus_world_modular/pull/83) | 2026-11-12 | 3 (G2) | Nomes do código em português |
 | [#84](https://github.com/ingrid-kiki/wumpus_world_modular/pull/84) | 2026-11-12 | Plano | Registro da revisão completa depois da troca de nomes |
 | [#85](https://github.com/ingrid-kiki/wumpus_world_modular/pull/85) | 2026-11-16 | 3 (H) | Tipos nas funções públicas, com `mypy` no CI e no `pre-commit` |
-| [#86](https://github.com/ingrid-kiki/wumpus_world_modular/pull/86) | em revisão | 3 (I1) | Pacote `wumpus/`, arquivos em português e `pyproject` completo |
+| [#86](https://github.com/ingrid-kiki/wumpus_world_modular/pull/86) | em revisão | 3 (I1) | Pacote `wumpus/`, arquivos em português, `pyproject` completo e testes em subpastas |
 
 Ao abrir uma PR deste plano, acrescente-a aqui na mesma PR.
 
